@@ -1,0 +1,22 @@
+{
+  "name": "@sbozh/website",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": ">=18"
+  }
+}
