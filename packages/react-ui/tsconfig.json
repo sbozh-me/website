@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@sbozh/react-ui/*": ["./src/*"]
     }
   },
   "include": ["src"],
