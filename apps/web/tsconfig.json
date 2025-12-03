@@ -1,6 +1,7 @@
 {
   "extends": "@sbozh/typescript-config/nextjs.json",
   "compilerOptions": {
+    "verbatimModuleSyntax": true,
     "plugins": [
       {
         "name": "next"

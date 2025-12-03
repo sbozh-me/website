@@ -22,19 +22,14 @@ export default tseslint.config(
       prettier: prettier,
     },
     rules: {
-      "no-unused-vars": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/no-unnecessary-type-constraint": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          args: "after-used",
-          argsIgnorePattern: "^_",
-          vars: "all",
-          varsIgnorePattern: "^_",
-          ignoreRestSiblings: true,
-        },
-      ],
+      "@typescript-eslint/no-unused-vars": ['error', {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+        vars: 'all',
+      }],
       "prettier/prettier": [
         "error",
         {
