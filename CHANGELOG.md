@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2025-12-03
+
+### Changes
+
+- feat(react-ui): add shared UI package with shadcn/ui ([dff90d8](https://github.com/sbozh-me/website/commit/dff90d812e88d0f5e88608558b122997a309584b))
+- feat(web): integrate Tailwind CSS v4 and shared UI components ([911d0d8](https://github.com/sbozh-me/website/commit/911d0d89aeb70402ab079b35f653a503ca566723))
+
+
 ## [0.0.2] - 2025-12-03
 
 ### Changes
