@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2025-12-03
+
+### Changes
+
+- docs: update README with react-ui package ([bcc5510](https://github.com/sbozh-me/website/commit/bcc5510428de7f2fce4188f2e86d51f12fd7dd43))
+
+
 ## [0.0.4] - 2025-12-03
 
 ### Changes
