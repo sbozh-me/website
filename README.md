@@ -6,6 +6,7 @@ Monorepo for sbozh.me website.
 
 - **Framework**: Next.js 15 (React 19)
 - **Build**: Turborepo + pnpm
+- **UI**: shadcn/ui + Tailwind CSS v4
 - **Testing**: Vitest
 - **Linting**: ESLint 9 + Prettier
 
@@ -13,8 +14,9 @@ Monorepo for sbozh.me website.
 
 ```
 apps/
-  web/          # Main website (Next.js)
+  web/                # Main website (Next.js)
 packages/
+  react-ui/           # Shared UI components (shadcn/ui)
   eslint-config/      # Shared ESLint config
   typescript-config/  # Shared TypeScript config
 ```
@@ -27,6 +29,13 @@ pnpm dev        # Start dev server
 pnpm build      # Build all packages
 pnpm lint       # Lint all packages
 pnpm test       # Run tests
+```
+
+## Adding UI Components
+
+```bash
+cd packages/react-ui
+pnpm dlx shadcn@latest add button card input
 ```
 
 ## Release
