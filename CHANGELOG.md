@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-12-04
+
+### Changes
+
+- docs: update README with react-ui package ([bcc5510](https://github.com/sbozh-me/website/commit/bcc5510428de7f2fce4188f2e86d51f12fd7dd43))
+- chore(release): v0.1.0 ([d404c10](https://github.com/sbozh-me/website/commit/d404c10e6aad1618f353132311c4e0af262b36a0))
+- docs: add project roadmap ([82f6a2f](https://github.com/sbozh-me/website/commit/82f6a2fa23c33ecd6b7680a0895448649b8ddf60))
+
+
 ## [0.1.0] - 2025-12-03
 
 ### Changes
