@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-12-04
+
+### Changes
+
+- test(home): update tests for new tagline and remove tech stack test ([babda69](https://github.com/sbozh-me/website/commit/babda6906e20477ef8ba3d52a7c1d8262b9b5363))
+- docs: update README with Obsidian Forge design and mark 0.3.0 complete in ROADMAP ([0f17f15](https://github.com/sbozh-me/website/commit/0f17f15d05e6d8818c45fb736f62e7fc7c6e8485))
+
+
 ## [0.2.4] - 2025-12-04
 
 ### Changes
