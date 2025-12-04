@@ -96,25 +96,6 @@ export default function Home() {
           </motion.nav>
         </div>
       </motion.div>
-      <motion.div
-        className="flex items-center gap-6 flex-col py-12"
-        variants={item}
-        initial="hidden"
-        animate="show"
-      >
-        <span className="text-sm text-muted-foreground">Built with</span>
-        <div className="flex items-center gap-4">
-          {techStack.map((tech) => (
-            <span
-              key={tech.name}
-              className="text-muted-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:text-secondary"
-              title={tech.name}
-            >
-              {tech.icon}
-            </span>
-          ))}
-        </div>
-      </motion.div>
     </main>
   );
 }
