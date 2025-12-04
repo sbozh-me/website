@@ -19,7 +19,15 @@ export type {
   WatermarkProps,
 } from "./components/cv";
 
+export type { UsePMDXJSOptions, UsePMDXJSResult } from "./hooks";
+
 export type { Token, TokenType } from "./parser";
+
+export type {
+  CompileOptions,
+  CompileResult,
+  ErrorBoundaryProps,
+} from "./runtime";
 
 export type { DocumentContextValue, TransformOptions } from "./transformer";
 
@@ -66,9 +74,13 @@ export {
   Watermark,
 } from "./components/cv";
 
+// Hook exports
+export { usePMDXJS } from "./hooks";
 // Parser exports
 export { parse, remarkPmdxjs, tokenize } from "./parser";
 
+// Runtime exports
+export { compile, compileAsync, PMDXJSErrorBoundary } from "./runtime";
 // Transformer exports
 export { DocumentContext, transform, useDocumentConfig } from "./transformer";
 

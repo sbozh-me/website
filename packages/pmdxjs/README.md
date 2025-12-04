@@ -112,6 +112,30 @@ Built-in styled components for professional CV rendering:
 import { Header, Entry, Tags } from "@sbozh/pmdxjs/components/cv";
 ```
 
+## Browser Runtime
+
+Live editing with real-time preview:
+
+```typescript
+import { usePMDXJS } from "@sbozh/pmdxjs/hooks";
+
+function Editor() {
+  const [source, setSource] = useState(defaultCV);
+  const { element, loading, error } = usePMDXJS(source);
+
+  return (
+    <div className="flex">
+      <textarea value={source} onChange={(e) => setSource(e.target.value)} />
+      <div className="preview">
+        {loading && <Spinner />}
+        {error && <ErrorDisplay message={error.message} />}
+        {element}
+      </div>
+    </div>
+  );
+}
+```
+
 ## Exports
 
 - `@sbozh/pmdxjs` - Main entry
@@ -119,6 +143,10 @@ import { Header, Entry, Tags } from "@sbozh/pmdxjs/components/cv";
 - `@sbozh/pmdxjs/transformer` - AST-to-JSX transformer
 - `@sbozh/pmdxjs/components` - Layout components (Document, Page, Columns)
 - `@sbozh/pmdxjs/components/cv` - CV-specific components
+- `@sbozh/pmdxjs/runtime` - Compile functions
+- `@sbozh/pmdxjs/runtime/browser` - Browser-specific runtime
+- `@sbozh/pmdxjs/runtime/server` - Server-specific runtime
+- `@sbozh/pmdxjs/hooks` - React hooks (usePMDXJS)
 - `@sbozh/pmdxjs/types` - TypeScript types
 
 ## License
