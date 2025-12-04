@@ -8,7 +8,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      <main className="min-h-[calc(100vh-200px)]">{children}</main>
+      <main className="flex-1">{children}</main>
     </>
   );
 }
