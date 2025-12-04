@@ -1,4 +1,3 @@
-
 # Roadmap
 
 ## ~~0.2.0 - App Structure~~ ✅
@@ -8,10 +7,13 @@
 - ~~Blog page (placeholder)~~
 - ~~CV page (placeholder)~~
 
-## 0.3.0 - Final Design
-- Complete visual design implementation
-- Responsive layouts
-- Typography and color system finalization
+## ~~0.3.0 - Obsidian Forge Design~~ ✅
+- ~~Obsidian Forge color palette (amethyst, gold, terminal green)~~
+- ~~Space Grotesk + JetBrains Mono typography~~
+- ~~Generous spacing and responsive layouts~~
+- ~~Motion design (staggered reveals, hover animations)~~
+- ~~SparkMark component with shimmer animation~~
+- ~~Responsive hamburger menu~~
 
 ## 0.4.0 - Animated Logo
 - Animated text logo "sbozh.me"

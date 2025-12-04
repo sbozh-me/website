@@ -2,17 +2,27 @@
 
 Personal website and portfolio for sbozh.me.
 
+## Design
+
+**Obsidian Forge** — A dark, spacious aesthetic
+
+- **Colors**: Deep obsidian background (#0a0a0f), amethyst primary (#8b5cf6), gold secondary (#f59e0b), terminal green accent (#22c55e)
+- **Typography**: Space Grotesk (headings), JetBrains Mono (code)
+- **Motion**: Deliberate animations with smooth easing, staggered page reveals, sliding underlines
+- **SparkMark**: The `*` symbol — purple-to-gold gradient, appears only in tagline and favicon
+
 ## Tech Stack
 
 - **Framework**: Next.js 15 (React 19)
 - **Build**: Turborepo + pnpm
 - **UI**: shadcn/ui + Tailwind CSS v4
+- **Animation**: Framer Motion
 - **Testing**: Vitest (100% coverage)
 - **Linting**: ESLint 9 + Prettier
 
 ## Pages
 
-- `/` - Homepage with navigation and social links
+- `/` - Homepage with navigation
 - `/blog` - Blog (coming soon)
 - `/cv` - CV/Resume (coming soon)
 - `/projects` - Projects showcase (coming soon)
