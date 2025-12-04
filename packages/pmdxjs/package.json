@@ -9,6 +9,7 @@
     "./parser": "./src/parser/index.ts",
     "./transformer": "./src/transformer/index.ts",
     "./components": "./src/components/index.ts",
+    "./components/cv": "./src/components/cv/index.ts",
     "./types": "./src/types/index.ts"
   },
   "scripts": {

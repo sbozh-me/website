@@ -1,6 +1,13 @@
 import { createElement } from "react";
 
 import { Column, Columns, Document, Page } from "../components";
+import {
+  Divider as CVDivider,
+  Entry as CVEntry,
+  Header as CVHeader,
+  Section as CVSection,
+  Tags as CVTags,
+} from "../components/cv";
 
 import type {
   ColumnNode,
@@ -46,92 +53,8 @@ export interface TransformOptions {
 }
 
 /**
- * Default components for rendering (placeholder implementations)
- * These will be replaced with full CV components in 0.4.2
+ * Default paragraph component (simple, not CV-specific)
  */
-const DefaultHeader = ({ name, subtitle, contact }: HeaderNode) =>
-  createElement(
-    "header",
-    { className: "pmdxjs-header mb-6" },
-    createElement("h1", { className: "text-3xl font-bold" }, name),
-    subtitle &&
-      createElement("p", { className: "text-xl text-gray-600" }, subtitle),
-    contact &&
-      createElement(
-        "p",
-        { className: "text-sm text-gray-500 mt-2" },
-        contact.join(" | "),
-      ),
-  );
-
-const DefaultSection = ({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) =>
-  createElement(
-    "section",
-    { className: "pmdxjs-section mb-6" },
-    createElement(
-      "h2",
-      { className: "text-xl font-semibold mb-3 border-b pb-1" },
-      title,
-    ),
-    children,
-  );
-
-const DefaultEntry = ({
-  company,
-  role,
-  dates,
-  location,
-  children,
-}: EntryNode) =>
-  createElement(
-    "article",
-    { className: "pmdxjs-entry mb-4" },
-    createElement(
-      "div",
-      { className: "flex justify-between items-baseline" },
-      createElement(
-        "div",
-        null,
-        createElement("span", { className: "font-semibold" }, company),
-        createElement("span", { className: "text-gray-400 mx-2" }, "|"),
-        createElement("span", null, role),
-      ),
-      createElement(
-        "div",
-        { className: "text-sm text-gray-500" },
-        dates,
-        location && ` | ${location}`,
-      ),
-    ),
-    createElement("div", { className: "mt-2" }, children),
-  );
-
-const DefaultTags = ({ items }: { items: string[] }) =>
-  createElement(
-    "div",
-    { className: "pmdxjs-tags flex flex-wrap gap-2" },
-    ...items.map((item, i) =>
-      createElement(
-        "span",
-        {
-          key: i,
-          className:
-            "inline-block px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700",
-        },
-        item,
-      ),
-    ),
-  );
-
-const DefaultDivider = () =>
-  createElement("hr", { className: "pmdxjs-divider my-4 border-gray-200" });
-
 const DefaultParagraph = ({ children }: { children: ReactNode }) =>
   createElement("p", { className: "pmdxjs-paragraph mb-2" }, children);
 
@@ -170,7 +93,7 @@ function transformDivider(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const DividerComponent = options.components?.Divider ?? DefaultDivider;
+  const DividerComponent = options.components?.Divider ?? CVDivider;
   return createElement(DividerComponent, { key });
 }
 
@@ -182,7 +105,7 @@ function transformTags(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const TagsComponent = options.components?.Tags ?? DefaultTags;
+  const TagsComponent = options.components?.Tags ?? CVTags;
   return createElement(TagsComponent, { key, items: node.items });
 }
 
@@ -194,14 +117,13 @@ function transformEntry(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const EntryComponent = options.components?.Entry ?? DefaultEntry;
+  const EntryComponent = options.components?.Entry ?? CVEntry;
   const children = node.children.map((child, i) =>
     transformContentNode(child, options, i),
   );
 
   return createElement(EntryComponent, {
     key,
-    type: "entry",
     company: node.company,
     role: node.role,
     dates: node.dates,
@@ -218,10 +140,9 @@ function transformHeader(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const HeaderComponent = options.components?.Header ?? DefaultHeader;
+  const HeaderComponent = options.components?.Header ?? CVHeader;
   return createElement(HeaderComponent, {
     key,
-    type: "header",
     name: node.name,
     subtitle: node.subtitle,
     contact: node.contact,
@@ -236,7 +157,7 @@ function transformSection(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const SectionComponent = options.components?.Section ?? DefaultSection;
+  const SectionComponent = options.components?.Section ?? CVSection;
   const children = node.children.map((child, i) =>
     transformContentNode(child, options, i),
   );
