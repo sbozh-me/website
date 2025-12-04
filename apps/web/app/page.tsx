@@ -79,7 +79,7 @@ export default function Home() {
               sbozh.me
             </motion.h1>
             <motion.p className="mt-4 text-muted-foreground" variants={item}>
-              Developer & Creator
+              Personal startup<span className="relative"><span className="text-primary absolute w-[50%] overflow-hidden select-none">*</span><span className="text-secondary">*</span></span>
             </motion.p>
           </div>
 
