@@ -1,14 +1,21 @@
 # @sbozh/website
 
-Monorepo for sbozh.me website.
+Personal website and portfolio for sbozh.me.
 
 ## Tech Stack
 
 - **Framework**: Next.js 15 (React 19)
 - **Build**: Turborepo + pnpm
 - **UI**: shadcn/ui + Tailwind CSS v4
-- **Testing**: Vitest
+- **Testing**: Vitest (100% coverage)
 - **Linting**: ESLint 9 + Prettier
+
+## Pages
+
+- `/` - Homepage with navigation and social links
+- `/blog` - Blog (coming soon)
+- `/cv` - CV/Resume (coming soon)
+- `/projects` - Projects showcase (coming soon)
 
 ## Structure
 

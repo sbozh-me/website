@@ -1,11 +1,11 @@
 # Roadmap
 
-## 0.2.0 - App Structure
-- Home page with navigation menu
-- Social links (LinkedIn, Discord, Email)
-- Footer with website stack info
-- Blog page (placeholder)
-- CV page (placeholder)
+## ~~0.2.0 - App Structure~~ ✅
+- ~~Home page with navigation menu~~
+- ~~Social links (LinkedIn, Discord, Email)~~
+- ~~Footer with website stack info~~
+- ~~Blog page (placeholder)~~
+- ~~CV page (placeholder)~~
 
 ## 0.3.0 - Final Design
 - Complete visual design implementation
