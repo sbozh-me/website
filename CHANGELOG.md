@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.2] - 2025-12-05
+
+### Changes
+
+- feat(pmdxjs): implement milestone 0.4.2 - CV-specific components ([428ec79](https://github.com/sbozh-me/website/commit/428ec7911ffac1bad9de047aab321df888745a26))
+- docs(pmdxjs): add CV components section to README ([410364a](https://github.com/sbozh-me/website/commit/410364a5fc8ba09173b51dc1ab9f5f83ce4f6608))
+
+
 ## [0.4.1] - 2025-12-04
 
 ### Changes
