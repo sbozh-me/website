@@ -15,9 +15,16 @@
 - ~~SparkMark component with shimmer animation~~
 - ~~Responsive hamburger menu~~
 
-## 0.4.0 - CV Page
-- Full CV page implementation
-- Downloadable PDF option
+## 0.4.0 - CV Page (PMDXJS)
+
+Full CV page powered by `@sbozh/pmdxjs` - a custom markdown-to-JSX parser.
+
+- [0.4.0 - Package Scaffold + Parser](roadmap/pmdxjs/0.4.0.md)
+- [0.4.1 - Core Layout Components](roadmap/pmdxjs/0.4.1.md)
+- [0.4.2 - CV-Specific Components](roadmap/pmdxjs/0.4.2.md)
+- [0.4.3 - MDX Browser Runtime](roadmap/pmdxjs/0.4.3.md)
+- [0.4.4 - CV Page Implementation](roadmap/pmdxjs/0.4.4.md)
+- [0.4.5 - PDF Export](roadmap/pmdxjs/0.4.5.md)
 
 ## 0.5.0 - Blog Layouts
 - Blog listing page
