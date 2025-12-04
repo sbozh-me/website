@@ -37,7 +37,7 @@ export function SocialLinks({ className }: { className?: string }) {
         <Link
           key={social.name}
           href={social.href}
-          className="text-muted-foreground transition-colors hover:text-foreground"
+          className="text-muted-foreground transition-colors hover:text-primary"
           aria-label={social.name}
           target={social.href.startsWith('mailto') ? undefined : '_blank'}
           rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}

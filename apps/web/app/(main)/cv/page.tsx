@@ -1,9 +1,9 @@
 export default function CVPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">CV</h1>
-        <p className="mt-4 text-lg text-muted-foreground">Coming soon</p>
+    <div className="mx-auto px-6 md:px-12 lg:px-24 py-24">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="tracking-tight">CV</h1>
+        <p className="mt-6 text-muted-foreground">Coming soon</p>
       </div>
     </div>
   );

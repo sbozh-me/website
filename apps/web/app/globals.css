@@ -3,53 +3,71 @@
 @source "../../../packages/react-ui/src";
 
 @theme {
-  --color-background: #ffffff;
-  --color-foreground: #0a0a0b;
-  --color-card: #ffffff;
-  --color-card-foreground: #0a0a0b;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #0a0a0b;
-  --color-primary: #18181b;
-  --color-primary-foreground: #fafafa;
-  --color-secondary: #f4f4f5;
-  --color-secondary-foreground: #18181b;
-  --color-muted: #f4f4f5;
-  --color-muted-foreground: #71717a;
-  --color-accent: #f4f4f5;
-  --color-accent-foreground: #18181b;
+  /* Obsidian Forge - Dark, spacious aesthetic */
+  --color-background: #0a0a0f;
+  --color-foreground: #e5e7eb;
+  --color-muted: #18181b;
+  --color-muted-foreground: #6b7280;
+  --color-primary: #8b5cf6;
+  --color-primary-foreground: #0a0a0f;
+  --color-secondary: #f59e0b;
+  --color-secondary-foreground: #0a0a0f;
+  --color-accent: #22c55e;
+  --color-accent-foreground: #0a0a0f;
+  --color-border: #27272a;
+  --color-ring: #8b5cf6;
+  --color-card: #18181b;
+  --color-card-foreground: #e5e7eb;
+  --color-popover: #18181b;
+  --color-popover-foreground: #e5e7eb;
   --color-destructive: #ef4444;
-  --color-destructive-foreground: #fafafa;
-  --color-border: #e4e4e7;
-  --color-input: #e4e4e7;
-  --color-ring: #18181b;
+  --color-destructive-foreground: #e5e7eb;
+  --color-input: #27272a;
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
+
+  /* Typography */
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
-.dark {
-  --color-background: #0a0a0b;
-  --color-foreground: #fafafa;
-  --color-card: #0a0a0b;
-  --color-card-foreground: #fafafa;
-  --color-popover: #0a0a0b;
-  --color-popover-foreground: #fafafa;
-  --color-primary: #fafafa;
-  --color-primary-foreground: #18181b;
-  --color-secondary: #27272a;
-  --color-secondary-foreground: #fafafa;
-  --color-muted: #27272a;
-  --color-muted-foreground: #a1a1aa;
-  --color-accent: #27272a;
-  --color-accent-foreground: #fafafa;
-  --color-destructive: #7f1d1d;
-  --color-destructive-foreground: #fafafa;
-  --color-border: #27272a;
-  --color-input: #27272a;
-  --color-ring: #d4d4d8;
+/* Base typography */
+html {
+  font-size: 18px;
 }
 
 body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+}
+
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
 }
