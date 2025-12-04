@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.3] - 2025-12-04
+
+### Changes
+
+- feat(ui): add responsive hamburger menu to header ([dfe9640](https://github.com/sbozh-me/website/commit/dfe9640ec43d3fdd643ac3605afaab6b167865eb))
+
+
 ## [0.2.2] - 2025-12-04
 
 ### Changes
