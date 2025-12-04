@@ -33,6 +33,7 @@ Personal website and portfolio for sbozh.me.
 apps/
   web/                # Main website (Next.js)
 packages/
+  pmdxjs/             # PMDXJS - Markdown to JSX parser for CVs
   react-ui/           # Shared UI components (shadcn/ui)
   eslint-config/      # Shared ESLint config
   typescript-config/  # Shared TypeScript config
