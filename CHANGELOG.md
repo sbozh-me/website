@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] - 2025-12-04
+
+### Changes
+
+- feat(pmdxjs): implement milestone 0.4.1 - core layout components ([caf0c81](https://github.com/sbozh-me/website/commit/caf0c81953a5cf391507ee7ddc946a92939ccbcd))
+- chore(deps): update lockfile for pmdxjs 0.4.1 dependencies ([5420575](https://github.com/sbozh-me/website/commit/54205757516f0f565df020de21f57f5ab8cdcece))
+- docs(pmdxjs): add package README ([66e36c4](https://github.com/sbozh-me/website/commit/66e36c4edc027a369c8e8404bb31bb4876c81cbe))
+
+
 ## [0.4.0] - 2025-12-04
 
 ### Changes
