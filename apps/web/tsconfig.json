@@ -2,6 +2,10 @@
   "extends": "@sbozh/typescript-config/nextjs.json",
   "compilerOptions": {
     "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "plugins": [
       {
         "name": "next"
