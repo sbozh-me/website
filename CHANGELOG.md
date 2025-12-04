@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2025-12-04
+
+### Changes
+
+- docs: update README and mark 0.2.0 complete in roadmap ([1bc6cf3](https://github.com/sbozh-me/website/commit/1bc6cf3b9829a0c2be04d74aaedd4df29ccf8579))
+
+
 ## [0.1.3] - 2025-12-04
 
 ### Changes
