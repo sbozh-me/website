@@ -24,7 +24,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+    >
       <body className="flex min-h-screen flex-col antialiased">
         {children}
         <Footer />

@@ -1,0 +1,47 @@
+:::config
+format: A4
+margins: 15 15 15 15
+theme: obsidian-forge
+:::
+
+:::page
+
+# John Doe
+subtitle: Senior Software Engineer
+contact: john@example.com | +1-555-0100 | San Francisco, CA
+
+---
+
+---columns 65 35
+
+## Experience
+
+:::entry ACME Corp | Lead Developer | 2020-Present | San Francisco
+Led a team of 8 engineers in developing cloud-native applications.
+- Increased deployment frequency by 300%
+- Reduced production incidents by 50%
+:::
+
+:::entry StartupXYZ | Software Engineer | 2018-2020 | New York
+Built core platform features from scratch.
+- Implemented real-time notification system
+- Designed microservices architecture
+:::
+
+---
+
+## Skills
+
+#tag TypeScript
+#tag React
+#tag Node.js
+#tag AWS
+
+---columns-end
+
+## Languages
+
+English: Native
+German: Professional
+
+:::page-end

@@ -1,15 +1,15 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import BlogPage from './page';
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+import BlogPage from "./page";
 
-describe('BlogPage', () => {
-  it('renders blog heading', () => {
+describe("BlogPage", () => {
+  it("renders blog heading", () => {
     render(<BlogPage />);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Blog');
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Blog");
   });
 
-  it('renders coming soon message', () => {
+  it("renders coming soon message", () => {
     render(<BlogPage />);
-    expect(screen.getByText('Coming soon')).toBeInTheDocument();
+    expect(screen.getByText("Coming soon")).toBeInTheDocument();
   });
 });

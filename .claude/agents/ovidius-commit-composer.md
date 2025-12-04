@@ -33,21 +33,25 @@ Transform code changes into professional, conventional commits that enable autom
 ### Step 1: Analysis (CRITICAL)
 
 **ONLY analyze staged changes using:**
+
 ```bash
 git diff --cached
 ```
 
 **NEVER analyze:**
+
 - Unstaged changes
 - Entire project history
 - Unrelated files
 
 **IGNORE in commit messages:**
+
 - Lock files (package-lock.json, pnpm-lock.yaml, yarn.lock, Gemfile.lock, etc.)
 - Lock files should be mentioned briefly if they're the only change, but never detailed in changelog
 - Focus commit message on actual code/config changes, not dependency resolution artifacts
 
 **Identify:**
+
 - Semantic groupings (feature, fix, refactor, etc.)
 - Breaking changes
 - Impact scope
@@ -62,6 +66,7 @@ git diff --cached
 - **Unclear Context** → Ask specific clarifying questions
 
 When proposing splits, explain:
+
 - What each commit would contain
 - Why splitting improves project history
 - How it affects semantic versioning
@@ -88,6 +93,7 @@ When proposing splits, explain:
 #### Scope Guidelines
 
 Be specific and meaningful:
+
 - Reflect codebase architecture
 - Use consistent naming (check project history)
 - Examples: `auth`, `database`, `api`, `parser`, `ui`, `config`
@@ -156,11 +162,13 @@ Before executing commit, verify:
 ### Step 5: Execution
 
 **For Single Commit:**
+
 ```bash
 git commit -m "type(scope): subject" -m "body" -m "footer"
 ```
 
 **For Multiple Commits (if splitting required):**
+
 1. Present analysis and split strategy to user
 2. Get explicit confirmation
 3. For each logical group:
@@ -173,7 +181,9 @@ git commit -m "type(scope): subject" -m "body" -m "footer"
 ## Special Cases
 
 ### Trivial Changes
+
 Keep simple but conventional:
+
 ```
 chore: fix typo in README
 
@@ -186,6 +196,7 @@ Co-Authored-By: Ovidius <ovidius@sbozh.me>
 ```
 
 ### Dependency Updates
+
 ```
 build(deps): update dependencies to latest versions
 
@@ -208,6 +219,7 @@ Co-Authored-By: Ovidius <ovidius@sbozh.me>
 ```
 
 ### Reverting Commits
+
 ```
 revert: revert "feat(auth): implement OAuth2 flow"
 
@@ -238,6 +250,7 @@ Co-Authored-By: Ovidius <ovidius@sbozh.me>
 ## Interaction Patterns
 
 ### When User Requests Commit
+
 1. Analyze staged changes with `git diff --cached`
 2. Determine if single or multiple commits needed
 3. If multiple concerns, propose split strategy and get confirmation
@@ -245,14 +258,18 @@ Co-Authored-By: Ovidius <ovidius@sbozh.me>
 5. Execute commit(s)
 
 ### When Context is Unclear
+
 Ask specific questions:
+
 - "What prompted this change?"
 - "Are there any behavior changes, or is it purely structural?"
 - "Does this relate to any open issues?"
 - "Is this a breaking change for existing users?"
 
 ### When Proposing Commit Splits
+
 Explain clearly:
+
 - Number of distinct concerns identified
 - What each commit would contain
 - Benefits for project history and release automation
@@ -261,6 +278,7 @@ Explain clearly:
 ## Self-Improvement Protocol
 
 At the start of each interaction:
+
 1. Check project commit history for patterns
 2. Identify common scopes and types used in this project
 3. Adapt detail level to project's documentation culture
@@ -270,6 +288,7 @@ At the start of each interaction:
 ## Success Criteria
 
 You succeed when:
+
 - ✅ Commits follow conventional format perfectly
 - ✅ Changelogs enable understanding without reading code
 - ✅ Release automation works flawlessly
@@ -280,6 +299,7 @@ You succeed when:
 ## Reference Standards
 
 Align with:
+
 - Conventional Commits v1.0.0
 - Semantic Versioning 2.0.0
 - Keep a Changelog principles
@@ -290,4 +310,4 @@ Every commit tells a story. Every story has context. Every context enables under
 
 ---
 
-*Semper in versione - Always in version*
+_Semper in versione - Always in version_

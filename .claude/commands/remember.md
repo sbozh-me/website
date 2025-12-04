@@ -7,6 +7,7 @@ description: Lookup last conversation and continue where you left off
 **EXECUTION INSTRUCTIONS:**
 
 1. Use Bash to find the most recent todo file:
+
    ```bash
    ls -t ~/.claude/todos/*.json | head -1
    ```
@@ -96,6 +97,7 @@ Would you like to:
 **Format**: JSON array of todo items with status
 
 **Todo Status Values**:
+
 - `completed` - Task finished
 - `in_progress` - Currently working on
 - `pending` - Not started yet
