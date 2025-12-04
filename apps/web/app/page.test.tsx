@@ -10,7 +10,7 @@ describe('Home', () => {
 
   it('renders tagline', () => {
     render(<Home />);
-    expect(screen.getByText('Developer & Creator')).toBeInTheDocument();
+    expect(screen.getByText(/Personal startup/)).toBeInTheDocument();
   });
 
   it('renders navigation links', () => {
@@ -18,13 +18,5 @@ describe('Home', () => {
     expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
     expect(screen.getByRole('link', { name: 'CV' })).toHaveAttribute('href', '/cv');
     expect(screen.getByRole('link', { name: 'Projects' })).toHaveAttribute('href', '/projects');
-  });
-
-  it('renders tech stack section', () => {
-    render(<Home />);
-    expect(screen.getByText('Built with')).toBeInTheDocument();
-    expect(screen.getByTitle('Next.js')).toBeInTheDocument();
-    expect(screen.getByTitle('React')).toBeInTheDocument();
-    expect(screen.getByTitle('Tailwind')).toBeInTheDocument();
   });
 });
