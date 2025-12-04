@@ -94,12 +94,31 @@ Right column content (40%)
 #tag Node.js
 ```
 
+## CV Components
+
+Built-in styled components for professional CV rendering:
+
+- **Header** - Name, subtitle, contact info
+- **Section** - Titled content blocks
+- **Entry** - Job/education entries with metadata
+- **Tags/Tag** - Skill badges
+- **Divider** - Visual separator
+- **Summary** - Prose block for professional summary
+- **Achievement** - Bullet point achievements
+- **Languages** - Language proficiency list
+- **Watermark** - Footer watermark for print
+
+```typescript
+import { Header, Entry, Tags } from "@sbozh/pmdxjs/components/cv";
+```
+
 ## Exports
 
 - `@sbozh/pmdxjs` - Main entry
 - `@sbozh/pmdxjs/parser` - Parser functions
 - `@sbozh/pmdxjs/transformer` - AST-to-JSX transformer
-- `@sbozh/pmdxjs/components` - React components
+- `@sbozh/pmdxjs/components` - Layout components (Document, Page, Columns)
+- `@sbozh/pmdxjs/components/cv` - CV-specific components
 - `@sbozh/pmdxjs/types` - TypeScript types
 
 ## License
