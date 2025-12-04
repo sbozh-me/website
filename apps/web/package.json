@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sbozh/react-ui": "workspace:*",
+    "framer-motion": "^12.23.25",
     "next": "^15.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import {SocialLinks} from '@/components/SocialLinks';
+import { motion } from 'framer-motion';
 
 const navItems = [
   {name: 'Blog', href: '/blog'},
@@ -37,43 +39,82 @@ const techStack = [
   },
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
 export default function Home() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 md:px-12 lg:px-24 self-center">
-      <div className="flex flex-1 flex-col items-center justify-center">
+      <motion.div
+        className="flex flex-1 flex-col items-center justify-center"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
         <div className="flex flex-col items-center gap-12">
           <div className="text-center">
-            <h1 className="tracking-tight sm:text-6xl transition-colors hover:text-primary">sbozh.me</h1>
-            <p className="mt-4 text-muted-foreground">Developer & Creator</p>
+            <motion.h1
+              className="tracking-tight sm:text-6xl transition-colors hover:text-primary"
+              variants={item}
+            >
+              sbozh.me
+            </motion.h1>
+            <motion.p className="mt-4 text-muted-foreground" variants={item}>
+              Developer & Creator
+            </motion.p>
           </div>
 
-          <nav className="flex flex-col items-center gap-4">
-            {navItems.map((item) => (
+          <motion.nav className="flex flex-col items-center gap-4" variants={item}>
+            {navItems.map((navItem) => (
               <Link
-                key={item.href}
-                href={item.href}
-                className="text-muted-foreground transition-colors hover:text-primary"
+                key={navItem.href}
+                href={navItem.href}
+                className="relative text-muted-foreground transition-colors hover:text-primary after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-[width] after:duration-200 after:ease-out hover:after:w-full"
               >
-                {item.name}
+                {navItem.name}
               </Link>
             ))}
-          </nav>
+          </motion.nav>
         </div>
-      </div>
-      <div className="flex items-center gap-6 flex-col py-12">
+      </motion.div>
+      <motion.div
+        className="flex items-center gap-6 flex-col py-12"
+        variants={item}
+        initial="hidden"
+        animate="show"
+      >
         <span className="text-sm text-muted-foreground">Built with</span>
         <div className="flex items-center gap-4">
           {techStack.map((tech) => (
             <span
               key={tech.name}
-              className="text-muted-foreground transition-colors hover:text-secondary"
+              className="text-muted-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:text-secondary"
               title={tech.name}
             >
-                  {tech.icon}
-                </span>
+              {tech.icon}
+            </span>
           ))}
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }

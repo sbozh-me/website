@@ -24,10 +24,10 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className={`transition-colors ${
+              className={`relative transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:bg-primary after:transition-[width] after:duration-200 after:ease-out ${
                 pathname === item.href
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-primary'
+                  ? 'text-primary after:w-full'
+                  : 'text-muted-foreground hover:text-primary after:w-0 hover:after:w-full'
               }`}
             >
               {item.name}
