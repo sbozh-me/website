@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.4] - 2025-12-04
+
+### Changes
+
+- feat(home): update subtitle to 'Personal startup' with spark mark ([25d177c](https://github.com/sbozh-me/website/commit/25d177c515019d333549462bd4ba1f1ea651699e))
+- refactor(home): remove tech stack section from homepage ([8245a54](https://github.com/sbozh-me/website/commit/8245a54d36c201f5f31f3e4c8c489da93cdc3bb2))
+
+
 ## [0.2.3] - 2025-12-04
 
 ### Changes
