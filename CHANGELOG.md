@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2025-12-04
+
+### Changes
+
+- docs(roadmap): simplify milestones and remove animated logo phase ([fa2b07d](https://github.com/sbozh-me/website/commit/fa2b07d1e6726897d44aee6824e60deb8f909ee1))
+- docs(roadmap): add PMDXJS milestone documentation ([7ace2af](https://github.com/sbozh-me/website/commit/7ace2af4846588d3f83b083cd4c1c2a01c97aebc))
+- feat(pmdxjs): implement milestone 0.4.0 - package scaffold and basic parser ([d3b2a47](https://github.com/sbozh-me/website/commit/d3b2a47c3919d24c3694519092c9be935b9264be))
+- docs(readme): add pmdxjs package to structure section ([c22848d](https://github.com/sbozh-me/website/commit/c22848dc21cf71275817242e17f67a434e22acc5))
+
+
 ## [0.3.0] - 2025-12-04
 
 ### Changes
