@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2025-12-04
+
+### Changes
+
+- feat(ui): implement Obsidian Forge motion design system ([7f42933](https://github.com/sbozh-me/website/commit/7f429331f2a9e15ec778708f90d4bba1b6dc1b46))
+
+
 ## [0.2.1] - 2025-12-04
 
 ### Changes
