@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.3] - 2025-12-04
+
+### Changes
+
+- test(web): update and add tests for 100% coverage ([2dffe7a](https://github.com/sbozh-me/website/commit/2dffe7a1f28ecb77600aaa2a943e908e5bb548c1))
+
+
 ## [0.1.2] - 2025-12-04
 
 ### Changes
