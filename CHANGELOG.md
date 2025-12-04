@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2025-12-04
+
+### Changes
+
+- feat(web): implement portfolio website structure with navigation and core pages ([f744c74](https://github.com/sbozh-me/website/commit/f744c74d031ee5b8542b93644f735c914884fd52))
+- refactor(web): simplify footer and improve homepage layout ([e29d1f3](https://github.com/sbozh-me/website/commit/e29d1f32d63ea8dc24a5ce4783a84ba9939b8b1d))
+
+
 ## [0.1.1] - 2025-12-04
 
 ### Changes
