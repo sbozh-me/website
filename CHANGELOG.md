@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2025-12-04
+
+### Changes
+
+- feat(design): implement Obsidian Forge design system ([6eb0969](https://github.com/sbozh-me/website/commit/6eb0969e75160c1c78ce0ff76bf2c29568048808))
+- style(ui): update text selection to 40% opacity primary color ([3115713](https://github.com/sbozh-me/website/commit/311571324ffa42c23c6a16ad045ff85ce5fb4f61))
+
+
 ## [0.2.0] - 2025-12-04
 
 ### Changes
