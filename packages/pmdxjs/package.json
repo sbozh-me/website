@@ -7,6 +7,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./parser": "./src/parser/index.ts",
+    "./transformer": "./src/transformer/index.ts",
+    "./components": "./src/components/index.ts",
     "./types": "./src/types/index.ts"
   },
   "scripts": {
@@ -19,15 +21,20 @@
     "react": "^19.0.0"
   },
   "dependencies": {
-    "unified": "^11.0.5",
+    "clsx": "^2.1.1",
     "remark-parse": "^11.0.0",
+    "tailwind-merge": "^3.4.0",
+    "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
     "@sbozh/eslint-config": "workspace:*",
     "@sbozh/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.1.0",
     "typescript": "^5.7.2",
     "vitest": "^4.0.15"
   }

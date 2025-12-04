@@ -6,6 +6,6 @@
       "@sbozh/pmdxjs/*": ["./src/*"]
     }
   },
-  "include": ["src", "vitest.config.ts"],
+  "include": ["src", "vitest.config.ts", "vitest.setup.ts"],
   "exclude": ["node_modules"]
 }
