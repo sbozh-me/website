@@ -16,6 +16,18 @@ describe("Columns", () => {
     expect(screen.getByText("Right")).toBeInTheDocument();
   });
 
+  it("applies grid template columns from ratio", () => {
+    render(
+      <Columns ratio={[60, 40]}>
+        <Column>Left</Column>
+        <Column>Right</Column>
+      </Columns>,
+    );
+
+    const columns = document.querySelector(".pmdxjs-columns");
+    expect(columns).toHaveStyle({ gridTemplateColumns: "60fr 40fr" });
+  });
+
   it("applies default gap", () => {
     render(
       <Columns ratio={[60, 40]}>
@@ -63,24 +75,17 @@ describe("Column", () => {
     expect(screen.getByTestId("child")).toBeInTheDocument();
   });
 
-  it("applies width style", () => {
-    render(<Column width={60}>Content</Column>);
-
-    const column = document.querySelector(".pmdxjs-column");
-    expect(column).toHaveStyle({ width: "60%" });
-  });
-
-  it("does not apply width when not specified", () => {
-    render(<Column>Content</Column>);
-
-    const column = document.querySelector(".pmdxjs-column");
-    expect(column).not.toHaveStyle({ width: "60%" });
-  });
-
   it("applies className", () => {
     render(<Column className="custom-class">Content</Column>);
 
     const column = document.querySelector(".pmdxjs-column");
     expect(column).toHaveClass("custom-class");
+  });
+
+  it("has min-w-0 class for grid overflow handling", () => {
+    render(<Column>Content</Column>);
+
+    const column = document.querySelector(".pmdxjs-column");
+    expect(column).toHaveClass("min-w-0");
   });
 });

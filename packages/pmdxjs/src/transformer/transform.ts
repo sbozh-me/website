@@ -234,14 +234,13 @@ function transformColumn(
   node: ColumnNode,
   options: TransformOptions,
   key: number,
-  width?: number,
 ): ReactElement {
   const ColumnComponent = options.components?.Column ?? Column;
   const children = node.children.map((child, i) =>
     transformContentNode(child, options, i),
   );
 
-  return createElement(ColumnComponent, { key, width, children });
+  return createElement(ColumnComponent, { key, children });
 }
 
 /**
@@ -253,14 +252,10 @@ function transformColumns(
   key: number,
 ): ReactElement {
   const ColumnsComponent = options.components?.Columns ?? Columns;
-  const [leftRatio, rightRatio] = node.ratio;
-  const total = leftRatio + rightRatio;
 
-  const children = node.children.map((child, i) => {
-    const width =
-      i === 0 ? (leftRatio / total) * 100 : (rightRatio / total) * 100;
-    return transformColumn(child, options, i, width);
-  });
+  const children = node.children.map((child, i) =>
+    transformColumn(child, options, i),
+  );
 
   return createElement(ColumnsComponent, { key, ratio: node.ratio, children });
 }

@@ -12,21 +12,26 @@ export interface ColumnsProps {
 }
 
 /**
- * Columns component - two-column layout with configurable ratio
+ * Columns component - two-column layout with configurable ratio using CSS Grid
  *
  * @param ratio - Width ratio for columns, e.g., [60, 40] for 60%/40% split
  * @param gap - Gap between columns in pixels (default: 20)
  */
 export function Columns({
-  ratio: _ratio,
+  ratio,
   children,
   className,
   gap = 20,
 }: ColumnsProps) {
+  const [left, right] = ratio;
+
   return (
     <div
-      className={cn("pmdxjs-columns", "flex", className)}
-      style={{ gap: `${gap}px` }}
+      className={cn("pmdxjs-columns", "grid", className)}
+      style={{
+        gridTemplateColumns: `${left}fr ${right}fr`,
+        gap: `${gap}px`,
+      }}
     >
       {children}
     </div>
@@ -36,20 +41,15 @@ export function Columns({
 export interface ColumnProps {
   children: ReactNode;
   className?: string;
-  /** Width as percentage (0-100) */
+  /** Width is now handled by parent grid, kept for backwards compatibility */
   width?: number;
 }
 
 /**
- * Column component - single column within Columns
+ * Column component - single column within Columns grid
  */
-export function Column({ children, className, width }: ColumnProps) {
+export function Column({ children, className }: ColumnProps) {
   return (
-    <div
-      className={cn("pmdxjs-column", "flex-shrink-0", className)}
-      style={width ? { width: `${width}%` } : undefined}
-    >
-      {children}
-    </div>
+    <div className={cn("pmdxjs-column", "min-w-0", className)}>{children}</div>
   );
 }
