@@ -38,11 +38,12 @@ export function Page({ children, className }: PageProps) {
         "shadow-lg print:shadow-none",
         "break-after-page",
         "rounded-sm",
+        "overflow-hidden",
         className,
       )}
       style={{
         width: `${size.width}mm`,
-        minHeight: `${size.height}mm`,
+        height: `${size.height}mm`,
         padding: `${marginTop}mm ${marginRight}mm ${marginBottom}mm ${marginLeft}mm`,
       }}
     >
