@@ -10,10 +10,11 @@ export interface TagsProps {
 
 /**
  * CV Tags component - collection of skill badges
+ * Styling handled via CSS variables in globals.css
  */
 export function Tags({ items, className }: TagsProps) {
   return (
-    <div className={cn("pmdxjs-tags flex flex-wrap gap-x-3 gap-y-1.5", className)}>
+    <div className={cn("pmdxjs-tags flex flex-wrap gap-1.5", className)}>
       {items.map((item, i) => (
         <Tag key={i}>{item}</Tag>
       ))}

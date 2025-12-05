@@ -33,7 +33,6 @@ export function Page({ children, className }: PageProps) {
       className={cn(
         "pmdxjs-page",
         "relative",
-        "bg-white",
         "mx-auto mb-8 last:mb-0",
         "shadow-lg print:shadow-none",
         "break-after-page",

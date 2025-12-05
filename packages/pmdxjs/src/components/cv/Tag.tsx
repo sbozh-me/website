@@ -8,16 +8,12 @@ export interface TagProps {
 }
 
 /**
- * CV Tag component - single skill badge with underline
+ * CV Tag component - single skill badge
+ * Styling handled via CSS variables in globals.css
  */
 export function Tag({ children, className }: TagProps) {
   return (
-    <span
-      className={cn(
-        "pmdxjs-tag inline-block border-b border-[#cbd5e0] pb-0.5 text-[10px] text-[#1a202c]",
-        className,
-      )}
-    >
+    <span className={cn("pmdxjs-tag", className)}>
       {children}
     </span>
   );

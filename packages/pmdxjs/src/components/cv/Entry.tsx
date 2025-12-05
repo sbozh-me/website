@@ -15,6 +15,7 @@ export interface EntryProps {
 
 /**
  * CV Entry component - job/education entry with metadata
+ * Styling handled via CSS variables in globals.css
  */
 export function Entry({
   company,
@@ -25,26 +26,18 @@ export function Entry({
   className,
 }: EntryProps) {
   return (
-    <article className={cn("pmdxjs-entry mb-3", className)}>
+    <article className={cn("pmdxjs-entry", className)}>
       <div className="flex flex-wrap items-start justify-between gap-x-2">
         <div>
-          <span className="text-[12px] font-semibold text-[#2b6cb0]">
-            {role}
-          </span>
-          <div className="text-[11px] font-medium text-[#1a365d]">
-            {company}
-          </div>
+          <span className="pmdxjs-entry-role">{role}</span>
+          <div className="pmdxjs-entry-company">{company}</div>
         </div>
-        <div className="text-[10px] text-[#718096]">
-          <div>{dates}</div>
-          {location && <div>{location}</div>}
+        <div className="text-right">
+          <div className="pmdxjs-entry-dates">{dates}</div>
+          {location && <div className="pmdxjs-entry-location">{location}</div>}
         </div>
       </div>
-      {children && (
-        <div className="mt-1 text-[10px] leading-relaxed text-[#4a5568]">
-          {children}
-        </div>
-      )}
+      {children && <div className="pmdxjs-entry-content mt-1">{children}</div>}
     </article>
   );
 }

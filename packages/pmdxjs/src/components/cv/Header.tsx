@@ -11,20 +11,15 @@ export interface HeaderProps {
 
 /**
  * CV Header component - displays name, subtitle, and contact info
+ * Styling handled via CSS variables in globals.css
  */
 export function Header({ name, subtitle, contact, className }: HeaderProps) {
   return (
-    <header className={cn("pmdxjs-header mb-4", className)}>
-      <h1 className="text-[28px] font-bold tracking-tight text-[#1a365d]">
-        {name}
-      </h1>
-      {subtitle && (
-        <p className="mt-0.5 text-[13px] font-medium text-[#2b6cb0]">
-          {subtitle}
-        </p>
-      )}
+    <header className={cn("pmdxjs-header", className)}>
+      <h1>{name}</h1>
+      {subtitle && <p className="pmdxjs-header-subtitle mt-1">{subtitle}</p>}
       {contact && contact.length > 0 && (
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-0.5 text-[11px] text-[#4a5568]">
+        <div className="pmdxjs-header-contact mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
           {contact.map((item, i) => (
             <span key={i}>{item}</span>
           ))}

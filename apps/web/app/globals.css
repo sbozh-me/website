@@ -84,7 +84,133 @@ code, pre {
   }
 }
 
-/* CV Print Styles */
+/* CV Theme Variables - Obsidian Forge Professional */
+.pmdxjs-document {
+  /* Dark mode (default) - paper colors */
+  --cv-paper: #0a0a0f;
+  --cv-foreground: #e5e7eb;
+  --cv-muted: #18181b;
+  --cv-muted-foreground: #6b7280;
+  --cv-border: #27272a;
+  --cv-primary: #8b5cf6;
+  --cv-secondary: #f59e0b;
+  --cv-accent: #22c55e;
+
+  font-family: var(--font-sans);
+}
+
+.pmdxjs-document[data-theme="light"] {
+  /* Light mode - only paper becomes white */
+  --cv-paper: #ffffff;
+  --cv-foreground: #1a1a1a;
+  --cv-muted: #f3f4f6;
+  --cv-muted-foreground: #6b7280;
+  --cv-border: #e5e7eb;
+}
+
+/* CV Page styling - the actual paper */
+.pmdxjs-page {
+  background-color: var(--cv-paper);
+  color: var(--cv-foreground);
+}
+
+.pmdxjs-section {
+    margin-bottom: 12px;
+}
+
+/* CV Section Headers - Normal case with purple underline */
+.pmdxjs-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--cv-foreground);
+  border-bottom: 2px solid var(--cv-primary);
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+  width: fit-content;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* CV Entry styling */
+.pmdxjs-entry {
+  margin-bottom: 12px;
+}
+
+.pmdxjs-entry-role {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cv-primary);
+}
+
+.pmdxjs-entry-company {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--cv-foreground);
+}
+
+.pmdxjs-entry-dates,
+.pmdxjs-entry-location {
+  font-size: 0.75rem;
+  color: var(--cv-muted-foreground);
+}
+
+/* CV Header styling */
+.pmdxjs-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cv-foreground);
+}
+
+.pmdxjs-header-subtitle {
+  font-size: 0.875rem;
+  color: var(--cv-muted-foreground);
+}
+
+.pmdxjs-header-contact {
+  font-size: 0.75rem;
+  color: var(--cv-muted-foreground);
+}
+
+/* CV Tags - Compact badges */
+.pmdxjs-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  background: var(--cv-muted);
+  border: 1px solid var(--cv-border);
+  border-radius: 4px;
+  color: var(--cv-foreground);
+}
+
+/* CV Lists - Compact */
+.pmdxjs-list {
+  padding-left: 1rem;
+  margin: 4px 0;
+}
+
+.pmdxjs-list-item {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.pmdxjs-list-item::marker {
+  color: var(--cv-muted-foreground);
+}
+
+/* CV Paragraphs */
+.pmdxjs-paragraph {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+/* CV Divider */
+.pmdxjs-divider {
+  border-color: var(--cv-border);
+}
+
+/* CV Print Styles - Always light mode */
 @media print {
   @page {
     size: A4;
@@ -92,35 +218,23 @@ code, pre {
   }
 
   body {
-    background-color: white !important;
-    color: black !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
+  /* Force light mode for CV in print */
   .pmdxjs-document {
-    background-color: white !important;
-    color: #1a1a1a !important;
+    --cv-paper: #ffffff !important;
+    --cv-foreground: #1a1a1a !important;
+    --cv-muted: #f3f4f6 !important;
+    --cv-muted-foreground: #6b7280 !important;
+    --cv-border: #e5e7eb !important;
   }
 
   .pmdxjs-page {
     box-shadow: none !important;
     margin: 0 !important;
     page-break-after: always;
-  }
-
-  .pmdxjs-header,
-  .pmdxjs-section,
-  .pmdxjs-entry {
-    color: #1a1a1a !important;
-  }
-
-  .text-muted-foreground {
-    color: #4b5563 !important;
-  }
-
-  .border-border {
-    border-color: #d1d5db !important;
   }
 
   /* Hide non-print elements */

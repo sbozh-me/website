@@ -3,7 +3,11 @@ import { join } from "path";
 
 import { compile } from "@sbozh/pmdxjs";
 
-import { CVOverflowWrapper, CVPrintButton } from "@/components/cv";
+import {
+  CVOverflowWrapper,
+  CVPrintButton,
+  CVThemeToggle,
+} from "@/components/cv";
 
 function getCV() {
   const cvPath = join(process.cwd(), "content", "cv.pmdx");
@@ -27,7 +31,8 @@ export default function CVPage() {
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 print:p-0">
-      <div className="flex justify-end mb-6 print:hidden">
+      <div className="flex justify-end gap-3 mb-6 print:hidden">
+        <CVThemeToggle />
         <CVPrintButton />
       </div>
       <CVOverflowWrapper>
