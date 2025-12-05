@@ -3,7 +3,7 @@ import { join } from "path";
 
 import { compile } from "@sbozh/pmdxjs";
 
-import { CVPrintButton } from "@/components/cv";
+import { CVOverflowWrapper, CVPrintButton } from "@/components/cv";
 
 function getCV() {
   const cvPath = join(process.cwd(), "content", "cv.pmdx");
@@ -30,7 +30,9 @@ export default function CVPage() {
       <div className="flex justify-end mb-6 print:hidden">
         <CVPrintButton />
       </div>
-      <div className="cv-container">{element}</div>
+      <CVOverflowWrapper>
+        <div className="cv-container">{element}</div>
+      </CVOverflowWrapper>
     </div>
   );
 }
