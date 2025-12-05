@@ -31,13 +31,17 @@ export default function CVPage() {
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 print:p-0">
-      <div className="flex justify-end gap-3 mb-6 print:hidden">
-        <CVThemeToggle />
-        <CVPrintButton />
+      <div className="flex justify-center gap-3 mb-6 print:hidden">
+        <CVOverflowWrapper>
+          <div className="cv-container relative">
+            <div className="absolute right-0 print:hidden z-10 flex gap-2 p-4 py-8 px-8">
+              <CVThemeToggle />
+              <CVPrintButton />
+            </div>
+            {element}
+          </div>
+        </CVOverflowWrapper>
       </div>
-      <CVOverflowWrapper>
-        <div className="cv-container">{element}</div>
-      </CVOverflowWrapper>
     </div>
   );
 }
