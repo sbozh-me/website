@@ -25,19 +25,26 @@ export function Entry({
   className,
 }: EntryProps) {
   return (
-    <article className={cn("pmdxjs-entry mb-4", className)}>
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-        <div className="flex items-baseline gap-2">
-          <span className="font-semibold">{company}</span>
-          <span className="text-muted-foreground">|</span>
-          <span className="text-muted-foreground">{role}</span>
+    <article className={cn("pmdxjs-entry mb-3", className)}>
+      <div className="flex flex-wrap items-start justify-between gap-x-2">
+        <div>
+          <span className="text-[12px] font-semibold text-[#2b6cb0]">
+            {role}
+          </span>
+          <div className="text-[11px] font-medium text-[#1a365d]">
+            {company}
+          </div>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {dates}
-          {location && ` | ${location}`}
+        <div className="text-[10px] text-[#718096]">
+          <div>{dates}</div>
+          {location && <div>{location}</div>}
         </div>
       </div>
-      {children && <div className="mt-2 text-sm">{children}</div>}
+      {children && (
+        <div className="mt-1 text-[10px] leading-relaxed text-[#4a5568]">
+          {children}
+        </div>
+      )}
     </article>
   );
 }

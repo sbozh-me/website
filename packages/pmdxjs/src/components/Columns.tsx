@@ -15,13 +15,13 @@ export interface ColumnsProps {
  * Columns component - two-column layout with configurable ratio
  *
  * @param ratio - Width ratio for columns, e.g., [60, 40] for 60%/40% split
- * @param gap - Gap between columns in pixels (default: 24)
+ * @param gap - Gap between columns in pixels (default: 20)
  */
 export function Columns({
   ratio: _ratio,
   children,
   className,
-  gap = 24,
+  gap = 20,
 }: ColumnsProps) {
   return (
     <div

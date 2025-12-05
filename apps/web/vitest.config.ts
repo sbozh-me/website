@@ -18,6 +18,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./"),
+      "@sbozh/pmdxjs": path.resolve(__dirname, "../../packages/pmdxjs/src"),
     },
   },
 });

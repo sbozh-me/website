@@ -32,10 +32,12 @@ export function Page({ children, className }: PageProps) {
     <div
       className={cn(
         "pmdxjs-page",
-        "relative bg-white",
+        "relative",
+        "bg-white",
         "mx-auto mb-8 last:mb-0",
         "shadow-lg print:shadow-none",
         "break-after-page",
+        "rounded-sm",
         className,
       )}
       style={{

@@ -13,7 +13,7 @@ export interface TagsProps {
  */
 export function Tags({ items, className }: TagsProps) {
   return (
-    <div className={cn("pmdxjs-tags flex flex-wrap gap-2", className)}>
+    <div className={cn("pmdxjs-tags flex flex-wrap gap-x-3 gap-y-1.5", className)}>
       {items.map((item, i) => (
         <Tag key={i}>{item}</Tag>
       ))}

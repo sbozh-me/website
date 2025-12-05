@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @source "../../../packages/react-ui/src";
+@source "../../../packages/pmdxjs/src";
 
 @theme {
   /* Obsidian Forge - Dark, spacious aesthetic */
@@ -80,5 +81,52 @@ code, pre {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* CV Print Styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .pmdxjs-document {
+    background-color: white !important;
+    color: #1a1a1a !important;
+  }
+
+  .pmdxjs-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    page-break-after: always;
+  }
+
+  .pmdxjs-header,
+  .pmdxjs-section,
+  .pmdxjs-entry {
+    color: #1a1a1a !important;
+  }
+
+  .text-muted-foreground {
+    color: #4b5563 !important;
+  }
+
+  .border-border {
+    border-color: #d1d5db !important;
+  }
+
+  /* Hide non-print elements */
+  header:has(nav),
+  footer,
+  .print\\:hidden {
+    display: none !important;
   }
 }

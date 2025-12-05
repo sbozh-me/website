@@ -33,8 +33,6 @@ export function Document({
       <div
         className={cn(
           "pmdxjs-document",
-          "bg-white text-black",
-          "print:bg-white print:text-black",
           className,
         )}
         data-format={config.format}
