@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2025-12-05
+
+### Changes
+
+- feat(pmdxjs): implement milestone 0.4.3 - MDX browser runtime ([dcc9b9f](https://github.com/sbozh-me/website/commit/dcc9b9fc20e21c51f001433dce51d07cd84f39eb))
+
+
 ## [0.4.2] - 2025-12-05
 
 ### Changes
