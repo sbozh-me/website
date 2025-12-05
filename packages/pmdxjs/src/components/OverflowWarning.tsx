@@ -66,15 +66,28 @@ export function OverflowWarning({
             Page Overflow Detected
           </div>
           <div className="space-y-2">
-            {result.elements.slice(0, 5).map((el, i) => (
-              <div key={i} className="rounded bg-red-100 p-2">
-                <div className="font-medium">
-                  {el.name}{" "}
-                  <span className="text-red-600">({el.overflowPx}px over)</span>
+            {result.elements.slice(0, 5).map((el, i) => {
+              const arrow =
+                el.direction === "bottom"
+                  ? "↓"
+                  : el.direction === "right"
+                    ? "→"
+                    : "←";
+              const directionLabel =
+                el.direction === "bottom" ? "vertical" : "horizontal";
+              return (
+                <div key={i} className="rounded bg-red-100 p-2">
+                  <div className="font-medium">
+                    <span className="mr-1">{arrow}</span>
+                    {el.name}{" "}
+                    <span className="text-red-600">
+                      ({el.overflowPx}px {directionLabel})
+                    </span>
+                  </div>
+                  <div className="text-red-700">{el.suggestion}</div>
                 </div>
-                <div className="text-red-700">{el.suggestion}</div>
-              </div>
-            ))}
+              );
+            })}
             {result.elements.length > 5 && (
               <div className="text-red-600">
                 ...and {result.elements.length - 5} more overflowing element(s)
@@ -82,8 +95,7 @@ export function OverflowWarning({
             )}
           </div>
           <div className="mt-3 text-xs text-red-600">
-            Total overflow: {result.totalOverflowPx}px (~
-            {Math.ceil(result.totalOverflowPx / 14)} lines)
+            Max overflow: {result.totalOverflowPx}px
           </div>
         </div>
       )}
