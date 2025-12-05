@@ -25,7 +25,7 @@ describe("Columns", () => {
     );
 
     const columns = document.querySelector(".pmdxjs-columns");
-    expect(columns).toHaveStyle({ gap: "24px" });
+    expect(columns).toHaveStyle({ gap: "20px" });
   });
 
   it("applies custom gap", () => {

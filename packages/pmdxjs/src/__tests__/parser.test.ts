@@ -8,6 +8,7 @@ import type {
   ColumnsNode,
   EntryNode,
   HeaderNode,
+  ListNode,
   SectionNode,
   TagsNode,
 } from "../types";
@@ -319,6 +320,58 @@ Job stuff.
 
       expect(tags.type).toBe("tags");
       expect(tags.items).toEqual(["TypeScript", "React", "Node.js"]);
+    });
+  });
+
+  describe("list parsing", () => {
+    it("should parse list items into list node", () => {
+      const source = `:::page
+# Name
+
+## Achievements
+
+- Built something amazing
+- Scaled to 1M users
+- Won an award
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const section = page.children.find(
+        (c) => c.type === "section",
+      ) as SectionNode;
+      const list = section.children.find((c) => c.type === "list") as ListNode;
+
+      expect(list.type).toBe("list");
+      expect(list.ordered).toBe(false);
+      expect(list.children).toHaveLength(3);
+      expect(list.children[0].type).toBe("listItem");
+    });
+
+    it("should parse list items inside entry", () => {
+      const source = `:::page
+# Name
+
+## Experience
+
+:::entry Company | Role | 2020-Present | Remote
+- Achievement one
+- Achievement two
+:::
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const section = page.children.find(
+        (c) => c.type === "section",
+      ) as SectionNode;
+      const entry = section.children[0] as EntryNode;
+      const list = entry.children.find((c) => c.type === "list") as ListNode;
+
+      expect(list.type).toBe("list");
+      expect(list.children).toHaveLength(2);
     });
   });
 

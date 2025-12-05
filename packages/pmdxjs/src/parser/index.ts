@@ -4,6 +4,7 @@ import {
   createDocumentNode,
   createEntryNode,
   createHeaderNode,
+  createListNode,
   createPageNode,
   createParagraphNode,
   createSectionNode,
@@ -47,6 +48,7 @@ interface ParserState {
     inRightColumn: boolean;
   };
   pendingTags: Token[];
+  pendingListItems: Token[];
   entryContext: {
     active: boolean;
     startToken: Token | null;
@@ -72,6 +74,7 @@ function createInitialState(): ParserState {
       inRightColumn: false,
     },
     pendingTags: [],
+    pendingListItems: [],
     entryContext: {
       active: false,
       startToken: null,
@@ -81,9 +84,21 @@ function createInitialState(): ParserState {
 }
 
 /**
+ * Flush pending list items into the current context
+ */
+function flushListItems(state: ParserState): void {
+  if (state.pendingListItems.length > 0) {
+    const listNode = createListNode(state.pendingListItems);
+    addToCurrentContext(state, listNode);
+    state.pendingListItems = [];
+  }
+}
+
+/**
  * Flush pending tags into the current context
  */
 function flushTags(state: ParserState): void {
+  flushListItems(state);
   if (state.pendingTags.length > 0) {
     const tagsNode = createTagsNode(state.pendingTags);
     addToCurrentContext(state, tagsNode);
@@ -283,7 +298,26 @@ function processToken(
     }
 
     case "tag": {
+      flushListItems(state);
       state.pendingTags.push(token);
+      break;
+    }
+
+    case "list_item": {
+      // Flush tags but NOT list items (we're collecting them)
+      if (state.pendingTags.length > 0) {
+        flushListItems(state);
+        const tagsNode = createTagsNode(state.pendingTags);
+        addToCurrentContext(state, tagsNode);
+        state.pendingTags = [];
+      }
+      if (state.entryContext.active) {
+        // List item inside entry
+        state.entryContext.content.push(token);
+      } else {
+        // Collect list items
+        state.pendingListItems.push(token);
+      }
       break;
     }
 
@@ -293,13 +327,14 @@ function processToken(
     }
 
     case "text": {
+      flushListItems(state);
       if (state.entryContext.active) {
         // Text inside entry
         state.entryContext.content.push(token);
       } else {
         // Regular text paragraph
         const trimmed = token.value.trim();
-        if (trimmed && !trimmed.startsWith("-")) {
+        if (trimmed) {
           addToCurrentContext(state, createParagraphNode(trimmed, token));
         }
       }

@@ -8,6 +8,8 @@ import type {
   DocumentNode,
   EntryNode,
   HeaderNode,
+  ListItemNode,
+  ListNode,
   PageNode,
   ParagraphNode,
   SectionNode,
@@ -113,19 +115,30 @@ export function createEntryNode(
   };
 
   const children: ContentNode[] = [];
+  const pendingListItems: Token[] = [];
+
+  // Helper to flush list items
+  const flushList = () => {
+    if (pendingListItems.length > 0) {
+      children.push(createListNode(pendingListItems.splice(0)));
+    }
+  };
 
   // Parse content tokens into paragraph/list nodes
   for (const token of contentTokens) {
-    if (token.type === "text") {
+    if (token.type === "list_item") {
+      pendingListItems.push(token);
+    } else if (token.type === "text") {
+      flushList();
       const trimmed = token.value.trim();
-      if (trimmed.startsWith("-")) {
-        // This is a list item - we'll handle lists later
-        children.push(createParagraphNode(trimmed.slice(1).trim(), token));
-      } else if (trimmed) {
+      if (trimmed) {
         children.push(createParagraphNode(trimmed, token));
       }
     }
   }
+
+  // Flush remaining list items
+  flushList();
 
   return {
     type: "entry",
@@ -233,6 +246,47 @@ export function createPageNode(
       start: { line: startToken.line, column: startToken.column },
       end: { line: startToken.line, column: startToken.column },
     },
+  };
+}
+
+/**
+ * Create a list item node
+ */
+export function createListItemNode(text: string, token: Token): ListItemNode {
+  const textNode: TextNode = {
+    type: "text",
+    value: text,
+  };
+
+  return {
+    type: "listItem",
+    children: [
+      {
+        type: "paragraph",
+        children: [textNode],
+      } as ParagraphNode,
+    ],
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
+    },
+  };
+}
+
+/**
+ * Create a list node from list item tokens
+ */
+export function createListNode(itemTokens: Token[]): ListNode {
+  return {
+    type: "list",
+    ordered: false,
+    children: itemTokens.map((t) => createListItemNode(t.value, t)),
+    position: itemTokens[0]
+      ? {
+          start: { line: itemTokens[0].line, column: itemTokens[0].column },
+          end: { line: itemTokens[0].line, column: itemTokens[0].column },
+        }
+      : undefined,
   };
 }
 

@@ -14,6 +14,7 @@ export type TokenType =
   | "heading"
   | "metadata"
   | "divider"
+  | "list_item"
   | "text";
 
 /**
@@ -53,6 +54,8 @@ const PATTERNS = {
   metadata: /^(\w+):\s*(.+)$/,
   // --- (horizontal rule, but not columns)
   divider: /^---\s*$/,
+  // - List item
+  listItem: /^-\s+(.+)$/,
 };
 
 /**
@@ -203,6 +206,17 @@ export function tokenizeLine(
     return {
       type: "divider",
       value: trimmed,
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // List item
+  const listMatch = trimmed.match(PATTERNS.listItem);
+  if (listMatch) {
+    return {
+      type: "list_item",
+      value: listMatch[1],
       line: lineNumber,
       column: 1,
     };

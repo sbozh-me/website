@@ -17,6 +17,8 @@ import type {
   DocumentNode,
   EntryNode,
   HeaderNode,
+  ListItemNode,
+  ListNode,
   PageNode,
   ParagraphNode,
   SectionNode,
@@ -49,6 +51,8 @@ export interface TransformOptions {
     Tags?: React.ComponentType<{ items: string[] }>;
     Divider?: React.ComponentType<Record<string, never>>;
     Paragraph?: React.ComponentType<{ children: ReactNode }>;
+    List?: React.ComponentType<{ ordered: boolean; children: ReactNode }>;
+    ListItem?: React.ComponentType<{ children: ReactNode }>;
     // Allow any custom component for extended directives
     [key: string]: React.ComponentType<Record<string, unknown>> | undefined;
   };
@@ -59,6 +63,30 @@ export interface TransformOptions {
  */
 const DefaultParagraph = ({ children }: { children: ReactNode }) =>
   createElement("p", { className: "pmdxjs-paragraph mb-2" }, children);
+
+/**
+ * Default list component
+ */
+const DefaultList = ({
+  ordered,
+  children,
+}: {
+  ordered: boolean;
+  children: ReactNode;
+}) =>
+  createElement(
+    ordered ? "ol" : "ul",
+    {
+      className: `pmdxjs-list ${ordered ? "list-decimal" : "list-disc"} pl-4 space-y-0.5 text-[10px]`,
+    },
+    children,
+  );
+
+/**
+ * Default list item component
+ */
+const DefaultListItem = ({ children }: { children: ReactNode }) =>
+  createElement("li", { className: "pmdxjs-list-item" }, children);
 
 /**
  * Transform inline text node to React element
@@ -97,6 +125,38 @@ function transformDivider(
 ): ReactElement {
   const DividerComponent = options.components?.Divider ?? CVDivider;
   return createElement(DividerComponent, { key });
+}
+
+/**
+ * Transform a list item node to React element
+ */
+function transformListItem(
+  node: ListItemNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const ListItemComponent = options.components?.ListItem ?? DefaultListItem;
+  const children = node.children.map((child, i) =>
+    transformContentNode(child, options, i),
+  );
+
+  return createElement(ListItemComponent, { key, children });
+}
+
+/**
+ * Transform a list node to React element
+ */
+function transformList(
+  node: ListNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const ListComponent = options.components?.List ?? DefaultList;
+  const children = node.children.map((child, i) =>
+    transformListItem(child, options, i),
+  );
+
+  return createElement(ListComponent, { key, ordered: node.ordered, children });
 }
 
 /**
@@ -246,6 +306,8 @@ function transformContentNode(
       return transformColumns(node, options, key);
     case "column":
       return transformColumn(node, options, key);
+    case "list":
+      return transformList(node, options, key);
     case "entry":
       return transformEntry(node, options, key);
     case "tags":
