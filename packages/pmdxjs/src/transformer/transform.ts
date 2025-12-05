@@ -15,13 +15,17 @@ import type {
   ContentNode,
   DividerNode,
   DocumentNode,
+  EmphasisNode,
   EntryNode,
   HeaderNode,
+  InlineNode,
+  LinkNode,
   ListItemNode,
   ListNode,
   PageNode,
   ParagraphNode,
   SectionNode,
+  StrongNode,
   TagsNode,
   TextNode,
 } from "../types/ast";
@@ -96,6 +100,61 @@ function transformText(node: TextNode): string {
 }
 
 /**
+ * Transform strong (bold) node to React element
+ */
+function transformStrong(node: StrongNode, key: number): ReactElement {
+  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  return createElement("strong", { key, className: "font-bold" }, children);
+}
+
+/**
+ * Transform emphasis (italic) node to React element
+ */
+function transformEmphasis(node: EmphasisNode, key: number): ReactElement {
+  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  return createElement("em", { key, className: "italic" }, children);
+}
+
+/**
+ * Transform link node to React element
+ */
+function transformLink(node: LinkNode, key: number): ReactElement {
+  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  return createElement(
+    "a",
+    {
+      key,
+      href: node.url,
+      className: "text-blue-600 underline hover:text-blue-800",
+      target: "_blank",
+      rel: "noopener noreferrer",
+    },
+    children,
+  );
+}
+
+/**
+ * Transform any inline node to React element
+ */
+function transformInlineNode(
+  node: InlineNode,
+  key: number,
+): ReactElement | string {
+  switch (node.type) {
+    case "text":
+      return transformText(node);
+    case "strong":
+      return transformStrong(node, key);
+    case "emphasis":
+      return transformEmphasis(node, key);
+    case "link":
+      return transformLink(node, key);
+    default:
+      return "";
+  }
+}
+
+/**
  * Transform a paragraph node to React element
  */
 function transformParagraph(
@@ -104,13 +163,7 @@ function transformParagraph(
   key: number,
 ): ReactElement {
   const ParagraphComponent = options.components?.Paragraph ?? DefaultParagraph;
-  const children = node.children.map((child) => {
-    if (child.type === "text") {
-      return transformText(child);
-    }
-    // Handle other inline types (strong, emphasis, link) in future
-    return null;
-  });
+  const children = node.children.map((child, i) => transformInlineNode(child, i));
 
   return createElement(ParagraphComponent, { key, children });
 }

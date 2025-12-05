@@ -1,5 +1,7 @@
 import { DEFAULT_CONFIG } from "../types/config";
 
+import { parseInline } from "./inline";
+
 import type { Token } from "./tokenizer";
 import type {
   ColumnsNode,
@@ -14,7 +16,6 @@ import type {
   ParagraphNode,
   SectionNode,
   TagsNode,
-  TextNode,
 } from "../types/ast";
 import type { DocumentConfig } from "../types/config";
 
@@ -214,17 +215,12 @@ export function createDividerNode(token: Token): DividerNode {
 }
 
 /**
- * Create a paragraph node
+ * Create a paragraph node with inline formatting support
  */
 export function createParagraphNode(text: string, token: Token): ParagraphNode {
-  const textNode: TextNode = {
-    type: "text",
-    value: text,
-  };
-
   return {
     type: "paragraph",
-    children: [textNode],
+    children: parseInline(text),
     position: {
       start: { line: token.line, column: token.column },
       end: { line: token.line, column: token.column },
@@ -250,20 +246,15 @@ export function createPageNode(
 }
 
 /**
- * Create a list item node
+ * Create a list item node with inline formatting support
  */
 export function createListItemNode(text: string, token: Token): ListItemNode {
-  const textNode: TextNode = {
-    type: "text",
-    value: text,
-  };
-
   return {
     type: "listItem",
     children: [
       {
         type: "paragraph",
-        children: [textNode],
+        children: parseInline(text),
       } as ParagraphNode,
     ],
     position: {
