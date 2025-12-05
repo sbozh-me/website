@@ -21,7 +21,14 @@ export type {
 
 export type { UsePMDXJSOptions, UsePMDXJSResult } from "./hooks";
 
-export type { Token, TokenType } from "./parser";
+export type {
+  CustomNode,
+  DirectiveDefinition,
+  ExtendedParserOptions,
+  ExtensibleParser,
+  Token,
+  TokenType,
+} from "./parser";
 
 export type {
   CompileOptions,
@@ -76,8 +83,15 @@ export {
 
 // Hook exports
 export { usePMDXJS } from "./hooks";
+
 // Parser exports
-export { parse, remarkPmdxjs, tokenize } from "./parser";
+export {
+  createParser,
+  defaultParser,
+  parse,
+  remarkPmdxjs,
+  tokenize,
+} from "./parser";
 
 // Runtime exports
 export { compile, compileAsync, PMDXJSErrorBoundary } from "./runtime";

@@ -17,7 +17,16 @@ import type { Token } from "./tokenizer";
 import type { ContentNode, DocumentNode, PageNode } from "../types/ast";
 import type { DocumentConfig } from "../types/config";
 
+export type {
+  CustomNode,
+  DirectiveDefinition,
+  ExtendedParserOptions,
+  ExtensibleParser,
+} from "./extensible";
 export type { Token, TokenType } from "./tokenizer";
+// Extensible parser API
+export { createParser, defaultParser } from "./extensible";
+
 export { remarkPmdxjs } from "./plugins/remark-pmdxjs";
 export { tokenize } from "./tokenizer";
 

@@ -49,6 +49,8 @@ export interface TransformOptions {
     Tags?: React.ComponentType<{ items: string[] }>;
     Divider?: React.ComponentType<Record<string, never>>;
     Paragraph?: React.ComponentType<{ children: ReactNode }>;
+    // Allow any custom component for extended directives
+    [key: string]: React.ComponentType<Record<string, unknown>> | undefined;
   };
 }
 
@@ -204,6 +206,30 @@ function transformColumns(
 }
 
 /**
+ * Transform a custom node to React element
+ */
+function transformCustomNode(
+  node: Record<string, unknown>,
+  options: TransformOptions,
+  key: number,
+): ReactElement | null {
+  const nodeType = node.type as string;
+  const CustomComponent = options.components?.[nodeType];
+
+  if (!CustomComponent) {
+    // No component registered for this custom type
+    console.warn(`No component registered for custom node type: ${nodeType}`);
+    return null;
+  }
+
+  // Pass all node properties except 'type' and 'position' as props
+  const { type: _type, position: _position, props, ...rest } = node;
+  const componentProps = props ?? rest;
+
+  return createElement(CustomComponent, { key, ...componentProps });
+}
+
+/**
  * Transform a content node to React element
  */
 function transformContentNode(
@@ -229,7 +255,12 @@ function transformContentNode(
     case "paragraph":
       return transformParagraph(node, options, key);
     default:
-      return null;
+      // Try to handle as custom node
+      return transformCustomNode(
+        node as unknown as Record<string, unknown>,
+        options,
+        key,
+      );
   }
 }
 
