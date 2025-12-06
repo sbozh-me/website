@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.5] - 2025-12-06
+
+### Changes
+
+- fix(cv): hide page title in print view ([bb451de](https://github.com/sbozh-me/website/commit/bb451de0a216aecfc1099d0228a573aca3861c6c))
+- feat(cv): add PDF download functionality ([467898c](https://github.com/sbozh-me/website/commit/467898c3479439534837103d50b9c0f5718cd3a5))
+- feat(ui): add Sonner toast with Obsidian Forge theme ([02fd74c](https://github.com/sbozh-me/website/commit/02fd74cfb1da87c604152d33e819c71003d247f6))
+- feat(pmdxjs): add spark syntax and styled links for CV ([3c13dae](https://github.com/sbozh-me/website/commit/3c13daed39afc980e88c581747b06758053619f5))
+- fix(pmdxjs): correct tests and semantic markup ([09320db](https://github.com/sbozh-me/website/commit/09320db042f181861a6a24acd6ca48586533aa5b))
+- docs: update README files with pmdxjs features and CV page status ([45f468f](https://github.com/sbozh-me/website/commit/45f468f030045287b5862ffb0afcc030647de3da))
+
+
 ## [0.4.4] - 2025-12-06
 
 ### Changes
