@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - 2025-12-06
+
+### Changes
+
+- feat(pmdxjs): implement extensible parser API for custom directives ([c4f790c](https://github.com/sbozh-me/website/commit/c4f790c62b7c66de996d7c75041fd311913bf455))
+- wip(cv): implement CV page with PMDXJS and professional styling ([e53d54a](https://github.com/sbozh-me/website/commit/e53d54a78512cb2111bc5234c73208089c59aeef))
+- feat(parser): add list item support ([6bb4221](https://github.com/sbozh-me/website/commit/6bb4221e5b44c2037b5bca58f266ac9c27432e47))
+- fix(page): use fixed height instead of minHeight for exact dimensions ([f45c8d2](https://github.com/sbozh-me/website/commit/f45c8d2122b872c77f2e9b57ed8db792c94d720a))
+- refactor(pmdxjs): convert Columns to CSS Grid layout ([28b8494](https://github.com/sbozh-me/website/commit/28b84948f756ed6c5be53b1ee696371264f5864a))
+- feat(pmdxjs): add page overflow detection with developer warnings ([f8f6042](https://github.com/sbozh-me/website/commit/f8f604236d9723dfecf661cfaf0274448737c4f4))
+- feat(pmdxjs): add horizontal overflow detection for columns ([a3d69cd](https://github.com/sbozh-me/website/commit/a3d69cdcb4bf7cf0c23dbc070a4141f9541b4e44))
+- feat(pmdxjs): add inline formatting support for bold, italic, and links ([bcd2955](https://github.com/sbozh-me/website/commit/bcd2955aa019f03b46e4a34f29c8e056de144a6c))
+- feat(cv): redesign CV with Obsidian Forge theme system ([26c5a69](https://github.com/sbozh-me/website/commit/26c5a69994b2d80252409a61e68623b4bca47ddc))
+- refactor(cv): move theme and print buttons inside CV container ([48daa0f](https://github.com/sbozh-me/website/commit/48daa0fac4577448dce209daaedf273d4586a6cb))
+- fix(cv): update print styles and use UI button components ([be98eeb](https://github.com/sbozh-me/website/commit/be98eeb4aa8bacd56b40290e5e54a2cb4d58ea7a))
+- feat(cv): add responsive scaling for mobile devices ([13eb607](https://github.com/sbozh-me/website/commit/13eb6071182f36f65d1529c155a53137f63b0860))
+- refactor(home): extract spark animation to separate component ([e226705](https://github.com/sbozh-me/website/commit/e226705d67f426935fd78468210c4b6d7ba68ced))
+- feat(pmdxjs): auto-link contact items in CV header ([2760c22](https://github.com/sbozh-me/website/commit/2760c227bea33ad881dc969362add3cdb48bb842))
+- test(cv): update tests for redesigned CV page ([d568e44](https://github.com/sbozh-me/website/commit/d568e44788d6240543e54432bbd09ecdfe478440))
+- test(cv): add error handling test for compile failures ([4ae969b](https://github.com/sbozh-me/website/commit/4ae969b47335f90a75b939f596a72d2a4a0667e7))
+
+
 ## [0.4.3] - 2025-12-05
 
 ### Changes
