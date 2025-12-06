@@ -220,6 +220,7 @@ code, pre {
   body {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    background: white !important;
   }
 
   /* Force light mode for CV in print */
@@ -238,9 +239,28 @@ code, pre {
   }
 
   /* Hide non-print elements */
-  header:has(nav),
-  footer,
-  .print\\:hidden {
+  header,
+  footer {
     display: none !important;
+  }
+
+  /* Hide elements with print:hidden class */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset page container padding for print */
+  .cv-container {
+    padding: 0 !important;
+  }
+
+  /* Hide main wrapper padding */
+  main {
+    padding: 0 !important;
+  }
+
+  /* Ensure CV document takes full page */
+  .pmdxjs-document {
+    width: 100% !important;
   }
 }

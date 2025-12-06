@@ -15,7 +15,7 @@ export interface HeaderProps {
  */
 export function Header({ name, subtitle, contact, className }: HeaderProps) {
   return (
-    <header className={cn("pmdxjs-header", className)}>
+    <div className={cn("pmdxjs-header", className)}>
       <h1>{name}</h1>
       {subtitle && <p className="pmdxjs-header-subtitle mt-1">{subtitle}</p>}
       {contact && contact.length > 0 && (
@@ -25,6 +25,6 @@ export function Header({ name, subtitle, contact, className }: HeaderProps) {
           ))}
         </div>
       )}
-    </header>
+    </div>
   );
 }

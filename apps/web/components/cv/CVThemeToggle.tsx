@@ -2,19 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import { Button } from "@sbozh/react-ui/components/ui/button";
+
 type Theme = "dark" | "light";
 
 export function CVThemeToggle() {
   const [theme, setTheme] = useState<Theme>("dark");
-
-  useEffect(() => {
-    // Load saved preference
-    const saved = localStorage.getItem("cv-theme") as Theme | null;
-    if (saved) {
-      setTheme(saved);
-      updateDocument(saved);
-    }
-  }, []);
 
   const updateDocument = (newTheme: Theme) => {
     const doc = document.querySelector(".pmdxjs-document");
@@ -26,40 +19,34 @@ export function CVThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    localStorage.setItem("cv-theme", newTheme);
     updateDocument(newTheme);
   };
 
   return (
-    <button
+    <Button
+      variant="outline"
+      size="sm"
       onClick={toggleTheme}
-      className="flex items-center gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted/80"
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       {theme === "dark" ? (
         <>
-          <SunIcon className="h-4 w-4" />
-          <span>Light</span>
+          <SunIcon />
+          Light
         </>
       ) : (
         <>
-          <MoonIcon className="h-4 w-4" />
-          <span>Dark</span>
+          <MoonIcon />
+          Dark
         </>
       )}
-    </button>
+    </Button>
   );
 }
 
-function SunIcon({ className }: { className?: string }) {
+function SunIcon() {
   return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -70,15 +57,9 @@ function SunIcon({ className }: { className?: string }) {
   );
 }
 
-function MoonIcon({ className }: { className?: string }) {
+function MoonIcon() {
   return (
-    <svg
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
