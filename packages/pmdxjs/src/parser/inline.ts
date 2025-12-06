@@ -2,23 +2,36 @@ import type {
   EmphasisNode,
   InlineNode,
   LinkNode,
+  SparkNode,
   StrongNode,
   TextNode,
 } from "../types/ast";
 
 /**
- * Parse inline markdown formatting (bold, italic, links)
+ * Parse inline markdown formatting (bold, italic, links, spark)
  *
  * Supports:
  * - **bold** or __bold__
  * - *italic* or _italic_
  * - [text](url)
+ * - {*} (spark - branded asterisk)
  */
 export function parseInline(text: string): InlineNode[] {
   const nodes: InlineNode[] = [];
   let remaining = text;
 
   while (remaining.length > 0) {
+    // Try to match spark {*}
+    const sparkMatch = remaining.match(/^\{\*\}/);
+    if (sparkMatch) {
+      const sparkNode: SparkNode = {
+        type: "spark",
+      };
+      nodes.push(sparkNode);
+      remaining = remaining.slice(sparkMatch[0].length);
+      continue;
+    }
+
     // Try to match bold (**text** or __text__)
     const boldMatch = remaining.match(/^(\*\*|__)(.+?)\1/);
     if (boldMatch) {
@@ -57,7 +70,7 @@ export function parseInline(text: string): InlineNode[] {
     }
 
     // Find the next special character
-    const nextSpecial = remaining.search(/\*|_|\[/);
+    const nextSpecial = remaining.search(/\{|\*|_|\[/);
 
     if (nextSpecial === -1) {
       // No more special characters, rest is plain text

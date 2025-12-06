@@ -25,6 +25,7 @@ import type {
   PageNode,
   ParagraphNode,
   SectionNode,
+  SparkNode,
   StrongNode,
   TagsNode,
   TextNode,
@@ -125,7 +126,9 @@ function transformText(node: TextNode): string {
  * Transform strong (bold) node to React element
  */
 function transformStrong(node: StrongNode, key: number): ReactElement {
-  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  const children = node.children.map((child, i) =>
+    transformInlineNode(child, i),
+  );
   return createElement("strong", { key, className: "font-bold" }, children);
 }
 
@@ -133,7 +136,9 @@ function transformStrong(node: StrongNode, key: number): ReactElement {
  * Transform emphasis (italic) node to React element
  */
 function transformEmphasis(node: EmphasisNode, key: number): ReactElement {
-  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  const children = node.children.map((child, i) =>
+    transformInlineNode(child, i),
+  );
   return createElement("em", { key, className: "italic" }, children);
 }
 
@@ -141,17 +146,37 @@ function transformEmphasis(node: EmphasisNode, key: number): ReactElement {
  * Transform link node to React element
  */
 function transformLink(node: LinkNode, key: number): ReactElement {
-  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  const children = node.children.map((child, i) =>
+    transformInlineNode(child, i),
+  );
   return createElement(
     "a",
     {
       key,
       href: node.url,
-      className: "text-blue-600 underline hover:text-blue-800",
+      className: "pmdxjs-link text-primary underline hover:opacity-80",
       target: "_blank",
       rel: "noopener noreferrer",
     },
     children,
+  );
+}
+
+/**
+ * Transform a spark node to branded asterisk with primary/secondary color overlay
+ */
+function transformSpark(_node: SparkNode, key: number): ReactElement {
+  return createElement(
+    "span",
+    { key, className: "pmdxjs-spark relative" },
+    createElement(
+      "span",
+      {
+        className: "text-primary absolute w-[50%] overflow-hidden select-none",
+      },
+      "*",
+    ),
+    createElement("span", { className: "text-secondary" }, "*"),
   );
 }
 
@@ -171,6 +196,8 @@ function transformInlineNode(
       return transformEmphasis(node, key);
     case "link":
       return transformLink(node, key);
+    case "spark":
+      return transformSpark(node, key);
     default:
       return "";
   }
@@ -185,7 +212,9 @@ function transformParagraph(
   key: number,
 ): ReactElement {
   const ParagraphComponent = options.components?.Paragraph ?? DefaultParagraph;
-  const children = node.children.map((child, i) => transformInlineNode(child, i));
+  const children = node.children.map((child, i) =>
+    transformInlineNode(child, i),
+  );
 
   return createElement(ParagraphComponent, { key, children });
 }

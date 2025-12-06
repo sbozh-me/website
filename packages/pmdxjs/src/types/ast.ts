@@ -150,9 +150,21 @@ export interface LinkNode extends BaseNode {
 }
 
 /**
+ * Spark node - branded asterisk with primary/secondary color overlay
+ */
+export interface SparkNode extends BaseNode {
+  type: "spark";
+}
+
+/**
  * Inline content nodes
  */
-export type InlineNode = TextNode | StrongNode | EmphasisNode | LinkNode;
+export type InlineNode =
+  | TextNode
+  | StrongNode
+  | EmphasisNode
+  | LinkNode
+  | SparkNode;
 
 /**
  * Block content nodes
