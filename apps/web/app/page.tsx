@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import {Spark} from "@/components/Spark";
 
 const navItems = [
   { name: "Blog", href: "/blog" },
@@ -77,12 +78,7 @@ export default function Home() {
             </motion.h1>
             <motion.p className="mt-4 text-muted-foreground" variants={item}>
               Personal startup
-              <span className="relative">
-                <span className="text-primary absolute w-[50%] overflow-hidden select-none">
-                  *
-                </span>
-                <span className="text-secondary">*</span>
-              </span>
+              <Spark />
             </motion.p>
           </div>
 
