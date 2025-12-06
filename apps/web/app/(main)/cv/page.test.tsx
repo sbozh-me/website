@@ -25,6 +25,13 @@ describe("CVPage", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders download button", () => {
+    render(<CVPage />);
+    expect(
+      screen.getByRole("button", { name: /download cv as pdf/i }),
+    ).toBeInTheDocument();
+  });
+
   it("renders CV document structure", () => {
     render(<CVPage />);
     expect(document.querySelector(".pmdxjs-document")).toBeInTheDocument();

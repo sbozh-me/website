@@ -4,6 +4,7 @@ import { join } from "path";
 import { compile } from "@sbozh/pmdxjs";
 
 import {
+  CVDownloadButton,
   CVOverflowWrapper,
   CVPrintButton,
   CVScaleWrapper,
@@ -36,6 +37,7 @@ export default function CVPage() {
       <div className="flex justify-center print:hidden z-10 flex gap-2 p-4 py-8 px-8">
         <CVThemeToggle />
         <CVPrintButton />
+        <CVDownloadButton />
       </div>
       <CVScaleWrapper>
         <CVOverflowWrapper>
