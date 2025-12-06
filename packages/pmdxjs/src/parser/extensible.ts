@@ -203,8 +203,9 @@ function preprocessCustomTokens(
     );
 
     if (customToken && customToken.meta) {
-      // Create marker and store custom node
-      const markerId = `__pmdxjs_custom_${customIndex}__`;
+      // Create marker using a format that won't be parsed as markdown
+      // Use a unique text format that the inline parser won't touch
+      const markerId = `PMDXJSCUSTOM${customIndex}ENDMARKER`;
       const nodeName = customToken.meta.directiveName as string;
 
       // Remove directiveName from props
@@ -256,16 +257,43 @@ function injectIntoChildren(
     const node = children[i];
 
     // Check if this is a paragraph containing a marker
-    if (node.type === "paragraph" && node.children.length === 1) {
-      const textChild = node.children[0];
-      if (textChild.type === "text") {
-        const marker = textChild.value.trim();
-        const customNode = customNodes.get(marker);
+    if (node.type === "paragraph") {
+      // Check for single text child with marker
+      if (node.children.length === 1) {
+        const textChild = node.children[0];
+        if (textChild.type === "text") {
+          const marker = textChild.value.trim();
+          const customNode = customNodes.get(marker);
 
-        if (customNode) {
-          // Replace paragraph with custom node
-          children[i] = customNode as unknown as ContentNode;
-          continue;
+          if (customNode) {
+            // Replace paragraph with custom node
+            children[i] = customNode as unknown as ContentNode;
+            continue;
+          }
+        }
+      }
+      // Also check if the marker is in a nested structure (like link children)
+      for (const child of node.children) {
+        if (child.type === "text") {
+          const marker = child.value.trim();
+          const customNode = customNodes.get(marker);
+          if (customNode) {
+            children[i] = customNode as unknown as ContentNode;
+            break;
+          }
+        }
+        // Check link children for marker text
+        if (child.type === "link" && child.children) {
+          for (const linkChild of child.children) {
+            if (linkChild.type === "text") {
+              const marker = linkChild.value.trim();
+              const customNode = customNodes.get(marker);
+              if (customNode) {
+                children[i] = customNode as unknown as ContentNode;
+                break;
+              }
+            }
+          }
         }
       }
     }
