@@ -24,20 +24,34 @@ Personal website and portfolio for sbozh.me.
 
 - `/` - Homepage with navigation
 - `/blog` - Blog (coming soon)
-- `/cv` - CV/Resume (coming soon)
+- `/cv` - CV/Resume with PDF export
 - `/projects` - Projects showcase (coming soon)
 
 ## Structure
 
 ```
 apps/
-  web/                # Main website (Next.js)
+  web/                  # Main website (Next.js)
 packages/
-  pmdxjs/             # PMDXJS - Markdown to JSX parser for CVs
-  react-ui/           # Shared UI components (shadcn/ui)
-  eslint-config/      # Shared ESLint config
-  typescript-config/  # Shared TypeScript config
+  pmdxjs/               # PMDXJS - Markdown to JSX parser for CVs
+  react-ui/             # Shared UI components (shadcn/ui)
+  eslint-config/        # Shared ESLint config
+  typescript-config/    # Shared TypeScript config
 ```
+
+## Packages
+
+### @sbozh/pmdxjs
+
+Custom markdown parser for CV rendering with:
+- Extended syntax for CV elements (entries, tags, columns)
+- Inline formatting with branded `{*}` spark marker
+- A4/Letter page layouts with print support
+- PDF export via Puppeteer
+
+### @sbozh/react-ui
+
+Shared UI components built on shadcn/ui with Obsidian Forge theming.
 
 ## Development
 

@@ -5,8 +5,10 @@ A custom markdown-to-JSX parser for CV/resume rendering with page layout awarene
 ## Features
 
 - **Custom Syntax**: Extended markdown with directives for CV-specific elements
+- **Inline Formatting**: Bold, italic, links, and branded spark `{*}` marker
 - **Page Layout**: A4/Letter format support with configurable margins
 - **Two-Column Layout**: Ratio-based column system for complex layouts
+- **PDF Export**: Generate downloadable PDFs via Puppeteer
 - **SSR + Browser**: Works with Next.js SSR and browser runtime
 
 ## Installation
@@ -15,36 +17,44 @@ A custom markdown-to-JSX parser for CV/resume rendering with page layout awarene
 pnpm add @sbozh/pmdxjs
 ```
 
-## Usage
+## Quick Start
 
 ```typescript
-import { parse } from "@sbozh/pmdxjs/parser";
-import { transform } from "@sbozh/pmdxjs/transformer";
+import { compile } from "@sbozh/pmdxjs";
 
 const source = `
 :::config
 format: A4
-margins: 20 20 20 20
+margins: 10 10 10 10
 :::
 
 :::page
 # John Doe
-subtitle: Software Engineer
+subtitle: Software Engineer | [github.com/johndoe](https://github.com/johndoe)
+contact: john@example.com | +1-555-0100 | San Francisco
+
+---
 
 ## Experience
 
-:::entry ACME Corp | Lead Developer | 2020-Present | San Francisco
-Led team of engineers.
+:::entry ACME Corp | Lead Developer | 2020-Present | Remote
+- Led team of 5 engineers on critical payment infrastructure
+- Reduced deployment time by 40% through CI/CD improvements
 :::
+
+## Skills
+
+#tag TypeScript
+#tag React
+#tag Node.js
 
 :::page-end
 `;
 
-const ast = parse(source);
-const element = transform(ast);
+const { element, error } = compile(source);
 ```
 
-## Syntax
+## Syntax Reference
 
 ### Config Block
 
@@ -52,7 +62,6 @@ const element = transform(ast);
 :::config
 format: A4 | Letter
 margins: top right bottom left
-theme: light | dark
 :::
 ```
 
@@ -64,24 +73,42 @@ Content here...
 :::page-end
 ```
 
+### Header (H1)
+
+```markdown
+# Name
+subtitle: Job Title | Additional Info
+contact: email@example.com | +1-555-0100 | Location
+```
+
+Contact items are auto-linked: emails get `mailto:`, phone numbers get `tel:`, URLs open in new tabs.
+
+### Section (H2)
+
+```markdown
+## Section Title
+Content...
+```
+
 ### Entry (Job/Education)
 
 ```markdown
 :::entry Company | Role | Dates | Location
-Description content...
+- Achievement one
+- Achievement two
 :::
 ```
 
 ### Columns
 
 ```markdown
----columns 60 40
+---columns 66 34
 
-Left column content (60%)
+Left column content (66%)
 
 ---
 
-Right column content (40%)
+Right column content (34%)
 
 ---columns-end
 ```
@@ -94,23 +121,40 @@ Right column content (40%)
 #tag Node.js
 ```
 
-## CV Components
+### Inline Formatting
 
-Built-in styled components for professional CV rendering:
+```markdown
+**bold text**
+*italic text*
+[link text](https://example.com)
+{*}  <!-- Branded spark marker (purple/gold asterisk) -->
+```
 
-- **Header** - Name, subtitle, contact info
-- **Section** - Titled content blocks
-- **Entry** - Job/education entries with metadata
-- **Tags/Tag** - Skill badges
-- **Divider** - Visual separator
-- **Summary** - Prose block for professional summary
-- **Achievement** - Bullet point achievements
-- **Languages** - Language proficiency list
-- **Watermark** - Footer watermark for print
+### Divider
+
+```markdown
+---
+```
+
+## Components
+
+### Layout Components
 
 ```typescript
-import { Header, Entry, Tags } from "@sbozh/pmdxjs/components/cv";
+import { Document, Page, Columns, Column } from "@sbozh/pmdxjs/components";
 ```
+
+### CV Components
+
+```typescript
+import { Header, Section, Entry, Tags, Divider } from "@sbozh/pmdxjs/components/cv";
+```
+
+- **Header** - Name, subtitle, contact info with auto-linking
+- **Section** - Titled content blocks
+- **Entry** - Job/education entries with company, role, dates, location
+- **Tags** - Skill badges
+- **Divider** - Visual separator
 
 ## Browser Runtime
 
@@ -119,16 +163,20 @@ Live editing with real-time preview:
 ```typescript
 import { usePMDXJS } from "@sbozh/pmdxjs/hooks";
 
-function Editor() {
+function CVEditor() {
   const [source, setSource] = useState(defaultCV);
   const { element, loading, error } = usePMDXJS(source);
 
   return (
-    <div className="flex">
-      <textarea value={source} onChange={(e) => setSource(e.target.value)} />
-      <div className="preview">
-        {loading && <Spinner />}
-        {error && <ErrorDisplay message={error.message} />}
+    <div className="flex gap-4">
+      <textarea
+        value={source}
+        onChange={(e) => setSource(e.target.value)}
+        className="flex-1 font-mono"
+      />
+      <div className="flex-1">
+        {loading && <div>Compiling...</div>}
+        {error && <div className="text-red-500">{error.message}</div>}
         {element}
       </div>
     </div>
@@ -136,18 +184,40 @@ function Editor() {
 }
 ```
 
+## Extensible Parser
+
+Register custom directives for domain-specific syntax:
+
+```typescript
+import { createParser } from "@sbozh/pmdxjs/parser";
+import { transform } from "@sbozh/pmdxjs/transformer";
+
+const parser = createParser()
+  .extend({
+    name: "button",
+    pattern: /^:::button\s+(.+)$/,
+    parse: (match) => ({ label: match[1] }),
+  });
+
+const ast = parser.parse(source);
+const element = transform(ast, {
+  components: {
+    button: ({ label }) => <button>{label}</button>,
+  },
+});
+```
+
 ## Exports
 
-- `@sbozh/pmdxjs` - Main entry
-- `@sbozh/pmdxjs/parser` - Parser functions
-- `@sbozh/pmdxjs/transformer` - AST-to-JSX transformer
-- `@sbozh/pmdxjs/components` - Layout components (Document, Page, Columns)
-- `@sbozh/pmdxjs/components/cv` - CV-specific components
-- `@sbozh/pmdxjs/runtime` - Compile functions
-- `@sbozh/pmdxjs/runtime/browser` - Browser-specific runtime
-- `@sbozh/pmdxjs/runtime/server` - Server-specific runtime
-- `@sbozh/pmdxjs/hooks` - React hooks (usePMDXJS)
-- `@sbozh/pmdxjs/types` - TypeScript types
+| Export | Description |
+|--------|-------------|
+| `@sbozh/pmdxjs` | Main entry with `compile()` |
+| `@sbozh/pmdxjs/parser` | `parse()`, `createParser()` |
+| `@sbozh/pmdxjs/transformer` | `transform()` |
+| `@sbozh/pmdxjs/components` | Document, Page, Columns, Column |
+| `@sbozh/pmdxjs/components/cv` | Header, Section, Entry, Tags, Divider |
+| `@sbozh/pmdxjs/hooks` | `usePMDXJS()` |
+| `@sbozh/pmdxjs/types` | TypeScript types |
 
 ## License
 
