@@ -34,32 +34,54 @@ import type { ReactElement, ReactNode } from "react";
 /**
  * Transform options
  */
+/**
+ * Known component types with their specific props
+ */
+interface KnownComponents {
+  Document?: React.ComponentType<{
+    config: DocumentNode["config"];
+    children: ReactNode;
+  }>;
+  Page?: React.ComponentType<{ children: ReactNode }>;
+  Columns?: React.ComponentType<{
+    ratio: [number, number];
+    children: ReactNode;
+  }>;
+  Column?: React.ComponentType<{ width?: number; children: ReactNode }>;
+  Header?: React.ComponentType<{
+    name: string;
+    subtitle?: string;
+    contact?: string[];
+  }>;
+  Section?: React.ComponentType<{ title: string; children: ReactNode }>;
+  Entry?: React.ComponentType<{
+    company: string;
+    role: string;
+    dates: string;
+    location?: string;
+    children: ReactNode;
+  }>;
+  Tags?: React.ComponentType<{ items: string[] }>;
+  Divider?: React.ComponentType<object>;
+  Paragraph?: React.ComponentType<{ children: ReactNode }>;
+  List?: React.ComponentType<{ ordered: boolean; children: ReactNode }>;
+  ListItem?: React.ComponentType<{ children: ReactNode }>;
+}
+
+/**
+ * Custom component map for extended directives
+ */
+type CustomComponents = Record<
+  string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  React.ComponentType<any> | undefined
+>;
+
 export interface TransformOptions {
   /**
    * Custom component overrides
    */
-  components?: {
-    Document?: React.ComponentType<{
-      config: DocumentNode["config"];
-      children: ReactNode;
-    }>;
-    Page?: React.ComponentType<{ children: ReactNode }>;
-    Columns?: React.ComponentType<{
-      ratio: [number, number];
-      children: ReactNode;
-    }>;
-    Column?: React.ComponentType<{ width?: number; children: ReactNode }>;
-    Header?: React.ComponentType<HeaderNode>;
-    Section?: React.ComponentType<{ title: string; children: ReactNode }>;
-    Entry?: React.ComponentType<EntryNode>;
-    Tags?: React.ComponentType<{ items: string[] }>;
-    Divider?: React.ComponentType<Record<string, never>>;
-    Paragraph?: React.ComponentType<{ children: ReactNode }>;
-    List?: React.ComponentType<{ ordered: boolean; children: ReactNode }>;
-    ListItem?: React.ComponentType<{ children: ReactNode }>;
-    // Allow any custom component for extended directives
-    [key: string]: React.ComponentType<Record<string, unknown>> | undefined;
-  };
+  components?: KnownComponents & CustomComponents;
 }
 
 /**
