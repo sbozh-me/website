@@ -17,28 +17,33 @@
 - ~~SparkMark component with shimmer animation~~
 - ~~Responsive hamburger menu~~
 
-## 0.4.0 - CV Page (PMDXJS)
+## ~~0.4.0 - CV Page (PMDXJS)~~ ✅
 
 Full CV page powered by `@sbozh/pmdxjs` - a custom markdown-to-JSX parser.
 
-- [0.4.0 - Package Scaffold + Parser](roadmap/pmdxjs/0.4.0.md)
-- [0.4.1 - Core Layout Components](roadmap/pmdxjs/0.4.1.md)
-- [0.4.2 - CV-Specific Components](roadmap/pmdxjs/0.4.2.md)
-- [0.4.3 - MDX Browser Runtime](roadmap/pmdxjs/0.4.3.md)
-- [0.4.4 - CV Page Implementation](roadmap/pmdxjs/0.4.4.md)
-- [0.4.5 - PDF Export](roadmap/pmdxjs/0.4.5.md)
+- ~~[0.4.0 - Package Scaffold + Parser](roadmap/pmdxjs/0.4.0.md)~~
+- ~~[0.4.1 - Core Layout Components](roadmap/pmdxjs/0.4.1.md)~~
+- ~~[0.4.2 - CV-Specific Components](roadmap/pmdxjs/0.4.2.md)~~
+- ~~[0.4.3 - MDX Browser Runtime](roadmap/pmdxjs/0.4.3.md)~~
+- ~~[0.4.4 - CV Page Implementation](roadmap/pmdxjs/0.4.4.md)~~
+- ~~[0.4.5 - PDF Export](roadmap/pmdxjs/0.4.5.md)~~
 
 ## 0.5.0 - Blog Layouts
 
-- Blog listing page
-- Blog post page layout
-- Category/tag system
+Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pattern).
+
+- [0.5.0 - Package Scaffold + Types + Data Layer](roadmap/blog/0.5.0.md)
+- [0.5.1 - Timeline Components](roadmap/blog/0.5.1.md)
+- [0.5.2 - Filter Components](roadmap/blog/0.5.2.md)
+- [0.5.3 - Post Page Components](roadmap/blog/0.5.3.md)
+- [0.5.4 - Blog List Page Implementation](roadmap/blog/0.5.4.md)
+- [0.5.5 - Post Page Implementation](roadmap/blog/0.5.5.md)
 
 ## 0.6.0 - Blog Backend
 
 - Directus CMS integration
+- `DirectusRepository` implementation
 - Content API setup
-- Blog data fetching
 
 ## 0.7.0 - Blog SEO
 
