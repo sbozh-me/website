@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+
+import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
+
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
@@ -31,6 +34,7 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col antialiased">
         {children}
         <Footer />
+        <Toaster />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
@@ -24,8 +25,14 @@ export function CVDownloadButton() {
       a.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
-    } catch (error) {
-      console.error("Download failed:", error);
+
+      toast.success("PDF downloaded successfully");
+    } catch (err) {
+      console.error("Download failed:", err);
+      toast.error("Download failed", {
+        description:
+          err instanceof Error ? err.message : "An unexpected error occurred",
+      });
     } finally {
       setIsLoading(false);
     }
