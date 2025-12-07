@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2025-12-07
+
+### Changes
+
+- docs(roadmap): add comprehensive blog implementation plan (0.5.0-0.5.5) ([eb85451](https://github.com/sbozh-me/website/commit/eb8545113fd0c85f2ac66980d013a761145072af))
+- feat(blog): implement blog package with repository pattern and mock data ([2e3e444](https://github.com/sbozh-me/website/commit/2e3e4448b8ba1f4021ec33bd8a41b135fdee4b52))
+- build(deps): update lockfile for blog package dependencies ([562bd73](https://github.com/sbozh-me/website/commit/562bd73b1a29e0e74923ba83a23cd8c07dada8c4))
+- test(cv): add PDF route tests and exclude API from coverage ([4ee7c02](https://github.com/sbozh-me/website/commit/4ee7c02c43fcc701da92efd43bf2b18043fb8e75))
+
+
 ## [0.4.5] - 2025-12-06
 
 ### Changes
