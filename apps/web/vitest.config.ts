@@ -12,7 +12,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json-summary"],
       include: ["app/**/*.{ts,tsx}"],
-      exclude: ["**/*.test.{ts,tsx}", "**/*.d.ts", "**/layout.tsx"],
+      exclude: [
+        "**/*.test.{ts,tsx}",
+        "**/*.d.ts",
+        "**/layout.tsx",
+        "**/api/**", // API routes with Puppeteer have browser-context code that can't be covered
+      ],
     },
   },
   resolve: {

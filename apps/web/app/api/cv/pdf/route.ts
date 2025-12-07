@@ -36,12 +36,14 @@ export async function GET(request: NextRequest) {
     });
 
     // Set light theme for PDF (call the same toggle mechanism)
+    /* v8 ignore start -- browser context code, not coverable in Node tests */
     await page.evaluate(() => {
       const doc = document.querySelector(".pmdxjs-document");
       if (doc) {
         doc.setAttribute("data-theme", "light");
       }
     });
+    /* v8 ignore stop */
 
     // Wait for theme change to apply
     await new Promise((resolve) => setTimeout(resolve, 100));
