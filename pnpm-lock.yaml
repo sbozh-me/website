@@ -100,6 +100,31 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)
 
+  packages/blog:
+    dependencies:
+      react:
+        specifier: ^19.0.0
+        version: 19.2.0
+    devDependencies:
+      '@sbozh/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@sbozh/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/react':
+        specifier: ^19.0.1
+        version: 19.2.7
+      '@vitest/coverage-v8':
+        specifier: ^4.0.15
+        version: 4.0.15(vitest@4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2))
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.15
+        version: 4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)
+
   packages/eslint-config:
     dependencies:
       '@eslint/eslintrc':
