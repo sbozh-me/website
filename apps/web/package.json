@@ -11,6 +11,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@sbozh/blog": "workspace:*",
     "@sbozh/pmdxjs": "workspace:*",
     "@sbozh/react-ui": "workspace:*",
     "framer-motion": "^12.23.25",
