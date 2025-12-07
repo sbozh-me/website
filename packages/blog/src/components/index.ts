@@ -1,4 +1,13 @@
 export type {
+  DateFilterProps,
+  FilterBarProps,
+  PersonaFilterProps,
+  SelectOption,
+  SelectProps,
+  TagFilterProps,
+} from "./filters";
+
+export type {
   EmptyStateProps,
   MonthMarkerProps,
   PersonaDotProps,
@@ -6,6 +15,15 @@ export type {
   TimelineProps,
   YearMarkerProps,
 } from "./timeline";
+
+export {
+  DateFilter,
+  FilterBar,
+  PersonaFilter,
+  SearchPlaceholder,
+  Select,
+  TagFilter,
+} from "./filters";
 
 export {
   EmptyState,
