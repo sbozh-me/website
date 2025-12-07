@@ -17,6 +17,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@sbozh/blog':
+        specifier: workspace:*
+        version: link:../../packages/blog
       '@sbozh/pmdxjs':
         specifier: workspace:*
         version: link:../../packages/pmdxjs
@@ -112,18 +115,30 @@ importers:
       '@sbozh/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/react':
         specifier: ^19.0.1
         version: 19.2.7
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2))
       '@vitest/coverage-v8':
         specifier: ^4.0.15
-        version: 4.0.15(vitest@4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2))
+        version: 4.0.15(vitest@4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2))
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)
+        version: 4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)
 
   packages/eslint-config:
     dependencies:
@@ -4523,6 +4538,23 @@ snapshots:
       '@types/babel__core': 7.20.5
       react-refresh: 0.18.0
       vite: 7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)
+    transitivePeerDependencies:
+      - supports-color
+
+  '@vitest/coverage-v8@4.0.15(vitest@4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2))':
+    dependencies:
+      '@bcoe/v8-coverage': 1.0.2
+      '@vitest/utils': 4.0.15
+      ast-v8-to-istanbul: 0.3.8
+      istanbul-lib-coverage: 3.2.2
+      istanbul-lib-report: 3.0.1
+      istanbul-lib-source-maps: 5.0.6
+      istanbul-reports: 3.2.0
+      magicast: 0.5.1
+      obug: 2.1.1
+      std-env: 3.10.0
+      tinyrainbow: 3.0.3
+      vitest: 4.0.15(@types/node@22.19.1)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)
     transitivePeerDependencies:
       - supports-color
 

@@ -2,6 +2,7 @@
 
 @source "../../../packages/react-ui/src";
 @source "../../../packages/pmdxjs/src";
+@source "../../../packages/blog/src";
 
 @theme {
   /* Obsidian Forge - Dark, spacious aesthetic */
