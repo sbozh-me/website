@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2025-12-07
+
+### Changes
+
+- feat(blog): implement Timeline components with date grouping and formatting utilities ([e1980d9](https://github.com/sbozh-me/website/commit/e1980d91f6910231f6294b2e3f323ca776229818))
+- feat(web): add blog timeline demo with mock data ([43713b1](https://github.com/sbozh-me/website/commit/43713b1641a30ff1ef8570b6d4c9be2b68f092cd))
+- chore: update globals.css and lockfile ([e5e2b3d](https://github.com/sbozh-me/website/commit/e5e2b3dc7c1e6202fc1e5659947a1d0a23ae8a12))
+
+
 ## [0.5.0] - 2025-12-07
 
 ### Changes
