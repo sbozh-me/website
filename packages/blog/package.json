@@ -1,0 +1,29 @@
+{
+  "name": "@sbozh/blog",
+  "version": "0.5.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types/index.ts",
+    "./data": "./src/data/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@sbozh/eslint-config": "workspace:*",
+    "@sbozh/typescript-config": "workspace:*",
+    "@types/react": "^19.0.1",
+    "@vitest/coverage-v8": "^4.0.15",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.15"
+  }
+}
