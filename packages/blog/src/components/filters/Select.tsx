@@ -1,3 +1,13 @@
+"use client";
+
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Select as ShadcnSelect,
+} from "@sbozh/react-ui/components/ui/select";
+
 export interface SelectOption {
   value: string;
   label: string;
@@ -17,20 +27,23 @@ export function Select({
   value,
   options,
   onChange,
-  className = "",
+  className,
 }: SelectProps) {
   return (
-    <select
+    <ShadcnSelect
       value={value ?? ""}
-      onChange={(e) => onChange(e.target.value || undefined)}
-      className={`bg-muted border border-border rounded-md px-3 py-2 text-sm text-foreground min-w-[120px] focus:outline-none focus:ring-2 focus:ring-primary ${className}`}
+      onValueChange={(val) => onChange(val || undefined)}
     >
-      <option value="">{placeholder}</option>
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+      <SelectTrigger className={className}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </ShadcnSelect>
   );
 }

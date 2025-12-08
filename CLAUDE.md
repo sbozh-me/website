@@ -1,4 +1,4 @@
-/# Claude Code Guidelines
+# Claude Code Guidelines
 
 ## Commit Strategy
 
@@ -23,3 +23,21 @@ make major   # Breaking changes (requires 90% test coverage)
 - Add tests for new functionality in apps/
 - Keep changes focused and reviewable
 - Update CHANGELOG.md via release scripts, not manually
+
+## UI Components
+
+**Always use shadcn/ui components from `@sbozh/react-ui`** for consistent styling:
+
+```tsx
+// Import from react-ui package
+import { Button } from "@sbozh/react-ui/components/ui/button";
+import { Input } from "@sbozh/react-ui/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@sbozh/react-ui/components/ui/select";
+```
+
+Available components:
+- Button, Input, Select - form controls
+- Alert, Separator - layout/feedback
+- Sonner (toast) - notifications
+
+When a component doesn't exist in react-ui, add it from [shadcn/ui](https://ui.shadcn.com/docs/components) before using it.

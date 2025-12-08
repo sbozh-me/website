@@ -1,6 +1,8 @@
+import { Input } from "@sbozh/react-ui/components/ui/input";
+
 export function SearchPlaceholder() {
   return (
-    <div className="flex items-center gap-2 text-muted-foreground cursor-not-allowed opacity-50">
+    <div className="relative">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -12,11 +14,17 @@ export function SearchPlaceholder() {
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
       >
         <circle cx="11" cy="11" r="8" />
         <path d="m21 21-4.3-4.3" />
       </svg>
-      <span className="text-sm">Search</span>
+      <Input
+        type="search"
+        placeholder="Search"
+        disabled
+        className="pl-9 w-[140px] cursor-not-allowed"
+      />
     </div>
   );
 }

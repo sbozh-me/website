@@ -19,6 +19,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
+    "@sbozh/react-ui": "workspace:*",
     "react": "^19.0.0"
   },
   "devDependencies": {
