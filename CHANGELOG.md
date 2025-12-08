@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2025-12-08
+
+### Changes
+
+- feat(blog): implement filter components and state management for post filtering ([e81be01](https://github.com/sbozh-me/website/commit/e81be019824082c9360ca355953e5580e782b98c))
+- feat(ui): integrate shadcn components across packages ([404f996](https://github.com/sbozh-me/website/commit/404f99696b85739f1b160412c0c967f10aa9ebdb))
+
+
 ## [0.5.1] - 2025-12-07
 
 ### Changes
