@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2025-12-09
+
+### Changes
+
+- feat(blog): implement post page components and MDX rendering ([87ce7c4](https://github.com/sbozh-me/website/commit/87ce7c4cd8061b770f49369943bdc7d01973d62f))
+- feat(blog): add optional image support to blog posts ([51ad5d7](https://github.com/sbozh-me/website/commit/51ad5d7005a6a12fb7d198df2ae64d2e2482b2bb))
+- style(blog): update TOC to use design system color tokens ([5f33978](https://github.com/sbozh-me/website/commit/5f339780cd368faef26cf878783df8ff50ffa3aa))
+- refactor(blog): use design system color tokens in code.css ([e5f5ac0](https://github.com/sbozh-me/website/commit/e5f5ac0b5db93c0087484cd7bbd13396103b1c0c))
+- feat(blog): add scroll-to-top button component ([87f1453](https://github.com/sbozh-me/website/commit/87f1453167b1c46a4dfc3fab78903a8c0ec979e8))
+- feat(blog): add click handler for immediate TOC active state update ([632b1f9](https://github.com/sbozh-me/website/commit/632b1f971b7b45b77c59e2068cff014454968465))
+- docs(roadmap): add email subscription milestone and renumber versions ([9fe3d81](https://github.com/sbozh-me/website/commit/9fe3d81189626f1610fc8544e432f91944bf94b2))
+- feat(blog): improve TableOfContents mobile UX ([8590b9e](https://github.com/sbozh-me/website/commit/8590b9e8d94604338786a5c4c49413fda316d192))
+- docs(roadmap): mark blog layouts milestone as complete ([8515cb6](https://github.com/sbozh-me/website/commit/8515cb6e1991bfeaed531d964c393cce3e18a556))
+- fix(deps)!: patch critical RCE vulnerabilities in React and Next.js ([8f47ace](https://github.com/sbozh-me/website/commit/8f47ace2815ab086660372a9587957b60d216ca2))
+- docs: add blog package documentation and update main README ([d38b88e](https://github.com/sbozh-me/website/commit/d38b88ef8f644556b1d9f70927cb2cb03d2041d1))
+
+
 ## [0.5.2] - 2025-12-08
 
 ### Changes
