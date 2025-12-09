@@ -13,17 +13,18 @@ Personal website and portfolio for sbozh.me.
 
 ## Tech Stack
 
-- **Framework**: Next.js 15 (React 19)
+- **Framework**: Next.js 15.5.7 (React 19.2.1)
 - **Build**: Turborepo + pnpm
 - **UI**: shadcn/ui + Tailwind CSS v4
 - **Animation**: Framer Motion
-- **Testing**: Vitest (100% coverage)
+- **Testing**: Vitest (90%+ coverage)
 - **Linting**: ESLint 9 + Prettier
 
 ## Pages
 
 - `/` - Homepage with navigation
-- `/blog` - Blog (coming soon)
+- `/blog` - Blog with multi-persona timeline, filters, and MDX rendering
+- `/blog/[slug]` - Blog post pages with table of contents
 - `/cv` - CV/Resume with PDF export
 - `/projects` - Projects showcase (coming soon)
 
@@ -33,6 +34,7 @@ Personal website and portfolio for sbozh.me.
 apps/
   web/                  # Main website (Next.js)
 packages/
+  blog/                 # Blog components and data layer
   pmdxjs/               # PMDXJS - Markdown to JSX parser for CVs
   react-ui/             # Shared UI components (shadcn/ui)
   eslint-config/        # Shared ESLint config
@@ -40,6 +42,15 @@ packages/
 ```
 
 ## Packages
+
+### @sbozh/blog
+
+Blog UI package with abstract data layer (repository pattern):
+- **Timeline components** - Year/month grouped post cards with persona indicators
+- **Filter components** - Dropdowns for date, tags, and persona filtering
+- **Post components** - MDX rendering with syntax highlighting and table of contents
+- **Repository pattern** - Abstract interface for easy backend swapping (currently uses mock data)
+- **SEO ready** - OpenGraph tags, static generation, optimized metadata
 
 ### @sbozh/pmdxjs
 
