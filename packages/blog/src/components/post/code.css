@@ -2,8 +2,8 @@
 
 /* Inline code */
 .prose code {
-  background: var(--muted);
-  color: var(--foreground);
+  background: var(--color-muted);
+  color: var(--color-foreground);
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
@@ -14,7 +14,7 @@
 /* Code blocks */
 .prose pre {
   background: #0f0f14;
-  border: 1px solid var(--border);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   padding: 1.5rem;
   margin: 1.5rem 0;
