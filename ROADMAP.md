@@ -43,9 +43,14 @@ Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pa
 
 ## 0.6.0 - Blog Backend
 
-- Directus CMS integration
-- `DirectusRepository` implementation
-- Content API setup
+Directus CMS integration with Docker, PostgreSQL, and repository pattern.
+
+- [0.6.0 - Directus Setup](roadmap/blog/0.6.0.md)
+- [0.6.1 - Schema Seeding](roadmap/blog/0.6.1.md)
+- [0.6.2 - Blog API Layer](roadmap/blog/0.6.2.md)
+- [0.6.3 - Frontend Integration](roadmap/blog/0.6.3.md)
+- [0.6.4 - Filters & Drafts](roadmap/blog/0.6.4.md)
+- [0.6.5 - Polish & Tests](roadmap/blog/0.6.5.md)
 
 ## 0.7.0 - Blog SEO
 
@@ -88,3 +93,13 @@ Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pa
 - Production launch
 - Final QA
 - Public announcement
+
+---
+
+## Post-Release
+
+### Wide Text Search
+
+- PostgreSQL full-text search or Algolia integration
+- `search` parameter in PostFilters
+- May require Directus extensions
