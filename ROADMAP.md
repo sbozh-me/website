@@ -57,18 +57,25 @@ Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pa
 - Blog engine boilerplate announcement
 - CV builder announcement
 
-## 0.9.0 - Deployment
+## 0.9.0 - Updates subscribe
+
+- Enter email to subscribe to updates
+- CV updates
+- Blog updates
+- Project updates
+
+## 0.10.0 - Deployment
 
 - Hetzner deploy scripts
 - CI/CD pipeline
 - Production configuration
 
-## 0.10.0 - Analytics
+## 0.11.0 - Analytics
 
 - Tracking systems integration
 - Analytics dashboard
 
-## 0.11.0 - Legal
+## 0.12.0 - Legal
 
 - Cookie consent
 - Privacy policy
