@@ -15,6 +15,10 @@ interface TableOfContentsProps {
 export function TableOfContents({ items }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
+  const handleClick = (id: string) => {
+    setTimeout(() => setActiveId(id), 10);
+  };
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -54,7 +58,11 @@ export function TableOfContents({ items }: TableOfContentsProps) {
               activeId === item.id ? "toc-item-active" : ""
             }`}
           >
-            <a href={`#${item.id}`} className="toc-link">
+            <a
+              href={`#${item.id}`}
+              className="toc-link"
+              onClick={() => handleClick(item.id)}
+            >
               {item.text}
             </a>
           </li>
