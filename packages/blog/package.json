@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "@sbozh/react-ui": "workspace:*",
-    "react": "^19.0.0"
+    "react": ">=19.2.1"
   },
   "devDependencies": {
     "@sbozh/eslint-config": "workspace:*",

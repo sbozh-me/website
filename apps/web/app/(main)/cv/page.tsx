@@ -12,7 +12,7 @@ import {
 } from "@/components/cv";
 
 function getCV() {
-  const cvPath = join(process.cwd(), "content", "cv-glass.pmdx");
+  const cvPath = join(process.cwd(), "content", "cv.pmdx");
   return readFileSync(cvPath, "utf-8");
 }
 
