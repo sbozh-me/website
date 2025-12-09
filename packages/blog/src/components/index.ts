@@ -33,3 +33,5 @@ export {
   Timeline,
   YearMarker,
 } from "./timeline";
+
+export { PostHeader, PostLayout, Prose, TableOfContents } from "./post";

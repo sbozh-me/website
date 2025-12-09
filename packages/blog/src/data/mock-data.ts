@@ -48,17 +48,62 @@ export const mockPosts: Post[] = [
     slug: "why-i-started-sbozh",
     excerpt:
       "From side project to personal startup. The story of building something that matters...",
-    content: `# Why I started sbozh.me
-
-This is the story of how a simple idea became something more.
+    content: `This is the story of how a simple idea became something more.
 
 ## The Beginning
 
 It all started with a question: what if I built something just for me?
 
+### The First Commit
+
+Every project starts somewhere. Here's how I set up the initial structure:
+
+\`\`\`typescript
+// packages/blog/src/index.ts
+export type { Post, Persona, Tag } from "./types";
+export { MockBlogRepository } from "./data";
+export { Timeline, PostCard, FilterBar } from "./components";
+
+// Simple, clean exports. Everything a blog needs.
+\`\`\`
+
+I kept it minimal. No over-engineering, no premature optimization.
+
+\`\`\`bash
+pnpm create turborepo@latest
+pnpm add -D typescript vitest
+pnpm test
+\`\`\`
+
+Green tests from day one. That's the way.
+
 ## The Journey
 
 Building in public has its challenges, but also its rewards.
+
+The architecture emerged naturally:
+
+\`\`\`tsx
+import { Timeline, FilterBar } from "@sbozh/blog";
+
+function BlogPage({ posts, personas, tags }) {
+  const { filters, setFilter } = usePostFilters();
+
+  return (
+    <>
+      <FilterBar
+        personas={personas}
+        tags={tags}
+        filters={filters}
+        onFiltersChange={setFilter}
+      />
+      <Timeline posts={posts} />
+    </>
+  );
+}
+\`\`\`
+
+Clean. Composable. TypeScript all the way.
 
 ## What's Next
 
@@ -74,9 +119,7 @@ The roadmap is clear, the vision is set. Let's build.`,
     slug: "on-patience-and-shipping",
     excerpt:
       "The tension between waiting for perfection and releasing into the world...",
-    content: `# On patience and shipping
-
-## The Paradox
+    content: `## The Paradox
 
 We want things to be perfect. But perfection is the enemy of done.
 
@@ -98,9 +141,7 @@ Sometimes the best code is the code you didn't write.`,
     slug: "prague-in-winter",
     excerpt:
       "First snow, empty streets, and the best coffee spots when the tourists are gone...",
-    content: `# Prague in winter
-
-## The First Snow
+    content: `## The First Snow
 
 There's something magical about Prague covered in white.
 
@@ -122,9 +163,7 @@ Hot chocolate, warm lights, and the sound of trams.`,
     slug: "the-architecture-of-dreams",
     excerpt:
       "A short story about a city that builds itself from the memories of its inhabitants...",
-    content: `# The architecture of dreams
-
-## Chapter One
+    content: `## Chapter One
 
 The city rose from nothing, shaped by thought alone.
 
@@ -146,9 +185,7 @@ And in the center, a tower that reached beyond the sky.`,
     slug: "building-a-design-system",
     excerpt:
       "How Obsidian Forge evolved from a color palette to a complete design language...",
-    content: `# Building a design system
-
-## Starting Point
+    content: `## Starting Point
 
 Every design system starts with constraints.
 

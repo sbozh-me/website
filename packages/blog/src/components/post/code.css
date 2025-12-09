@@ -1,0 +1,117 @@
+/* Code block and inline code styling with Obsidian Forge theme */
+
+/* Inline code */
+.prose code {
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* Code blocks */
+.prose pre {
+  background: #0f0f14;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+/* Syntax highlighting token colors (Forge theme) */
+.prose pre code .token.comment,
+.prose pre code .token.prolog,
+.prose pre code .token.doctype,
+.prose pre code .token.cdata {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.prose pre code .token.punctuation {
+  color: #e5e7eb;
+}
+
+.prose pre code .token.property,
+.prose pre code .token.tag,
+.prose pre code .token.boolean,
+.prose pre code .token.number,
+.prose pre code .token.constant,
+.prose pre code .token.symbol,
+.prose pre code .token.deleted {
+  color: #f59e0b;
+}
+
+.prose pre code .token.selector,
+.prose pre code .token.attr-name,
+.prose pre code .token.string,
+.prose pre code .token.char,
+.prose pre code .token.builtin,
+.prose pre code .token.inserted {
+  color: #22c55e;
+}
+
+.prose pre code .token.operator,
+.prose pre code .token.entity,
+.prose pre code .token.url,
+.prose pre code .token.variable {
+  color: #e5e7eb;
+}
+
+.prose pre code .token.atrule,
+.prose pre code .token.attr-value,
+.prose pre code .token.function,
+.prose pre code .token.class-name {
+  color: #f59e0b;
+}
+
+.prose pre code .token.keyword {
+  color: #8b5cf6;
+}
+
+.prose pre code .token.regex,
+.prose pre code .token.important {
+  color: #f59e0b;
+}
+
+.prose pre code .token.important,
+.prose pre code .token.bold {
+  font-weight: 600;
+}
+
+.prose pre code .token.italic {
+  font-style: italic;
+}
+
+/* Line highlighting */
+.prose pre code .line {
+  display: block;
+}
+
+.prose pre code .line.highlighted {
+  background: rgba(139, 92, 246, 0.1);
+  border-left: 3px solid #8b5cf6;
+  padding-left: 1rem;
+  margin-left: -1rem;
+}
+
+/* Line numbers */
+.prose pre code .line-number {
+  display: inline-block;
+  width: 2.5rem;
+  text-align: right;
+  margin-right: 1.5rem;
+  color: #6b7280;
+  user-select: none;
+}
