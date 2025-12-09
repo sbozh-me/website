@@ -34,4 +34,10 @@ export {
   YearMarker,
 } from "./timeline";
 
-export { PostHeader, PostLayout, Prose, TableOfContents } from "./post";
+export {
+  PostHeader,
+  PostLayout,
+  Prose,
+  ScrollToTop,
+  TableOfContents,
+} from "./post";

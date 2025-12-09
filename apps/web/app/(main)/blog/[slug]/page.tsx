@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
-import { PostHeader, PostLayout } from "@sbozh/blog/components";
+import {
+  PostHeader,
+  PostLayout,
+  ScrollToTop,
+} from "@sbozh/blog/components";
 import { MockBlogRepository } from "@sbozh/blog/data";
 import { extractHeadings } from "@sbozh/blog/utils";
 import "@sbozh/blog/styles/prose.css";
@@ -42,28 +46,31 @@ export default async function BlogPostPage({ params }: PageProps) {
   } as any);
 
   return (
-    <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
-      <div className="max-w-6xl mx-auto">
-        <PostLayout toc={toc}>
-          <div>
-            <PostHeader post={post} />
-            {post.image && (
-              <Image
-                src={post.image.src}
-                alt={post.image.alt}
-                width={post.image.width || 1920}
-                height={post.image.height || 1080}
-                className="w-full h-auto rounded-lg my-8"
-                priority
-              />
-            )}
-            <div className="prose">
-              <MDXContent />
+    <>
+      <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
+        <div className="max-w-6xl mx-auto">
+          <PostLayout toc={toc}>
+            <div>
+              <PostHeader post={post} />
+              {post.image && (
+                <Image
+                  src={post.image.src}
+                  alt={post.image.alt}
+                  width={post.image.width || 1920}
+                  height={post.image.height || 1080}
+                  className="w-full h-auto rounded-lg my-8"
+                  priority
+                />
+              )}
+              <div className="prose">
+                <MDXContent />
+              </div>
             </div>
-          </div>
-        </PostLayout>
+          </PostLayout>
+        </div>
       </div>
-    </div>
+      <ScrollToTop />
+    </>
   );
 }
 

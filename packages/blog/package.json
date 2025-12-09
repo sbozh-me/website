@@ -15,7 +15,8 @@
     "./utils": "./src/utils/index.ts",
     "./styles/prose.css": "./src/components/post/prose.css",
     "./styles/code.css": "./src/components/post/code.css",
-    "./styles/toc.css": "./src/components/post/toc.css"
+    "./styles/toc.css": "./src/components/post/toc.css",
+    "./styles/scroll-to-top.css": "./src/components/post/scroll-to-top.css"
   },
   "scripts": {
     "lint": "eslint .",
