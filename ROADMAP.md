@@ -28,16 +28,18 @@ Full CV page powered by `@sbozh/pmdxjs` - a custom markdown-to-JSX parser.
 - ~~[0.4.4 - CV Page Implementation](roadmap/pmdxjs/0.4.4.md)~~
 - ~~[0.4.5 - PDF Export](roadmap/pmdxjs/0.4.5.md)~~
 
-## 0.5.0 - Blog Layouts
+## ~~0.5.0 - Blog Layouts~~ ✅
 
 Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pattern).
 
-- [0.5.0 - Package Scaffold + Types + Data Layer](roadmap/blog/0.5.0.md)
-- [0.5.1 - Timeline Components](roadmap/blog/0.5.1.md)
-- [0.5.2 - Filter Components](roadmap/blog/0.5.2.md)
-- [0.5.3 - Post Page Components](roadmap/blog/0.5.3.md)
-- [0.5.4 - Blog List Page Implementation](roadmap/blog/0.5.4.md)
-- [0.5.5 - Post Page Implementation](roadmap/blog/0.5.5.md)
+- ~~[0.5.0 - Package Scaffold + Types + Data Layer](roadmap/blog/0.5.0.md)~~
+- ~~[0.5.1 - Timeline Components](roadmap/blog/0.5.1.md)~~
+- ~~[0.5.2 - Filter Components](roadmap/blog/0.5.2.md)~~
+- ~~[0.5.3 - Post Page Components](roadmap/blog/0.5.3.md)~~
+- ~~[0.5.4 - Blog List Page Implementation](roadmap/blog/0.5.4.md)~~
+- ~~[0.5.5 - Post Page Implementation](roadmap/blog/0.5.5.md)~~
+
+0.5.4 and 0.5.5 was ignore because demos was implemented in 0.5.3
 
 ## 0.6.0 - Blog Backend
 
