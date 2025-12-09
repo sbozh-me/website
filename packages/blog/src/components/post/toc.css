@@ -1,10 +1,16 @@
 /* Table of contents styling */
 
 .toc {
-  position: sticky;
-  top: 6rem;
-  max-height: calc(100vh - 8rem);
-  overflow-y: auto;
+  /* Sticky positioning only on desktop */
+}
+
+@media (min-width: 1024px) {
+  .toc {
+    position: sticky;
+    top: 6rem;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+  }
 }
 
 .toc-title {
@@ -38,20 +44,27 @@
   display: block;
   font-size: 0.875rem;
   line-height: 1.4;
-  color: var(--color-muted-foreground);
+  color: var(--color-white);
   text-decoration: none;
   padding: 0.25rem 0.5rem;
   margin-left: -0.5rem;
   transition: all 200ms ease;
 }
 
-.toc-link:hover {
-  color: var(--color-primary);
-}
+/* Desktop only: muted color and hover/active states */
+@media (min-width: 1024px) {
+  .toc-link {
+    color: var(--color-muted-foreground);
+  }
 
-.toc-item-active .toc-link {
-  color: var(--color-white);
-  font-weight: 500;
+  .toc-link:hover {
+    color: var(--color-primary);
+  }
+
+  .toc-item-active .toc-link {
+    color: var(--color-white);
+    font-weight: 500;
+  }
 }
 
 /* Scrollbar styling for TOC */

@@ -8,6 +8,7 @@ import {
   PostHeader,
   PostLayout,
   ScrollToTop,
+  TableOfContents,
 } from "@sbozh/blog/components";
 import { MockBlogRepository } from "@sbozh/blog/data";
 import { extractHeadings } from "@sbozh/blog/utils";
@@ -61,6 +62,11 @@ export default async function BlogPostPage({ params }: PageProps) {
                   className="w-full h-auto rounded-lg my-8"
                   priority
                 />
+              )}
+              {toc && toc.length > 0 && (
+                <div className="lg:hidden mb-8">
+                  <TableOfContents items={toc} />
+                </div>
               )}
               <div className="prose">
                 <MDXContent />

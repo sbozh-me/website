@@ -14,12 +14,34 @@ interface TableOfContentsProps {
  */
 export function TableOfContents({ items }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if mobile on mount and window resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   const handleClick = (id: string) => {
-    setTimeout(() => setActiveId(id), 10);
+    if (!isMobile) {
+      setTimeout(() => setActiveId(id), 10);
+    }
   };
 
   useEffect(() => {
+    // Don't use IntersectionObserver on mobile
+    if (isMobile) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -45,7 +67,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
     return () => {
       observer.disconnect();
     };
-  }, [items]);
+  }, [items, isMobile]);
 
   return (
     <nav className="toc" aria-label="Table of contents">
