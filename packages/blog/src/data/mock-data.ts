@@ -112,6 +112,12 @@ The roadmap is clear, the vision is set. Let's build.`,
     readingTime: 5,
     persona: mockPersonas[0],
     tags: [mockTags[0], mockTags[1]],
+    image: {
+      src: "/trireme-ship.png",
+      alt: "Ancient Roman trireme ship at shore ready to depart",
+      width: 1920,
+      height: 1080,
+    },
   },
   {
     id: "2",
