@@ -2,6 +2,7 @@
 set -e
 
 RELEASE_TYPE=$1
+IGNORE_COVERAGE=$2
 REPO_URL="https://github.com/sbozh-me/website"
 COVERAGE_THRESHOLD=90
 
@@ -30,8 +31,8 @@ esac
 
 echo -e "${YELLOW}Releasing v${NEW} (${RELEASE_TYPE})${NC}"
 
-# Coverage check for minor/major only
-if [[ "$RELEASE_TYPE" != "patch" ]]; then
+# Coverage check for minor/major only (skip with --ignore)
+if [[ "$RELEASE_TYPE" != "patch" && "$IGNORE_COVERAGE" != "--ignore" ]]; then
   echo -e "${YELLOW}Running test coverage check...${NC}"
   pnpm --filter './apps/*' test:coverage
 
@@ -46,6 +47,8 @@ if [[ "$RELEASE_TYPE" != "patch" ]]; then
       echo -e "${GREEN}Coverage: ${min}% (threshold: ${COVERAGE_THRESHOLD}%)${NC}"
     fi
   done
+elif [[ "$IGNORE_COVERAGE" == "--ignore" ]]; then
+  echo -e "${YELLOW}Skipping coverage check (--ignore)${NC}"
 fi
 
 # Get commits for changelog
