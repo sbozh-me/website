@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2025-12-10
+
+### Changes
+
+- docs(roadmap): add detailed breakdown for v0.6.0 Blog Backend ([946298b](https://github.com/sbozh-me/website/commit/946298bfe734352f68be4f584e40b334b0087145))
+- feat(web): add Directus CMS backend setup with Docker Compose ([5c11da2](https://github.com/sbozh-me/website/commit/5c11da2e2ced30c75a4b49d4b6fee0554340749e))
+- feat(release): add --ignore flag to skip coverage validation ([7166359](https://github.com/sbozh-me/website/commit/7166359c979eb1fd53fad5c8e6be0f836b2ca9a2))
+
+
 ## [0.5.3] - 2025-12-09
 
 ### Changes
