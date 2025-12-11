@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2025-12-11
+
+### Changes
+
+- feat(blog): implement DirectusRepository with @directus/sdk ([f70d659](https://github.com/sbozh-me/website/commit/f70d659df3a123888c1a6a5e613f4fbc34490061))
+- docs(blog): update README with DirectusRepository usage ([4af64d6](https://github.com/sbozh-me/website/commit/4af64d6cc29195c914db63e6c79a50b82cd8fba1))
+
+
 ## [0.6.1] - 2025-12-11
 
 ### Changes
