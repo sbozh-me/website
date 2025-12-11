@@ -24,9 +24,8 @@ pnpm add @sbozh/blog
 
 The blog supports multiple personas (authors/voices):
 - **The Founder** - Business and startup content
-- **Kagurame Sbozh** - Technical deep-dives
-- **Semenus** - Philosophy and personal reflections
-- **The Dude** - Casual thoughts and updates
+- **Kagurame Sbozh** - Creative writing and storytelling
+- **Semenus** - Philosophy and deeper thoughts
 
 Each persona has a unique color and visual indicator throughout the UI.
 
@@ -43,13 +42,27 @@ interface BlogRepository {
 }
 ```
 
-**Current Implementations:**
+**Implementations:**
 - `MockBlogRepository` - In-memory mock data for development
-- `DirectusRepository` - Coming in v0.6.0
+- `DirectusRepository` - Directus CMS integration via REST API
 
 ## Usage
 
-### Blog List Page
+### DirectusRepository (Production)
+
+```typescript
+import { DirectusRepository } from '@sbozh/blog/data';
+
+const repository = new DirectusRepository({
+  url: process.env.DIRECTUS_URL,      // e.g. 'http://localhost:8055'
+  token: process.env.DIRECTUS_TOKEN,  // Optional: static API token
+  includeDrafts: false,               // Optional: show draft posts
+});
+
+const posts = await repository.getPosts({ persona: 'founder' });
+```
+
+### MockBlogRepository (Development)
 
 ```typescript
 import { MockBlogRepository } from '@sbozh/blog/data';
@@ -283,14 +296,15 @@ Target: 90%+ coverage
 
 ## Roadmap
 
-- **v0.6.0** - Directus CMS integration
+- ~~**v0.6.0** - Directus CMS integration~~ ✅
 - **v0.7.0** - SEO optimization (OG tags, sitemap)
-- **v0.8.0** - Algolia search integration
+- **v0.8.0** - Projects page
 - **v0.9.0** - Newsletter subscription
 - **v1.0.0** - Production release
 
 ## Dependencies
 
+- `@directus/sdk` - Directus CMS client
 - `@mdx-js/mdx` - MDX compilation
 - `rehype-pretty-code` - Syntax highlighting
 - `rehype-slug` - Heading IDs
