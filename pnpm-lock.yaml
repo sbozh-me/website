@@ -105,6 +105,9 @@ importers:
 
   packages/blog:
     dependencies:
+      '@directus/sdk':
+        specifier: ^20.3.0
+        version: 20.3.0
       '@mdx-js/mdx':
         specifier: ^3.1.0
         version: 3.1.1
@@ -468,6 +471,10 @@ packages:
   '@csstools/css-tokenizer@3.0.4':
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
+
+  '@directus/sdk@20.3.0':
+    resolution: {integrity: sha512-auy59B0A7Ri+4JDy0JcdFHnsHvOkl3ixWMWYciXAbm4oYIE9S4be8xEpIwA5qhlPTOprJ6JHPWo9rEvcrLwNtA==}
+    engines: {node: '>=22'}
 
   '@emnapi/core@1.7.1':
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
@@ -4382,6 +4389,8 @@ snapshots:
   '@csstools/css-syntax-patches-for-csstree@1.0.20': {}
 
   '@csstools/css-tokenizer@3.0.4': {}
+
+  '@directus/sdk@20.3.0': {}
 
   '@emnapi/core@1.7.1':
     dependencies:
