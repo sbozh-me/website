@@ -24,6 +24,18 @@ cp .env.example .env.local
 
 Without these variables, the app falls back to mock data.
 
+## Error Handling
+
+When Directus is unavailable or returns errors (e.g., invalid credentials), the blog pages display a user-friendly error state instead of crashing:
+
+- **Blog list page**: Shows error message with status code
+- **Blog post page**: Shows error message with status code
+- **Static generation**: Falls back to dynamic rendering if Directus is unreachable
+
+Common errors:
+- `Invalid user credentials` - Check `DIRECTUS_TOKEN` is correct
+- Connection refused - Ensure Directus is running (`docker compose up -d`)
+
 ## Directus CMS
 
 Local Directus instance for blog content management.

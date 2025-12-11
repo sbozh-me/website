@@ -62,6 +62,45 @@ const repository = new DirectusRepository({
 const posts = await repository.getPosts({ persona: 'founder' });
 ```
 
+### Error Handling
+
+The `DirectusRepository` wraps all API errors in `DirectusError` for consistent error handling:
+
+```typescript
+import { DirectusRepository, DirectusError } from '@sbozh/blog/data';
+import { ErrorState } from '@sbozh/blog/components';
+
+export default async function BlogPage() {
+  const repository = new DirectusRepository({ url, token });
+
+  let posts;
+  let error: DirectusError | null = null;
+
+  try {
+    posts = await repository.getPosts();
+  } catch (e) {
+    error = DirectusError.fromError(e);
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        title="Unable to load posts"
+        message={error.message}
+        status={error.status}
+      />
+    );
+  }
+
+  return <Timeline posts={posts} />;
+}
+```
+
+The `DirectusError` class provides:
+- `message` - Human-readable error message
+- `status` - HTTP status code (when available)
+- `DirectusError.fromError(e)` - Static method to convert any error
+
 ### MockBlogRepository (Development)
 
 ```typescript
@@ -147,6 +186,7 @@ export default async function BlogPostPage({ params }) {
 - `PostCard` - Individual post preview with persona dot, date, excerpt
 - `PersonaDot` - Colored indicator for persona
 - `EmptyState` - No results message
+- `ErrorState` - Error display with status code
 
 ### Filter Components
 
