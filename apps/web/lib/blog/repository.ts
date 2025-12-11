@@ -26,13 +26,5 @@ export function createBlogRepository(
   }
 
   // Fallback to mock for testing/CI when Directus is not configured
-  if (process.env.NODE_ENV === "development" && !directusUrl) {
-    console.warn(
-      "DIRECTUS_URL not set, using MockBlogRepository. Set DIRECTUS_URL and DIRECTUS_TOKEN in .env.local"
-    );
-  }
   return new MockBlogRepository();
 }
-
-// Default instance for simple imports
-export const blogRepository = createBlogRepository();

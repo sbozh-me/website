@@ -113,7 +113,15 @@ export class DirectusRepository implements BlogRepository {
     this.baseUrl = config.url;
     this.includeDrafts = config.includeDrafts ?? false;
 
-    const client = createDirectus<DirectusSchema>(config.url).with(rest());
+    // Disable Next.js fetch caching for all Directus requests
+    const client = createDirectus<DirectusSchema>(config.url).with(
+      rest({
+        onRequest: (options) => ({
+          ...options,
+          cache: "no-store",
+        }),
+      })
+    );
     if (config.token) {
       this.client = client.with(staticToken(config.token));
     } else {

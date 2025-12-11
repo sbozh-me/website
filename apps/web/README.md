@@ -68,3 +68,27 @@ docker compose down -v
 rm -rf data/
 docker compose up -d
 ```
+
+## Caching
+
+Both Directus and Next.js have caching layers that can cause stale data during development.
+
+### Directus Caching
+
+Directus caching is **disabled by default** in `docker-compose.yaml`:
+
+```yaml
+CACHE_ENABLED: "false"
+CACHE_AUTO_PURGE: "true"
+```
+
+To enable caching for production, set `CACHE_ENABLED: "true"`.
+
+### Next.js Caching
+
+Blog pages use `dynamic = "force-dynamic"` and `noStore()` to disable Next.js caching. The Directus SDK is also configured with `cache: "no-store"` for all requests.
+
+If content still appears stale:
+1. Clear Next.js cache: `rm -rf apps/web/.next`
+2. Restart Directus: `cd apps/web/directus && docker compose restart`
+3. Restart dev server: `pnpm dev`

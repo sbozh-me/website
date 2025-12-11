@@ -1,7 +1,12 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { EmptyState, ErrorState, Timeline } from "@sbozh/blog";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
+// Disable caching - always fetch fresh data from Directus
+export const dynamic = "force-dynamic";
+
 export default async function BlogPage() {
+  noStore();
   const repository = createBlogRepository();
 
   let posts;

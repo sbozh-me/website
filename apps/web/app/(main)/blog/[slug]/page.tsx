@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { evaluate } from "@mdx-js/mdx";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -16,11 +17,15 @@ import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import "@sbozh/blog/styles/prose.css";
 import "@sbozh/blog/styles/code.css";
 
+// Disable caching - always fetch fresh data from Directus
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+  noStore();
   const { slug } = await params;
   const repository = createBlogRepository();
 
