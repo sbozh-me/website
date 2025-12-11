@@ -1,0 +1,94 @@
+{
+  "personas": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "The Founder",
+      "slug": "founder",
+      "color": "#8b5cf6",
+      "description": "Project updates and announcements"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "name": "Kagurame Sbozh",
+      "slug": "kagurame",
+      "color": "#f59e0b",
+      "description": "Creative writing and storytelling"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000003",
+      "name": "Semenus",
+      "slug": "semenus",
+      "color": "#22c55e",
+      "description": "Philosophy and deeper thoughts"
+    }
+  ],
+  "tags": [
+    { "id": "00000000-0000-0000-0000-000000000011", "name": "Tech", "slug": "tech" },
+    { "id": "00000000-0000-0000-0000-000000000012", "name": "Startup", "slug": "startup" },
+    { "id": "00000000-0000-0000-0000-000000000013", "name": "Philosophy", "slug": "philosophy" },
+    { "id": "00000000-0000-0000-0000-000000000014", "name": "Personal", "slug": "personal" },
+    { "id": "00000000-0000-0000-0000-000000000015", "name": "Creative", "slug": "creative" }
+  ],
+  "posts": [
+    {
+      "id": "00000000-0000-0000-0000-000000000101",
+      "status": "published",
+      "title": "Why I started sbozh.me",
+      "slug": "why-i-started-sbozh",
+      "excerpt": "From side project to personal startup. The story of building something that matters...",
+      "content": "This is the story of how a simple idea became something more.\n\n## The Beginning\n\nIt all started with a question: what if I built something just for me?\n\n### The First Commit\n\nEvery project starts somewhere. Here's how I set up the initial structure:\n\n```typescript\n// packages/blog/src/index.ts\nexport type { Post, Persona, Tag } from \"./types\";\nexport { MockBlogRepository } from \"./data\";\nexport { Timeline, PostCard, FilterBar } from \"./components\";\n\n// Simple, clean exports. Everything a blog needs.\n```\n\nI kept it minimal. No over-engineering, no premature optimization.\n\n```bash\npnpm create turborepo@latest\npnpm add -D typescript vitest\npnpm test\n```\n\nGreen tests from day one. That's the way.\n\n## The Journey\n\nBuilding in public has its challenges, but also its rewards.\n\nThe architecture emerged naturally:\n\n```tsx\nimport { Timeline, FilterBar } from \"@sbozh/blog\";\n\nfunction BlogPage({ posts, personas, tags }) {\n  const { filters, setFilter } = usePostFilters();\n\n  return (\n    <>\n      <FilterBar\n        personas={personas}\n        tags={tags}\n        filters={filters}\n        onFiltersChange={setFilter}\n      />\n      <Timeline posts={posts} />\n    </>\n  );\n}\n```\n\nClean. Composable. TypeScript all the way.\n\n## What's Next\n\nThe roadmap is clear, the vision is set. Let's build.",
+      "date_published": "2025-12-04",
+      "reading_time": 5,
+      "persona": "00000000-0000-0000-0000-000000000001",
+      "tags": ["00000000-0000-0000-0000-000000000011", "00000000-0000-0000-0000-000000000012"]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000102",
+      "status": "published",
+      "title": "On patience and shipping",
+      "slug": "on-patience-and-shipping",
+      "excerpt": "The tension between waiting for perfection and releasing into the world...",
+      "content": "## The Paradox\n\nWe want things to be perfect. But perfection is the enemy of done.\n\n## Finding Balance\n\nShip early, iterate often. But know when to wait.\n\n## The Art of Timing\n\nSometimes the best code is the code you didn't write.",
+      "date_published": "2025-12-01",
+      "reading_time": 3,
+      "persona": "00000000-0000-0000-0000-000000000003",
+      "tags": ["00000000-0000-0000-0000-000000000013"]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000103",
+      "status": "published",
+      "title": "Prague in winter",
+      "slug": "prague-in-winter",
+      "excerpt": "First snow, empty streets, and the best coffee spots when the tourists are gone...",
+      "content": "## The First Snow\n\nThere's something magical about Prague covered in white.\n\n## Hidden Gems\n\nThe cafes that locals know. The streets that tourists miss.\n\n## Winter Rituals\n\nHot chocolate, warm lights, and the sound of trams.",
+      "date_published": "2025-11-28",
+      "reading_time": 4,
+      "persona": "00000000-0000-0000-0000-000000000003",
+      "tags": ["00000000-0000-0000-0000-000000000014"]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000104",
+      "status": "published",
+      "title": "The architecture of dreams",
+      "slug": "the-architecture-of-dreams",
+      "excerpt": "A short story about a city that builds itself from the memories of its inhabitants...",
+      "content": "## Chapter One\n\nThe city rose from nothing, shaped by thought alone.\n\n## Chapter Two\n\nEach building held a memory, each street a story.\n\n## Chapter Three\n\nAnd in the center, a tower that reached beyond the sky.",
+      "date_published": "2025-11-15",
+      "reading_time": 8,
+      "persona": "00000000-0000-0000-0000-000000000002",
+      "tags": ["00000000-0000-0000-0000-000000000015"]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000105",
+      "status": "published",
+      "title": "Building a design system",
+      "slug": "building-a-design-system",
+      "excerpt": "How Obsidian Forge evolved from a color palette to a complete design language...",
+      "content": "## Starting Point\n\nEvery design system starts with constraints.\n\n## The Palette\n\nAmethyst, gold, and terminal green. The colors of the forge.\n\n## Components\n\nFrom atoms to organisms. Building blocks that compose.\n\n## The Result\n\nA cohesive visual language that scales.",
+      "date_published": "2024-10-20",
+      "reading_time": 6,
+      "persona": "00000000-0000-0000-0000-000000000001",
+      "tags": ["00000000-0000-0000-0000-000000000011"]
+    }
+  ]
+}
