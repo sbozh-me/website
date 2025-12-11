@@ -1,8 +1,11 @@
 import {
+  DirectusError,
   DirectusRepository,
   MockBlogRepository,
   type BlogRepository,
 } from "@sbozh/blog/data";
+
+export { DirectusError };
 
 export interface CreateBlogRepositoryOptions {
   includeDrafts?: boolean;

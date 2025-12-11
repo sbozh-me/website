@@ -9,6 +9,7 @@ export type {
 
 export type {
   EmptyStateProps,
+  ErrorStateProps,
   MonthMarkerProps,
   PersonaDotProps,
   PostCardProps,
@@ -27,6 +28,7 @@ export {
 
 export {
   EmptyState,
+  ErrorState,
   MonthMarker,
   PersonaDot,
   PostCard,

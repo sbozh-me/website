@@ -1,9 +1,17 @@
-import { EmptyState, Timeline } from "@sbozh/blog";
-import { createBlogRepository } from "@/lib/blog/repository";
+import { EmptyState, ErrorState, Timeline } from "@sbozh/blog";
+import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
 export default async function BlogPage() {
   const repository = createBlogRepository();
-  const posts = await repository.getPosts();
+
+  let posts;
+  let error: DirectusError | null = null;
+
+  try {
+    posts = await repository.getPosts();
+  } catch (e) {
+    error = DirectusError.fromError(e);
+  }
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-24">
@@ -14,11 +22,17 @@ export default async function BlogPage() {
         </p>
 
         <div className="mt-12">
-          {posts.length === 0 ? (
+          {error ? (
+            <ErrorState
+              title="Unable to load posts"
+              message={error.message}
+              status={error.status}
+            />
+          ) : posts && posts.length === 0 ? (
             <EmptyState />
-          ) : (
+          ) : posts ? (
             <Timeline posts={posts} />
-          )}
+          ) : null}
         </div>
       </div>
     </div>

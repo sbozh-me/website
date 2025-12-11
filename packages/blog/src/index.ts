@@ -1,6 +1,7 @@
 export type {
   DateFilterProps,
   EmptyStateProps,
+  ErrorStateProps,
   FilterBarProps,
   MonthMarkerProps,
   PersonaDotProps,
@@ -28,6 +29,7 @@ export type { GroupedPosts, MonthGroup } from "./utils";
 export {
   DateFilter,
   EmptyState,
+  ErrorState,
   FilterBar,
   MonthMarker,
   PersonaDot,

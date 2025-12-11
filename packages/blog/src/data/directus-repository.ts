@@ -11,6 +11,50 @@ import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
 import type { Tag } from "../types/tag";
 
+export class DirectusError extends Error {
+  constructor(
+    message: string,
+    public status?: number
+  ) {
+    super(message);
+    this.name = "DirectusError";
+  }
+
+  static fromError(error: unknown): DirectusError {
+    if (error instanceof DirectusError) {
+      return error;
+    }
+
+    // Handle Directus SDK errors
+    if (
+      error &&
+      typeof error === "object" &&
+      "errors" in error &&
+      Array.isArray((error as { errors: unknown[] }).errors)
+    ) {
+      const directusErrors = (error as { errors: { message: string }[] })
+        .errors;
+      const message =
+        directusErrors[0]?.message || "Unknown Directus error";
+
+      // Extract status from response if available
+      let status: number | undefined;
+      if ("response" in error && error.response) {
+        const response = error.response as { status?: number };
+        status = response.status;
+      }
+
+      return new DirectusError(message, status);
+    }
+
+    if (error instanceof Error) {
+      return new DirectusError(error.message);
+    }
+
+    return new DirectusError("An unexpected error occurred");
+  }
+}
+
 // Directus collection types
 interface DirectusPost {
   id: string;
@@ -78,65 +122,81 @@ export class DirectusRepository implements BlogRepository {
   }
 
   async getPosts(filters?: PostFilters): Promise<PostListItem[]> {
-    const directusFilter = this.buildFilter(filters);
+    try {
+      const directusFilter = this.buildFilter(filters);
 
-    const posts = await this.client.request(
-      readItems("posts", {
-        filter: directusFilter,
-        fields: [
-          "id",
-          "status",
-          "title",
-          "slug",
-          "excerpt",
-          "date_published",
-          "reading_time",
-          { persona: ["id", "name", "slug", "color", "description"] },
-          { tags: [{ tags_id: ["id", "name", "slug"] }] },
-          { image: ["id", "filename_download", "width", "height"] },
-        ],
-        sort: ["-date_published"],
-      })
-    );
+      const posts = await this.client.request(
+        readItems("posts", {
+          filter: directusFilter,
+          fields: [
+            "id",
+            "status",
+            "title",
+            "slug",
+            "excerpt",
+            "date_published",
+            "reading_time",
+            { persona: ["id", "name", "slug", "color", "description"] },
+            { tags: [{ tags_id: ["id", "name", "slug"] }] },
+            { image: ["id", "filename_download", "width", "height"] },
+          ],
+          sort: ["-date_published"],
+        })
+      );
 
-    return (posts as DirectusPost[]).map(this.mapToPostListItem.bind(this));
+      return (posts as DirectusPost[]).map(this.mapToPostListItem.bind(this));
+    } catch (error) {
+      throw DirectusError.fromError(error);
+    }
   }
 
   async getPost(slug: string): Promise<Post | null> {
-    const filter: Record<string, unknown> = { slug: { _eq: slug } };
-    if (!this.includeDrafts) {
-      filter.status = { _eq: "published" };
+    try {
+      const filter: Record<string, unknown> = { slug: { _eq: slug } };
+      if (!this.includeDrafts) {
+        filter.status = { _eq: "published" };
+      }
+
+      const posts = await this.client.request(
+        readItems("posts", {
+          filter,
+          fields: [
+            "*",
+            { persona: ["*"] },
+            { tags: [{ tags_id: ["*"] }] },
+            { image: ["*"] },
+          ],
+          limit: 1,
+        })
+      );
+
+      if (posts.length === 0) return null;
+      return this.mapToPost(posts[0] as DirectusPost);
+    } catch (error) {
+      throw DirectusError.fromError(error);
     }
-
-    const posts = await this.client.request(
-      readItems("posts", {
-        filter,
-        fields: [
-          "*",
-          { persona: ["*"] },
-          { tags: [{ tags_id: ["*"] }] },
-          { image: ["*"] },
-        ],
-        limit: 1,
-      })
-    );
-
-    if (posts.length === 0) return null;
-    return this.mapToPost(posts[0] as DirectusPost);
   }
 
   async getPersonas(): Promise<Persona[]> {
-    const personas = await this.client.request(
-      readItems("personas", { fields: ["*"] })
-    );
-    return (personas as DirectusPersona[]).map(this.mapToPersona);
+    try {
+      const personas = await this.client.request(
+        readItems("personas", { fields: ["*"] })
+      );
+      return (personas as DirectusPersona[]).map(this.mapToPersona);
+    } catch (error) {
+      throw DirectusError.fromError(error);
+    }
   }
 
   async getTags(): Promise<Tag[]> {
-    const tags = await this.client.request(
-      readItems("tags", { fields: ["*"] })
-    );
-    return (tags as DirectusTag[]).map(this.mapToTag);
+    try {
+      const tags = await this.client.request(
+        readItems("tags", { fields: ["*"] })
+      );
+      return (tags as DirectusTag[]).map(this.mapToTag);
+    } catch (error) {
+      throw DirectusError.fromError(error);
+    }
   }
 
   private buildFilter(filters?: PostFilters): Record<string, unknown> {
