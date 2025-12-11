@@ -9,6 +9,21 @@ Next.js frontend for sbozh.me personal website.
 pnpm dev
 ```
 
+## Environment Variables
+
+Copy `.env.example` to `.env.local`:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Description |
+|----------|-------------|
+| `DIRECTUS_URL` | Directus API URL (e.g., `http://localhost:8055`) |
+| `DIRECTUS_TOKEN` | Static API token for Directus authentication |
+
+Without these variables, the app falls back to mock data.
+
 ## Directus CMS
 
 Local Directus instance for blog content management.

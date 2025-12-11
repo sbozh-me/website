@@ -1,11 +1,8 @@
-import {
-  EmptyState,
-  MockBlogRepository,
-  Timeline,
-} from "@sbozh/blog";
+import { EmptyState, Timeline } from "@sbozh/blog";
+import { createBlogRepository } from "@/lib/blog/repository";
 
 export default async function BlogPage() {
-  const repository = new MockBlogRepository();
+  const repository = createBlogRepository();
   const posts = await repository.getPosts();
 
   return (

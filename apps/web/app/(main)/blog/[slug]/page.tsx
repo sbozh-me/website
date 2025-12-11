@@ -10,8 +10,8 @@ import {
   ScrollToTop,
   TableOfContents,
 } from "@sbozh/blog/components";
-import { MockBlogRepository } from "@sbozh/blog/data";
 import { extractHeadings } from "@sbozh/blog/utils";
+import { createBlogRepository } from "@/lib/blog/repository";
 import "@sbozh/blog/styles/prose.css";
 import "@sbozh/blog/styles/code.css";
 
@@ -21,7 +21,7 @@ interface PageProps {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const repository = new MockBlogRepository();
+  const repository = createBlogRepository();
   const post = await repository.getPost(slug);
 
   if (!post) {
@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 }
 
 export async function generateStaticParams() {
-  const repository = new MockBlogRepository();
+  const repository = createBlogRepository();
   const posts = await repository.getPosts();
 
   return posts.map((post) => ({
