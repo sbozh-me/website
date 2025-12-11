@@ -41,6 +41,7 @@ Blog UI powered by `@sbozh/blog` package with abstract data layer (repository pa
 
 0.5.4 and 0.5.5 was ignore because demos was implemented in 0.5.3
 
+
 ## 0.6.0 - Blog Backend
 
 Directus CMS integration with Docker, PostgreSQL, and repository pattern.

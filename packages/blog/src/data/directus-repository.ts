@@ -102,15 +102,17 @@ export interface DirectusConfig {
   url: string;
   token?: string;
   includeDrafts?: boolean;
+  /** Base URL for assets. Defaults to `${url}/assets`. Use `/api/assets` for Next.js proxy. */
+  assetBaseUrl?: string;
 }
 
 export class DirectusRepository implements BlogRepository {
   private client: RestClient<DirectusSchema>;
-  private baseUrl: string;
+  private assetBaseUrl: string;
   private includeDrafts: boolean;
 
   constructor(config: DirectusConfig) {
-    this.baseUrl = config.url;
+    this.assetBaseUrl = config.assetBaseUrl ?? `${config.url}/assets`;
     this.includeDrafts = config.includeDrafts ?? false;
 
     // Disable Next.js fetch caching for all Directus requests
@@ -281,7 +283,7 @@ export class DirectusRepository implements BlogRepository {
 
   private mapToImage(file: DirectusFile) {
     return {
-      src: `${this.baseUrl}/assets/${file.id}`,
+      src: `${this.assetBaseUrl}/${file.id}`,
       alt: file.filename_download,
       width: file.width,
       height: file.height,

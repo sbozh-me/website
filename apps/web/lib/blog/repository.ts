@@ -22,6 +22,7 @@ export function createBlogRepository(
       url: directusUrl,
       token: directusToken,
       includeDrafts: options?.includeDrafts,
+      assetBaseUrl: "/api/assets",
     });
   }
 
