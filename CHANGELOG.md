@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2025-12-11
+
+### Changes
+
+- feat(web): implement Directus schema seeding for blog backend ([2f691dc](https://github.com/sbozh-me/website/commit/2f691dc1b1d7cd6a37201ae25c5103451dd961c4))
+- docs(directus): add README with setup instructions ([076a99a](https://github.com/sbozh-me/website/commit/076a99ae64b0b20a8b5cc8d241d4e9a927de6b60))
+
+
 ## [0.6.0] - 2025-12-10
 
 ### Changes
