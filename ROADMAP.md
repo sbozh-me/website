@@ -50,8 +50,9 @@ Directus CMS integration with Docker, PostgreSQL, and repository pattern.
 - [0.6.1 - Schema Seeding](roadmap/blog/0.6.1.md)
 - [0.6.2 - Blog API Layer](roadmap/blog/0.6.2.md)
 - [0.6.3 - Frontend Integration](roadmap/blog/0.6.3.md)
-- [0.6.4 - Filters & Drafts](roadmap/blog/0.6.4.md)
-- [0.6.5 - Polish & Tests](roadmap/blog/0.6.5.md)
+- [0.6.4 - Polish & Tests](roadmap/blog/0.6.4.md)
+
+> **Note:** Filters & Drafts deferred to post-second-blog-post. Filter components exist in `@sbozh/blog` package; wiring to searchParams will be done when needed.
 
 ## 0.7.0 - Blog SEO
 
