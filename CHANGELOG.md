@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.4] - 2025-12-12
+
+### Changes
+
+- docs(roadmap): defer filters to post-second-blog-post ([afea4ae](https://github.com/sbozh-me/website/commit/afea4ae59b086699e57b6ea5e18a75e0a9f5d36f))
+- test(blog): add DirectusRepository tests and debug logging ([9fd5ab4](https://github.com/sbozh-me/website/commit/9fd5ab4e963e005ad8f8cf978af433b46be8bc50))
+
+
 ## [0.6.3] - 2025-12-12
 
 ### Changes
