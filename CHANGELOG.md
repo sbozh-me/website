@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.3] - 2025-12-12
+
+### Changes
+
+- feat(blog): implement environment-based repository factory for Directus integration ([e5fad68](https://github.com/sbozh-me/website/commit/e5fad68c4e4e7d19033f6c15af0cd93ca33ff673))
+- feat(blog): add error handling for Directus API failures ([2d14c85](https://github.com/sbozh-me/website/commit/2d14c854023c68790eefc85a64e789fab7d50a75))
+- docs(blog): add error handling sections to READMEs ([59f4cb0](https://github.com/sbozh-me/website/commit/59f4cb0bd821c5041612eb50b1ccbcdf92d495bf))
+- feat(blog): add image foreign key relation to posts schema ([7dab737](https://github.com/sbozh-me/website/commit/7dab7375dbf209aad202ebc2c21fa76f014bf726))
+- fix(blog): disable caching for real-time content updates ([8c201be](https://github.com/sbozh-me/website/commit/8c201be6fbc8485d81c51a1820f6881704a5821f))
+- feat(blog): add Next.js API proxy for Directus assets ([196cf48](https://github.com/sbozh-me/website/commit/196cf48d4b2635cf2f5efa8c67d4598db9dde490))
+- style(blog): update prose CSS variables and link hover effects ([bca69f9](https://github.com/sbozh-me/website/commit/bca69f9ef61ef75985cb051916446592f01bdd81))
+- feat(blog): add attribution field for content source crediting ([3eba1df](https://github.com/sbozh-me/website/commit/3eba1df03172f76c73d8ac8fbcd4a7d3d61613c7))
+- feat(directus): skip seeding if posts already exist ([9e6b419](https://github.com/sbozh-me/website/commit/9e6b419e11bf72218434363bb985f0a71a9d6b8b))
+
+
 ## [0.6.2] - 2025-12-11
 
 ### Changes
