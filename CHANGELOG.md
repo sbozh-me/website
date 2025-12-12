@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.3] - 2025-12-13
+
+### Changes
+
+- feat(seo): implement dynamic OG image generation for blog posts ([e1636b8](https://github.com/sbozh-me/website/commit/e1636b80a77938a306ddf2b93cfacf5e54b799f1))
+- docs(roadmap): mark 0.7.3 OG image generation for deploy testing ([f2fba05](https://github.com/sbozh-me/website/commit/f2fba05224e45ee8d425caf6be7b05a81e90c8ef))
+
+
 ## [0.7.2] - 2025-12-12
 
 ### Changes
