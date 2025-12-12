@@ -11,6 +11,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^3.1.1",
     "@sbozh/blog": "workspace:*",
     "@sbozh/pmdxjs": "workspace:*",
     "@sbozh/react-ui": "workspace:*",
@@ -19,6 +20,8 @@
     "puppeteer-core": "^24.32.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
+    "rehype-pretty-code": "^0.14.1",
+    "rehype-slug": "^6.0.0",
     "sonner": "^2.0.7"
   },
   "devDependencies": {

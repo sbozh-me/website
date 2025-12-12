@@ -17,6 +17,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@mdx-js/mdx':
+        specifier: ^3.1.1
+        version: 3.1.1
       '@sbozh/blog':
         specifier: workspace:*
         version: link:../../packages/blog
@@ -41,6 +44,12 @@ importers:
       react-dom:
         specifier: 19.2.1
         version: 19.2.1(react@19.2.1)
+      rehype-pretty-code:
+        specifier: ^0.14.1
+        version: 0.14.1(shiki@1.29.2)
+      rehype-slug:
+        specifier: ^6.0.0
+        version: 6.0.0
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)

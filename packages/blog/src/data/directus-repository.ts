@@ -155,6 +155,7 @@ export class DirectusRepository implements BlogRepository {
       const posts = await this.client.request(
         readItems("posts", {
           filter: directusFilter,
+          // Directus SDK types don't properly infer junction table fields (tags)
           fields: [
             "id",
             "status",
@@ -166,7 +167,7 @@ export class DirectusRepository implements BlogRepository {
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
             { image: ["id", "filename_download", "width", "height"] },
-          ],
+          ] as unknown as (keyof DirectusPost)[],
           sort: ["-date_published"],
         })
       );
@@ -190,12 +191,13 @@ export class DirectusRepository implements BlogRepository {
       const posts = await this.client.request(
         readItems("posts", {
           filter,
+          // Directus SDK types don't properly infer junction table fields (tags)
           fields: [
             "*",
             { persona: ["*"] },
             { tags: [{ tags_id: ["*"] }] },
             { image: ["*"] },
-          ],
+          ] as unknown as (keyof DirectusPost)[],
           limit: 1,
         })
       );

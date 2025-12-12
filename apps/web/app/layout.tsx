@@ -17,8 +17,29 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "sbozh",
-  description: "sbozh website",
+  metadataBase: new URL('https://sbozh.me'),
+  title: {
+    default: 'sbozh.me',
+    template: '%s | sbozh.me',
+  },
+  description: 'Personal website of sbozh - blog, CV, and projects.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/site.webmanifest',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'sbozh.me',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 export default function RootLayout({
