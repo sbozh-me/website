@@ -34,6 +34,26 @@ echo ""
 echo "Schema applied successfully!"
 echo ""
 
-# Run seed data script
-echo "Running seed data import..."
-./seed-data.sh
+# Check if posts already exist before seeding
+echo "Checking for existing posts..."
+TOKEN=$(curl -s -X POST http://localhost:8055/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"email":"admin@sbozh.me","password":"directus123"}' | jq -r '.data.access_token')
+
+if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+    echo "Warning: Could not authenticate to check for existing posts"
+    echo "Running seed data import..."
+    ./seed-data.sh
+else
+    POST_COUNT=$(curl -s "http://localhost:8055/items/posts?limit=0&meta=total_count" \
+        -H "Authorization: Bearer $TOKEN" | jq -r '.meta.total_count // 0')
+
+    if [ "$POST_COUNT" -gt 0 ]; then
+        echo "Found $POST_COUNT existing post(s). Skipping seed data import."
+        echo ""
+        echo "To re-seed data, manually run: ./seed-data.sh"
+    else
+        echo "No posts found. Running seed data import..."
+        ./seed-data.sh
+    fi
+fi
