@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { evaluate } from "@mdx-js/mdx";
 import Image from "next/image";
@@ -22,6 +23,54 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const repository = createBlogRepository();
+
+  try {
+    const post = await repository.getPost(slug);
+
+    if (!post) {
+      return {
+        title: "Post Not Found",
+      };
+    }
+
+    const ogImage = post.image?.src || "/og/blog-default.png";
+
+    return {
+      title: post.title,
+      description: post.excerpt,
+      authors: [{ name: post.persona.name }],
+      openGraph: {
+        title: post.title,
+        description: post.excerpt,
+        type: "article",
+        publishedTime: post.date,
+        authors: [post.persona.name],
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: post.title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: post.excerpt,
+        images: [ogImage],
+      },
+    };
+  } catch {
+    return {
+      title: "Blog Post",
+    };
+  }
 }
 
 export default async function BlogPostPage({ params }: PageProps) {

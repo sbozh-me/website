@@ -54,7 +54,7 @@ vi.mock("@/lib/blog/repository", () => ({
   },
 }));
 
-import BlogPostPage, { generateStaticParams } from "./page";
+import BlogPostPage, { generateStaticParams, generateMetadata } from "./page";
 import { notFound } from "next/navigation";
 
 describe("BlogPostPage", () => {
@@ -232,5 +232,107 @@ describe("generateStaticParams", () => {
 
     expect(Array.isArray(params)).toBe(true);
     expect(params.length).toBe(0);
+  });
+});
+
+describe("generateMetadata", () => {
+  beforeEach(() => {
+    mockShouldThrow = false;
+    mockPostOverride = undefined;
+  });
+
+  it("returns post metadata with OG and Twitter cards", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Test Blog Post",
+      slug: "test-post",
+      excerpt: "This is a test excerpt for the blog post",
+      content: "## Content",
+      date: "2025-01-15T10:00:00Z",
+      readingTime: 5,
+      persona: { id: "1", name: "John Doe", slug: "john", color: "#000" },
+      tags: [],
+      image: {
+        src: "/images/test-og.png",
+        alt: "Test image",
+        width: 1200,
+        height: 630,
+      },
+    };
+
+    const params = Promise.resolve({ slug: "test-post" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.title).toBe("Test Blog Post");
+    expect(metadata.description).toBe("This is a test excerpt for the blog post");
+    expect(metadata.authors).toEqual([{ name: "John Doe" }]);
+    expect(metadata.openGraph).toEqual({
+      title: "Test Blog Post",
+      description: "This is a test excerpt for the blog post",
+      type: "article",
+      publishedTime: "2025-01-15T10:00:00Z",
+      authors: ["John Doe"],
+      images: [
+        {
+          url: "/images/test-og.png",
+          width: 1200,
+          height: 630,
+          alt: "Test Blog Post",
+        },
+      ],
+    });
+    expect(metadata.twitter).toEqual({
+      card: "summary_large_image",
+      title: "Test Blog Post",
+      description: "This is a test excerpt for the blog post",
+      images: ["/images/test-og.png"],
+    });
+  });
+
+  it("uses default OG image when post has no image", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Post Without Image",
+      slug: "no-image",
+      excerpt: "No image here",
+      content: "## Content",
+      date: "2025-01-15",
+      readingTime: 3,
+      persona: { id: "1", name: "Jane Doe", slug: "jane", color: "#fff" },
+      tags: [],
+    };
+
+    const params = Promise.resolve({ slug: "no-image" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.openGraph?.images).toEqual([
+      {
+        url: "/og/blog-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Post Without Image",
+      },
+    ]);
+    expect(metadata.twitter?.images).toEqual(["/og/blog-default.png"]);
+  });
+
+  it("returns 'Post Not Found' title for non-existent post", async () => {
+    const params = Promise.resolve({ slug: "non-existent-post" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.title).toBe("Post Not Found");
+    expect(metadata.description).toBeUndefined();
+    expect(metadata.openGraph).toBeUndefined();
+  });
+
+  it("returns fallback metadata when repository throws", async () => {
+    mockShouldThrow = true;
+
+    const params = Promise.resolve({ slug: "any-slug" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.title).toBe("Blog Post");
+    expect(metadata.description).toBeUndefined();
+    expect(metadata.openGraph).toBeUndefined();
   });
 });
