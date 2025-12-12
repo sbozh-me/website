@@ -144,6 +144,27 @@ describe("BlogPostPage", () => {
     expect(screen.getByText("Connection failed")).toBeInTheDocument();
   });
 
+  it("renders tldr when post has tldr", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Test Post",
+      slug: "test-post",
+      excerpt: "Test excerpt",
+      tldr: "This is the short summary of the post.",
+      content: "## Test Content\n\nSome content here.",
+      date: "2025-01-01",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+    };
+
+    const params = Promise.resolve({ slug: "test-post" });
+    render(await BlogPostPage({ params }));
+
+    expect(screen.getByText("TL;DR:")).toBeInTheDocument();
+    expect(screen.getByText(/This is the short summary/)).toBeInTheDocument();
+  });
+
   it("renders attribution when post has attribution", async () => {
     mockPostOverride = {
       id: "test",

@@ -74,6 +74,15 @@ export default async function BlogPostPage({ params }: PageProps) {
     ],
   } as any);
 
+  // Compile tldr markdown if present
+  let TldrContent: React.ComponentType | null = null;
+  if (post.tldr) {
+    const { default: Content } = await evaluate(post.tldr, {
+      ...runtime,
+    } as any);
+    TldrContent = () => <Content />;
+  }
+
   // Compile attribution markdown if present
   let AttributionContent: React.ComponentType | null = null;
   if (post.attribution) {
@@ -99,6 +108,12 @@ export default async function BlogPostPage({ params }: PageProps) {
           <PostLayout toc={toc}>
             <div>
               <PostHeader post={post} />
+              {TldrContent && (
+                <div className="text-muted-foreground mb-6 [&_p]:inline">
+                  <span className="font-medium">TL;DR: </span>
+                  <TldrContent />
+                </div>
+              )}
               {post.image && (
                 <Image
                   src={post.image.src}

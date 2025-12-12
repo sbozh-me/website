@@ -507,6 +507,46 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: posts
+    field: tldr
+    type: text
+    meta:
+      collection: posts
+      conditions: null
+      display: null
+      display_options: null
+      field: tldr
+      group: null
+      hidden: false
+      interface: input-code
+      note: "Optional TL;DR summary (markdown). Shows below title with 'TL;DR:' prefix."
+      options:
+        language: markdown
+      readonly: false
+      required: false
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: tldr
+      table: posts
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: posts
     field: content
     type: text
     meta:
@@ -523,7 +563,7 @@ fields:
         language: markdown
       readonly: false
       required: false
-      sort: 6
+      sort: 7
       special: null
       translations: null
       validation: null
@@ -562,7 +602,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 7
+      sort: 8
       special: null
       translations: null
       validation: null
@@ -601,7 +641,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 8
+      sort: 9
       special: null
       translations: null
       validation: null
@@ -642,7 +682,7 @@ fields:
         template: '{{name}}'
       readonly: false
       required: false
-      sort: 9
+      sort: 10
       special:
         - m2o
       translations: null
@@ -684,7 +724,7 @@ fields:
         template: '{{tags_id.name}}'
       readonly: false
       required: false
-      sort: 10
+      sort: 11
       special:
         - m2m
       translations: null
@@ -707,7 +747,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 11
+      sort: 12
       special:
         - file
       translations: null
@@ -748,7 +788,7 @@ fields:
         language: markdown
       readonly: false
       required: false
-      sort: 12
+      sort: 13
       special: null
       translations: null
       validation: null

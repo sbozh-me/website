@@ -62,6 +62,7 @@ interface DirectusPost {
   title: string;
   slug: string;
   excerpt: string;
+  tldr: string | null;
   content: string;
   date_published: string;
   reading_time: number;
@@ -273,6 +274,7 @@ export class DirectusRepository implements BlogRepository {
       title: post.title,
       slug: post.slug,
       excerpt: post.excerpt,
+      tldr: post.tldr ?? undefined,
       content: post.content,
       date: post.date_published,
       readingTime: post.reading_time,

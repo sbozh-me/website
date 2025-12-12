@@ -13,6 +13,7 @@ export interface Post {
   title: string;
   slug: string;
   excerpt: string;
+  tldr?: string;
   content: string;
   date: string;
   readingTime: number;
