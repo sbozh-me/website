@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2025-12-12
+
+### Changes
+
+- docs(roadmap): add SEO implementation plans and favicon assets ([884a0d3](https://github.com/sbozh-me/website/commit/884a0d36d0a9498960c32f87d6d53ace866b4c21))
+- feat(seo): implement base metadata and favicon configuration ([8f679ee](https://github.com/sbozh-me/website/commit/8f679eecd2b0fcd10adc63c1a3ce976a2eaff06f))
+- test: remove deferred filter tests and fix mock assertion ([22b94b8](https://github.com/sbozh-me/website/commit/22b94b8738a8e2918c4cf81a1ddf58975db39e84))
+- test(blog): add comprehensive test coverage for blog pages ([288a2b8](https://github.com/sbozh-me/website/commit/288a2b846ca4da2c8a07219990b81dd3cb654f4f))
+
+
 ## [0.6.4] - 2025-12-12
 
 ### Changes
