@@ -241,7 +241,7 @@ describe("generateMetadata", () => {
     mockPostOverride = undefined;
   });
 
-  it("returns post metadata with OG and Twitter cards", async () => {
+  it("returns post metadata with OG and Twitter cards using dynamic OG route", async () => {
     mockPostOverride = {
       id: "test",
       title: "Test Blog Post",
@@ -274,7 +274,7 @@ describe("generateMetadata", () => {
       authors: ["John Doe"],
       images: [
         {
-          url: "/images/test-og.png",
+          url: "/api/og/blog/test-post",
           width: 1200,
           height: 630,
           alt: "Test Blog Post",
@@ -285,11 +285,44 @@ describe("generateMetadata", () => {
       card: "summary_large_image",
       title: "Test Blog Post",
       description: "This is a test excerpt for the blog post",
-      images: ["/images/test-og.png"],
+      images: ["/api/og/blog/test-post"],
     });
   });
 
-  it("uses default OG image when post has no image", async () => {
+  it("uses custom ogImage when provided", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Post With Custom OG",
+      slug: "custom-og",
+      excerpt: "Has custom OG image",
+      content: "## Content",
+      date: "2025-01-15",
+      readingTime: 3,
+      persona: { id: "1", name: "Jane Doe", slug: "jane", color: "#fff" },
+      tags: [],
+      ogImage: {
+        src: "/images/custom-og.png",
+        alt: "Custom OG",
+        width: 1200,
+        height: 630,
+      },
+    };
+
+    const params = Promise.resolve({ slug: "custom-og" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.openGraph?.images).toEqual([
+      {
+        url: "/images/custom-og.png",
+        width: 1200,
+        height: 630,
+        alt: "Post With Custom OG",
+      },
+    ]);
+    expect(metadata.twitter?.images).toEqual(["/images/custom-og.png"]);
+  });
+
+  it("uses dynamic OG route by default when post has no image", async () => {
     mockPostOverride = {
       id: "test",
       title: "Post Without Image",
@@ -307,10 +340,71 @@ describe("generateMetadata", () => {
 
     expect(metadata.openGraph?.images).toEqual([
       {
-        url: "/og/blog-default.png",
+        url: "/api/og/blog/no-image",
         width: 1200,
         height: 630,
         alt: "Post Without Image",
+      },
+    ]);
+    expect(metadata.twitter?.images).toEqual(["/api/og/blog/no-image"]);
+  });
+
+  it("uses hero image when ogGenerate is false", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Post With OG Disabled",
+      slug: "og-disabled",
+      excerpt: "OG generation disabled",
+      content: "## Content",
+      date: "2025-01-15",
+      readingTime: 3,
+      persona: { id: "1", name: "Jane Doe", slug: "jane", color: "#fff" },
+      tags: [],
+      image: {
+        src: "/images/hero.png",
+        alt: "Hero",
+        width: 1920,
+        height: 1080,
+      },
+      ogGenerate: false,
+    };
+
+    const params = Promise.resolve({ slug: "og-disabled" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.openGraph?.images).toEqual([
+      {
+        url: "/images/hero.png",
+        width: 1200,
+        height: 630,
+        alt: "Post With OG Disabled",
+      },
+    ]);
+  });
+
+  it("uses default fallback when ogGenerate is false and no images", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Post With No Images",
+      slug: "no-images",
+      excerpt: "No images at all",
+      content: "## Content",
+      date: "2025-01-15",
+      readingTime: 3,
+      persona: { id: "1", name: "Jane Doe", slug: "jane", color: "#fff" },
+      tags: [],
+      ogGenerate: false,
+    };
+
+    const params = Promise.resolve({ slug: "no-images" });
+    const metadata = await generateMetadata({ params });
+
+    expect(metadata.openGraph?.images).toEqual([
+      {
+        url: "/og/blog-default.png",
+        width: 1200,
+        height: 630,
+        alt: "Post With No Images",
       },
     ]);
     expect(metadata.twitter?.images).toEqual(["/og/blog-default.png"]);

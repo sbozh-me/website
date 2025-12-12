@@ -21,6 +21,8 @@ export interface Post {
   tags: Tag[];
   image?: PostImage;
   attribution?: string;
+  ogImage?: PostImage;
+  ogGenerate?: boolean;
 }
 
 export interface PostListItem {

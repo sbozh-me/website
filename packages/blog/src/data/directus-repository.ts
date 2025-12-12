@@ -70,6 +70,8 @@ interface DirectusPost {
   tags: { tags_id: DirectusTag }[];
   image: DirectusFile | null;
   attribution: string | null;
+  og_image: DirectusFile | null;
+  og_generate: boolean;
 }
 
 interface DirectusPersona {
@@ -198,6 +200,7 @@ export class DirectusRepository implements BlogRepository {
             { persona: ["*"] },
             { tags: [{ tags_id: ["*"] }] },
             { image: ["*"] },
+            { og_image: ["*"] },
           ] as unknown as (keyof DirectusPost)[],
           limit: 1,
         })
@@ -282,6 +285,8 @@ export class DirectusRepository implements BlogRepository {
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),
       image: post.image ? this.mapToImage(post.image) : undefined,
       attribution: post.attribution ?? undefined,
+      ogImage: post.og_image ? this.mapToImage(post.og_image) : undefined,
+      ogGenerate: post.og_generate,
     };
   }
 

@@ -811,6 +811,86 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: posts
+    field: og_image
+    type: uuid
+    meta:
+      collection: posts
+      conditions: null
+      display: image
+      display_options: null
+      field: og_image
+      group: null
+      hidden: false
+      interface: file-image
+      note: "Custom OG image (1200x630). Overrides auto-generation."
+      options: null
+      readonly: false
+      required: false
+      sort: 14
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: og_image
+      table: posts
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: posts
+    field: og_generate
+    type: boolean
+    meta:
+      collection: posts
+      conditions: null
+      display: boolean
+      display_options: null
+      field: og_generate
+      group: null
+      hidden: false
+      interface: boolean
+      note: "Auto-generate OG image from hero image (default: true)"
+      options: null
+      readonly: false
+      required: false
+      sort: 15
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: og_generate
+      table: posts
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: posts_tags
     field: id
     type: integer
@@ -1047,6 +1127,27 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
 relations:
+  - collection: posts
+    field: og_image
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: posts
+      many_field: og_image
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: posts
+      column: og_image
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: posts_og_image_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
   - collection: posts
     field: image
     related_collection: directus_files

@@ -38,7 +38,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
 
-    const ogImage = post.image?.src || "/og/blog-default.png";
+    // Determine OG image URL
+    // Priority: 1. Custom ogImage, 2. Dynamic generation, 3. Hero image, 4. Default
+    let ogImage: string;
+    if (post.ogImage?.src) {
+      ogImage = post.ogImage.src;
+    } else if (post.ogGenerate !== false) {
+      ogImage = `/api/og/blog/${post.slug}`;
+    } else if (post.image?.src) {
+      ogImage = post.image.src;
+    } else {
+      ogImage = "/og/blog-default.png";
+    }
 
     return {
       title: post.title,
