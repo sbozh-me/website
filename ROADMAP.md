@@ -61,7 +61,7 @@ Site-wide SEO, Open Graph, structured data, and sitemap generation.
 - ~~[0.7.0 - Favicon & Base Metadata](roadmap/seo/0.7.0.md)~~
 - ~~[0.7.1 - Robots & Sitemap](roadmap/seo/0.7.1.md)~~
 - ~~[0.7.2 - Blog Post SEO](roadmap/seo/0.7.2.md)~~
-- [0.7.3 - OG Image Generation](roadmap/seo/0.7.3.md)
+- [0.7.3 - OG Image Generation](roadmap/seo/0.7.3.md) 🚀 deploy to test
 - [0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)
 - [0.7.5 - Structured Data](roadmap/seo/0.7.5.md)
 
@@ -93,5 +93,6 @@ Site-wide SEO, Open Graph, structured data, and sitemap generation.
 - Production launch
 - Final QA
 - Public announcement
+- Test 0.7.3
 
 ---
