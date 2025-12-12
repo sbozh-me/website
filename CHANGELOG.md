@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2025-12-12
+
+### Changes
+
+- feat(seo): implement blog post SEO metadata with Open Graph and Twitter cards ([c0a8692](https://github.com/sbozh-me/website/commit/c0a869269c492e6c5b9b1e7d9a3447fa124a0bf9))
+
+
 ## [0.7.1] - 2025-12-12
 
 ### Changes
