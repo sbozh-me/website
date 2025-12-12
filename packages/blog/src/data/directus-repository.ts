@@ -105,16 +105,20 @@ export interface DirectusConfig {
   includeDrafts?: boolean;
   /** Base URL for assets. Defaults to `${url}/assets`. Use `/api/assets` for Next.js proxy. */
   assetBaseUrl?: string;
+  /** Enable debug logging for API requests */
+  debug?: boolean;
 }
 
 export class DirectusRepository implements BlogRepository {
   private client: RestClient<DirectusSchema>;
   private assetBaseUrl: string;
   private includeDrafts: boolean;
+  private debug: boolean;
 
   constructor(config: DirectusConfig) {
     this.assetBaseUrl = config.assetBaseUrl ?? `${config.url}/assets`;
     this.includeDrafts = config.includeDrafts ?? false;
+    this.debug = config.debug ?? false;
 
     // Disable Next.js fetch caching for all Directus requests
     const client = createDirectus<DirectusSchema>(config.url).with(
@@ -132,9 +136,21 @@ export class DirectusRepository implements BlogRepository {
     }
   }
 
+  private log(method: string, message: string, data?: unknown): void {
+    if (this.debug) {
+      const prefix = `[DirectusRepository.${method}]`;
+      if (data !== undefined) {
+        console.log(prefix, message, JSON.stringify(data, null, 2));
+      } else {
+        console.log(prefix, message);
+      }
+    }
+  }
+
   async getPosts(filters?: PostFilters): Promise<PostListItem[]> {
     try {
       const directusFilter = this.buildFilter(filters);
+      this.log("getPosts", "Fetching posts with filter:", directusFilter);
 
       const posts = await this.client.request(
         readItems("posts", {
@@ -155,8 +171,10 @@ export class DirectusRepository implements BlogRepository {
         })
       );
 
+      this.log("getPosts", `Fetched ${posts.length} posts`);
       return (posts as DirectusPost[]).map(this.mapToPostListItem.bind(this));
     } catch (error) {
+      this.log("getPosts", "Error:", error);
       throw DirectusError.fromError(error);
     }
   }
@@ -167,6 +185,7 @@ export class DirectusRepository implements BlogRepository {
       if (!this.includeDrafts) {
         filter.status = { _eq: "published" };
       }
+      this.log("getPost", `Fetching post with slug "${slug}"`, filter);
 
       const posts = await this.client.request(
         readItems("posts", {
@@ -181,31 +200,42 @@ export class DirectusRepository implements BlogRepository {
         })
       );
 
-      if (posts.length === 0) return null;
+      if (posts.length === 0) {
+        this.log("getPost", `Post not found: "${slug}"`);
+        return null;
+      }
+      this.log("getPost", `Found post: "${posts[0].title}"`);
       return this.mapToPost(posts[0] as DirectusPost);
     } catch (error) {
+      this.log("getPost", "Error:", error);
       throw DirectusError.fromError(error);
     }
   }
 
   async getPersonas(): Promise<Persona[]> {
+    this.log("getPersonas", "Fetching all personas");
     try {
       const personas = await this.client.request(
         readItems("personas", { fields: ["*"] })
       );
+      this.log("getPersonas", `Fetched ${personas.length} personas`);
       return (personas as DirectusPersona[]).map(this.mapToPersona);
     } catch (error) {
+      this.log("getPersonas", "Error:", error);
       throw DirectusError.fromError(error);
     }
   }
 
   async getTags(): Promise<Tag[]> {
+    this.log("getTags", "Fetching all tags");
     try {
       const tags = await this.client.request(
         readItems("tags", { fields: ["*"] })
       );
+      this.log("getTags", `Fetched ${tags.length} tags`);
       return (tags as DirectusTag[]).map(this.mapToTag);
     } catch (error) {
+      this.log("getTags", "Error:", error);
       throw DirectusError.fromError(error);
     }
   }

@@ -57,9 +57,29 @@ const repository = new DirectusRepository({
   url: process.env.DIRECTUS_URL,      // e.g. 'http://localhost:8055'
   token: process.env.DIRECTUS_TOKEN,  // Optional: static API token
   includeDrafts: false,               // Optional: show draft posts
+  assetBaseUrl: '/api/assets',        // Optional: custom asset URL for proxying
+  debug: false,                       // Optional: enable debug logging
 });
 
 const posts = await repository.getPosts({ persona: 'founder' });
+```
+
+#### Debug Logging
+
+Enable debug logging to see API requests and responses:
+
+```typescript
+const repository = new DirectusRepository({
+  url: process.env.DIRECTUS_URL,
+  token: process.env.DIRECTUS_TOKEN,
+  debug: true,  // Enable debug logging
+});
+```
+
+This will output logs like:
+```
+[DirectusRepository.getPosts] Fetching posts with filter: { "status": { "_eq": "published" } }
+[DirectusRepository.getPosts] Fetched 5 posts
 ```
 
 ### Error Handling
@@ -331,6 +351,21 @@ pnpm test              # Run tests
 pnpm test:watch        # Watch mode
 pnpm test:coverage     # Generate coverage report
 ```
+
+### Integration Tests
+
+Integration tests require a running Directus instance:
+
+```bash
+# Start Directus locally
+cd apps/web/directus
+docker compose up -d
+
+# Run all tests including integration
+DIRECTUS_URL=http://localhost:8055 DIRECTUS_TOKEN=your-token pnpm test
+```
+
+Integration tests are automatically skipped when `DIRECTUS_URL` is not set.
 
 Target: 90%+ coverage
 
