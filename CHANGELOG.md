@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2025-12-12
+
+### Changes
+
+- docs(roadmap): mark 0.6.0 Blog Backend as complete ([95df42d](https://github.com/sbozh-me/website/commit/95df42d019cfcdef888337cb8adabacdafa3d7d6))
+- chore(assets): update favicon files ([af3e7f3](https://github.com/sbozh-me/website/commit/af3e7f3297a3cd1453b80b077b368b555b03a9f1))
+- feat(blog): add optional TL;DR summaries for blog posts ([7d5f472](https://github.com/sbozh-me/website/commit/7d5f47254a0bb37faf200a8ff566ae85a3de3778))
+- feat(seo): implement robots.txt and sitemap.xml generation ([14675d1](https://github.com/sbozh-me/website/commit/14675d1a337e461a1a6133206f169346a59e4cbc))
+
+
 ## [0.7.0] - 2025-12-12
 
 ### Changes
