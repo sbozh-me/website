@@ -54,11 +54,16 @@ Directus CMS integration with Docker, PostgreSQL, and repository pattern.
 
 > **Note:** Filters & Drafts deferred to post-second-blog-post. Filter components exist in `@sbozh/blog` package; wiring to searchParams will be done when needed.
 
-## 0.7.0 - Blog SEO
+## 0.7.0 - SEO & Metadata
 
-- SEO preparation for LinkedIn announcements
-- Open Graph meta tags
-- Social sharing optimization
+Site-wide SEO, Open Graph, structured data, and sitemap generation.
+
+- [0.7.0 - Favicon & Base Metadata](roadmap/seo/0.7.0.md)
+- [0.7.1 - Robots & Sitemap](roadmap/seo/0.7.1.md)
+- [0.7.2 - Blog Post SEO](roadmap/seo/0.7.2.md)
+- [0.7.3 - OG Image Generation](roadmap/seo/0.7.3.md)
+- [0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)
+- [0.7.5 - Structured Data](roadmap/seo/0.7.5.md)
 
 ## 0.8.0 - Projects Page
 
@@ -66,29 +71,22 @@ Directus CMS integration with Docker, PostgreSQL, and repository pattern.
 - Blog engine boilerplate announcement
 - CV builder announcement
 
-## 0.9.0 - Updates subscribe
-
-- Enter email to subscribe to updates
-- CV updates
-- Blog updates
-- Project updates
-
-## 0.10.0 - Deployment
-
-- Hetzner deploy scripts
-- CI/CD pipeline
-- Production configuration
-
-## 0.11.0 - Analytics
+## 0.9.0 - Analytics
 
 - Tracking systems integration
 - Analytics dashboard
 
-## 0.12.0 - Legal
+## 0.10.0 - Legal
 
 - Cookie consent
 - Privacy policy
 - Coincidences disclaimer
+
+## 0.11.0 - Deployment
+
+- Hetzner deploy scripts
+- CI/CD pipeline
+- Production configuration
 
 ## 1.0.0 - Release
 
@@ -97,11 +95,3 @@ Directus CMS integration with Docker, PostgreSQL, and repository pattern.
 - Public announcement
 
 ---
-
-## Post-Release
-
-### Wide Text Search
-
-- PostgreSQL full-text search or Algolia integration
-- `search` parameter in PostFilters
-- May require Directus extensions
