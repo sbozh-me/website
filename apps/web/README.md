@@ -92,3 +92,25 @@ If content still appears stale:
 1. Clear Next.js cache: `rm -rf apps/web/.next`
 2. Restart Directus: `cd apps/web/directus && docker compose restart`
 3. Restart dev server: `pnpm dev`
+
+## SEO
+
+### Robots & Sitemap
+
+The site generates `robots.txt` and `sitemap.xml` at build time using Next.js metadata conventions.
+
+**Files:**
+- `app/robots.ts` - Generates `/robots.txt`
+- `app/sitemap.ts` - Generates `/sitemap.xml`
+
+**Indexed pages:**
+- `/` (homepage)
+- `/blog` (blog list)
+- `/blog/[slug]` (individual posts)
+- `/projects`
+
+**Excluded from indexing:**
+- `/cv`
+
+**Sitemap regeneration:**
+The sitemap is generated during `pnpm build`. To regenerate after publishing new blog posts, trigger a rebuild via Directus Flow webhook or manual deploy.
