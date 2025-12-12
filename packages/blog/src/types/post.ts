@@ -19,6 +19,7 @@ export interface Post {
   persona: Persona;
   tags: Tag[];
   image?: PostImage;
+  attribution?: string;
 }
 
 export interface PostListItem {

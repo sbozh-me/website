@@ -68,6 +68,7 @@ interface DirectusPost {
   persona: DirectusPersona;
   tags: { tags_id: DirectusTag }[];
   image: DirectusFile | null;
+  attribution: string | null;
 }
 
 interface DirectusPersona {
@@ -246,6 +247,7 @@ export class DirectusRepository implements BlogRepository {
       persona: this.mapToPersona(post.persona),
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),
       image: post.image ? this.mapToImage(post.image) : undefined,
+      attribution: post.attribution ?? undefined,
     };
   }
 

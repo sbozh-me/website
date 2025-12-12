@@ -74,6 +74,24 @@ export default async function BlogPostPage({ params }: PageProps) {
     ],
   } as any);
 
+  // Compile attribution markdown if present
+  let AttributionContent: React.ComponentType | null = null;
+  if (post.attribution) {
+    const { default: Content } = await evaluate(post.attribution, {
+      ...runtime,
+    } as any);
+    // Wrap to add target="_blank" to links
+    AttributionContent = () => (
+      <Content
+        components={{
+          a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+            <a {...props} target="_blank" rel="noopener noreferrer" />
+          ),
+        }}
+      />
+    );
+  }
+
   return (
     <>
       <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
@@ -99,6 +117,16 @@ export default async function BlogPostPage({ params }: PageProps) {
               <div className="prose">
                 <MDXContent />
               </div>
+              {AttributionContent && (
+                <div className="mt-12 pt-8 border-t border-border">
+                  <h4 className="text-xs font-medium text-muted-foreground mb-3">
+                    Attribution
+                  </h4>
+                  <div className="attribution-content text-xs text-muted-foreground [&_a]:text-muted-foreground [&_a]:underline [&_p]:m-0">
+                    <AttributionContent />
+                  </div>
+                </div>
+              )}
             </div>
           </PostLayout>
         </div>
