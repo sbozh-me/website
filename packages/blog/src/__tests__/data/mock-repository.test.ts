@@ -88,7 +88,7 @@ describe("MockBlogRepository", () => {
 
       expect(post).not.toBeNull();
       expect(post?.title).toBe("Why I started sbozh.me");
-      expect(post?.content).toContain("# Why I started sbozh.me");
+      expect(post?.content).toContain("## The Beginning");
       expect(post?.persona.name).toBe("The Founder");
     });
 
