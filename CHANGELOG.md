@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.2] - 2025-12-14
+
+### Changes
+
+- feat(projects): implement dynamic project detail pages with tab navigation ([5b2197b](https://github.com/sbozh-me/website/commit/5b2197b1fceae6903543892d3a8e4fd69fdc3028))
+- feat(projects): add hero image position option for object-fit control ([50f2765](https://github.com/sbozh-me/website/commit/50f276583c11a1413a22eab889ffa8051fcc60d0))
+
+
 ## [0.8.1] - 2025-12-13
 
 ### Changes
