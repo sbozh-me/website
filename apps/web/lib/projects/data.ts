@@ -4,15 +4,15 @@ export const projects: Project[] = [
   {
     slug: "sbozh-me",
     title: "sbozh.me",
-    tagline: "Personal website built in public with Next.js and Tailwind CSS",
+    tagline: "Platform built in public with Next.js and Tailwind CSS",
     status: "beta",
     heroImage: {
       src: "/images/projects/sbozh-me-hero.png",
-      alt: "sbozh.me website screenshot",
+      alt: "sbozh.me hero image",
     },
     meta: [
-      { label: "Stack", value: "Next.js, Tailwind CSS" },
-      { label: "Type", value: "Personal Website" },
+      { label: "Moto", value: "Personal startup*" },
+      { label: "Type", value: "Platform" },
     ],
     tabs: [
       { id: "about", label: "About", enabled: true },
@@ -24,7 +24,7 @@ export const projects: Project[] = [
   {
     slug: "discord-community",
     title: "Discord Community",
-    tagline: "A community for developers to learn, share, and grow together",
+    tagline: "A community for everyone to learn, share, and grow together",
     status: "coming-soon",
     heroImage: {
       src: "/images/projects/discord-community-hero.png",
