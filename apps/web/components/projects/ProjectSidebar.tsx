@@ -1,0 +1,42 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@sbozh/react-ui/lib/utils";
+import type { ProjectTab } from "@/lib/projects/types";
+
+interface ProjectSidebarProps {
+  slug: string;
+  tabs: ProjectTab[];
+}
+
+export function ProjectSidebar({ slug, tabs }: ProjectSidebarProps) {
+  const pathname = usePathname();
+  const enabledTabs = tabs.filter((tab) => tab.enabled);
+
+  return (
+    <aside className="hidden lg:block w-[200px] shrink-0 sticky top-24 self-start">
+      <nav className="space-y-1">
+        {enabledTabs.map((tab) => {
+          const href = `/projects/${slug}/${tab.id}`;
+          const isActive = pathname === href;
+
+          return (
+            <Link
+              key={tab.id}
+              href={href}
+              className={cn(
+                "block px-4 py-2 rounded-md text-sm transition-colors",
+                isActive
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+              )}
+            >
+              {tab.label}
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+}
