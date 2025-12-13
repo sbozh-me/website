@@ -65,11 +65,16 @@ Site-wide SEO, Open Graph, structured data, and sitemap generation.
 - ~~[0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)~~
 - ~~[0.7.5 - Structured Data](roadmap/seo/0.7.5.md)~~ ⏭️ skipped → backlog
 
-## 0.8.0 - Projects Page
+## 0.8.0 - Projects Section
 
-- Projects listing
-- Blog engine boilerplate announcement
-- CV builder announcement
+Projects showcase with landing pages for sbozh.me and Discord community.
+
+- [0.8.0 - Projects List Page](roadmap/projects/0.8.0.md)
+- [0.8.1 - Projects SEO](roadmap/projects/0.8.1.md)
+- [0.8.2 - Project Detail Layout](roadmap/projects/0.8.2.md)
+- [0.8.3 - sbozh.me Project](roadmap/projects/0.8.3.md)
+- [0.8.4 - Discord Community Project](roadmap/projects/0.8.4.md)
+- [0.8.5 - Polish & Testing](roadmap/projects/0.8.5.md)
 
 ## 0.9.0 - Analytics
 
