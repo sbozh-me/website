@@ -1,9 +1,27 @@
+import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { EmptyState, ErrorState, Timeline } from "@sbozh/blog";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Thoughts, stories, and ideas from different perspectives.",
+  openGraph: {
+    title: "Blog | sbozh.me",
+    description: "Thoughts, stories, and ideas from different perspectives.",
+    type: "website",
+    images: ["/ogdefault.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Blog | sbozh.me",
+    description: "Thoughts, stories, and ideas from different perspectives.",
+    images: ["/ogdefault.png"],
+  },
+};
 
 export default async function BlogPage() {
   noStore();

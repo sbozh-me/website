@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { readFileSync } from "fs";
 import { join } from "path";
 
@@ -10,6 +11,23 @@ import {
   CVScaleWrapper,
   CVThemeToggle,
 } from "@/components/cv";
+
+export const metadata: Metadata = {
+  title: "CV",
+  description: "Professional experience and skills of the founder.",
+  openGraph: {
+    title: "CV | sbozh.me",
+    description: "Professional experience and skills of the founder.",
+    type: "profile",
+    images: ["/ogdefault.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CV | sbozh.me",
+    description: "Professional experience and skills of the founder.",
+    images: ["/ogdefault.png"],
+  },
+};
 
 function getCV() {
   const cvPath = join(process.cwd(), "content", "cv.pmdx");

@@ -33,12 +33,18 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
+    title: 'sbozh.me',
+    description: 'Personal website of sbozh - blog, CV, and projects.',
     type: 'website',
     locale: 'en_US',
     siteName: 'sbozh.me',
+    images: ['/ogdefault.png'],
   },
   twitter: {
     card: 'summary_large_image',
+    title: 'sbozh.me',
+    description: 'Personal website of sbozh - blog, CV, and projects.',
+    images: ['/ogdefault.png'],
   },
 };
 
