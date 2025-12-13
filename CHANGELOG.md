@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2025-12-13
+
+### Changes
+
+- feat(seo): add projects SEO metadata, sitemap routes, and OG images ([764a141](https://github.com/sbozh-me/website/commit/764a14163cc2883ddcec221a7612f0c4399a2459))
+
+
 ## [0.8.0] - 2025-12-13
 
 ### Changes
