@@ -1,5 +1,21 @@
+import type { Metadata } from "next";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
 import { getProjects } from "@/lib/projects/data";
+
+export const metadata: Metadata = {
+  title: "Projects",
+  description: "Things I'm building in public - websites, communities, and tools.",
+  openGraph: {
+    type: "website",
+    title: "Projects | sbozh.me",
+    description: "Things I'm building in public - websites, communities, and tools.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Projects | sbozh.me",
+    description: "Things I'm building in public - websites, communities, and tools.",
+  },
+};
 
 export default function ProjectsPage() {
   const projects = getProjects();

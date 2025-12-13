@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { createBlogRepository } from "@/lib/blog/repository";
+import { getProjects } from "@/lib/projects/data";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sbozh.me";
@@ -22,10 +23,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/projects`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
+      changeFrequency: "weekly",
+      priority: 0.8,
     },
   ];
+
+  // Project routes
+  const projects = getProjects();
+  const projectRoutes: MetadataRoute.Sitemap = projects.flatMap((project) => {
+    const enabledTabs = project.tabs.filter((tab) => tab.enabled);
+    return enabledTabs.map((tab) => ({
+      url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
+  });
 
   // Blog posts from Directus
   let blogRoutes: MetadataRoute.Sitemap = [];
@@ -42,5 +55,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[Sitemap] Failed to fetch blog posts:", error);
   }
 
-  return [...staticRoutes, ...blogRoutes];
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
 }

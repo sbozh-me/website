@@ -37,6 +37,14 @@ describe("sitemap.ts", () => {
     expect(urls).toContain("https://sbozh.me/blog/test-post-2");
   });
 
+  it("includes project tab routes", async () => {
+    const result = await sitemap();
+    const urls = result.map((entry) => entry.url);
+
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/about");
+    expect(urls).toContain("https://sbozh.me/projects/discord-community/about");
+  });
+
   it("sets correct lastModified for blog posts", async () => {
     const result = await sitemap();
     const post1 = result.find((entry) =>
@@ -60,7 +68,7 @@ describe("sitemap.ts", () => {
 
     expect(homepage?.priority).toBe(1);
     expect(blog?.priority).toBe(0.8);
-    expect(projects?.priority).toBe(0.7);
+    expect(projects?.priority).toBe(0.8);
     expect(blogPost?.priority).toBe(0.6);
   });
 
