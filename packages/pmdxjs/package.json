@@ -19,8 +19,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:watch": "vitest"
   },
   "peerDependencies": {
     "react": ">=19.2.1"
