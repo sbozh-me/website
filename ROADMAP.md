@@ -54,16 +54,16 @@ Directus CMS integration with Docker, PostgreSQL, and repository pattern.
 
 > **Note:** Filters & Drafts deferred to post-second-blog-post. Filter components exist in `@sbozh/blog` package; wiring to searchParams will be done when needed.
 
-## 0.7.0 - SEO & Metadata
+## ~~0.7.0 - SEO & Metadata~~ ✅
 
 Site-wide SEO, Open Graph, structured data, and sitemap generation.
 
 - ~~[0.7.0 - Favicon & Base Metadata](roadmap/seo/0.7.0.md)~~
 - ~~[0.7.1 - Robots & Sitemap](roadmap/seo/0.7.1.md)~~
 - ~~[0.7.2 - Blog Post SEO](roadmap/seo/0.7.2.md)~~
-- [0.7.3 - OG Image Generation](roadmap/seo/0.7.3.md) 🚀 deploy to test
-- [0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)
-- [0.7.5 - Structured Data](roadmap/seo/0.7.5.md)
+- ~~[0.7.3 - OG Image Generation](roadmap/seo/0.7.3.md)~~ 🚀 deploy to test
+- ~~[0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)~~
+- ~~[0.7.5 - Structured Data](roadmap/seo/0.7.5.md)~~ ⏭️ skipped → backlog
 
 ## 0.8.0 - Projects Page
 
