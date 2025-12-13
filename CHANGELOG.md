@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2025-12-13
+
+### Changes
+
+- feat(seo): add page-level metadata for blog and CV pages ([6fa27b6](https://github.com/sbozh-me/website/commit/6fa27b65086871855eb031a41520cc9e42c1f5c7))
+- docs(seo): update site description to build in public tagline ([be0d8fb](https://github.com/sbozh-me/website/commit/be0d8fb94a41d45fa315121d1e67c08ff5c05410))
+
+
 ## [0.7.3] - 2025-12-13
 
 ### Changes
