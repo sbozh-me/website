@@ -21,6 +21,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           alt={heroImage.alt}
           fill
           className="object-cover"
+          style={{ objectPosition: heroImage.position ?? "center" }}
         />
         <StatusBadge status={status} className="absolute top-4 right-4" />
       </div>

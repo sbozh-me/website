@@ -29,6 +29,7 @@ export const projects: Project[] = [
     heroImage: {
       src: "/images/projects/discord-community-hero.png",
       alt: "Discord community preview",
+      position: "bottom",
     },
     meta: [
       { label: "Platform", value: "Discord" },

@@ -16,7 +16,7 @@ export interface Project {
   title: string;
   tagline: string;
   status: ProjectStatus;
-  heroImage: { src: string; alt: string };
+  heroImage: { src: string; alt: string; position?: "top" | "center" | "bottom" };
   meta: ProjectMeta[];
   tabs: ProjectTab[];
 }

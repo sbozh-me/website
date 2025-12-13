@@ -15,6 +15,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
           alt={project.heroImage.alt}
           fill
           className="object-cover"
+          style={{ objectPosition: project.heroImage.position ?? "center" }}
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
