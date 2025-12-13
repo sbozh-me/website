@@ -1,9 +1,17 @@
+import { ProjectGrid } from "@/components/projects/ProjectGrid";
+import { getProjects } from "@/lib/projects/data";
+
 export default function ProjectsPage() {
+  const projects = getProjects();
+
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-24">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <h1 className="tracking-tight">Projects</h1>
-        <p className="mt-6 text-muted-foreground">Coming soon</p>
+        <p className="mt-6 mb-12 text-muted-foreground">
+          Things I&apos;m building in public
+        </p>
+        <ProjectGrid projects={projects} />
       </div>
     </div>
   );
