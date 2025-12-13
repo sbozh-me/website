@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: 'sbozh.me',
     template: '%s | sbozh.me',
   },
-  description: 'Personal website of sbozh - blog, CV, and projects.',
+  description: 'A place where I build and ship things in public.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   openGraph: {
     title: 'sbozh.me',
-    description: 'Personal website of sbozh - blog, CV, and projects.',
+    description: 'A place where I build and ship things in public.',
     type: 'website',
     locale: 'en_US',
     siteName: 'sbozh.me',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'sbozh.me',
-    description: 'Personal website of sbozh - blog, CV, and projects.',
+    description: 'A place where I build and ship things in public.',
     images: ['/ogdefault.png'],
   },
 };
