@@ -10,8 +10,15 @@ describe("ProjectsPage", () => {
     );
   });
 
-  it("renders coming soon message", () => {
+  it("renders project cards", () => {
     render(<ProjectsPage />);
-    expect(screen.getByText("Coming soon")).toBeInTheDocument();
+    expect(screen.getByText("sbozh.me")).toBeInTheDocument();
+    expect(screen.getByText("Discord Community")).toBeInTheDocument();
+  });
+
+  it("renders status badges", () => {
+    render(<ProjectsPage />);
+    expect(screen.getByText("Beta")).toBeInTheDocument();
+    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
   });
 });
