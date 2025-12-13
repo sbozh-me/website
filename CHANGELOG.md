@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2025-12-13
+
+### Changes
+
+- docs: mark 0.7.0 SEO complete and add backlog ideas ([d8648b0](https://github.com/sbozh-me/website/commit/d8648b05abe429c86ba0b5f10a6e21bec607d475))
+- chore: remove test:coverage from packages, keep only in web app ([a176e0f](https://github.com/sbozh-me/website/commit/a176e0f781d67de51a456de4e3b579c92009d53e))
+- docs(roadmap): expand 0.8.0 into comprehensive projects section roadmap ([92435a7](https://github.com/sbozh-me/website/commit/92435a7cb301ff434855fc99be6e29fddb428aa4))
+- feat(projects): implement project listing page with card grid layout ([c788e62](https://github.com/sbozh-me/website/commit/c788e624dba4d7a523521eb3a82bcc7881784838))
+- chore(assets): add project hero images ([72525e5](https://github.com/sbozh-me/website/commit/72525e52b90239ebcc55d4a46e7e3c5c34e6cdcd))
+- chore(projects): update project descriptions and metadata ([4cc62b9](https://github.com/sbozh-me/website/commit/4cc62b9d26f8cfbd7d4e7d31cfca61e8202a091d))
+- test(projects): update tests for project grid implementation ([c5121d7](https://github.com/sbozh-me/website/commit/c5121d76b193d374905fa9cfb399ac9b2c84dd92))
+
+
 ## [0.7.4] - 2025-12-13
 
 ### Changes
