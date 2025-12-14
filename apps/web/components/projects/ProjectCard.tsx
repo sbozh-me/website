@@ -13,7 +13,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
       href={`/projects/${slug}`}
-      className="block bg-muted border border-border rounded-lg overflow-hidden transition-colors hover:border-primary"
+      className="flex flex-col h-full bg-muted border border-border rounded-lg overflow-hidden transition-colors hover:border-primary"
     >
       <div className="aspect-video relative">
         <Image
@@ -25,10 +25,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
         />
         <StatusBadge status={status} className="absolute top-4 right-4" />
       </div>
-      <div className="p-6">
+      <div className="flex flex-col flex-1 p-6">
         <h3 className="text-lg font-semibold text-foreground mb-2">{title}</h3>
-        <p className="text-muted-foreground text-sm mb-4">{tagline}</p>
-        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm mb-4 whitespace-pre-line">{tagline}</p>
+        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-auto">
           {meta.map((item) => (
             <span key={item.label}>
               <span className="font-medium text-foreground">{item.label}:</span>{" "}

@@ -5,7 +5,7 @@ export const projects: Project[] = [
   {
     slug: "sbozh-me",
     title: "sbozh.me",
-    tagline: "Platform built in public with Next.js and Tailwind CSS",
+    tagline: "A platform where ideas turn into shipped products.\nBuilt in public. Learned in motion.",
     status: "beta",
     version: packageJson.version,
     heroImage: {
@@ -28,13 +28,14 @@ export const projects: Project[] = [
   {
     slug: "discord-community",
     title: "Discord Community",
-    tagline: "A community for everyone to learn, share, and grow together",
-    status: "coming-soon",
+    tagline: "For people who make things.\nShare what you're working on, get help when you're stuck.",
+    status: "beta",
     heroImage: {
       src: "/images/projects/discord-community-hero.png",
       alt: "Discord community preview",
       position: "bottom",
     },
+    version: "0.0.1",
     meta: [
       { label: "Platform", value: "Discord" },
       { label: "Type", value: "Community" },
