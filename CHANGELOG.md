@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.1] - 2025-12-14
+
+### Changes
+
+- feat(analytics): integrate Umami Analytics for privacy-focused web tracking ([eab84a5](https://github.com/sbozh-me/website/commit/eab84a53e581a38fbfb5fc8273757b2c0bfdfe3b))
+
+
 ## [0.9.0] - 2025-12-14
 
 ### Changes
