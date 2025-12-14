@@ -16,6 +16,7 @@
     "@sbozh/pmdxjs": "workspace:*",
     "@sbozh/react-ui": "workspace:*",
     "framer-motion": "^12.23.25",
+    "lucide-react": "^0.555.0",
     "next": "15.5.7",
     "puppeteer-core": "^24.32.0",
     "react": "19.2.1",

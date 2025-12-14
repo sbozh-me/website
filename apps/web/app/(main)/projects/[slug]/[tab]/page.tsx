@@ -1,8 +1,12 @@
 import { notFound } from "next/navigation";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
+import { parseChangelogFromContent } from "@/lib/changelog/parser";
+import { VerticalTimeline } from "@/components/timeline";
 import { Spark } from "@/components/Spark";
 import "@sbozh/blog/styles/prose.css";
 
@@ -39,6 +43,12 @@ function getTabContent(slug: string, tabId: string): string | null {
   return null;
 }
 
+function getChangelogData() {
+  const changelogPath = join(process.cwd(), "..", "..", "CHANGELOG.md");
+  const content = readFileSync(changelogPath, "utf-8");
+  return parseChangelogFromContent(content);
+}
+
 export default async function TabPage({ params }: TabPageProps) {
   const { slug, tab } = await params;
   const project = getProject(slug);
@@ -51,6 +61,16 @@ export default async function TabPage({ params }: TabPageProps) {
 
   if (!currentTab) {
     notFound();
+  }
+
+  if (slug === "sbozh-me" && tab === "changelog") {
+    const changelogData = getChangelogData();
+    return (
+      <div>
+        <h2 className="text-2xl font-bold mb-6">Changelog</h2>
+        <VerticalTimeline data={changelogData} />
+      </div>
+    );
   }
 
   const content = getTabContent(slug, tab);
