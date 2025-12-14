@@ -40,7 +40,31 @@ I chose this setup because I wanted to own every layer. When something breaks, I
 `,
 
   motivation: `
-Content coming soon...
+## Founder's View
+
+I believe the best way to learn is to build something real - and share it before you feel ready.
+
+Not tutorials. Not side projects that stay local. Real things that ship. Things people can use. Things that force you to solve problems you didn't anticipate.
+
+Most developers I admire started the same way: they built something for themselves, put it out into the world, and let the work speak. I want to do the same. **sbozh.me** is where that happens.
+
+## The Catalyst
+
+I've reached a point where I'm overwhelmed with ideas I want to implement. The backlog keeps growing.
+
+Then LLMs happened. Suddenly, work that felt like months became weeks. Things I couldn't reasonably do alone became possible. After a decade of building, it feels like I finally have both the proficiency *and* the tools to pioneer ideas I've been carrying in my head for years.
+
+**sbozh.me** is how I document that process. If it works, you get a record of how it happened. If it fails, you get a record of the attempt - and something to learn from for the next iteration.
+
+Either way, it ships.
+
+## Why This Exists
+
+I want to build things I care about, in public, and show that it's possible to start with what you have.
+
+If watching the process helps you start your own project - great. If you need someone to help navigate the early chaos - I'm here. If you just want to see what gets built next - stick around.
+
+That's it. No grand mission. Just building, sharing, and hopefully making someone sbozhed along the way.
 `,
 
   changelog: `
