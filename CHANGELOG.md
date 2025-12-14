@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.4] - 2025-12-14
+
+### Changes
+
+- style(projects): improve card layout and support multiline taglines ([8cc345f](https://github.com/sbozh-me/website/commit/8cc345f04e5e2f4bf96911c89b67f630d868e023))
+- feat(projects): add Discord community content and routing ([88a64ab](https://github.com/sbozh-me/website/commit/88a64ab4da1c52d18e7285f3b3d144bf9b32fa42))
+- feat(projects): add roadmap tab to discord community project ([df277d9](https://github.com/sbozh-me/website/commit/df277d9e4cb9db973c21ba2c963d29b0bb31c3e6))
+- feat(projects): add Discord invite link and refactor ProjectLinks component ([3b8acf3](https://github.com/sbozh-me/website/commit/3b8acf3a3f995c9b33d1a615040813c05ab670ff))
+
+
 ## [0.8.3] - 2025-12-14
 
 ### Changes
