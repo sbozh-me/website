@@ -1,3 +1,5 @@
+import { siteConfig } from "@/lib/site-config";
+
 export const discordCommunityContent = {
   about: `
 This is a Discord server for builders.
@@ -20,7 +22,7 @@ You don't need to be an expert. You don't even need a project yet. If you're cur
 
 ### Join the Community
 
-Ready to join? [Click here to join the Discord server](https://discord.gg/your-invite-link)
+Ready to join? [Click here to join the Discord server](${siteConfig.links.discordInvite})
 `,
 
   motivation: `
@@ -58,12 +60,18 @@ Not just another Discord server. A place where projects come to life because the
 `,
 
   roadmap: `
-## 0.1.0 - Define Rules
-- ~~0.0.1 - Register Server~~
-- ~~0.0.2 - Provide Registration Link~~
-- Link attached to project
-- Basic structure created
-- Server permissions configured
+## 0.1.0 - Established server
+- ~~0.1.0 - Register Server~~
+
+## 0.2.0 - Invite Link
+- ~~0.2.0 - Provide Registration Link~~
+- ~~0.2.1 - Link attached to project~~
+
+## 0.3.0 - Define rules
+- 0.3.0 - Basic structure created
+- 0.3.1 - Server permissions configured
+- 0.3.2 - Post rules to server
+- 0.3.3 - Post rules to project
 
 ## ...
 
@@ -76,13 +84,7 @@ Not just another Discord server. A place where projects come to life because the
 
   backlog: `
 ## Future Ideas
-- Partner program for active builders
-- Monthly build challenges
-- Guest speaker series
-- Community-driven tutorials
-- Cross-project collaboration board
-- Skills marketplace
-- Mentorship matching system
+- Develop ideas
 `,
 };
 

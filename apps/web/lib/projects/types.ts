@@ -17,6 +17,7 @@ export interface ProjectLink {
   type: ProjectLinkType;
   label: string;
   href: string;
+  variant?: "default" | "primary";
 }
 
 export interface Project {

@@ -1,5 +1,6 @@
 import type { Project } from "./types";
 import packageJson from "../../../../package.json";
+import { siteConfig } from "@/lib/site-config";
 
 export const projects: Project[] = [
   {
@@ -35,7 +36,7 @@ export const projects: Project[] = [
       alt: "Discord community preview",
       position: "bottom",
     },
-    version: "0.0.2",
+    version: "0.2.1",
     meta: [
       { label: "Platform", value: "Discord" },
       { label: "Type", value: "Community" },
@@ -44,6 +45,9 @@ export const projects: Project[] = [
       { id: "about", label: "About", enabled: true },
       { id: "motivation", label: "Motivation", enabled: true },
       { id: "roadmap", label: "Roadmap", enabled: true },
+    ],
+    links: [
+      { type: "discord", label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
     ],
   },
 ];

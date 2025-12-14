@@ -1,10 +1,10 @@
-import Link from "next/link";
-import { Github, MessageCircle, Globe, BookOpen } from "lucide-react";
+import { Github, MessageCircle, Globe, BookOpen, SquarePlus } from "lucide-react";
+import { Button } from "@sbozh/react-ui/components/ui/button";
 import type { Project, ProjectLinkType } from "@/lib/projects/types";
 
 const linkIcons: Record<ProjectLinkType, React.ComponentType<{ className?: string }>> = {
   github: Github,
-  discord: MessageCircle,
+  discord: SquarePlus,
   website: Globe,
   docs: BookOpen,
 };
@@ -23,17 +23,24 @@ export function ProjectLinks({ project }: ProjectLinksProps) {
       <nav className="space-y-1">
         {project.links.map((link) => {
           const Icon = linkIcons[link.type];
+          const variant = link.variant === "primary" ? "default" : "ghost";
+
           return (
-            <Link
+            <Button
               key={link.href}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              variant={variant}
+              className="w-full"
+              asChild
             >
-              <Icon className="size-4" />
-              {link.label}
-            </Link>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon className="size-4" />
+                {link.label}
+              </a>
+            </Button>
           );
         })}
       </nav>
