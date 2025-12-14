@@ -6,6 +6,7 @@ export const projects: Project[] = [
     title: "sbozh.me",
     tagline: "Platform built in public with Next.js and Tailwind CSS",
     status: "beta",
+    version: "0.8.2",
     heroImage: {
       src: "/images/projects/sbozh-me-hero.png",
       alt: "sbozh.me hero image",

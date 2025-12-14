@@ -28,4 +28,5 @@ export interface Project {
   meta: ProjectMeta[];
   tabs: ProjectTab[];
   links?: ProjectLink[];
+  version?: string;
 }
