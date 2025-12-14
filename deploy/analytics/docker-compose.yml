@@ -1,140 +1,46 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database (shared for Umami and GlitchTip)
-  postgres:
+  # PostgreSQL Database for Umami
+  umami-db:
     image: postgres:15-alpine
-    container_name: analytics-postgres
+    container_name: sbozh-umami-db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-umami_secure_password}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    networks:
-      - analytics-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      - umami_db_data:/var/lib/postgresql/data
     restart: unless-stopped
-    mem_limit: ${POSTGRES_MEMORY:-512M}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # Umami Analytics
   umami:
     image: ghcr.io/umami-software/umami:postgresql-latest
-    container_name: umami
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${UMAMI_DATABASE}
-      DATABASE_TYPE: postgresql
-      APP_SECRET: ${UMAMI_APP_SECRET}
-      HOSTNAME: ${UMAMI_HOSTNAME:-0.0.0.0}
-      PORT: 3000
+    container_name: sbozh-umami
     ports:
       - "3001:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:${POSTGRES_PASSWORD:-umami_secure_password}@umami-db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: ${APP_SECRET:-replace-with-random-32-char-string}
+      # Disable telemetry and updates
+      DISABLE_TELEMETRY: 1
+      DISABLE_UPDATES: 1
     depends_on:
-      postgres:
+      umami-db:
         condition: service_healthy
-    networks:
-      - analytics-network
     restart: unless-stopped
-    mem_limit: ${UMAMI_MEMORY:-512M}
-
-  # Redis for GlitchTip
-  redis:
-    image: redis:7-alpine
-    container_name: analytics-redis
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
-    networks:
-      - analytics-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/heartbeat"]
       interval: 30s
-      timeout: 10s
-      retries: 5
-    restart: unless-stopped
-    mem_limit: ${REDIS_MEMORY:-256M}
-
-  # GlitchTip Database Migrations (runs once)
-  glitchtip-migrate:
-    image: glitchtip/glitchtip:latest
-    container_name: glitchtip-migrate
-    command: ./manage.py migrate
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${GLITCHTIP_DATABASE}
-      SECRET_KEY: ${GLITCHTIP_SECRET_KEY}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - analytics-network
-    restart: "no"
-
-  # GlitchTip Error Tracking
-  glitchtip-web:
-    image: glitchtip/glitchtip:latest
-    container_name: glitchtip-web
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${GLITCHTIP_DATABASE}
-      SECRET_KEY: ${GLITCHTIP_SECRET_KEY}
-      EMAIL_URL: ${GLITCHTIP_EMAIL_URL:-smtp://localhost:25}
-      GLITCHTIP_DOMAIN: ${GLITCHTIP_DOMAIN:-http://localhost:3002}
-      DEFAULT_FROM_EMAIL: ${GLITCHTIP_FROM_EMAIL:-errors@sbozh.me}
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CACHE_URL: redis://redis:6379/1
-    ports:
-      - "3002:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      glitchtip-migrate:
-        condition: service_completed_successfully
-    networks:
-      - analytics-network
-    restart: unless-stopped
-    mem_limit: ${GLITCHTIP_MEMORY:-512M}
-
-  # GlitchTip Worker
-  glitchtip-worker:
-    image: glitchtip/glitchtip:latest
-    container_name: glitchtip-worker
-    command: ./bin/run-celery-with-beat.sh
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${GLITCHTIP_DATABASE}
-      SECRET_KEY: ${GLITCHTIP_SECRET_KEY}
-      CELERY_BROKER_URL: redis://redis:6379/0
-      CACHE_URL: redis://redis:6379/1
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      glitchtip-migrate:
-        condition: service_completed_successfully
-    networks:
-      - analytics-network
-    restart: unless-stopped
-    mem_limit: ${GLITCHTIP_WORKER_MEMORY:-512M}
-
-networks:
-  analytics-network:
-    driver: bridge
-    name: analytics-network
-
-  # Optional: Connect to existing Directus network if needed
-  # To enable, uncomment the following and add to services that need it:
-  # directus-network:
-  #   external: true
-  #   name: directus-network
+      timeout: 3s
+      retries: 3
 
 volumes:
-  postgres_data:
-    driver: local
-  redis_data:
-    driver: local
+  umami_db_data:
+    name: sbozh_umami_db_data

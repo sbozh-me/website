@@ -4,6 +4,7 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 
 import { Footer } from "@/components/Footer";
+import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -59,9 +60,11 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
-        {children}
-        <Footer />
-        <Toaster />
+        <AnalyticsProvider>
+          {children}
+          <Footer />
+          <Toaster />
+        </AnalyticsProvider>
       </body>
     </html>
   );
