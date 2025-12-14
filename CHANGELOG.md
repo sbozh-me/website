@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.3] - 2025-12-14
+
+### Changes
+
+- feat(projects): add dynamic MDX content, breadcrumbs, contact page, and routing improvements ([738736c](https://github.com/sbozh-me/website/commit/738736c1ea1fe6894009dc0368c464ae1c00e368))
+- content(projects): add motivation tab content for sbozh-me ([a379084](https://github.com/sbozh-me/website/commit/a3790843d55c3fd318d037622e6af6c28557c0a2))
+- style(projects): improve mobile tab navigation visibility and touch targets ([5874479](https://github.com/sbozh-me/website/commit/58744795af9b7528872ee2c8576c5b6fb69f1b84))
+- style(projects): improve hero tagline readability with text shadow ([9782f8f](https://github.com/sbozh-me/website/commit/9782f8f9e0ee3331fee434fe9b77f487be0c6ef6))
+- feat(projects): add data-driven links sidebar ([10fb7de](https://github.com/sbozh-me/website/commit/10fb7deab123910a8351ea6ffb38643463fea80e))
+- feat(projects): add changelog timeline with version grouping and GitHub integration ([9256e91](https://github.com/sbozh-me/website/commit/9256e91fdee33c9f327b26c2ae1fd9a844fafbd1))
+- chore(web): add MIT license to package.json ([ee4196d](https://github.com/sbozh-me/website/commit/ee4196d7a17d7b4c4bb4a21cd87fd9fcd6a5b530))
+- feat(projects): display version in hero and footer ([2b8e145](https://github.com/sbozh-me/website/commit/2b8e145b7754184e5d418d467a4991adb83537d6))
+- feat(projects): add version to project cards and read from package.json ([93de3e2](https://github.com/sbozh-me/website/commit/93de3e2f370e8163e921f4745da12f404c4a96c6))
+- feat(projects): add roadmap feature with unified timeline component ([b057bfc](https://github.com/sbozh-me/website/commit/b057bfc66fe5db6cc0bdc1307b42fff3dd118ae4))
+- fix(react-ui): center timeline dots on vertical line ([f9b718c](https://github.com/sbozh-me/website/commit/f9b718c20cc9a226022d04fed67618d824c0ec80))
+- feat(projects): improve roadmap UI with tick icons and plain text links ([f5fb48d](https://github.com/sbozh-me/website/commit/f5fb48d949815ed9026ad89449f4318979533d9c))
+- feat(projects): auto-expand roadmap section matching current version ([8bd114a](https://github.com/sbozh-me/website/commit/8bd114a9dae94d8b8f7d2696169c44c04b61de53))
+- style(projects): improve mobile hero and tab navigation layout ([3c6994e](https://github.com/sbozh-me/website/commit/3c6994e6ccd40d1fc56d530d6cfc799991d49336))
+- content(projects): add intro blockquote to motivation tab ([bf6dea7](https://github.com/sbozh-me/website/commit/bf6dea70fa32a13d32b647259aedb0ac1a8e58ea))
+- style(projects): fix h2 heading size on changelog and roadmap tabs ([aa2f4f3](https://github.com/sbozh-me/website/commit/aa2f4f3e9b503821a9e8c2ccbe167276d193ffcf))
+- content(projects): simplify motivation tab intro ([65a13c7](https://github.com/sbozh-me/website/commit/65a13c7acd3d44e89e74214388cd4800e796ef15))
+
+
 ## [0.8.2] - 2025-12-14
 
 ### Changes
