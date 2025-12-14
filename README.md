@@ -1,6 +1,28 @@
 # @sbozh/website
 
-Personal website and portfolio for sbozh.me.
+Personal website and portfolio for sbozh.me. Built in public, learned in motion.
+
+**Version**: 0.8.5 | **Status**: Beta | **License**: MIT
+
+## Features
+
+### Projects Section (v0.8.x)
+- **Project Showcase**: Grid layout with status badges and hero images
+- **Project Details**: Tabbed navigation for About, Motivation, Roadmap, Changelog
+- **Discord Community**: Full project page with roadmap tracking
+- **Accessibility**: ARIA labels, keyboard navigation, focus management
+- **Testing**: Comprehensive unit and integration tests (41+ tests)
+
+### Blog System (v0.6.x)
+- **Directus CMS**: Headless CMS with PostgreSQL backend
+- **Multi-persona**: Different writing styles with persona indicators
+- **MDX Rendering**: Rich content with syntax highlighting
+- **SEO Optimized**: OpenGraph tags, sitemaps, structured data
+
+### CV Page (v0.4.x)
+- **Custom Parser**: PMDXJS for markdown-to-JSX conversion
+- **PDF Export**: Server-side generation with Puppeteer
+- **Print Support**: A4/Letter layouts with proper pagination
 
 ## Design
 
@@ -26,13 +48,20 @@ Personal website and portfolio for sbozh.me.
 - `/blog` - Blog with multi-persona timeline, filters, and MDX rendering
 - `/blog/[slug]` - Blog post pages with table of contents
 - `/cv` - CV/Resume with PDF export
-- `/projects` - Projects showcase (coming soon)
+- `/projects` - Projects showcase with card grid layout
+- `/projects/[slug]` - Project detail pages with tabbed navigation
+- `/projects/discord-community` - Discord community project page
+- `/contact` - Contact page with email and social links
 
 ## Structure
 
 ```
 apps/
   web/                  # Main website (Next.js)
+    app/                # App router pages and API routes
+    components/         # React components
+    lib/                # Utilities and data
+    directus/           # CMS configuration and schemas
 packages/
   blog/                 # Blog components and data layer
   pmdxjs/               # PMDXJS - Markdown to JSX parser for CVs

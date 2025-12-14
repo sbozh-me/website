@@ -1,12 +1,30 @@
-# Web App
+# @sbozh/web
 
 Next.js frontend for sbozh.me personal website.
+
+**Version**: 0.8.5 | **Framework**: Next.js 15.5.7 | **License**: MIT
+
+## Features
+
+- **Projects Section**: Showcase with tabbed navigation (About, Motivation, Roadmap, Changelog)
+- **Blog System**: Directus CMS integration with MDX rendering
+- **CV Page**: Custom markdown parser with PDF export
+- **Contact Page**: Email and social links
+- **Accessibility**: Full ARIA support, keyboard navigation
+- **Testing**: 90%+ coverage with Vitest
+- **SEO**: OpenGraph, sitemap, structured data
 
 ## Development
 
 ```bash
 # From repository root
 pnpm dev
+
+# Run tests
+pnpm test
+
+# Build for production
+pnpm build
 ```
 
 ## Environment Variables
@@ -107,10 +125,12 @@ The site generates `robots.txt` and `sitemap.xml` at build time using Next.js me
 - `/` (homepage)
 - `/blog` (blog list)
 - `/blog/[slug]` (individual posts)
-- `/projects`
+- `/projects` (projects showcase)
+- `/projects/[slug]` (project detail pages)
+- `/contact` (contact page)
 
 **Excluded from indexing:**
-- `/cv`
+- `/cv` (resume page)
 
 **Sitemap regeneration:**
 The sitemap is generated during `pnpm build`. To regenerate after publishing new blog posts, trigger a rebuild via Directus Flow webhook or manual deploy.
