@@ -84,7 +84,7 @@ function VerticalTimeline({
 
   return (
     <div className={cn("relative", className)}>
-      <div className="absolute left-[7px] top-4 bottom-4 w-px bg-border" />
+      <div className="absolute left-[8px] top-4 bottom-4 w-px bg-border" />
 
       <div className="space-y-2">
         {data.groups.map((group) => {
