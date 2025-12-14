@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2025-12-14
+
+### Changes
+
+- docs: update README files with v0.8.5 features and project status ([89e7bfb](https://github.com/sbozh-me/website/commit/89e7bfb59b961cf3a6ec62e7f8e5c1ad35f89983))
+- content(projects): mark discord community roadmap milestones as completed ([e86ae30](https://github.com/sbozh-me/website/commit/e86ae30a982bfd58bde97e102a32e5f50ee883c9))
+- feat(analytics): add v0.9.0-0.9.5 roadmap and infrastructure planning ([45cb685](https://github.com/sbozh-me/website/commit/45cb6856050eb225c3d95c66e8c9c4b838f0ef72))
+- docs(roadmap): expand 0.9.0 analytics section with sub-version links ([614aa84](https://github.com/sbozh-me/website/commit/614aa841df7a8fc945675c9fb7109900145681e8))
+- docs(roadmap): add note about cookie choice control for page view tracking ([dea7af6](https://github.com/sbozh-me/website/commit/dea7af6d43fb1c0f609cb33dfe918354913c904f))
+- feat(analytics): implement v0.9.0 infrastructure with Docker Compose ([93d00c3](https://github.com/sbozh-me/website/commit/93d00c3559886a336e8d8ec53b6fe8560212b6ca))
+- docs(roadmap): correct analytics deployment version to 0.11.0 ([d512790](https://github.com/sbozh-me/website/commit/d512790fec7239c77109003476f50d88348947a1))
+- test(web): add comprehensive test coverage for page components ([4b77d03](https://github.com/sbozh-me/website/commit/4b77d03b2c4f55142090c707aa259956b1d79c34))
+
+
 ## [0.8.5] - 2025-12-14
 
 ### Changes
