@@ -84,14 +84,18 @@ describe("ProjectsPage", () => {
   describe("layout", () => {
     it("should use grid layout for project cards", () => {
       render(<ProjectsPage />);
-      const projectsSection = screen.getByText("sbozh.me").closest("section");
-      expect(projectsSection?.parentElement).toHaveClass("grid");
+      // Find the grid container by looking for the parent of the project cards
+      const projectCard = screen.getByText("sbozh.me").closest("a");
+      const gridContainer = projectCard?.parentElement;
+      expect(gridContainer).toHaveClass("grid");
     });
 
     it("should have responsive grid columns", () => {
       render(<ProjectsPage />);
-      const gridContainer = screen.getByText("sbozh.me").closest("section")?.parentElement;
-      expect(gridContainer).toHaveClass("md:grid-cols-2", "lg:grid-cols-3");
+      // The ProjectGrid component uses md:grid-cols-2 (not lg:grid-cols-3)
+      const projectCard = screen.getByText("sbozh.me").closest("a");
+      const gridContainer = projectCard?.parentElement;
+      expect(gridContainer).toHaveClass("grid", "grid-cols-1", "md:grid-cols-2");
     });
   });
 

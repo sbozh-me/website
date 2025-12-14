@@ -18,7 +18,12 @@ describe("ProjectsPage", () => {
 
   it("renders status badges", () => {
     render(<ProjectsPage />);
-    expect(screen.getByText("Beta")).toBeInTheDocument();
-    expect(screen.getByText("Coming Soon")).toBeInTheDocument();
+    // Both projects in data.ts have "beta" status
+    // StatusBadge component renders "Beta" (capitalized)
+    const betaBadges = screen.getAllByText("Beta");
+    expect(betaBadges).toHaveLength(2);
+
+    // Verify no "Coming Soon" badges exist since no projects have that status
+    expect(screen.queryByText("Coming Soon")).not.toBeInTheDocument();
   });
 });

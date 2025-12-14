@@ -41,8 +41,13 @@ describe("sitemap.ts", () => {
     const result = await sitemap();
     const urls = result.map((entry) => entry.url);
 
-    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/about");
-    expect(urls).toContain("https://sbozh.me/projects/discord-community/about");
+    // About tab is at /projects/[slug], not /projects/[slug]/about
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me");
+    expect(urls).toContain("https://sbozh.me/projects/discord-community");
+
+    // Other tabs are at /projects/[slug]/[tab]
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/roadmap");
+    expect(urls).toContain("https://sbozh.me/projects/discord-community/roadmap");
   });
 
   it("sets correct lastModified for blog posts", async () => {
