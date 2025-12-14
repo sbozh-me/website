@@ -56,9 +56,44 @@ That's the kind of place I want to build. A community for people who share that 
 
 Not just another Discord server. A place where projects come to life because the people are there to make it happen.
 `,
+
+  roadmap: `
+## 0.1.0 - Define Rules
+- ~~0.0.1 - Register Server~~
+- ~~0.0.2 - Provide Registration Link~~
+- Link attached to project
+- Basic structure created
+- Server permissions configured
+
+## ...
+
+## 1.0.0 - Established Community
+- Active daily discussions
+- Regular community events
+- Member-led initiatives
+- Self-sustaining ecosystem
+`,
+
+  backlog: `
+## Future Ideas
+- Partner program for active builders
+- Monthly build challenges
+- Guest speaker series
+- Community-driven tutorials
+- Cross-project collaboration board
+- Skills marketplace
+- Mentorship matching system
+`,
 };
 
 export function getDiscordCommunityTabContent(tabId: string): string | null {
   const content = discordCommunityContent[tabId as keyof typeof discordCommunityContent];
   return content ?? null;
+}
+
+export function getDiscordCommunityRoadmapData() {
+  return {
+    roadmap: discordCommunityContent.roadmap || '',
+    backlog: discordCommunityContent.backlog || ''
+  };
 }

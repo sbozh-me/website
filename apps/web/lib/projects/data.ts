@@ -35,7 +35,7 @@ export const projects: Project[] = [
       alt: "Discord community preview",
       position: "bottom",
     },
-    version: "0.0.1",
+    version: "0.0.2",
     meta: [
       { label: "Platform", value: "Discord" },
       { label: "Type", value: "Community" },
@@ -43,6 +43,7 @@ export const projects: Project[] = [
     tabs: [
       { id: "about", label: "About", enabled: true },
       { id: "motivation", label: "Motivation", enabled: true },
+      { id: "roadmap", label: "Roadmap", enabled: true },
     ],
   },
 ];
