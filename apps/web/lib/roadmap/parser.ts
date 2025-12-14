@@ -113,7 +113,7 @@ export function parseRoadmapFromContent(content: string): { data: TimelineData; 
 
   return {
     data: {
-      groups: sections.map(sectionToTimelineGroup),
+      groups: sections.map(sectionToTimelineGroup).reverse(),
     },
     completedCount,
     totalCount: sections.length,

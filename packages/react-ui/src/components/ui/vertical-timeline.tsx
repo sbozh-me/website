@@ -33,7 +33,7 @@ interface VerticalTimelineProps {
   variant?: "changelog" | "roadmap";
 }
 
-function defaultFormatLine(line: string): string {
+function changelogFormatLine(line: string): string {
   return line
     .replace(/~~([^~]+)~~/g, '<span class="line-through text-muted-foreground/60">$1</span>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-foreground">$1</strong>')
@@ -47,16 +47,31 @@ function defaultFormatLine(line: string): string {
     );
 }
 
+function roadmapFormatLine(line: string): string {
+  return line
+    .replace(/~~([^~]+)~~/g, '<span class="inline-flex items-center gap-1"><svg class="size-3 text-green-500 inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg><span class="text-muted-foreground">$1</span></span>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong class="text-foreground">$1</strong>')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+}
+
 function DefaultNode({ isExpanded, isCompleted }: { isExpanded: boolean; isCompleted?: boolean }) {
+  if (isCompleted) {
+    return (
+      <div className="relative z-10 size-4 flex items-center justify-center">
+        <svg className="size-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
         "relative z-10 size-4 rounded-full border-2 transition-colors",
-        isCompleted
-          ? "bg-green-500 border-green-500"
-          : isExpanded
-            ? "bg-primary border-primary"
-            : "bg-background border-muted-foreground group-hover:border-primary"
+        isExpanded
+          ? "bg-primary border-primary"
+          : "bg-background border-muted-foreground group-hover:border-primary"
       )}
     />
   );
@@ -66,7 +81,7 @@ function VerticalTimeline({
   data,
   defaultExpanded,
   baseGitHubUrl,
-  formatLine = defaultFormatLine,
+  formatLine,
   className,
   renderNode,
   renderCount,
@@ -79,6 +94,9 @@ function VerticalTimeline({
   const toggleGroup = (id: string) => {
     setExpandedId((current) => (current === id ? null : id));
   };
+
+  const defaultFormatLine = variant === "roadmap" ? roadmapFormatLine : changelogFormatLine;
+  const lineFormatter = formatLine ?? defaultFormatLine;
 
   const NodeComponent = renderNode ?? DefaultNode;
 
@@ -157,7 +175,7 @@ function VerticalTimeline({
                               <li
                                 key={index}
                                 className="text-sm text-muted-foreground leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: formatLine(line) }}
+                                dangerouslySetInnerHTML={{ __html: lineFormatter(line) }}
                               />
                             ))}
                           </ul>
@@ -171,7 +189,7 @@ function VerticalTimeline({
                           <li
                             key={`${item.id}-${index}`}
                             className="text-sm text-muted-foreground leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: formatLine(line) }}
+                            dangerouslySetInnerHTML={{ __html: lineFormatter(line) }}
                           />
                         ))
                       )}
