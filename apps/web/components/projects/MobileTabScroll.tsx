@@ -21,7 +21,7 @@ export function MobileTabScroll({ slug, tabs }: MobileTabScrollProps) {
 
   return (
     <nav className="lg:hidden overflow-x-auto scrollbar-hide border-b border-border">
-      <div className="flex gap-2 px-4 py-3">
+      <div className="flex gap-3 px-4 py-3">
         {enabledTabs.map((tab) => {
           const href = getTabHref(slug, tab.id);
           const isActive =
@@ -34,10 +34,10 @@ export function MobileTabScroll({ slug, tabs }: MobileTabScrollProps) {
               key={tab.id}
               href={href}
               className={cn(
-                "px-4 py-2 rounded-full text-sm whitespace-nowrap transition-colors",
+                "px-5 py-2.5 rounded-full text-sm whitespace-nowrap transition-colors min-h-[44px] flex items-center",
                 isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+                  ? "bg-primary/80 text-white"
+                  : "bg-white/5 border border-white/20 text-muted-foreground hover:bg-white/10 hover:text-foreground"
               )}
             >
               {tab.label}
