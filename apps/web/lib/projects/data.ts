@@ -20,6 +20,9 @@ export const projects: Project[] = [
       { id: "changelog", label: "Changelog", enabled: true },
       { id: "roadmap", label: "Roadmap", enabled: true },
     ],
+    links: [
+      { type: "github", label: "Repository", href: "https://github.com/sbozh-me/website" },
+    ],
   },
   {
     slug: "discord-community",

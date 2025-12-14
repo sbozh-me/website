@@ -11,6 +11,14 @@ export interface ProjectTab {
   enabled: boolean;
 }
 
+export type ProjectLinkType = "github" | "discord" | "website" | "docs";
+
+export interface ProjectLink {
+  type: ProjectLinkType;
+  label: string;
+  href: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -19,4 +27,5 @@ export interface Project {
   heroImage: { src: string; alt: string; position?: "top" | "center" | "bottom" };
   meta: ProjectMeta[];
   tabs: ProjectTab[];
+  links?: ProjectLink[];
 }

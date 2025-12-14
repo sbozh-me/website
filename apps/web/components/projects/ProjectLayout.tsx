@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ProjectBreadcrumbs } from "./ProjectBreadcrumbs";
 import { ProjectHeader } from "./ProjectHeader";
 import { ProjectSidebar } from "./ProjectSidebar";
+import { ProjectLinks } from "./ProjectLinks";
 import { MobileTabScroll } from "./MobileTabScroll";
 import type { Project } from "@/lib/projects/types";
 
@@ -22,6 +23,7 @@ export function ProjectLayout({ project, children }: ProjectLayoutProps) {
         <div className="flex gap-12 mt-8">
           <ProjectSidebar slug={project.slug} tabs={project.tabs} />
           <main className="flex-1 min-w-0">{children}</main>
+          <ProjectLinks project={project} />
         </div>
       </div>
     </div>
