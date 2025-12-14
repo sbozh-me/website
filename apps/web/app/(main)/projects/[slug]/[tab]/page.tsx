@@ -81,7 +81,7 @@ export default async function TabPage({ params }: TabPageProps) {
     const changelogData = getChangelogData();
     return (
       <div>
-        <h2 className="text-2xl font-bold mb-6">Changelog</h2>
+        <h2 className="!text-2xl font-semibold mb-6">Changelog</h2>
         <VerticalTimeline data={changelogData} baseGitHubUrl="https://github.com/sbozh-me/website" />
       </div>
     );
@@ -91,7 +91,7 @@ export default async function TabPage({ params }: TabPageProps) {
     const { roadmapData, backlogData, completedCount, totalCount } = getRoadmapData();
     return (
       <div>
-        <h2 className="text-2xl font-bold mb-6">Roadmap</h2>
+        <h2 className="!text-2xl font-semibold mb-6">Roadmap</h2>
         <RoadmapView
           roadmapData={roadmapData}
           backlogData={backlogData}
