@@ -25,7 +25,9 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
         <h1 className="text-2xl md:text-4xl font-bold text-foreground">
           {project.title}
         </h1>
-        <p className="mt-2 text-muted-foreground max-w-2xl">{project.tagline}</p>
+        <p className="mt-2 text-white/80 max-w-2xl [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">
+          {project.tagline}
+        </p>
       </div>
     </div>
   );
