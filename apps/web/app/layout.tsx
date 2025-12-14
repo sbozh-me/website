@@ -5,6 +5,7 @@ import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 
 import { Footer } from "@/components/Footer";
 import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
+import { PerformanceProvider } from "@/providers/PerformanceProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -61,9 +62,11 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col antialiased">
         <AnalyticsProvider>
-          {children}
-          <Footer />
-          <Toaster />
+          <PerformanceProvider>
+            {children}
+            <Footer />
+            <Toaster />
+          </PerformanceProvider>
         </AnalyticsProvider>
       </body>
     </html>
