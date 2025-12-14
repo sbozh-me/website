@@ -13,7 +13,8 @@ export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Link
       href={`/projects/${slug}`}
-      className="flex flex-col h-full bg-muted border border-border rounded-lg overflow-hidden transition-colors hover:border-primary"
+      className="flex flex-col h-full bg-muted border border-border rounded-lg overflow-hidden transition-colors hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      aria-label={`View ${title} project details`}
     >
       <div className="aspect-video relative">
         <Image
@@ -22,6 +23,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
           fill
           className="object-cover"
           style={{ objectPosition: heroImage.position ?? "center" }}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <StatusBadge status={status} className="absolute top-4 right-4" />
       </div>

@@ -74,7 +74,7 @@ Projects showcase with landing pages for sbozh.me and Discord community.
 - ~~[0.8.2 - Project Detail Layout](roadmap/projects/0.8.2.md)~~
 - ~~[0.8.3 - sbozh.me Project](roadmap/projects/0.8.3.md)~~
 - ~~[0.8.4 - Discord Community Project](roadmap/projects/0.8.4.md)~~
-- [0.8.5 - Polish & Testing](roadmap/projects/0.8.5.md)
+- ~~[0.8.5 - Polish & Testing](roadmap/projects/0.8.5.md)~~
 
 ## 0.9.0 - Analytics
 

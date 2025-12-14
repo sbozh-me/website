@@ -33,7 +33,11 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const config = statusConfig[status];
 
   return (
-    <Badge variant="outline" className={cn(config.className, className)}>
+    <Badge
+      variant="outline"
+      className={cn(config.className, className)}
+      aria-label={`Project status: ${config.label}`}
+    >
       {config.label}
     </Badge>
   );

@@ -18,6 +18,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
           className="object-cover"
           style={{ objectPosition: project.heroImage.position ?? "center" }}
           priority
+          sizes="100vw"
         />
         {/* Mobile badge and version on image */}
         <div className="md:hidden absolute top-3 left-3 right-3 flex items-center justify-between">
