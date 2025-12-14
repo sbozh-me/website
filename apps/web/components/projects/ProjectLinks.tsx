@@ -1,6 +1,9 @@
+'use client';
+
 import { Github, MessageCircle, Globe, BookOpen, SquarePlus } from "lucide-react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import type { Project, ProjectLinkType } from "@/lib/projects/types";
+import { useExternalLinkTracking } from "@/hooks/useExternalLinkTracking";
 
 const linkIcons: Record<ProjectLinkType, React.ComponentType<{ className?: string }>> = {
   github: Github,
@@ -14,9 +17,42 @@ interface ProjectLinksProps {
 }
 
 export function ProjectLinks({ project }: ProjectLinksProps) {
+  const { trackRepositoryClick, trackDiscordInviteClick, trackExternalLink } = useExternalLinkTracking();
+
   if (!project.links?.length) {
     return null;
   }
+
+  const handleLinkClick = (link: typeof project.links[0]) => {
+    // Track repository clicks
+    if (link.type === 'github') {
+      trackRepositoryClick({
+        repository: link.href,
+        projectName: project.name,
+        platform: 'github',
+        location: 'project_sidebar',
+      });
+    }
+    // Track Discord invite clicks
+    else if (link.type === 'discord') {
+      // Extract invite code from URL if possible
+      const inviteCode = link.href.match(/discord\.gg\/([a-zA-Z0-9]+)/)?.[1];
+      trackDiscordInviteClick({
+        inviteCode,
+        serverName: project.name,
+        location: 'project_sidebar',
+      });
+    }
+    // Track other external links
+    else {
+      trackExternalLink({
+        url: link.href,
+        label: link.label,
+        projectId: project.slug,
+        location: 'project_sidebar',
+      });
+    }
+  };
 
   return (
     <aside className="hidden lg:block w-[200px] shrink-0 sticky top-24 self-start">
@@ -36,6 +72,7 @@ export function ProjectLinks({ project }: ProjectLinksProps) {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => handleLinkClick(link)}
               >
                 <Icon className="size-4" />
                 {link.label}
