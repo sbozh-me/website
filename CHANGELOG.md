@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.5] - 2025-12-14
+
+### Changes
+
+- feat(projects): complete 0.8.5 milestone with accessibility, testing, and polish ([0054421](https://github.com/sbozh-me/website/commit/005442127114ec8a34ca46c8389c0c63bf09e440))
+
+
 ## [0.8.4] - 2025-12-14
 
 ### Changes
