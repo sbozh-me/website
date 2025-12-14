@@ -1,0 +1,36 @@
+# Environment files
+.env
+.env.local
+.env.production
+
+# Data directories
+data/
+postgres_data/
+redis_data/
+
+# Backup files
+*.sql
+*.backup
+*.dump
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+
+# Certificates (for production)
+*.pem
+*.key
+*.crt
+*.cer
+
+# IDE
+.idea/
+.vscode/
+
+# Docker volumes (if mounted locally)
+volumes/
