@@ -22,21 +22,9 @@ Three things:
 
 ## Open Source & AI Development
 
-The entire codebase is public. You can browse the [repository](https://github.com/sbozh-me/website) and follow the [Changelog](/projects/sbozh-me/changelog) to see what's happening.
+The codebase is public - MIT licensed. Most development happens with AI assistance. That's not a disclaimer, it's an advantage: this project is a live experiment in human-AI collaboration.
 
-Most development is done with AI assistance. That's not a disclaimer - it's an advantage. This project becomes a live experiment in human-AI collaboration: what works, what breaks, what's worth adopting. I review everything that ships, and documenting that process is part of what makes **sbozh.me** useful beyond just another portfolio site.
-
-## Tech Stack
-
-**sbozh.me** runs on my own VPS. No Vercel, no Netlify, no managed platforms.
-
-The stack:
-- **Next.js** - frontend and routing
-- **Tailwind CSS** - styling
-- **Directus** - headless CMS for blog and content
-- **Self-hosted on VPS** - full control, full responsibility
-
-I chose this setup because I wanted to own every layer. When something breaks, I fix it. When I want to experiment, nothing stops me. That's the tradeoff I prefer.
+I review everything that ships. The [Changelog](/projects/sbozh-me/changelog) tracks what changed. The [Roadmap](/projects/sbozh-me/roadmap) shows what's planned and what's done.
 `,
 
   motivation: `
