@@ -5,6 +5,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
+import { getDiscordCommunityTabContent } from "@/lib/projects/content/discord-community";
 import { parseChangelogFromContent } from "@/lib/changelog/parser";
 import { parseRoadmapFromContent, parseBacklogFromContent } from "@/lib/roadmap/parser";
 import { VerticalTimeline } from "@sbozh/react-ui/components/ui/vertical-timeline";
@@ -41,6 +42,9 @@ export async function generateStaticParams() {
 function getTabContent(slug: string, tabId: string): string | null {
   if (slug === "sbozh-me") {
     return getSbozhMeTabContent(tabId);
+  }
+  if (slug === "discord-community") {
+    return getDiscordCommunityTabContent(tabId);
   }
   return null;
 }
