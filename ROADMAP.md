@@ -76,10 +76,19 @@ Projects showcase with landing pages for sbozh.me and Discord community.
 - ~~[0.8.4 - Discord Community Project](roadmap/projects/0.8.4.md)~~
 - ~~[0.8.5 - Polish & Testing](roadmap/projects/0.8.5.md)~~
 
-## 0.9.0 - Analytics
+## 0.9.0 - Analytics & Error Tracking
 
-- Tracking systems integration
-- Analytics dashboard
+Self-hosted analytics (Umami) and error tracking (GlitchTip) with privacy-first approach.
+
+- [0.9.0 - Analytics Infrastructure Setup](roadmap/analytics/0.9.0.md) - Docker setup for local development
+- [0.9.1 - Umami Analytics Integration](roadmap/analytics/0.9.1.md) - Page views and custom events
+- [0.9.2 - GlitchTip Error Tracking](roadmap/analytics/0.9.2.md) - Sentry SDK integration
+- [0.9.3 - Advanced Tracking & Privacy](roadmap/analytics/0.9.3.md) - Web Vitals and consent management
+- [0.9.4 - Monitoring Dashboard & Alerts](roadmap/analytics/0.9.4.md) - Custom reports and notifications
+- [0.9.5 - Testing & Documentation](roadmap/analytics/0.9.5.md) - E2E tests and migration guide
+
+> **Tech Stack:** Umami (analytics), GlitchTip (errors), PostgreSQL, Redis, Docker Compose
+> **Note:** Production deployment (Hetzner VPS) will be handled in 0.10.0
 
 ## 0.10.0 - Legal
 
