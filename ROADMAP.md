@@ -88,7 +88,7 @@ Self-hosted analytics (Umami) and error tracking (GlitchTip) with privacy-first 
 - [0.9.5 - Testing & Documentation](roadmap/analytics/0.9.5.md) - E2E tests and migration guide
 
 > **Tech Stack:** Umami (analytics), GlitchTip (errors), PostgreSQL, Redis, Docker Compose
-> **Note:** Production deployment (Hetzner VPS) will be handled in 0.10.0
+> **Note:** Production deployment (Hetzner VPS) will be handled in 0.11.0
 
 ## 0.10.0 - Legal
 
