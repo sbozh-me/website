@@ -10,6 +10,11 @@ interface ProjectSidebarProps {
   tabs: ProjectTab[];
 }
 
+function getTabHref(slug: string, tabId: string): string {
+  // "about" tab lives at /projects/[slug], others at /projects/[slug]/[tab]
+  return tabId === "about" ? `/projects/${slug}` : `/projects/${slug}/${tabId}`;
+}
+
 export function ProjectSidebar({ slug, tabs }: ProjectSidebarProps) {
   const pathname = usePathname();
   const enabledTabs = tabs.filter((tab) => tab.enabled);
@@ -18,8 +23,11 @@ export function ProjectSidebar({ slug, tabs }: ProjectSidebarProps) {
     <aside className="hidden lg:block w-[200px] shrink-0 sticky top-24 self-start">
       <nav className="space-y-1">
         {enabledTabs.map((tab) => {
-          const href = `/projects/${slug}/${tab.id}`;
-          const isActive = pathname === href;
+          const href = getTabHref(slug, tab.id);
+          const isActive =
+            tab.id === "about"
+              ? pathname === `/projects/${slug}`
+              : pathname === href;
 
           return (
             <Link

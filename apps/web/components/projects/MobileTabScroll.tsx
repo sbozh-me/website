@@ -10,6 +10,11 @@ interface MobileTabScrollProps {
   tabs: ProjectTab[];
 }
 
+function getTabHref(slug: string, tabId: string): string {
+  // "about" tab lives at /projects/[slug], others at /projects/[slug]/[tab]
+  return tabId === "about" ? `/projects/${slug}` : `/projects/${slug}/${tabId}`;
+}
+
 export function MobileTabScroll({ slug, tabs }: MobileTabScrollProps) {
   const pathname = usePathname();
   const enabledTabs = tabs.filter((tab) => tab.enabled);
@@ -18,8 +23,11 @@ export function MobileTabScroll({ slug, tabs }: MobileTabScrollProps) {
     <nav className="lg:hidden overflow-x-auto scrollbar-hide border-b border-border">
       <div className="flex gap-2 px-4 py-3">
         {enabledTabs.map((tab) => {
-          const href = `/projects/${slug}/${tab.id}`;
-          const isActive = pathname === href;
+          const href = getTabHref(slug, tab.id);
+          const isActive =
+            tab.id === "about"
+              ? pathname === `/projects/${slug}`
+              : pathname === href;
 
           return (
             <Link

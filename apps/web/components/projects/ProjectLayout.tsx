@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ProjectBreadcrumbs } from "./ProjectBreadcrumbs";
 import { ProjectHeader } from "./ProjectHeader";
 import { ProjectSidebar } from "./ProjectSidebar";
 import { MobileTabScroll } from "./MobileTabScroll";
@@ -13,6 +14,7 @@ export function ProjectLayout({ project, children }: ProjectLayoutProps) {
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
       <div className="max-w-6xl mx-auto">
+        <ProjectBreadcrumbs project={project} />
         <ProjectHeader project={project} />
 
         <MobileTabScroll slug={project.slug} tabs={project.tabs} />

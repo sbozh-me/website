@@ -31,13 +31,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Project routes
   const projects = getProjects();
   const projectRoutes: MetadataRoute.Sitemap = projects.flatMap((project) => {
-    const enabledTabs = project.tabs.filter((tab) => tab.enabled);
-    return enabledTabs.map((tab) => ({
-      url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
+    // "about" tab is at /projects/[slug], others at /projects/[slug]/[tab]
+    const aboutRoute = {
+      url: `${baseUrl}/projects/${project.slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
-    }));
+    };
+    const otherTabs = project.tabs
+      .filter((tab) => tab.enabled && tab.id !== "about")
+      .map((tab) => ({
+        url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      }));
+    return [aboutRoute, ...otherTabs];
   });
 
   // Blog posts from Directus
