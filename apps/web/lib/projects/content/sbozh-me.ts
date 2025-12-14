@@ -28,6 +28,12 @@ I review everything that ships. The [Changelog](/projects/sbozh-me/changelog) tr
 `,
 
   motivation: `
+> This is a record of building in public.
+> Shipping before it’s comfortable.
+> Learning by making real things.
+
+This project is my story of building in public - and an open invitation to follow, learn, or start your own.
+
 ## Founder's View
 
 I believe the best way to learn is to build something real - and share it before you feel ready.
