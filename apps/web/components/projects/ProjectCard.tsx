@@ -8,7 +8,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  const { slug, title, tagline, status, heroImage, meta } = project;
+  const { slug, title, tagline, status, heroImage, meta, version } = project;
 
   return (
     <Link
@@ -35,6 +35,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
               {item.value}
             </span>
           ))}
+          {version && (
+            <span>
+              <span className="font-medium text-foreground">Version:</span>{" "}
+              {version}
+            </span>
+          )}
         </div>
       </div>
     </Link>

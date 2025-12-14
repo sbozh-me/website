@@ -1,4 +1,5 @@
 import type { Project } from "./types";
+import packageJson from "../../../../package.json";
 
 export const projects: Project[] = [
   {
@@ -6,14 +7,13 @@ export const projects: Project[] = [
     title: "sbozh.me",
     tagline: "Platform built in public with Next.js and Tailwind CSS",
     status: "beta",
-    version: "0.8.2",
+    version: packageJson.version,
     heroImage: {
       src: "/images/projects/sbozh-me-hero.png",
       alt: "sbozh.me hero image",
     },
     meta: [
-      { label: "Moto", value: "Personal startup*" },
-      { label: "Type", value: "Platform" },
+      { label: "Type", value: "Webapp" },
     ],
     tabs: [
       { id: "about", label: "About", enabled: true },
