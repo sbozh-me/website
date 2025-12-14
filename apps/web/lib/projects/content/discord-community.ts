@@ -60,10 +60,10 @@ Not just another Discord server. A place where projects come to life because the
 `,
 
   roadmap: `
-## 0.1.0 - Established server
+## ~~0.1.0 - Established server~~ ✅
 - ~~0.1.0 - Register Server~~
 
-## 0.2.0 - Invite Link
+## ~~0.2.0 - Invite Link~~ ✅
 - ~~0.2.0 - Provide Registration Link~~
 - ~~0.2.1 - Link attached to project~~
 
