@@ -120,7 +120,7 @@ services:
     networks:
       - analytics-network
     restart: unless-stopped
-    mem_limit: ${GLITCHTIP_WORKER_MEMORY:-256M}
+    mem_limit: ${GLITCHTIP_WORKER_MEMORY:-512M}
 
 networks:
   analytics-network:
