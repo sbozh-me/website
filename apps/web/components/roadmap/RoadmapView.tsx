@@ -9,21 +9,32 @@ interface RoadmapViewProps {
   backlogData: TimelineData;
   completedCount: number;
   totalCount: number;
+  currentVersion?: string;
 }
 
 type TabType = "actual" | "backlog";
+
+function findCurrentVersionGroup(groups: TimelineData["groups"], version?: string): string | undefined {
+  if (!version) return groups.find((g) => !g.completed)?.id;
+
+  const minorVersion = version.split(".").slice(0, 2).join(".");
+  const matchingGroup = groups.find((g) => g.label.startsWith(minorVersion));
+
+  return matchingGroup?.id ?? groups.find((g) => !g.completed)?.id;
+}
 
 export function RoadmapView({
   roadmapData,
   backlogData,
   completedCount,
   totalCount,
+  currentVersion,
 }: RoadmapViewProps) {
   const [activeTab, setActiveTab] = useState<TabType>("actual");
 
   const currentData = activeTab === "actual" ? roadmapData : backlogData;
   const defaultExpanded = activeTab === "actual"
-    ? roadmapData.groups.find((g) => !g.completed)?.id
+    ? findCurrentVersionGroup(roadmapData.groups, currentVersion)
     : backlogData.groups[0]?.id;
 
   return (

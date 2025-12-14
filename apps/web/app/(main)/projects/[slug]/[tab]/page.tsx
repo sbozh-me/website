@@ -97,6 +97,7 @@ export default async function TabPage({ params }: TabPageProps) {
           backlogData={backlogData}
           completedCount={completedCount}
           totalCount={totalCount}
+          currentVersion={project.version}
         />
       </div>
     );
