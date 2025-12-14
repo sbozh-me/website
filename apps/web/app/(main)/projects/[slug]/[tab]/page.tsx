@@ -6,7 +6,9 @@ import { join } from "path";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
 import { parseChangelogFromContent } from "@/lib/changelog/parser";
-import { VerticalTimeline } from "@/components/timeline";
+import { parseRoadmapFromContent, parseBacklogFromContent } from "@/lib/roadmap/parser";
+import { VerticalTimeline } from "@sbozh/react-ui/components/ui/vertical-timeline";
+import { RoadmapView } from "@/components/roadmap";
 import { Spark } from "@/components/Spark";
 import "@sbozh/blog/styles/prose.css";
 
@@ -49,6 +51,18 @@ function getChangelogData() {
   return parseChangelogFromContent(content);
 }
 
+function getRoadmapData() {
+  const roadmapPath = join(process.cwd(), "..", "..", "ROADMAP.md");
+  const backlogPath = join(process.cwd(), "..", "..", "BACKLOGIDEAS.md");
+  const roadmapContent = readFileSync(roadmapPath, "utf-8");
+  const backlogContent = readFileSync(backlogPath, "utf-8");
+
+  const { data: roadmapData, completedCount, totalCount } = parseRoadmapFromContent(roadmapContent);
+  const backlogData = parseBacklogFromContent(backlogContent);
+
+  return { roadmapData, backlogData, completedCount, totalCount };
+}
+
 export default async function TabPage({ params }: TabPageProps) {
   const { slug, tab } = await params;
   const project = getProject(slug);
@@ -68,7 +82,22 @@ export default async function TabPage({ params }: TabPageProps) {
     return (
       <div>
         <h2 className="text-2xl font-bold mb-6">Changelog</h2>
-        <VerticalTimeline data={changelogData} />
+        <VerticalTimeline data={changelogData} baseGitHubUrl="https://github.com/sbozh-me/website" />
+      </div>
+    );
+  }
+
+  if (slug === "sbozh-me" && tab === "roadmap") {
+    const { roadmapData, backlogData, completedCount, totalCount } = getRoadmapData();
+    return (
+      <div>
+        <h2 className="text-2xl font-bold mb-6">Roadmap</h2>
+        <RoadmapView
+          roadmapData={roadmapData}
+          backlogData={backlogData}
+          completedCount={completedCount}
+          totalCount={totalCount}
+        />
       </div>
     );
   }

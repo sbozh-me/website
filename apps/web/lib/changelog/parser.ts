@@ -1,4 +1,4 @@
-import type { TimelineData, TimelineGroup } from "../timeline/types";
+import type { TimelineData, TimelineGroup, TimelineItem } from "@sbozh/react-ui/components/ui/vertical-timeline";
 
 interface ChangelogEntry {
   version: string;
