@@ -100,7 +100,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="mx-auto px-6 md:px-12 lg:px-24 py-24">
+      <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
         <div className="max-w-3xl mx-auto">
           <ErrorState
             title="Unable to load post"
