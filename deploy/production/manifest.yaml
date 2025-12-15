@@ -4,6 +4,6 @@
 
 web:
   image: ghcr.io/sbozh-me/website
-  tag: 0.11.8-rc-1
+  tag: 0.11.8-rc-2
 
 # pdf-generator is built locally on server via docker compose build
