@@ -148,6 +148,35 @@ services:
       retries: 3
       start_period: 40s
 
+  web:
+    image: ghcr.io/sbozh-me/website:${WEB_IMAGE_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"  # Only accessible via localhost (Nginx proxy)
+    depends_on:
+      directus:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      # Runtime config (served via /api/config endpoint)
+      DIRECTUS_URL: ${DIRECTUS_URL:-https://directus.sbozh.me}
+      UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID}
+      UMAMI_SCRIPT_URL: ${UMAMI_SCRIPT_URL:-https://analytics.sbozh.me/script.js}
+      ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
+    networks:
+      - sbozh-me-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
 networks:
   sbozh-me-network:
     driver: bridge

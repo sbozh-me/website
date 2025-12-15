@@ -390,6 +390,40 @@ chmod +x /root/backup-ludus.sh
 - Volume (50GB): **€2.40/month**
 - **Total: ~€10.61/month**
 
+## CI/CD Configuration
+
+### GitHub Container Registry (GHCR)
+
+The Next.js app is built and pushed to GHCR via GitHub Actions on:
+- Every push to `main` branch → `ghcr.io/sbozh-me/website:main`
+- Version tags (v*) → `ghcr.io/sbozh-me/website:0.11.0`
+
+### Docker Compose Configuration
+
+#### Image Tag
+
+Control which image version to deploy via the `WEB_IMAGE_TAG` environment variable:
+
+```bash
+# In .env file
+WEB_IMAGE_TAG=main          # Latest from main branch
+WEB_IMAGE_TAG=0.11.0        # Specific version
+WEB_IMAGE_TAG=sha-abc1234   # Specific commit
+```
+
+#### Runtime Environment Variables
+
+These are configured in docker-compose and read at runtime (no rebuild needed):
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DIRECTUS_URL` | Directus API URL | `https://directus.sbozh.me` |
+| `UMAMI_WEBSITE_ID` | Umami website ID | `abc123-...` |
+| `UMAMI_SCRIPT_URL` | Umami script URL | `https://analytics.sbozh.me/script.js` |
+| `ANALYTICS_ENABLED` | Enable analytics | `true` |
+
+The app exposes these via `/api/config` endpoint for client-side access.
+
 ## Next Steps
 
 1. ✅ Deploy completed
