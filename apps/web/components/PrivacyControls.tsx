@@ -31,9 +31,9 @@ export function PrivacyControls() {
       });
     };
 
-    window.addEventListener('consentchange', handleConsentChange as any);
+    window.addEventListener('consentchange', handleConsentChange as EventListener);
     return () => {
-      window.removeEventListener('consentchange', handleConsentChange as any);
+      window.removeEventListener('consentchange', handleConsentChange as EventListener);
     };
   }, []);
 
@@ -41,7 +41,6 @@ export function PrivacyControls() {
     const newValue = !consent[type];
     setConsent(prev => ({ ...prev, [type]: newValue }));
 
-    // Update consent manager
     consentManager.saveConsent({
       [type]: newValue,
     });
@@ -59,31 +58,27 @@ export function PrivacyControls() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 border border-border bg-muted rounded-lg p-6">
       <div>
-        <h3 className="text-lg font-medium mb-4">Privacy Settings</h3>
-        <p className="text-sm text-muted-foreground mb-6">
-          Control how your data is collected and used. These settings apply immediately.
+        <h3 className="text-lg font-medium mb-2">Cookie Settings</h3>
+        <p className="text-sm text-muted-foreground">
+          Choose which cookies you allow. Your preferences are saved locally.
         </p>
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
-            <h4 className="font-medium">Necessary Cookies</h4>
-            <p className="text-sm text-muted-foreground">
-              Essential for the website to function. Cannot be disabled.
-            </p>
+            <p className="text-sm font-medium">Necessary</p>
+            <p className="text-xs text-muted-foreground">Required for the site to work</p>
           </div>
           <Switch checked={true} disabled />
         </div>
 
-        <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
-            <h4 className="font-medium">Analytics Cookies</h4>
-            <p className="text-sm text-muted-foreground">
-              Help us understand how visitors use our website.
-            </p>
+            <p className="text-sm font-medium">Analytics</p>
+            <p className="text-xs text-muted-foreground">Help us improve the site</p>
           </div>
           <Switch
             checked={consent.analytics}
@@ -91,12 +86,10 @@ export function PrivacyControls() {
           />
         </div>
 
-        <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
-            <h4 className="font-medium">Functional Cookies</h4>
-            <p className="text-sm text-muted-foreground">
-              Enable enhanced functionality and personalization.
-            </p>
+            <p className="text-sm font-medium">Functional</p>
+            <p className="text-xs text-muted-foreground">Enhanced features</p>
           </div>
           <Switch
             checked={consent.functional}
@@ -104,12 +97,10 @@ export function PrivacyControls() {
           />
         </div>
 
-        <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center justify-between gap-4">
           <div className="flex-1">
-            <h4 className="font-medium">Marketing Cookies</h4>
-            <p className="text-sm text-muted-foreground">
-              Used to track visitors across websites for advertising.
-            </p>
+            <p className="text-sm font-medium">Marketing</p>
+            <p className="text-xs text-muted-foreground">Personalized ads</p>
           </div>
           <Switch
             checked={consent.marketing}
@@ -118,23 +109,13 @@ export function PrivacyControls() {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <Button
-          variant="outline"
-          onClick={handleDenyAll}
-        >
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={handleDenyAll}>
           Deny All
         </Button>
-        <Button
-          onClick={handleAcceptAll}
-        >
+        <Button onClick={handleAcceptAll}>
           Accept All
         </Button>
-      </div>
-
-      <div className="text-xs text-muted-foreground">
-        <p>Your preferences are saved locally and respected across all pages.</p>
-        <p>We use Umami Analytics (privacy-friendly, no cookies) for anonymous usage statistics.</p>
       </div>
     </div>
   );
