@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2025-12-15
+
+### Changes
+
+- docs(roadmap): add 0.11.x deployment roadmap ([50b4bc6](https://github.com/sbozh-me/website/commit/50b4bc6b59a6587e9130a9c0204b2d00926dfe63))
+- feat(deploy): add Hetzner production infrastructure ([ef6022d](https://github.com/sbozh-me/website/commit/ef6022d69801ee8f13262d635ff519cb01e30230))
+- docs(roadmap): clarify GitOps deploy trigger ([a328de6](https://github.com/sbozh-me/website/commit/a328de699503e4a5126b92ccc8c2aeba55336145))
+- fix(terraform): rename ludus-crm references to sbozh-me ([399b05e](https://github.com/sbozh-me/website/commit/399b05e88b1d9bba89d82beb0460c730619ab86d))
+
+
 ## [0.10.3] - 2025-12-15
 
 ### Changes
