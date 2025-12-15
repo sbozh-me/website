@@ -28,7 +28,7 @@ export function ProjectLinks({ project }: ProjectLinksProps) {
     if (link.type === 'github') {
       trackRepositoryClick({
         repository: link.href,
-        projectName: project.name,
+        projectName: project.title,
         platform: 'github',
         location: 'project_sidebar',
       });
@@ -39,7 +39,7 @@ export function ProjectLinks({ project }: ProjectLinksProps) {
       const inviteCode = link.href.match(/discord\.gg\/([a-zA-Z0-9]+)/)?.[1];
       trackDiscordInviteClick({
         inviteCode,
-        serverName: project.name,
+        serverName: project.title,
         location: 'project_sidebar',
       });
     }
