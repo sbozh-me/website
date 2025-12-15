@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.3] - 2025-12-15
+
+### Changes
+
+- docs(roadmap): mark 0.11.2 as complete ([0b06acf](https://github.com/sbozh-me/website/commit/0b06acfdf919f451a626da77d8f6655a0ca164ef))
+- feat(deploy): integrate Umami analytics with production stack ([3822aa6](https://github.com/sbozh-me/website/commit/3822aa6e15c7d992bf819cc18faebb7b9adf0901))
+
+
 ## [0.11.2] - 2025-12-15
 
 ### Changes
