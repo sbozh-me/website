@@ -152,7 +152,10 @@ services:
       start_period: 40s
 
   pdf-generator:
-    image: ghcr.io/sbozh-me/pdf-generator:${PDF_GENERATOR_IMAGE_TAG:-latest}
+    build:
+      context: ../../services/pdf-generator
+      dockerfile: Dockerfile
+    image: sbozh-me/pdf-generator:local
     restart: unless-stopped
     environment:
       NODE_ENV: production
