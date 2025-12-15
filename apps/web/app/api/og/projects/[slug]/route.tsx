@@ -74,6 +74,17 @@ export async function GET(
       }
     }
 
+    let logoImageData: ArrayBuffer | null = null;
+    try {
+      const imageUrl = new URL('/android-chrome-192x192.png', request.url).toString()
+      const imageResponse = await fetch(imageUrl, { cache: "force-cache" });
+      if (imageResponse.ok) {
+        logoImageData = await imageResponse.arrayBuffer();
+      }
+    } catch {
+      // Fall back to gradient if image fetch fails
+    }
+
     const statusColor = STATUS_COLORS[project.status];
     const statusLabel = STATUS_LABELS[project.status];
 
@@ -87,54 +98,23 @@ export async function GET(
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
-            padding: "60px",
             fontFamily: '"Space Grotesk", sans-serif',
             position: "relative",
             overflow: "hidden",
           }}
         >
-          {/* Background layer */}
-          {heroImageData ? (
-            <>
-              {/* Hero image background */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`data:image/png;base64,${Buffer.from(heroImageData).toString("base64")}`}
-                alt=""
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-              />
-              {/* Dark overlay for readability */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  background: `linear-gradient(to bottom, ${COLORS.overlay}, rgba(10, 10, 15, 0.85))`,
-                }}
-              />
-            </>
-          ) : (
-            /* Fallback gradient background */
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                background: `linear-gradient(135deg, ${COLORS.background} 0%, ${COLORS.backgroundAlt} 50%, #0f3460 100%)`,
-              }}
-            />
-          )}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: COLORS.background,
+            }}
+          />
+
+          { heroImageData ? <img alt='' src={`data:image/png;base64,${Buffer.from(heroImageData).toString("base64")}`} style={{width: '100%', height: '100%', position: 'absolute', 'top': 0}} /> : null }
 
           {/* Site branding - top right */}
           <div
@@ -147,15 +127,21 @@ export async function GET(
               gap: "8px",
             }}
           >
-            <span
-              style={{
-                color: COLORS.amethyst,
-                fontSize: "28px",
-                fontWeight: 600,
-              }}
-            >
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <span
+                style={{
+                  color: COLORS.textPrimary,
+                  fontSize: "42px",
+                  fontWeight: 700,
+                }}
+              >
               sbozh.me
             </span>
+              <span style={{color: COLORS.textPrimary}}>
+                Personal startup
+                {logoImageData ? <img alt='' src={`data:image/png;base64,${Buffer.from(logoImageData).toString("base64")}`} style={{width: '8px', height: '8px'}} /> : null}
+              </span>
+            </div>
           </div>
 
           {/* Content area */}
@@ -164,50 +150,11 @@ export async function GET(
               display: "flex",
               flexDirection: "column",
               position: "relative",
+              padding: "40px",
               zIndex: 10,
+              background: 'rgba(0,0,0,0.75)',
             }}
           >
-            {/* Status badge */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                marginBottom: "24px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                  padding: "8px 16px",
-                  borderRadius: "20px",
-                  border: `1px solid ${statusColor}`,
-                }}
-              >
-                <div
-                  style={{
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    backgroundColor: statusColor,
-                    boxShadow: `0 0 8px ${statusColor}`,
-                  }}
-                />
-                <span
-                  style={{
-                    color: statusColor,
-                    fontSize: "18px",
-                    fontWeight: 500,
-                  }}
-                >
-                  {statusLabel}
-                </span>
-              </div>
-            </div>
-
             {/* Project title */}
             <h1
               style={{
@@ -238,16 +185,6 @@ export async function GET(
           </div>
 
           {/* Decorative accent line */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              width: "100%",
-              height: "4px",
-              background: `linear-gradient(90deg, ${COLORS.amethyst}, ${COLORS.gold})`,
-            }}
-          />
         </div>
       ),
       {
