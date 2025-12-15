@@ -22,7 +22,7 @@ You don't need to be an expert. You don't even need a project yet. If you're cur
 
 ### Join the Community
 
-Ready to join? [Click here to join the Discord server](${siteConfig.links.discordInvite})
+Ready to join? <a href="${siteConfig.links.discordInvite}" target="_blank" rel="noopener noreferrer">Click here to join the Discord server</a>
 `,
 
   motivation: `
