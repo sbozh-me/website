@@ -92,9 +92,11 @@ Self-hosted analytics (Umami) and error tracking (GlitchTip) with privacy-first 
 
 ## 0.10.0 - Legal
 
-- Cookie consent
-- Privacy policy
-- Coincidences disclaimer
+Legal pages with cookie consent, privacy policy, and terms of usage.
+
+- [0.10.0 - Cookie Consent Modal](roadmap/legal/0.10.0.md) - Floating consent modal for first-time visitors
+- [0.10.1 - Terms of Usage](roadmap/legal/0.10.1.md) - Terms page with footer link
+- [0.10.2 - Privacy Policy with Tabs](roadmap/legal/0.10.2.md) - Comprehensive privacy policy page
 
 ## 0.11.0 - Deployment
 
