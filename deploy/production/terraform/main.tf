@@ -14,13 +14,13 @@ provider "hcloud" {
 
 # SSH Key
 resource "hcloud_ssh_key" "sbozh_me" {
-  name       = "ludus-crm-deploy"
+  name       = "sbozh-me-deploy"
   public_key = var.ssh_public_key
 }
 
 # Firewall
 resource "hcloud_firewall" "sbozh_me" {
-  name = "ludus-crm-firewall"
+  name = "sbozh-me-firewall"
 
   # SSH
   rule {
@@ -58,7 +58,7 @@ resource "hcloud_firewall" "sbozh_me" {
 
 # Server
 resource "hcloud_server" "sbozh_me" {
-  name        = "ludus-crm-${var.environment}"
+  name        = "sbozh-me-${var.environment}"
   image       = "ubuntu-24.04"
   server_type = var.server_type
   location    = var.location
@@ -72,7 +72,7 @@ resource "hcloud_server" "sbozh_me" {
   })
 
   labels = {
-    application = "ludus-crm"
+    application = "sbozh-me"
     environment = var.environment
     managed_by  = "terraform"
   }
@@ -85,13 +85,13 @@ resource "hcloud_server" "sbozh_me" {
 
 # Volume for persistent data
 resource "hcloud_volume" "sbozh_me_data" {
-  name      = "ludus-crm-data-${var.environment}"
+  name      = "sbozh-me-data-${var.environment}"
   size      = var.volume_size
   location  = var.location
   format    = "ext4"
 
   labels = {
-    application = "ludus-crm"
+    application = "sbozh-me"
     environment = var.environment
   }
 

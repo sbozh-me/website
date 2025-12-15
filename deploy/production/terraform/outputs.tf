@@ -15,7 +15,7 @@ output "server_name" {
 
 output "volume_path" {
   description = "Volume mount path"
-  value       = "/mnt/ludus-data"
+  value       = "/mnt/sbozh-me-data"
 }
 
 output "ssh_command" {
