@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2025-12-15
+
+### Changes
+
+- docs(roadmap): add v0.10.x legal milestones ([0e0da55](https://github.com/sbozh-me/website/commit/0e0da554f26c5bf0ba9b831b2aa358de4c2d488f))
+- fix: resolve type errors in ProjectLinks and performance tracking ([5ad5f33](https://github.com/sbozh-me/website/commit/5ad5f3354dcc0fbe151785b2edccf546c8bdff1e))
+- feat(ui): add Dialog component from shadcn ([3a5752d](https://github.com/sbozh-me/website/commit/3a5752d06771216a736429eefca0dcce9d005459))
+- feat(legal): add cookie consent modal with toast notifications ([c7e2932](https://github.com/sbozh-me/website/commit/c7e2932f8bbdf2f183d5e904ca97dfc7fe7dc8e2))
+- docs: mark 0.10.0 cookie consent modal as complete ([9eba383](https://github.com/sbozh-me/website/commit/9eba3830ff50dbabc279e4c509200c516591710d))
+- feat(ui): add soft bottom slide animation to Dialog ([eb486af](https://github.com/sbozh-me/website/commit/eb486afa3504a68f54191bd01afa4dc79267b38f))
+- fix(legal): hide cookie button when dialog is open ([c1896fc](https://github.com/sbozh-me/website/commit/c1896fc63c2de70467d804227743cec8991c4aa4))
+- chore(test): exclude test-analytics from coverage ([0c22dd4](https://github.com/sbozh-me/website/commit/0c22dd4769bcfdf7b811afb432393dcb28c26bb2))
+
+
 ## [0.9.2] - 2025-12-15
 
 ### Changes
