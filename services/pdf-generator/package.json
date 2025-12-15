@@ -1,0 +1,20 @@
+{
+  "name": "@sbozh/pdf-generator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "fastify": "^5.3.3",
+    "puppeteer-core": "^24.32.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.3"
+  }
+}

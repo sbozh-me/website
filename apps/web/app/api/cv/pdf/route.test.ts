@@ -3,37 +3,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "./route";
 
-// Mock puppeteer-core
-const mockPdf = vi.fn();
-const mockGoto = vi.fn();
-const mockEvaluate = vi.fn();
-const mockNewPage = vi.fn();
-const mockClose = vi.fn();
-
-vi.mock("puppeteer-core", () => ({
-  default: {
-    launch: vi.fn(() =>
-      Promise.resolve({
-        newPage: mockNewPage,
-        close: mockClose,
-      }),
-    ),
-  },
-}));
+// Mock global fetch
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe("PDF Route", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockNewPage.mockResolvedValue({
-      goto: mockGoto,
-      evaluate: mockEvaluate,
-      pdf: mockPdf,
+    // Default successful response
+    mockFetch.mockResolvedValue({
+      ok: true,
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)),
     });
-    mockGoto.mockResolvedValue(undefined);
-    mockEvaluate.mockResolvedValue(undefined);
-    mockPdf.mockResolvedValue(Buffer.from("mock-pdf-content"));
-    mockClose.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -53,11 +35,11 @@ describe("PDF Route", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toBe(
-      'attachment; filename="Sem_Bozhyk_CV.pdf"',
+      'attachment; filename="Sem_Bozhyk_CV.pdf"'
     );
   });
 
-  it("navigates to the CV page", async () => {
+  it("calls PDF service with correct URL", async () => {
     const request = new NextRequest("http://localhost:3000/api/cv/pdf", {
       headers: {
         host: "localhost:3000",
@@ -67,42 +49,34 @@ describe("PDF Route", () => {
 
     await GET(request);
 
-    expect(mockGoto).toHaveBeenCalledWith("https://localhost:3000/cv", {
-      waitUntil: "networkidle0",
-      timeout: 30000,
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining("/generate"),
+      expect.objectContaining({
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: expect.stringContaining("https://localhost:3000/cv"),
+      })
+    );
+  });
+
+  it("includes filename in request body", async () => {
+    const request = new NextRequest("http://localhost:3000/api/cv/pdf");
+
+    await GET(request);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: expect.stringContaining("Sem_Bozhyk_CV.pdf"),
+      })
+    );
+  });
+
+  it("returns 500 error when PDF service fails", async () => {
+    mockFetch.mockResolvedValue({
+      ok: false,
+      text: () => Promise.resolve("Service error"),
     });
-  });
-
-  it("sets light theme before generating PDF", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf");
-
-    await GET(request);
-
-    expect(mockEvaluate).toHaveBeenCalled();
-  });
-
-  it("generates PDF with A4 format", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf");
-
-    await GET(request);
-
-    expect(mockPdf).toHaveBeenCalledWith({
-      format: "A4",
-      printBackground: true,
-      margin: { top: 0, right: 0, bottom: 0, left: 0 },
-    });
-  });
-
-  it("closes browser after generating PDF", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf");
-
-    await GET(request);
-
-    expect(mockClose).toHaveBeenCalled();
-  });
-
-  it("returns 500 error when puppeteer fails", async () => {
-    mockNewPage.mockRejectedValue(new Error("Browser launch failed"));
 
     const request = new NextRequest("http://localhost:3000/api/cv/pdf");
     const response = await GET(request);
@@ -112,8 +86,8 @@ describe("PDF Route", () => {
     expect(json.error).toBe("Failed to generate PDF");
   });
 
-  it("returns 500 error when page navigation fails", async () => {
-    mockGoto.mockRejectedValue(new Error("Navigation timeout"));
+  it("returns 500 error when fetch throws", async () => {
+    mockFetch.mockRejectedValue(new Error("Network error"));
 
     const request = new NextRequest("http://localhost:3000/api/cv/pdf");
     const response = await GET(request);
@@ -126,27 +100,35 @@ describe("PDF Route", () => {
 
     await GET(request);
 
-    expect(mockGoto).toHaveBeenCalledWith(
-      expect.stringContaining("localhost:3000/cv"),
-      expect.any(Object),
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: expect.stringContaining("localhost:3000/cv"),
+      })
     );
   });
 
-  it("uses CHROME_PATH env variable when set", async () => {
-    const originalEnv = process.env.CHROME_PATH;
-    process.env.CHROME_PATH = "/custom/chrome/path";
+  it("uses PDF_SERVICE_URL env variable when set", async () => {
+    const originalEnv = process.env.PDF_SERVICE_URL;
+    process.env.PDF_SERVICE_URL = "http://custom-pdf-service:3001";
+
+    // Need to re-import to pick up env change
+    vi.resetModules();
+    const { GET: freshGET } = await import("./route");
 
     const request = new NextRequest("http://localhost:3000/api/cv/pdf");
-    await GET(request);
+    await freshGET(request);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "http://custom-pdf-service:3001/generate",
+      expect.any(Object)
+    );
 
     // Restore env
     if (originalEnv === undefined) {
-      delete process.env.CHROME_PATH;
+      delete process.env.PDF_SERVICE_URL;
     } else {
-      process.env.CHROME_PATH = originalEnv;
+      process.env.PDF_SERVICE_URL = originalEnv;
     }
-
-    // The test passes if no error is thrown - the custom path was used
-    expect(mockNewPage).toHaveBeenCalled();
   });
 });
