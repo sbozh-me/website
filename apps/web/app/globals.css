@@ -115,6 +115,9 @@ code, pre {
   --tw-ring-color: var(--color-primary) !important;
   --tw-ring-offset-width: 0px !important;
   --tw-ring-offset-shadow: 0 0 0 1px var(--color-primary) !important;
+}
+
+*:focus-visible {
     outline-color: var(--color-primary) !important;
     outline: 1px solid var(--color-primary);
 }
