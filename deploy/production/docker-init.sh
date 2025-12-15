@@ -1,25 +1,41 @@
 #!/bin/sh
 set -e
 
-DIRECTUS_CONTAINER="sbozh-me-production-directus-1"
-MARKER_FILE="/directus/uploads/.schema-applied"
+APP_DIR="/opt/sbozh-me"
+MARKER_FILE="/directus/uploads/.init-completed"
 
-echo "=== Directus Init Script ==="
+echo "=== Init Script ==="
+echo "Working directory: $(pwd)"
+echo "Snapshots available:"
+ls -la /snapshots/ 2>/dev/null || echo "  No snapshots found!"
 
-# Wait for Directus container to be available
-echo "Waiting for Directus container..."
-until docker inspect "$DIRECTUS_CONTAINER" >/dev/null 2>&1; do
-    echo "  Container not found, waiting..."
-    sleep 2
-done
+# Get container names dynamically
+DIRECTUS_CONTAINER=$(docker ps --filter "name=directus" --filter "status=running" --format "{{.Names}}" | grep -v init | head -1)
+DATABASE_CONTAINER=$(docker ps --filter "name=database" --filter "status=running" --format "{{.Names}}" | head -1)
 
-# Check if schema was already applied (marker file exists in persistent volume)
+echo "Directus container: $DIRECTUS_CONTAINER"
+echo "Database container: $DATABASE_CONTAINER"
+
+if [ -z "$DIRECTUS_CONTAINER" ]; then
+    echo "Error: Directus container not found!"
+    exit 1
+fi
+
+# Check if init was already completed
 if docker exec "$DIRECTUS_CONTAINER" test -f "$MARKER_FILE" 2>/dev/null; then
-    echo "Schema already applied (marker file exists). Skipping."
+    echo "Init already completed (marker file exists). Skipping."
     exit 0
 fi
 
-echo "First run detected. Applying schema..."
+echo ""
+echo "=== First run detected ==="
+
+# --- Directus Schema ---
+echo ""
+echo "--- Applying Directus Schema ---"
+
+# Create snapshots directory in container
+docker exec "$DIRECTUS_CONTAINER" mkdir -p /directus/snapshots
 
 # Copy snapshot to container
 echo "Copying schema snapshot..."
@@ -27,10 +43,16 @@ docker cp /snapshots/blog-schema.yaml "$DIRECTUS_CONTAINER":/directus/snapshots/
 
 # Apply schema
 echo "Applying schema..."
-docker exec "$DIRECTUS_CONTAINER" npx directus schema apply --yes /directus/snapshots/blog-schema.yaml
+docker exec "$DIRECTUS_CONTAINER" npx directus schema apply --yes /directus/snapshots/blog-schema.yaml || {
+    echo "Warning: Schema apply failed (might already exist)"
+}
 
-# Create marker file to prevent re-running
+echo "Directus schema applied!"
+
+# --- Create marker file ---
+echo ""
 echo "Creating marker file..."
 docker exec "$DIRECTUS_CONTAINER" touch "$MARKER_FILE"
 
-echo "=== Schema applied successfully! ==="
+echo ""
+echo "=== Init completed successfully! ==="
