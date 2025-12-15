@@ -1,0 +1,91 @@
+:::config
+format: A4
+margins: 10 10 10 10
+:::
+
+:::page
+
+# Sem Bozhyk
+
+subtitle: Senior Software Engineer | Full-Stack JavaScript | AI Integration
+contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | Prague, CZ
+
+---
+
+---columns 66 34
+
+## Summary
+
+Self-taught Ukrainian engineer. From zero to 20M-session platforms; from side hustle to profitable product. Led teams, shipped payment systems, and built AI features that save hours of work.
+
+Now creating [sbozh.me](https://sbozh.me) - a personal startup{*}.
+
+Let’s build something that matters.
+
+## Experience
+
+:::entry Rock.estate | Vue.js Developer | Nov 2024 - Oct 2025
+- Built AI chatbot saving agents 2–4h daily
+- Delivered AI features for 100K+ property-data workflows
+- Cut data entry time by 40% with smart forms
+:::
+
+:::entry GR8 Tech | React.js Team Lead | Jan 2023 - Aug 2023 | Remote
+- Led team of 5 processing EUR 5M+ monthly payments
+- Reduced payment failures by 23%; achieved 99.99% uptime
+- Mentored juniors, increasing team velocity by 40%
+:::
+
+:::entry Private Social Media Company | Key JavaScript Developer | Feb 2020 - Feb 2023 | Remote
+- Maintained features used by 20M daily sessions (99.95% uptime)
+- Built tax reporting for $2M+ daily payouts
+- Optimized photo editor, reducing memory use by 60%
+:::
+
+:::entry VVLEN | Founder & Full-Stack Dev | Oct 2016 - Present | Part-time
+- Built e-commerce platform generating EUR 250K annual revenue
+:::
+
+---
+
+## Skills
+
+#tag TypeScript
+#tag JavaScript
+#tag Vue.js 2/3
+#tag React
+#tag Node.js
+#tag Pinia
+#tag TanStack Query
+#tag WebWorker
+#tag WASM
+#tag Canvas
+#tag WebSockets
+#tag Docker
+#tag AWS
+#tag CI/CD
+#tag Team Leadership
+#tag Technical Mentoring
+#tag RxJS
+
+## Achievements
+
+- AI chatbot saving 2–4h daily per agent (Rock.estate)
+- Built EUR 250K e-commerce platform from scratch
+- Vue 2 to Vue 3 migration: +35% performance
+- PCI-compliant system handling $5M+ monthly payments
+
+## Languages
+
+- English: B2–C1
+- Ukrainian: Native
+- Czech: Conversational
+- German: Basic
+
+## Education
+
+Self-taught since 2015. Learning through real-world projects, open-source work, and technical documentation.
+
+---columns-end
+
+:::page-end

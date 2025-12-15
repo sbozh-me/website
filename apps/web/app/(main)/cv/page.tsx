@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 function getCV() {
-  const cvPath = join(process.cwd(), "content", "cv.pmdx");
+  const cvPath = join(process.cwd(), "content", "sem-bozhyk-v0.0.1.pmdx");
   return readFileSync(cvPath, "utf-8");
 }
 

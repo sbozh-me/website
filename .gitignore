@@ -40,6 +40,8 @@ coverage
 # Misc
 *.tsbuildinfo
 
+# Ignore CV drafts except the main one
 apps/web/content/cv*
+!apps/web/content/sem-bozhyk-v0.0.1.pmdx
 
 deploy/production/terraform/cloud-init.yaml
