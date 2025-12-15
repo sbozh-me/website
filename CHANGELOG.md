@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.2] - 2025-12-15
+
+### Changes
+
+- feat(legal): update privacy controls to match modal styling ([bcd048d](https://github.com/sbozh-me/website/commit/bcd048d3a5127515bdd2f0f530e4e79df9adc9b9))
+
+
 ## [0.10.1] - 2025-12-15
 
 ### Changes

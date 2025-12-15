@@ -1,6 +1,6 @@
 {
   "name": "@sbozh/react-ui",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "private": true,
   "sideEffects": false,
   "exports": {
