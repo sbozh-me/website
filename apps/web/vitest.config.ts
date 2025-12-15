@@ -17,6 +17,7 @@ export default defineConfig({
         "**/*.d.ts",
         "**/layout.tsx",
         "**/api/**", // API routes with Puppeteer have browser-context code that can't be covered
+        "**/test-analytics/**", // Test page for analytics debugging
       ],
     },
   },
