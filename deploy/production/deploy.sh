@@ -119,15 +119,9 @@ print_info "Uploading .env file..."
 scp -q "$SCRIPT_DIR/.env" $SSH_HOST:$APP_DIR/.env
 print_success ".env file uploaded"
 
-print_info "Uploading application source for Docker build..."
-ssh $SSH_HOST "mkdir -p $APP_DIR/directus"
-rsync -r --progress --stats --exclude='node_modules' --exclude='dist' --exclude='data' --exclude='uploads' "$SCRIPT_DIR/../directus/" $SSH_HOST:$APP_DIR/directus/
-print_success "Directus application uploaded"
-
-print_info "Uploading services source for Docker build..."
-ssh $SSH_HOST "mkdir -p $APP_DIR/services"
-rsync -r --progress --stats --exclude='node_modules' --exclude='dist' --exclude='build' "$SCRIPT_DIR/../services/" $SSH_HOST:$APP_DIR/services/
-print_success "Services uploaded"
+print_info "Uploading init scripts..."
+scp -q "$SCRIPT_DIR/init-umami-db.sh" $SSH_HOST:$APP_DIR/
+print_success "Init scripts uploaded"
 
 print_info "Preparing uploads directory..."
 ssh $SSH_HOST "sudo mkdir -p /mnt/sbozh-me-data/directus/uploads && sudo chown oktavian:oktavian /mnt/sbozh-me-data/directus/uploads"
@@ -139,17 +133,11 @@ scp -q "$SCRIPT_DIR/scripts/"* $SSH_HOST:$APP_DIR/scripts/
 ssh $SSH_HOST "chmod +x $APP_DIR/scripts/*.sh"
 print_success "Scripts uploaded"
 
-# Build extensions on server
-#print_header "5️⃣ Building Extensions"
-#print_info "Building kr-list-module extension..."
-#ssh $SSH_HOST "export PATH=~/.nvm/versions/node/v22.21.0/bin:\$PATH && cd $APP_DIR/directus/extensions/kr-list-module && npm install && npm run build"
-#print_success "Extension built"
-
 # Start services
 print_header "5️⃣ Starting Services"
-print_info "Building Docker images..."
-ssh $SSH_HOST "cd $APP_DIR && docker compose build"
-print_success "Images built"
+print_info "Pulling Docker images..."
+ssh $SSH_HOST "cd $APP_DIR && docker compose pull"
+print_success "Images pulled"
 
 print_info "Starting containers..."
 ssh $SSH_HOST "cd $APP_DIR && docker compose up -d"

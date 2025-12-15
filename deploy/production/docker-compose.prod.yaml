@@ -56,9 +56,7 @@ services:
         max-file: "3"
 
   directus:
-    build:
-      context: ./directus
-      dockerfile: Dockerfile
+    image: directus/directus:11
     restart: unless-stopped
     ports:
       - "127.0.0.1:8055:8055"  # Only accessible via localhost (Nginx proxy)
