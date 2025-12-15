@@ -424,6 +424,32 @@ These are configured in docker-compose and read at runtime (no rebuild needed):
 
 The app exposes these via `/api/config` endpoint for client-side access.
 
+### GitOps Deployment
+
+Deployments are controlled by `manifest.yaml`. When this file changes, GitHub Actions automatically deploys.
+
+**manifest.yaml:**
+```yaml
+web:
+  image: ghcr.io/sbozh-me/website
+  tag: main  # Change this to deploy a new version
+```
+
+**Automatic deploy:** Push a change to `manifest.yaml` on main branch.
+
+**Manual deploy via SSH:**
+```bash
+ssh oktavian@your-server '/opt/sbozh-me/scripts/deploy-web.sh v0.11.1'
+```
+
+**Required GitHub Secrets for automated deploys:**
+
+| Secret | Description |
+|--------|-------------|
+| `DEPLOY_SSH_KEY` | Private SSH key for server access |
+| `DEPLOY_HOST` | Server IP or hostname |
+| `DEPLOY_USER` | SSH user (`oktavian`) |
+
 ## Next Steps
 
 1. ✅ Deploy completed

@@ -1,0 +1,7 @@
+# GitOps Manifest
+# Change the tag to deploy a new version
+# GitHub Actions will automatically deploy when this file changes
+
+web:
+  image: ghcr.io/sbozh-me/website
+  tag: main
