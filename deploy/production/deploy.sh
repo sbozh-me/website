@@ -133,6 +133,12 @@ print_info "Preparing uploads directory..."
 ssh $SSH_HOST "sudo mkdir -p /mnt/sbozh-me-data/directus/uploads && sudo chown oktavian:oktavian /mnt/sbozh-me-data/directus/uploads"
 print_success "Uploads directory prepared"
 
+print_info "Uploading deployment scripts..."
+ssh $SSH_HOST "mkdir -p $APP_DIR/scripts"
+scp -q "$SCRIPT_DIR/scripts/"* $SSH_HOST:$APP_DIR/scripts/
+ssh $SSH_HOST "chmod +x $APP_DIR/scripts/*.sh"
+print_success "Scripts uploaded"
+
 # Build extensions on server
 #print_header "5️⃣ Building Extensions"
 #print_info "Building kr-list-module extension..."
@@ -186,49 +192,44 @@ if [ -n "$DOMAIN" ]; then
             exit 1
         fi
     else
-        print_warning "No SSL certificate found, setting up SSL..."
-        print_warning "Make sure $DOMAIN points to $SERVER_IP!"
+        print_warning "No SSL certificate found, setting up SSL via Cloudflare DNS..."
+        print_warning "Make sure DNS records for $DOMAIN point to $SERVER_IP!"
 
-        # Deploy HTTP-only configuration first
-        print_info "Deploying HTTP-only configuration for Let's Encrypt..."
-        scp -q "$SCRIPT_DIR/nginx-http.conf.template" $SSH_HOST:/tmp/nginx-http.conf
-        ssh $SSH_HOST "sudo sed 's/{{DOMAIN}}/$DOMAIN/g' /tmp/nginx-http.conf | sudo tee /etc/nginx/sites-available/sbozh-me > /dev/null"
-        ssh $SSH_HOST "sudo ln -sf /etc/nginx/sites-available/sbozh-me /etc/nginx/sites-enabled/sbozh-me"
-        ssh $SSH_HOST "sudo rm /etc/nginx/sites-enabled/default 2>/dev/null || true"
-
-        # Test and start nginx
-        if ssh $SSH_HOST "sudo nginx -t" &> /dev/null; then
-            ssh $SSH_HOST "sudo systemctl start nginx"
-            print_success "Nginx started with HTTP-only configuration"
+        # Check for Cloudflare credentials on server
+        if ! ssh $SSH_HOST "sudo test -f /root/.cloudflare.ini"; then
+            print_error "Cloudflare credentials not found on server!"
+            print_info "Create /root/.cloudflare.ini on server with:"
+            echo "  dns_cloudflare_api_token = YOUR_TOKEN"
+            print_info "Then run: sudo chmod 600 /root/.cloudflare.ini"
+            print_warning "Skipping SSL setup. Run setup-ssl.sh manually after configuring credentials:"
+            echo "  ssh $SSH_HOST \"sudo $APP_DIR/scripts/setup-ssl.sh admin@$DOMAIN\""
         else
-            print_error "Nginx configuration test failed"
-            ssh $SSH_HOST "sudo nginx -t"
-            exit 1
-        fi
+            # Run setup-ssl.sh for wildcard certificate
+            print_info "Obtaining wildcard SSL certificate via Cloudflare DNS-01..."
+            if ssh $SSH_HOST "sudo $APP_DIR/scripts/setup-ssl.sh admin@$DOMAIN"; then
+                print_success "Wildcard SSL certificate obtained"
 
-        # Get SSL certificate
-        print_info "Obtaining SSL certificate from Let's Encrypt..."
-        if ssh $SSH_HOST "sudo certbot certonly --webroot -w /var/www/certbot -d $DOMAIN --email admin@$DOMAIN --agree-tos --non-interactive"; then
-            print_success "SSL certificate obtained"
+                # Deploy full SSL configuration
+                print_info "Deploying full SSL configuration..."
+                scp -q "$SCRIPT_DIR/nginx.conf.template" $SSH_HOST:/tmp/nginx.conf
+                ssh $SSH_HOST "sudo cp /tmp/nginx.conf /etc/nginx/sites-available/sbozh-me"
+                ssh $SSH_HOST "sudo ln -sf /etc/nginx/sites-available/sbozh-me /etc/nginx/sites-enabled/sbozh-me"
+                ssh $SSH_HOST "sudo rm /etc/nginx/sites-enabled/default 2>/dev/null || true"
 
-            # Now deploy full SSL configuration
-            print_info "Deploying full SSL configuration..."
-            scp -q "$SCRIPT_DIR/nginx.conf.template" $SSH_HOST:/tmp/nginx.conf
-            ssh $SSH_HOST "sudo sed 's/{{DOMAIN}}/$DOMAIN/g' /tmp/nginx.conf | sudo tee /etc/nginx/sites-available/sbozh-me > /dev/null"
-
-            # Test and reload with SSL
-            if ssh $SSH_HOST "sudo nginx -t" &> /dev/null; then
-                ssh $SSH_HOST "sudo systemctl reload nginx"
-                print_success "Nginx reloaded with SSL"
+                if ssh $SSH_HOST "sudo nginx -t" &> /dev/null; then
+                    ssh $SSH_HOST "sudo systemctl restart nginx"
+                    print_success "Nginx configured with SSL"
+                else
+                    print_error "Nginx configuration test failed"
+                    ssh $SSH_HOST "sudo nginx -t"
+                    exit 1
+                fi
             else
-                print_error "SSL configuration test failed"
-                ssh $SSH_HOST "sudo nginx -t"
-                exit 1
+                print_error "Failed to obtain SSL certificate"
+                print_warning "Check Cloudflare credentials and DNS configuration"
+                print_info "You can retry manually with:"
+                echo "  ssh $SSH_HOST \"sudo $APP_DIR/scripts/setup-ssl.sh admin@$DOMAIN\""
             fi
-        else
-            print_error "Failed to obtain SSL certificate"
-            print_warning "Nginx is running with HTTP only. You can retry SSL setup later with:"
-            echo "  ssh $SSH_HOST \"sudo certbot certonly --webroot -w /var/www/certbot -d $DOMAIN --email admin@$DOMAIN --agree-tos\""
         fi
     fi
 
