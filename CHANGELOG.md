@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.6] - 2025-12-15
+
+### Changes
+
+- feat(deploy): implement production backup and restore system ([a132016](https://github.com/sbozh-me/website/commit/a13201676576183b0c1a8956ebd769613de733e9))
+- chore: mark 0.11.6 complete, add 0.11.7 placeholder ([e28f84b](https://github.com/sbozh-me/website/commit/e28f84b25087df0192a58486da5a5a0438328766))
+
+
 ## [0.11.5] - 2025-12-15
 
 ### Changes
