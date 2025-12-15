@@ -89,15 +89,17 @@ export function CookieConsentModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          className="fixed bottom-4 right-4 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse"
-          aria-label="Cookie settings"
-        >
-          <Cookie className="h-5 w-5" />
-          <span>Cookie Settings</span>
-        </Button>
-      </DialogTrigger>
+      {!open && (
+        <DialogTrigger asChild>
+          <Button
+            className="fixed bottom-4 right-4 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse"
+            aria-label="Cookie settings"
+          >
+            <Cookie className="h-5 w-5" />
+            <span>Cookie Settings</span>
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Cookie Preferences</DialogTitle>
