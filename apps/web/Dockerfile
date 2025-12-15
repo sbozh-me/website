@@ -38,6 +38,10 @@ COPY --from=deps /app/packages ./packages
 # Copy source code
 COPY . .
 
+# Write CV content from build arg (passed via GitHub secret)
+ARG CV_CONTENT
+RUN if [ -n "$CV_CONTENT" ]; then echo "$CV_CONTENT" > ./apps/web/content/cv.pmdx; fi
+
 # Build packages first, then the app
 RUN pnpm --filter @sbozh/react-ui build 2>/dev/null || true
 RUN pnpm --filter @sbozh/pmdxjs build 2>/dev/null || true
