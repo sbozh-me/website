@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.2] - 2025-12-15
+
+### Changes
+
+- feat(deploy): implement GitOps deployment workflow ([a0ce08d](https://github.com/sbozh-me/website/commit/a0ce08d65796e512714aef7ba05d04941c6bcd4f))
+
+
 ## [0.11.1] - 2025-12-15
 
 ### Changes
