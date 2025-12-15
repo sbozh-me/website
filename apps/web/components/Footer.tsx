@@ -19,6 +19,12 @@ export function Footer() {
             >
               Privacy
             </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Terms
+            </Link>
             <SocialLinks />
           </div>
         </div>
