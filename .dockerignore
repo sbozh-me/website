@@ -34,8 +34,11 @@ coverage
 **/*.spec.tsx
 __tests__
 
-# Documentation
+# Documentation (except files needed for build)
 *.md
+!CHANGELOG.md
+!ROADMAP.md
+!BACKLOGIDEAS.md
 
 # Misc
 .DS_Store
