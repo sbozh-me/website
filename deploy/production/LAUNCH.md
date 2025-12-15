@@ -59,22 +59,13 @@ Navigate to: **Repository Settings > Secrets and variables > Actions > New repos
 
 | Secret Name | Description | How to Get |
 |-------------|-------------|------------|
-| `CR_PAT` | GitHub Container Registry Personal Access Token | [Step 2.1](#21-create-cr_pat) |
 | `DEPLOY_HOST` | Production server IP address | From Terraform output |
 | `DEPLOY_USER` | SSH username | `oktavian` (default) |
-| `DEPLOY_SSH_KEY` | Private SSH key for deployment | [Step 2.2](#22-create-deploy_ssh_key) |
+| `DEPLOY_SSH_KEY` | Private SSH key for deployment | [Step 2.1](#21-create-deploy_ssh_key) |
 
-### 2.1 Create CR_PAT
+> **Note:** `GITHUB_TOKEN` is automatically provided by GitHub Actions for GHCR authentication. No manual token needed.
 
-1. Go to https://github.com/settings/tokens
-2. Click **Generate new token (classic)**
-3. Select scopes:
-   - `read:packages`
-   - `write:packages`
-   - `delete:packages`
-4. Copy the token and save as `CR_PAT` secret
-
-### 2.2 Create DEPLOY_SSH_KEY
+### 2.1 Create DEPLOY_SSH_KEY
 
 ```bash
 # Copy your private key content
