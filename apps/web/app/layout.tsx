@@ -3,6 +3,7 @@ import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 
+import { CookieConsentModal } from "@/components/CookieConsentModal";
 import { Footer } from "@/components/Footer";
 import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/providers/PerformanceProvider";
@@ -66,6 +67,7 @@ export default function RootLayout({
             {children}
             <Footer />
             <Toaster />
+            <CookieConsentModal />
           </PerformanceProvider>
         </AnalyticsProvider>
       </body>

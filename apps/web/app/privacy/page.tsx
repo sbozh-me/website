@@ -1,25 +1,25 @@
+import type { Metadata } from 'next';
 import { PrivacyControls } from '@/components/PrivacyControls';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Settings',
-  description: 'Manage your privacy preferences and cookie settings',
+  title: 'Privacy',
+  description: 'Learn about how we handle your data and privacy on sbozh.me',
 };
 
 export default function PrivacyPage() {
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Privacy & Cookie Settings</h1>
+        <h1 className="text-3xl font-bold mb-4">Privacy</h1>
         <p className="text-muted-foreground">
-          We respect your privacy and give you control over your data. This page allows you to manage
-          how we collect and use information about your visit.
+          We respect your privacy and give you control over your data. Learn how we collect
+          and use information about your visit.
         </p>
       </div>
 
       <PrivacyControls />
 
-      <div className="mt-12 space-y-6 text-sm text-muted-foreground">
+      <div className="mt-12 space-y-8 text-sm text-muted-foreground">
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">About Our Analytics</h2>
           <p>
@@ -107,7 +107,7 @@ export default function PrivacyPage() {
           <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
             <li>Are stored locally in your browser</li>
             <li>Are respected across all pages of our website</li>
-            <li>Can be changed at any time</li>
+            <li>Can be changed at any time on this page</li>
             <li>Never require an account or personal information</li>
           </ul>
         </section>

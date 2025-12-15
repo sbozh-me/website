@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import { Button } from '@sbozh/react-ui/components/ui/button';
 import { Switch } from '@sbozh/react-ui/components/ui/switch';
 import { consentManager, ConsentType } from '@/lib/privacy/consent';
@@ -44,6 +45,17 @@ export function PrivacyControls() {
     consentManager.saveConsent({
       [type]: newValue,
     });
+    toast.success('Cookie preferences saved');
+  };
+
+  const handleDenyAll = () => {
+    consentManager.denyAll();
+    toast.success('Only necessary cookies enabled');
+  };
+
+  const handleAcceptAll = () => {
+    consentManager.grantAll();
+    toast.success('All cookies accepted');
   };
 
   return (
@@ -109,12 +121,12 @@ export function PrivacyControls() {
       <div className="flex gap-4">
         <Button
           variant="outline"
-          onClick={() => consentManager.denyAll()}
+          onClick={handleDenyAll}
         >
           Deny All
         </Button>
         <Button
-          onClick={() => consentManager.grantAll()}
+          onClick={handleAcceptAll}
         >
           Accept All
         </Button>
