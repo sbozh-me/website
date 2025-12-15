@@ -4,8 +4,14 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
-  // Get analytics domain from environment
-  const analyticsDomain = process.env.NEXT_PUBLIC_UMAMI_DOMAIN || 'localhost:3001';
+  // Get analytics domain from script URL (runtime env var, no NEXT_PUBLIC_ prefix)
+  const umamiScriptUrl = process.env.UMAMI_SCRIPT_URL || 'http://localhost:3001/script.js';
+  let analyticsDomain = 'localhost:3001';
+  try {
+    analyticsDomain = new URL(umamiScriptUrl).host;
+  } catch {
+    // Keep default if URL parsing fails
+  }
 
   // Configure CSP to allow Umami
   const cspHeader = `

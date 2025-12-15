@@ -1,66 +1,58 @@
 'use client';
 
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, Suspense } from 'react';
+import { useEffect, useState } from 'react';
+
+interface AnalyticsConfig {
+  enabled: boolean;
+  umamiWebsiteId: string;
+  umamiScriptUrl: string;
+}
 
 interface AnalyticsProviderProps {
   children: React.ReactNode;
 }
 
-function AnalyticsContent({ children }: AnalyticsProviderProps) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // Log page views in development when Umami is not loaded
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development' && !window.umami) {
-      console.log('[Analytics Dev] pageview', {
-        url: pathname,
-        referrer: document.referrer,
-      });
-    }
-    // Umami automatically tracks page views when data-auto-track="true"
-  }, [pathname, searchParams]);
-
-  return <>{children}</>;
-}
-
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
-  const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
-  const scriptSrc = process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL;
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const analyticsEnabled = process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true';
+  const [config, setConfig] = useState<AnalyticsConfig | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  // Always wrap with AnalyticsContent for development logging
-  const content = (
-    <Suspense fallback={children}>
-      <AnalyticsContent>{children}</AnalyticsContent>
-    </Suspense>
-  );
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        setConfig(data.analytics);
+        setLoaded(true);
+      })
+      .catch(() => {
+        console.warn('Analytics: Failed to load config');
+        setLoaded(true);
+      });
+  }, []);
 
-  // Skip loading Umami script in development unless explicitly enabled
-  if (!analyticsEnabled || (isDevelopment && !process.env.NEXT_PUBLIC_FORCE_ANALYTICS)) {
-    return content;
+  // Don't block rendering while loading config
+  if (!loaded) {
+    return <>{children}</>;
   }
 
-  if (!websiteId || !scriptSrc) {
-    console.warn('Analytics: Missing configuration');
-    return content;
+  // Skip if analytics disabled or missing config
+  if (!config?.enabled || !config.umamiWebsiteId || !config.umamiScriptUrl) {
+    return <>{children}</>;
   }
 
   return (
     <>
       <Script
-        src={scriptSrc}
-        data-website-id={websiteId}
-        data-host-url="http://localhost:3001"
+        src={config.umamiScriptUrl}
+        data-website-id={config.umamiWebsiteId}
         strategy="afterInteractive"
         onLoad={() => {
-          console.log('Analytics: Umami loaded');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Analytics: Umami loaded');
+          }
         }}
       />
-      {content}
+      {children}
     </>
   );
 }
