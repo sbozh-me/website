@@ -80,13 +80,15 @@ Projects showcase with landing pages for sbozh.me and Discord community.
 
 Self-hosted analytics (Umami) and error tracking (GlitchTip) with privacy-first approach.
 
-- [0.9.0 - Analytics Infrastructure Setup](roadmap/analytics/0.9.0.md) - Docker setup for local development
-- [0.9.1 - Umami Analytics Integration](roadmap/analytics/0.9.1.md) - Page views and custom events
-- [0.9.2 - GlitchTip Error Tracking](roadmap/analytics/0.9.2.md) - Web Vitals and consent management
-- [0.9.3 - Advanced Tracking & Privacy](roadmap/analytics/0.9.3.md) - E2E tests and migration guide
+- ~~[0.9.0 - Analytics Infrastructure Setup](roadmap/analytics/0.9.0.md)~~ - Docker setup for local development
+- ~~[0.9.1 - Umami Analytics Integration](roadmap/analytics/0.9.1.md)~~ - Page views and custom events
+- ~~[0.9.2 - GlitchTip Error Tracking](roadmap/analytics/0.9.2.md)~~ - Web Vitals and consent management
+- ~~[0.9.3 - Advanced Tracking & Privacy](roadmap/analytics/0.9.3.md)~~ - E2E tests and migration guide
 
 > **Tech Stack:** Umami (analytics), GlitchTip (errors), PostgreSQL, Redis, Docker Compose
 > **Note:** Production deployment (Hetzner VPS) will be handled in 0.11.0
+
+> 0.9.2 is containing 0.9.3
 
 ## 0.10.0 - Legal
 
