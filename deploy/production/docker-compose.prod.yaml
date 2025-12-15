@@ -152,8 +152,9 @@ services:
       start_period: 40s
 
   pdf-generator:
-    build: ../../services/pdf-generator
+    build: ./services/pdf-generator
     restart: unless-stopped
+    shm_size: '256mb'
     environment:
       NODE_ENV: production
       PORT: "3010"

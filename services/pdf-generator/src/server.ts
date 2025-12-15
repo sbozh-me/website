@@ -50,13 +50,17 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: true,
+      headless: "new",
       executablePath: getChromePath(),
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
         "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--disable-extensions",
+        "--no-zygote",
+        "--disable-breakpad",
       ],
     });
 

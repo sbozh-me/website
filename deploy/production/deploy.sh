@@ -140,11 +140,20 @@ scp -q "$SCRIPT_DIR/scripts/"* $SSH_HOST:$APP_DIR/scripts/
 ssh $SSH_HOST "chmod +x $APP_DIR/scripts/*.sh"
 print_success "Scripts uploaded"
 
+print_info "Uploading services for local build..."
+ssh $SSH_HOST "mkdir -p $APP_DIR/services"
+rsync -aq --exclude='node_modules' --exclude='dist' "$SCRIPT_DIR/../../services/pdf-generator" $SSH_HOST:$APP_DIR/services/
+print_success "Services uploaded"
+
 # Start services
 print_header "5️⃣ Starting Services"
 print_info "Pulling Docker images..."
-ssh $SSH_HOST "cd $APP_DIR && docker compose pull"
+ssh $SSH_HOST "cd $APP_DIR && docker compose pull --ignore-buildable"
 print_success "Images pulled"
+
+print_info "Building local services..."
+ssh $SSH_HOST "cd $APP_DIR && docker compose build pdf-generator"
+print_success "Local services built"
 
 print_info "Starting containers..."
 ssh $SSH_HOST "cd $APP_DIR && docker compose up -d"
