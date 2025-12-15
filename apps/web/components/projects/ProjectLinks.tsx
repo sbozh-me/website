@@ -14,9 +14,10 @@ const linkIcons: Record<ProjectLinkType, React.ComponentType<{ className?: strin
 
 interface ProjectLinksProps {
   project: Project;
+  mobile?: boolean;
 }
 
-export function ProjectLinks({ project }: ProjectLinksProps) {
+export function ProjectLinks({ project, mobile = false }: ProjectLinksProps) {
   const { trackRepositoryClick, trackDiscordInviteClick, trackExternalLink } = useExternalLinkTracking();
 
   if (!project.links?.length) {
@@ -53,6 +54,37 @@ export function ProjectLinks({ project }: ProjectLinksProps) {
       });
     }
   };
+
+  if (mobile) {
+    return (
+      <div className="flex flex-wrap items-center gap-2 mt-4 lg:hidden">
+        <span className="text-sm text-muted-foreground">Links:</span>
+        {project.links.map((link) => {
+          const Icon = linkIcons[link.type];
+          const variant = link.variant === "primary" ? "default" : "ghost";
+
+          return (
+            <Button
+              key={link.href}
+              variant={variant}
+              size="sm"
+              asChild
+            >
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleLinkClick(link)}
+              >
+                <Icon className="size-4" />
+                {link.label}
+              </a>
+            </Button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <aside className="hidden lg:block w-[200px] shrink-0 sticky top-24 self-start">

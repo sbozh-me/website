@@ -19,6 +19,7 @@ export function ProjectLayout({ project, children }: ProjectLayoutProps) {
         <ProjectHeader project={project} />
 
         <MobileTabScroll slug={project.slug} tabs={project.tabs} />
+        <ProjectLinks project={project} mobile />
 
         <div className="flex gap-12 mt-8">
           <ProjectSidebar slug={project.slug} tabs={project.tabs} />
