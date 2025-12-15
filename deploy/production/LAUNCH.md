@@ -74,6 +74,20 @@ cat ~/.ssh/sbozh-me
 # Paste the ENTIRE content (including -----BEGIN/END-----) as DEPLOY_SSH_KEY secret
 ```
 
+### 2.2 Create GitHub PAT for GHCR (Server Authentication)
+
+The server needs to authenticate with GitHub Container Registry to pull private images.
+
+1. Go to https://github.com/settings/tokens
+2. Click **Generate new token (classic)**
+3. Name: `ghcr-server-read`
+4. Expiration: No expiration (or set reminder to rotate)
+5. Select scope: **`read:packages`** only
+6. Click **Generate token**
+7. Copy the token immediately (shown only once!)
+
+**Save this token** - you'll need it during server setup (Section 3.5).
+
 ---
 
 ## 3. Infrastructure Provisioning (Terraform)
@@ -163,7 +177,23 @@ Test connection:
 ssh sbozhme "echo 'SSH OK'"
 ```
 
-### 3.6 Update GitHub Secrets
+### 3.6 Login to GHCR on Server
+
+The server needs to authenticate with GitHub Container Registry to pull private images:
+
+```bash
+ssh sbozhme
+
+# Login to GHCR (use the PAT from Section 2.2)
+echo "ghp_xxxxxxxxxxxx" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+
+# Verify login
+docker pull ghcr.io/sbozh-me/website:main
+```
+
+> **Note:** This login persists in `~/.docker/config.json`. You only need to do this once per server.
+
+### 3.7 Update GitHub Secrets
 
 Now that you have the server IP, add to GitHub Secrets:
 
