@@ -450,6 +450,53 @@ ssh oktavian@your-server '/opt/sbozh-me/scripts/deploy-web.sh v0.11.1'
 | `DEPLOY_HOST` | Server IP or hostname |
 | `DEPLOY_USER` | SSH user (`oktavian`) |
 
+## Analytics (Umami)
+
+### Configuration
+
+Umami shares the PostgreSQL instance with Directus. Configure in `.env`:
+
+```bash
+UMAMI_DB_USER=umami
+UMAMI_DB_PASSWORD=your-secure-password
+UMAMI_DB_NAME=umami
+UMAMI_APP_SECRET=your-32-char-secret
+UMAMI_WEBSITE_ID=  # Get from Umami dashboard
+UMAMI_SCRIPT_URL=https://analytics.sbozh.me/script.js
+ANALYTICS_ENABLED=true
+```
+
+### First-Time Setup
+
+**For existing servers** (database already running):
+```bash
+ssh oktavian@your-server '/opt/sbozh-me/scripts/init-umami.sh'
+ssh oktavian@your-server 'cd /opt/sbozh-me && docker compose up -d umami'
+```
+
+**For new servers**, the init script runs automatically on first `docker compose up`.
+
+### Access Umami Dashboard
+
+1. Navigate to `http://SERVER_IP:3001` (or `https://analytics.sbozh.me` after nginx setup)
+2. Login with default credentials: `admin` / `umami`
+3. **Change password immediately**
+4. Add website: Settings → Websites → Add website
+5. Copy the Website ID to your `.env` as `UMAMI_WEBSITE_ID`
+
+### Useful Commands
+
+```bash
+# View Umami logs
+ssh oktavian@your-server 'cd /opt/sbozh-me && docker compose logs -f umami'
+
+# Restart Umami
+ssh oktavian@your-server 'cd /opt/sbozh-me && docker compose restart umami'
+
+# Check Umami health
+ssh oktavian@your-server 'curl -s http://localhost:3001/api/heartbeat'
+```
+
 ## Next Steps
 
 1. ✅ Deploy completed
