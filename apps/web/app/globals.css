@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 @source "../../../packages/react-ui/src";
 @source "../../../packages/pmdxjs/src";
