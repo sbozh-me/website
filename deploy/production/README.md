@@ -497,6 +497,63 @@ ssh oktavian@your-server 'cd /opt/sbozh-me && docker compose restart umami'
 ssh oktavian@your-server 'curl -s http://localhost:3001/api/heartbeat'
 ```
 
+## SSL & Domain Configuration
+
+### Domain Mapping
+
+| Domain | Service | Port |
+|--------|---------|------|
+| sbozh.me | Web (Next.js) | 3000 |
+| directus.sbozh.me | Directus CMS | 8055 |
+| analytics.sbozh.me | Umami Analytics | 3001 |
+
+### DNS Records (Cloudflare)
+
+Add these A records pointing to your server IP:
+
+| Type | Name | Value |
+|------|------|-------|
+| A | @ | SERVER_IP |
+| A | directus | SERVER_IP |
+| A | analytics | SERVER_IP |
+
+### Wildcard SSL Certificate Setup
+
+We use a wildcard certificate (*.sbozh.me + sbozh.me) via Cloudflare DNS-01 challenge.
+
+**1. Create Cloudflare API Token:**
+- Go to https://dash.cloudflare.com/profile/api-tokens
+- Create Custom Token with permissions: `Zone:DNS:Edit` for sbozh.me
+
+**2. Configure credentials on server:**
+```bash
+ssh oktavian@your-server
+
+# Create credentials file (as root)
+sudo bash -c 'echo "dns_cloudflare_api_token = YOUR_TOKEN" > /root/.cloudflare.ini'
+sudo chmod 600 /root/.cloudflare.ini
+```
+
+**3. Obtain certificate:**
+```bash
+sudo /opt/sbozh-me/scripts/setup-ssl.sh admin@sbozh.me
+```
+
+**4. Deploy nginx config:**
+```bash
+sudo cp /opt/sbozh-me/nginx.conf.template /etc/nginx/sites-available/sbozh-me.conf
+sudo ln -sf /etc/nginx/sites-available/sbozh-me.conf /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+### Certificate Renewal
+
+Certificates auto-renew via certbot timer. To test:
+```bash
+sudo certbot renew --dry-run
+```
+
 ## Next Steps
 
 1. ✅ Deploy completed

@@ -1,21 +1,31 @@
-# Ludus CRM Nginx Configuration
-# Replace {{DOMAIN}} with your actual domain
+# sbozh.me Multi-Domain Nginx Configuration
+# Wildcard SSL certificate covers *.sbozh.me + sbozh.me
 
-# Rate limiting
+# Rate limiting zones
 limit_req_zone $binary_remote_addr zone=api_limit:10m rate=10r/s;
 limit_req_zone $binary_remote_addr zone=general_limit:10m rate=30r/s;
 
-# Upstream Directus
+# Upstreams
+upstream web_backend {
+    server 127.0.0.1:3000;
+    keepalive 32;
+}
+
 upstream directus_backend {
     server 127.0.0.1:8055;
     keepalive 32;
 }
 
-# HTTP Server - Redirect to HTTPS
+upstream umami_backend {
+    server 127.0.0.1:3001;
+    keepalive 32;
+}
+
+# HTTP Server - Redirect to HTTPS (all domains)
 server {
     listen 80;
     listen [::]:80;
-    server_name {{DOMAIN}};
+    server_name sbozh.me *.sbozh.me;
 
     # Allow Let's Encrypt challenges
     location /.well-known/acme-challenge/ {
@@ -24,19 +34,21 @@ server {
 
     # Redirect all other traffic to HTTPS
     location / {
-        return 301 https://$server_name$request_uri;
+        return 301 https://$host$request_uri;
     }
 }
 
-# HTTPS Server
+# =============================================================================
+# sbozh.me - Web App (Next.js)
+# =============================================================================
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name {{DOMAIN}};
+    server_name sbozh.me;
 
-    # SSL Configuration (managed by certbot)
-    ssl_certificate /etc/letsencrypt/live/{{DOMAIN}}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{DOMAIN}}/privkey.pem;
+    # SSL Configuration (wildcard certificate)
+    ssl_certificate /etc/letsencrypt/live/sbozh.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/sbozh.me/privkey.pem;
     ssl_session_timeout 1d;
     ssl_session_cache shared:SSL:50m;
     ssl_session_tickets off;
@@ -49,7 +61,7 @@ server {
     # OCSP Stapling
     ssl_stapling on;
     ssl_stapling_verify on;
-    ssl_trusted_certificate /etc/letsencrypt/live/{{DOMAIN}}/chain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/sbozh.me/chain.pem;
 
     # Security Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
@@ -59,21 +71,93 @@ server {
     add_header Referrer-Policy "no-referrer-when-downgrade" always;
 
     # Logging
-    access_log /var/log/nginx/ludus-crm-access.log;
-    error_log /var/log/nginx/ludus-crm-error.log warn;
+    access_log /var/log/nginx/sbozh-me-web-access.log;
+    error_log /var/log/nginx/sbozh-me-web-error.log warn;
 
     # Max upload size
+    client_max_body_size 10M;
+
+    # Proxy to Next.js
+    location / {
+        limit_req zone=general_limit burst=20 nodelay;
+
+        proxy_pass http://web_backend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        # WebSocket support (for HMR in dev, if needed)
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+
+        proxy_buffering off;
+    }
+
+    # Static assets caching
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        proxy_pass http://web_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+
+        expires 7d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+}
+
+# =============================================================================
+# directus.sbozh.me - Directus CMS
+# =============================================================================
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name directus.sbozh.me;
+
+    # SSL Configuration (same wildcard certificate)
+    ssl_certificate /etc/letsencrypt/live/sbozh.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/sbozh.me/privkey.pem;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_prefer_server_ciphers off;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/sbozh.me/chain.pem;
+
+    # Security Headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+
+    # Logging
+    access_log /var/log/nginx/sbozh-me-directus-access.log;
+    error_log /var/log/nginx/sbozh-me-directus-error.log warn;
+
+    # Max upload size (larger for CMS uploads)
     client_max_body_size 100M;
 
     # Proxy to Directus
     location / {
-        # Rate limiting
         limit_req zone=general_limit burst=20 nodelay;
 
         proxy_pass http://directus_backend;
         proxy_http_version 1.1;
 
-        # Headers
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -85,12 +169,10 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
 
-        # Timeouts
         proxy_connect_timeout 60s;
         proxy_send_timeout 60s;
         proxy_read_timeout 60s;
 
-        # Buffering
         proxy_buffering off;
         proxy_request_buffering off;
     }
@@ -103,9 +185,8 @@ server {
         access_log off;
     }
 
-    # Admin interface
+    # Admin interface (stricter rate limiting)
     location /admin {
-        # Stricter rate limiting for admin
         limit_req zone=api_limit burst=10 nodelay;
 
         proxy_pass http://directus_backend;
@@ -117,8 +198,7 @@ server {
     }
 
     # API endpoints
-    location /api {
-        # API rate limiting
+    location ~* ^/(items|users|roles|permissions|fields|collections|relations|activity|revisions|files|folders|presets|settings|webhooks|flows|operations|panels|dashboards|translations|extensions|schema|server|auth|graphql) {
         limit_req zone=api_limit burst=20 nodelay;
 
         proxy_pass http://directus_backend;
@@ -128,7 +208,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # CORS headers (if needed)
+        # CORS headers
         add_header 'Access-Control-Allow-Origin' '$http_origin' always;
         add_header 'Access-Control-Allow-Credentials' 'true' always;
         add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, PATCH, OPTIONS' always;
@@ -150,6 +230,112 @@ server {
 
         expires 7d;
         add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+}
+
+# =============================================================================
+# analytics.sbozh.me - Umami Analytics
+# =============================================================================
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name analytics.sbozh.me;
+
+    # SSL Configuration (same wildcard certificate)
+    ssl_certificate /etc/letsencrypt/live/sbozh.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/sbozh.me/privkey.pem;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_prefer_server_ciphers off;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/sbozh.me/chain.pem;
+
+    # Security Headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+
+    # Logging
+    access_log /var/log/nginx/sbozh-me-analytics-access.log;
+    error_log /var/log/nginx/sbozh-me-analytics-error.log warn;
+
+    # Max upload size
+    client_max_body_size 10M;
+
+    # Proxy to Umami
+    location / {
+        limit_req zone=general_limit burst=20 nodelay;
+
+        proxy_pass http://umami_backend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+
+        proxy_buffering off;
+    }
+
+    # Analytics script - high traffic, relaxed rate limiting
+    location /script.js {
+        proxy_pass http://umami_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+
+        # Cache the script
+        expires 1h;
+        add_header Cache-Control "public";
+
+        # CORS for cross-domain tracking
+        add_header 'Access-Control-Allow-Origin' '*' always;
+    }
+
+    # API endpoint for collecting analytics data
+    location /api/send {
+        # Higher rate limit for analytics events
+        limit_req zone=general_limit burst=50 nodelay;
+
+        proxy_pass http://umami_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # CORS for cross-domain tracking
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'POST, OPTIONS' always;
+        add_header 'Access-Control-Allow-Headers' 'Content-Type' always;
+
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+    }
+
+    # Health check endpoint
+    location /api/heartbeat {
+        proxy_pass http://umami_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
         access_log off;
     }
 }
