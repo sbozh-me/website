@@ -22,6 +22,29 @@ jobs:
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Deploying tag: $TAG"
 
+      - name: Wait for build workflow if running
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ steps.manifest.outputs.tag }}"
+          echo "Checking for running build workflow for tag: $TAG"
+
+          # Find any in-progress build workflow runs
+          RUN_ID=$(gh run list \
+            --workflow="Build and Push Docker Image" \
+            --status=in_progress \
+            --limit=5 \
+            --json databaseId,headBranch \
+            --jq ".[] | select(.headBranch == \"$TAG\") | .databaseId" | head -1)
+
+          if [ -n "$RUN_ID" ]; then
+            echo "Found running build workflow (run ID: $RUN_ID), waiting for completion..."
+            gh run watch "$RUN_ID" --exit-status
+            echo "Build workflow completed successfully!"
+          else
+            echo "No running build workflow found, image should already exist"
+          fi
+
       - name: Deploy to server
         uses: appleboy/ssh-action@v1
         with:

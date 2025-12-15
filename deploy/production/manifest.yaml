@@ -4,4 +4,4 @@
 
 web:
   image: ghcr.io/sbozh-me/website
-  tag: v0.11.7
+  tag: 0.11.7
