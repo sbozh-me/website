@@ -41,3 +41,5 @@ coverage
 *.tsbuildinfo
 
 apps/web/content/cv*
+
+deploy/production/terraform/cloud-init.yaml

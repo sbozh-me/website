@@ -1,57 +1,407 @@
-# Production Deployment (v0.10.0)
+# sbozh.me Deployment Guide
 
-This directory will contain production deployment configuration for Hetzner VPS in version 0.10.0.
+Complete guide to deploy sbozh.me to Hetzner Cloud in **2-3 hours**.
 
-## Planned Features
+## Overview
 
-### Infrastructure
-- Docker Compose for production
-- Traefik reverse proxy with SSL/TLS
-- Let's Encrypt automatic certificates
-- Production environment variables
-- Resource optimization
+This deployment uses:
+- **Hetzner Cloud VPS** (CPX21 - 4GB RAM, ~€8/month)
+- **Terraform** for infrastructure automation
+- **Docker Compose** for application orchestration
+- **Nginx** as reverse proxy
+- **Let's Encrypt** for SSL certificates
 
-### Security
-- Firewall configuration
-- SSL/TLS enforcement
-- Security headers
-- Rate limiting
-- DDoS protection
+## Architecture
 
-### Monitoring
-- Uptime monitoring
-- Performance metrics
-- Alert escalation
-- Log aggregation
-- Backup automation
-
-### Deployment
-- CI/CD pipeline
-- Blue-green deployment
-- Rollback procedures
-- Health checks
-- Graceful shutdown
-
-## Timeline
-
-Version 0.10.0 will implement production deployment after 0.9.x analytics features are tested and stable.
-
-## Documentation
-
-Detailed implementation will be documented in `/roadmap/deployment/` when 0.10.0 development begins.
+```
+Internet → Nginx (443) → Directus (8055) → PostgreSQL + Redis
+         SSL/HTTPS
+```
 
 ## Prerequisites
 
-Before starting 0.10.0:
-- [ ] Complete all 0.9.x milestones
-- [ ] Test analytics in development
-- [ ] Verify error tracking works
-- [ ] Document all configuration
-- [ ] Create backup strategy
-- [ ] Prepare migration plan
+### 1. Hetzner Cloud Account
+- Sign up at: https://console.hetzner.cloud/
+- Create API Token: Console → Security → API Tokens → Generate
 
-## References
+### 2. Domain Name (Optional but Recommended)
+- Any domain registrar (Cloudflare, Namecheap, etc.)
+- Access to DNS settings
 
-- Analytics setup: `/deploy/analytics/README.md`
-- Roadmap: `/roadmap/analytics/`
-- Migration guide: `/roadmap/analytics/0.9.5.md`
+### 3. Local Tools
+```bash
+# macOS
+brew install terraform
+
+# Linux
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+```
+
+### 4. SSH Key
+```bash
+# Generate if you don't have one
+ssh-keygen -t ed25519 -C "sbozh-me-deploy" -f ~/.ssh/sbozh_me
+```
+
+## Deployment Steps
+
+### Step 1: Configure Infrastructure (15 min)
+
+Navigate to terraform directory:
+```bash
+cd apps/sbozh-me/terraform
+```
+
+Create and configure variables:
+```bash
+cp terraform.tfvars.example terraform.tfvars
+nano terraform.tfvars
+```
+
+Set these values:
+```hcl
+hcloud_token   = "your-hetzner-api-token"
+ssh_public_key = "ssh-ed25519 AAAAC3... your-email@example.com"
+domain         = "crm.yourdomain.com"  # Optional
+environment    = "prod"
+```
+
+Initialize and apply Terraform:
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+Type `yes` when prompted. **This takes 2-3 minutes.**
+
+Save the server IP:
+```bash
+export SERVER_IP=$(terraform output -raw server_ip)
+echo "Server IP: $SERVER_IP"
+```
+
+### Step 2: Wait for Server Setup (10 min)
+
+Cloud-init is automatically installing Docker and preparing the server.
+
+Check progress:
+```bash
+ssh dev@$SERVER_IP "cloud-init status --wait"
+```
+
+Verify installation:
+```bash
+ssh dev@$SERVER_IP "/home/dev/health-check.sh"
+```
+
+Expected output:
+```
+Docker: Docker version 24.x.x
+Docker Compose: Docker Compose version v2.x.x
+Nginx: nginx version
+...
+```
+
+### Step 3: Configure Domain (5 min)
+
+**Add DNS A Record:**
+
+| Type | Name | Value | TTL |
+|------|------|-------|-----|
+| A | crm (or @) | YOUR_SERVER_IP | 300 |
+
+Verify DNS propagation:
+```bash
+dig crm.yourdomain.com
+# or
+nslookup crm.yourdomain.com
+```
+
+Wait until it returns your server IP (usually 1-5 minutes).
+
+### Step 4: Configure Application (10 min)
+
+Navigate to deploy directory:
+```bash
+cd apps/sbozh-me/deploy
+```
+
+Create environment file:
+```bash
+cp .env.example .env
+nano .env
+```
+
+**IMPORTANT: Change these values:**
+```bash
+# Strong passwords (generate with: openssl rand -hex 32)
+DB_PASSWORD=your-strong-password-here
+DIRECTUS_SECRET=your-random-secret-32-chars
+DIRECTUS_KEY=another-random-key-32-chars
+ADMIN_PASSWORD=your-admin-password
+
+# Your domain
+PUBLIC_URL=https://crm.yourdomain.com
+CORS_ORIGIN=https://crm.yourdomain.com
+
+# Your email
+ADMIN_EMAIL=admin@yourdomain.com
+
+# Cookie domains
+REFRESH_TOKEN_COOKIE_DOMAIN=.yourdomain.com
+SESSION_COOKIE_DOMAIN=.yourdomain.com
+
+# SMTP settings (optional, for email)
+EMAIL_FROM=noreply@yourdomain.com
+EMAIL_SMTP_HOST=smtp.yourdomain.com
+EMAIL_SMTP_USER=noreply@yourdomain.com
+EMAIL_SMTP_PASSWORD=your-smtp-password
+```
+
+### Step 5: Deploy Application (15 min)
+
+Run the deployment script:
+```bash
+./deploy.sh pifagor.sbozh.me
+```
+
+Or without domain (no SSL):
+```bash
+./deploy.sh
+```
+
+**Note:** The script uses the `pifagor` SSH alias from your `~/.ssh/config`
+
+The script will:
+1. ✓ Verify SSH connection
+2. ✓ Check server readiness
+3. ✓ Copy application files
+4. ✓ Start Docker containers
+5. ✓ Configure Nginx
+6. ✓ Obtain SSL certificate
+7. ✓ Perform health checks
+
+**Deployment takes 5-10 minutes.**
+
+### Step 6: Access Directus (1 min)
+
+Open your browser:
+```
+https://crm.yourdomain.com/admin
+```
+
+Login with credentials from `.env`:
+- Email: `ADMIN_EMAIL`
+- Password: `ADMIN_PASSWORD`
+
+## Total Time: 2-2.5 hours
+
+- ⏱️ Step 1 (Terraform): 15 min
+- ⏱️ Step 2 (Wait): 10 min
+- ⏱️ Step 3 (DNS): 5 min
+- ⏱️ Step 4 (Config): 10 min
+- ⏱️ Step 5 (Deploy): 15 min
+- ⏱️ Step 6 (Access): 1 min
+
+Plus buffer time for DNS propagation and testing.
+
+## Post-Deployment
+
+### Verify Everything Works
+
+```bash
+# SSH to server
+ssh dev@$SERVER_IP
+
+# Check containers
+cd /opt/sbozh-me
+docker compose ps
+
+# View logs
+docker compose logs -f directus
+
+# Check health
+curl http://localhost:8055/server/health
+```
+
+### Useful Commands
+
+```bash
+# Restart services
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose restart'
+
+# Stop services
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose down'
+
+# Start services
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose up -d'
+
+# View real-time logs
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose logs -f'
+
+# Check disk usage
+ssh dev@$SERVER_IP 'df -h'
+
+# Database backup
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose exec database pg_dump -U directus sbozh_me > /mnt/ludus-data/backups/backup-$(date +%Y%m%d).sql'
+```
+
+### SSL Certificate Renewal
+
+Certificates auto-renew via certbot. To test renewal:
+```bash
+ssh dev@$SERVER_IP 'sudo certbot renew --dry-run'
+```
+
+### Monitoring
+
+Check logs regularly:
+```bash
+# Application logs
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose logs -f'
+
+# Nginx logs
+ssh dev@$SERVER_IP 'tail -f /var/log/nginx/sbozh-me-access.log'
+ssh dev@$SERVER_IP 'tail -f /var/log/nginx/sbozh-me-error.log'
+
+# System resources
+ssh dev@$SERVER_IP 'htop'
+```
+
+## Troubleshooting
+
+### Can't access Directus
+
+1. Check containers are running:
+   ```bash
+   ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose ps'
+   ```
+
+2. Check logs for errors:
+   ```bash
+   ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose logs directus'
+   ```
+
+3. Verify Nginx is running:
+   ```bash
+   ssh dev@$SERVER_IP 'sudo systemctl status nginx'
+   ```
+
+### SSL certificate failed
+
+1. Verify DNS is pointing to server:
+   ```bash
+   dig crm.yourdomain.com
+   ```
+
+2. Retry certificate:
+   ```bash
+   ssh dev@$SERVER_IP 'sudo certbot certonly --webroot -w /var/www/certbot -d crm.yourdomain.com --email admin@yourdomain.com --agree-tos'
+   ```
+
+3. Reload Nginx:
+   ```bash
+   ssh dev@$SERVER_IP 'sudo systemctl reload nginx'
+   ```
+
+### Database connection errors
+
+1. Check PostgreSQL logs:
+   ```bash
+   ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose logs database'
+   ```
+
+2. Verify database is healthy:
+   ```bash
+   ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose exec database pg_isready -U directus'
+   ```
+
+### Out of disk space
+
+1. Check disk usage:
+   ```bash
+   ssh dev@$SERVER_IP 'df -h'
+   ```
+
+2. Clean Docker:
+   ```bash
+   ssh dev@$SERVER_IP 'docker system prune -a'
+   ```
+
+3. Clean old logs:
+   ```bash
+   ssh dev@$SERVER_IP 'journalctl --vacuum-time=7d'
+   ```
+
+## Scaling Up
+
+If you need more resources later:
+
+1. **Resize server** (in Hetzner Console or via Terraform)
+2. **Add more volume space** (in Hetzner Console)
+3. **Upgrade to separate DB server** (modify docker-compose to use external PostgreSQL)
+
+## Backup Strategy
+
+### Automated Backups
+
+Create a backup cron job:
+```bash
+ssh dev@$SERVER_IP
+
+# Create backup script
+cat > /root/backup-ludus.sh <<'EOF'
+#!/bin/bash
+BACKUP_DIR="/mnt/ludus-data/backups"
+DATE=$(date +%Y%m%d-%H%M%S)
+
+# Database backup
+docker compose -f /opt/sbozh-me/docker-compose.yaml exec -T database \
+  pg_dump -U directus sbozh_me | gzip > $BACKUP_DIR/db-$DATE.sql.gz
+
+# Keep only last 7 days
+find $BACKUP_DIR -name "db-*.sql.gz" -mtime +7 -delete
+
+echo "Backup completed: $BACKUP_DIR/db-$DATE.sql.gz"
+EOF
+
+chmod +x /root/backup-ludus.sh
+
+# Add to crontab (daily at 2 AM)
+(crontab -l 2>/dev/null; echo "0 2 * * * /root/backup-ludus.sh") | crontab -
+```
+
+## Security Checklist
+
+- ✅ Firewall configured (SSH, HTTP, HTTPS only)
+- ✅ SSL certificate installed
+- ✅ Strong passwords in .env
+- ✅ Rate limiting enabled in Nginx
+- ✅ Security headers configured
+- ✅ Automatic security updates enabled
+- ✅ Docker containers run as non-root (where possible)
+
+## Cost Breakdown
+
+- Hetzner Cloud VPS (CPX21): **€8.21/month**
+- Volume (50GB): **€2.40/month**
+- **Total: ~€10.61/month**
+
+## Next Steps
+
+1. ✅ Deploy completed
+2. → Configure Directus (collections, fields, permissions)
+3. → Set up regular backups
+4. → Configure monitoring (optional)
+5. → Deploy frontend application
+
+## Support
+
+For issues:
+- Check logs first
+- Review troubleshooting section
+- Hetzner Support: https://docs.hetzner.com/
+- Directus Docs: https://docs.directus.io/

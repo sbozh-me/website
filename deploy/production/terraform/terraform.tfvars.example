@@ -1,0 +1,26 @@
+# Hetzner Cloud API Token
+# Get it from: https://console.hetzner.cloud/ -> Security -> API Tokens
+hcloud_token = "your-hetzner-cloud-api-token-here"
+
+# SSH Public Key
+# Generate with: ssh-keygen -t ed25519 -C "sbozh-me-deploy"
+# Then copy from: cat ~/.ssh/id_ed25519.pub
+ssh_public_key = "ssh-ed25519 AAAAC3... your-email@example.com"
+
+# Root Password (for emergency console access only)
+# SSH root login is disabled for security
+# Generate strong password with: openssl rand -base64 32
+root_password = "your-strong-root-password-here"
+
+# Domain name (optional, can be set later)
+domain = "crm.yourdomain.com"
+
+# Environment
+environment = "prod"
+
+# Server Configuration
+server_type = "cpx21"  # 3 vCPU, 4GB RAM, €8.21/month
+location    = "nbg1"   # Nuremberg, Germany (also: fsn1, hel1, ash, hil)
+
+# Data volume size in GB
+volume_size = 50
