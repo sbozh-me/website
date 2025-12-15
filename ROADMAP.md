@@ -101,9 +101,18 @@ Legal pages with cookie consent, privacy policy, and terms of usage.
 
 ## 0.11.0 - Deployment
 
-- Hetzner deploy scripts
-- CI/CD pipeline
-- Production configuration
+Hetzner production deployment with CI/CD, GitOps, and backup automation.
+
+- [0.11.0 - Terraform Validation](roadmap/deploy/0.11.0.md) - Validate Hetzner IaC
+- [0.11.1 - Dockerfile & CI/CD](roadmap/deploy/0.11.1.md) - Next.js image + GitHub Actions
+- [0.11.2 - GitOps](roadmap/deploy/0.11.2.md) - Deploy manifest workflow
+- [0.11.3 - Analytics Integration](roadmap/deploy/0.11.3.md) - Umami in docker-compose
+- [0.11.4 - Nginx Subdomains](roadmap/deploy/0.11.4.md) - analytics + directus SSL
+- [0.11.5 - Environment Configuration](roadmap/deploy/0.11.5.md) - .env.local for domains
+- [0.11.6 - Local Backup Script](roadmap/deploy/0.11.6.md) - Download backups to dev machine
+- [0.11.7 - Hetzner Volume Backups](roadmap/deploy/0.11.7.md) - Automated backups
+
+> **Tech Stack:** Terraform, Docker, GitHub Actions, GHCR, Nginx, Certbot, Umami
 
 ## 1.0.0 - Release
 
