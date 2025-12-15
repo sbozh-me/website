@@ -152,10 +152,7 @@ services:
       start_period: 40s
 
   pdf-generator:
-    build:
-      context: ../../services/pdf-generator
-      dockerfile: Dockerfile
-    image: sbozh-me/pdf-generator:local
+    build: ../../services/pdf-generator
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -163,17 +160,6 @@ services:
       CHROME_PATH: /usr/bin/chromium
     networks:
       - sbozh-me-network
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3010/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 
   web:
     image: ghcr.io/sbozh-me/website:${WEB_IMAGE_TAG:-latest}
@@ -182,8 +168,6 @@ services:
       - "127.0.0.1:3000:3000"  # Only accessible via localhost (Nginx proxy)
     depends_on:
       directus:
-        condition: service_healthy
-      pdf-generator:
         condition: service_healthy
     environment:
       NODE_ENV: production
