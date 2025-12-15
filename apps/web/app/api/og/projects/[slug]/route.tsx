@@ -30,13 +30,30 @@ const STATUS_LABELS = {
   archived: "Archived",
 };
 
-// Load Space Grotesk font from Google Fonts
+// Load Space Grotesk font from Google Fonts (TTF format required for OG image generation)
 async function loadSpaceGroteskFont(): Promise<ArrayBuffer> {
-  const response = await fetch(
-    "https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMA.woff2",
-    { cache: "force-cache" }
+  // Fetch Google Fonts CSS with a user-agent that returns TTF URLs
+  const cssResponse = await fetch(
+    "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700",
+    {
+      headers: {
+        // Use an older user-agent to get TTF instead of WOFF2
+        "User-Agent":
+          "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
+      },
+      cache: "force-cache",
+    }
   );
-  return response.arrayBuffer();
+  const css = await cssResponse.text();
+
+  // Extract the first TTF URL from the CSS
+  const ttfUrlMatch = css.match(/url\((https:\/\/[^)]+\.ttf)\)/);
+  if (!ttfUrlMatch) {
+    throw new Error("Could not find TTF font URL in Google Fonts CSS");
+  }
+
+  const fontResponse = await fetch(ttfUrlMatch[1], { cache: "force-cache" });
+  return fontResponse.arrayBuffer();
 }
 
 export async function GET(
