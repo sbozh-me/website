@@ -23,35 +23,100 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">About Our Analytics</h2>
           <p>
-            We use Umami Analytics, a privacy-focused analytics solution that doesn't use cookies
-            and doesn't track personal information. It only collects anonymous usage statistics to
-            help us understand how our website is used and improve the user experience.
+            We use <strong>Umami Analytics</strong>, a privacy-focused, self-hosted analytics solution.
+            Unlike traditional analytics:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
+            <li>No cookies are used for tracking</li>
+            <li>No personal information is collected</li>
+            <li>Data is stored on our own servers, not shared with third parties</li>
+            <li>IP addresses are not stored</li>
+            <li>Fully GDPR compliant</li>
+          </ul>
+          <p className="mt-2">
+            We only collect anonymous, aggregated statistics like page views, referrers, and
+            device types to understand how our website is used.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">Performance Monitoring</h2>
           <p>
-            We monitor Core Web Vitals and performance metrics to ensure our website loads quickly
-            and provides a smooth experience. This data is aggregated and does not identify individual users.
+            We monitor <strong>Core Web Vitals</strong> and performance metrics to ensure our website
+            loads quickly and provides a smooth experience:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
+            <li>Largest Contentful Paint (LCP) - loading performance</li>
+            <li>First Contentful Paint (FCP) - initial render time</li>
+            <li>Cumulative Layout Shift (CLS) - visual stability</li>
+            <li>Interaction to Next Paint (INP) - responsiveness</li>
+          </ul>
+          <p className="mt-2">
+            This data is aggregated and anonymized. It helps us identify and fix performance issues
+            but does not identify individual users.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Error Tracking</h2>
+          <p>
+            We use error tracking to monitor and fix issues that may affect your experience.
+            When an error occurs:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
+            <li>Error messages and stack traces are captured</li>
+            <li>Browser type and version may be recorded</li>
+            <li>The page URL where the error occurred is logged</li>
+          </ul>
+          <p className="mt-2">
+            This data is used solely for debugging and improving the website.
+            No personal information is included in error reports.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">Data Retention</h2>
+          <p className="mb-2">We retain data only as long as necessary:</p>
           <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Analytics data: 90 days</li>
-            <li>Performance metrics: 7 days</li>
-            <li>Session data: Until you close your browser</li>
+            <li><strong>Analytics data:</strong> 90 days</li>
+            <li><strong>Error logs:</strong> 30 days</li>
+            <li><strong>Performance metrics:</strong> 7 days</li>
+            <li><strong>Session data:</strong> Until you close your browser</li>
+          </ul>
+          <p className="mt-2">
+            After these periods, data is automatically deleted from our systems.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-foreground mb-2">What We Don't Collect</h2>
+          <ul className="list-disc list-inside space-y-1 ml-4">
+            <li>Names, email addresses, or other personal identifiers</li>
+            <li>IP addresses (they are not stored or logged)</li>
+            <li>Cross-site tracking or browsing history</li>
+            <li>Data sold to advertisers or data brokers</li>
           </ul>
         </section>
 
         <section>
           <h2 className="text-lg font-semibold text-foreground mb-2">Your Rights</h2>
           <p>
-            You have the right to opt out of any data collection at any time. Your preferences
-            are stored locally in your browser and are respected across all pages of our website.
-            No personal data is sent to third parties without your explicit consent.
+            You have the right to opt out of any data collection at any time using the controls
+            above. Your preferences:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-4 mt-2">
+            <li>Are stored locally in your browser</li>
+            <li>Are respected across all pages of our website</li>
+            <li>Can be changed at any time</li>
+            <li>Never require an account or personal information</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Contact</h2>
+          <p>
+            If you have questions about our privacy practices, please visit our{' '}
+            <a href="/contact" className="text-primary hover:underline">contact page</a>.
           </p>
         </section>
       </div>
