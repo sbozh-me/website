@@ -65,7 +65,7 @@ Site-wide SEO, Open Graph, structured data, and sitemap generation.
 - ~~[0.7.4 - Page Metadata](roadmap/seo/0.7.4.md)~~
 - ~~[0.7.5 - Structured Data](roadmap/seo/0.7.5.md)~~ ⏭️ skipped → backlog
 
-## 0.8.0 - Projects Section
+## ~~0.8.0 - Projects Section~~  ✅
 
 Projects showcase with landing pages for sbozh.me and Discord community.
 
@@ -76,7 +76,7 @@ Projects showcase with landing pages for sbozh.me and Discord community.
 - ~~[0.8.4 - Discord Community Project](roadmap/projects/0.8.4.md)~~
 - ~~[0.8.5 - Polish & Testing](roadmap/projects/0.8.5.md)~~
 
-## 0.9.0 - Analytics & Error Tracking
+## ~~0.9.0 - Analytics & Error Tracking~~ ✅
 
 Self-hosted analytics (Umami) and error tracking (GlitchTip) with privacy-first approach.
 
