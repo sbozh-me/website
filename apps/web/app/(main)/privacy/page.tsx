@@ -52,26 +52,26 @@ export default function PrivacyPage() {
           but does not identify individual users.
         </p>
 
-        <h2>Error Tracking</h2>
-        <p>
-          We use error tracking to monitor and fix issues that may affect your experience.
-          When an error occurs:
-        </p>
-        <ul>
-          <li>Error messages and stack traces are captured</li>
-          <li>Browser type and version may be recorded</li>
-          <li>The page URL where the error occurred is logged</li>
-        </ul>
-        <p>
-          This data is used solely for debugging and improving the website.
-          No personal information is included in error reports.
-        </p>
+        {/*<h2>Error Tracking</h2>*/}
+        {/*<p>*/}
+        {/*  We use error tracking to monitor and fix issues that may affect your experience.*/}
+        {/*  When an error occurs:*/}
+        {/*</p>*/}
+        {/*<ul>*/}
+        {/*  <li>Error messages and stack traces are captured</li>*/}
+        {/*  <li>Browser type and version may be recorded</li>*/}
+        {/*  <li>The page URL where the error occurred is logged</li>*/}
+        {/*</ul>*/}
+        {/*<p>*/}
+        {/*  This data is used solely for debugging and improving the website.*/}
+        {/*  No personal information is included in error reports.*/}
+        {/*</p>postponed*/}
 
         <h2>Data Retention</h2>
         <p>We retain data only as long as necessary:</p>
         <ul>
           <li><strong>Analytics data:</strong> 90 days</li>
-          <li><strong>Error logs:</strong> 30 days</li>
+          {/*<li><strong>Error logs:</strong> 30 days</li>postponed*/}
           <li><strong>Performance metrics:</strong> 7 days</li>
           <li><strong>Session data:</strong> Until you close your browser</li>
         </ul>

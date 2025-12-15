@@ -63,6 +63,7 @@ export default function TermsPage() {
         <ul>
           <li><strong>Emails</strong> — only if voluntarily submitted</li>
           <li><strong>Analytics</strong> — anonymized usage data via Umami</li>
+          {/*<li><strong>Error tracking</strong> — via GlitchTip</li>postponed*/}
         </ul>
         <p>
           We do not sell data or use invasive tracking. As an EU-based service, we respect GDPR.
