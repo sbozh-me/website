@@ -31,7 +31,7 @@ export function Footer() {
               Contact
             </Link>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center sm:gap-2 sm:flex-row gap-4">
             <SocialLinks />
             <p className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} sbozh.me{sbozhMe?.version && ` v${sbozhMe.version}`}

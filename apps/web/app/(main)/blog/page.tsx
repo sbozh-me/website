@@ -37,9 +37,9 @@ export default async function BlogPage() {
   }
 
   return (
-    <div className="mx-auto px-6 md:px-12 lg:px-24 py-24">
+    <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
       <div className="max-w-3xl mx-auto">
-        <h1 className="tracking-tight">Blog</h1>
+        <h1 className="text-3xl md:text-4xl tracking-tight">Blog</h1>
         <p className="mt-2 text-muted-foreground">
           Thoughts, stories, and ideas from different perspectives.
         </p>
