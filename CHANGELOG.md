@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.1] - 2025-12-15
+
+### Changes
+
+- feat(deploy)!: implement containerization with CI/CD pipeline ([a184b36](https://github.com/sbozh-me/website/commit/a184b36bc40d2d5d45e34e9b0c9506952359fd0a))
+- docs(roadmap): mark 0.11.0 and 0.11.1 as complete ([62f7435](https://github.com/sbozh-me/website/commit/62f74356a65e28fac4565e0f7d20758b8cfd3e51))
+
+
 ## [0.11.0] - 2025-12-15
 
 ### Changes
