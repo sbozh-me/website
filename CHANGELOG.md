@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.3] - 2025-12-15
+
+### Changes
+
+- feat(footer): add active link highlighting and contact link ([d5a2f03](https://github.com/sbozh-me/website/commit/d5a2f030bec48ef6efbecee26c968865646e06da))
+- style(blog): improve mobile responsiveness ([3313cdb](https://github.com/sbozh-me/website/commit/3313cdba4a3b1560d6b028e72c081a5b4f29691a))
+- style(ui): improve responsive spacing and focus accessibility ([2adcb34](https://github.com/sbozh-me/website/commit/2adcb343c444d12d86b7b20a2c95d165522da736))
+- docs(roadmap): fix version number for cosmetic fixes task ([32d7525](https://github.com/sbozh-me/website/commit/32d7525d8e866d75e4a745aa1789bd6c7782098c))
+- feat(projects): reposition status badge in project header ([ff9b5dd](https://github.com/sbozh-me/website/commit/ff9b5dd20898fc8e27d569882c2f8885669c90fc))
+- feat(projects): add mobile project links to layout ([3e7c819](https://github.com/sbozh-me/website/commit/3e7c819e305e5517e8e500c54fa5d2aa829bc777))
+- style(button): update ghost variant hover styles ([e9f7928](https://github.com/sbozh-me/website/commit/e9f79285703fc6e69ab71fdecee1105913cc3edd))
+- feat(web): open Discord invite link in new tab ([4bcff9c](https://github.com/sbozh-me/website/commit/4bcff9ce94fc6cd3ffc6af363ce2b809f1d0b84d))
+- fix(ui): correct focus-visible selector syntax ([575198c](https://github.com/sbozh-me/website/commit/575198ca276c444f12977f8f23fe56cf1685149c))
+
+
 ## [0.10.2] - 2025-12-15
 
 ### Changes
