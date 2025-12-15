@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.4] - 2025-12-15
+
+### Changes
+
+- feat(deploy): implement wildcard SSL and multi-domain nginx configuration ([000f41d](https://github.com/sbozh-me/website/commit/000f41d316f6c45968d7654dc05471a9b613ab8c))
+
+
 ## [0.11.3] - 2025-12-15
 
 ### Changes
