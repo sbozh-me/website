@@ -97,7 +97,7 @@ Legal pages with cookie consent, privacy policy, and terms of usage.
 - ~~[0.10.0 - Cookie Consent Modal](roadmap/legal/0.10.0.md)~~ - Floating consent modal for first-time visitors
 - ~~[0.10.1 - Terms of Usage](roadmap/legal/0.10.1.md)~~ - Terms page with footer link
 - ~~[0.10.2 - Privacy Controls Styling](roadmap/legal/0.10.2.md)~~ - Updated controls to match modal design
-- 0.10.4 - Cosmetic fixes
+- 0.10.3 - Cosmetic fixes
 
 ## 0.11.0 - Deployment
 
