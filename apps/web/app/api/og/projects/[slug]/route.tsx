@@ -1,6 +1,8 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import { getProject } from "@/lib/projects/data";
+import { readFile } from "fs/promises";
+import { join } from "path";
 
 export const runtime = "nodejs";
 
@@ -30,30 +32,14 @@ const STATUS_LABELS = {
   archived: "Archived",
 };
 
-// Load Space Grotesk font from Google Fonts (TTF format required for OG image generation)
+// Load Space Grotesk font from local file (TTF format required for OG image generation)
 async function loadSpaceGroteskFont(): Promise<ArrayBuffer> {
-  // Fetch Google Fonts CSS with a user-agent that returns TTF URLs
-  const cssResponse = await fetch(
-    "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700",
-    {
-      headers: {
-        // Use an older user-agent to get TTF instead of WOFF2
-        "User-Agent":
-          "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
-      },
-      cache: "force-cache",
-    }
+  const fontPath = join(process.cwd(), "public/fonts/SpaceGrotesk-Regular.ttf");
+  const fontBuffer = await readFile(fontPath);
+  return fontBuffer.buffer.slice(
+    fontBuffer.byteOffset,
+    fontBuffer.byteOffset + fontBuffer.byteLength
   );
-  const css = await cssResponse.text();
-
-  // Extract the first TTF URL from the CSS
-  const ttfUrlMatch = css.match(/url\((https:\/\/[^)]+\.ttf)\)/);
-  if (!ttfUrlMatch) {
-    throw new Error("Could not find TTF font URL in Google Fonts CSS");
-  }
-
-  const fontResponse = await fetch(ttfUrlMatch[1], { cache: "force-cache" });
-  return fontResponse.arrayBuffer();
 }
 
 export async function GET(
