@@ -121,7 +121,14 @@ print_success ".env file uploaded"
 
 print_info "Uploading init scripts..."
 scp -q "$SCRIPT_DIR/init-umami-db.sh" $SSH_HOST:$APP_DIR/
+scp -q "$SCRIPT_DIR/docker-init.sh" $SSH_HOST:$APP_DIR/
+ssh $SSH_HOST "chmod +x $APP_DIR/docker-init.sh"
 print_success "Init scripts uploaded"
+
+print_info "Uploading Directus schema snapshots..."
+ssh $SSH_HOST "mkdir -p $APP_DIR/snapshots"
+scp -q "$SCRIPT_DIR/snapshots/"*.yaml $SSH_HOST:$APP_DIR/snapshots/
+print_success "Schema snapshots uploaded"
 
 print_info "Preparing uploads directory..."
 ssh $SSH_HOST "sudo mkdir -p /mnt/sbozh-me-data/directus/uploads && sudo chown oktavian:oktavian /mnt/sbozh-me-data/directus/uploads"

@@ -208,6 +208,21 @@ services:
       retries: 3
       start_period: 30s
 
+  # One-time init container to apply init things
+  init:
+    image: docker:cli
+    volumes:
+      - ./snapshots:/snapshots:ro
+      - ./docker-init.sh:/docker-init.sh:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      directus:
+        condition: service_healthy
+    networks:
+      - sbozh-me-network
+    entrypoint: ["/bin/sh", "/docker-init.sh"]
+    restart: "no"
+
 networks:
   sbozh-me-network:
     driver: bridge
