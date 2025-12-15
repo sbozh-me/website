@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.7] - 2025-12-15
+
+### Changes
+
+- ci(docker): build only on version tags, not on main branch ([8794fc2](https://github.com/sbozh-me/website/commit/8794fc28d9b14e4330b1cde8de999d9c02770b7b))
+- feat(deploy): add automated Directus schema initialization ([26ba387](https://github.com/sbozh-me/website/commit/26ba3874c6afe2185a52b80d1b69ee307d428c28))
+- fix(deploy): use dynamic container discovery in init script ([49fa981](https://github.com/sbozh-me/website/commit/49fa9815499625fc2b321f3c9a03a2a669b217d9))
+- fix(deploy): add DIRECTUS_TOKEN to web service for blog data fetching ([d0cb969](https://github.com/sbozh-me/website/commit/d0cb969f68a4df75ecbe27e36b4116f2630c18a9))
+- fix(og): fetch TTF fonts instead of WOFF2 for image generation ([d677c6e](https://github.com/sbozh-me/website/commit/d677c6e8d0066ca28dcfab14f481ca8a220ab3b8))
+- chore(deploy): update production to v0.11.7 and roadmap milestone ([ce49289](https://github.com/sbozh-me/website/commit/ce492894f207c5e1ceb2596858bb492ab4d315fc))
+
+
 ## [0.11.6] - 2025-12-15
 
 ### Changes
