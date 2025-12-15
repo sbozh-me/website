@@ -33,7 +33,6 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
         <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
         <div className="hidden md:flex absolute bottom-0 left-0 right-0 p-8 justify-between items-end">
           <div>
-            <StatusBadge status={project.status} className="mb-3" />
             <h1 className="text-4xl font-bold text-foreground">
               {project.title}
             </h1>
@@ -41,11 +40,14 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
               {project.tagline}
             </p>
           </div>
-          {project.version && (
-            <span className="text-white/80 [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">
-              v{project.version}
-            </span>
-          )}
+          <div className="flex flex-col items-end gap-2">
+            <StatusBadge status={project.status} />
+            {project.version && (
+              <span className="text-white/80 [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]">
+                v{project.version}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
