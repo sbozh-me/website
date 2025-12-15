@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.5] - 2025-12-15
+
+### Changes
+
+- refactor(web): migrate analytics to runtime configuration ([7b19844](https://github.com/sbozh-me/website/commit/7b198441f4e8e55a0717d60951533486dce95096))
+- chore: mark 0.11.4-0.11.5 complete, remove 0.11.7 ([92c4990](https://github.com/sbozh-me/website/commit/92c4990e953c375097cc50cfffce4fb879123ff9))
+
+
 ## [0.11.4] - 2025-12-15
 
 ### Changes
