@@ -31,7 +31,7 @@ jobs:
 
           # Find any in-progress build workflow runs
           RUN_ID=$(gh run list \
-            --workflow="Build and Push Docker Image" \
+            --workflow="Build and Push Docker Images" \
             --status=in_progress \
             --limit=5 \
             --json databaseId,headBranch \
@@ -42,7 +42,7 @@ jobs:
             gh run watch "$RUN_ID" --exit-status
             echo "Build workflow completed successfully!"
           else
-            echo "No running build workflow found, image should already exist"
+            echo "No running build workflow found, images should already exist"
           fi
 
       - name: Deploy to server
