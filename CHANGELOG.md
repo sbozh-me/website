@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.2] - 2025-12-15
+
+### Changes
+
+- docs(roadmap): restructure analytics roadmap by consolidating phases ([f0e5723](https://github.com/sbozh-me/website/commit/f0e5723e1bee696da13b7805260d27666043a981))
+- docs(roadmap): fix version numbers in analytics roadmap files ([adc8e63](https://github.com/sbozh-me/website/commit/adc8e63d0d68d6d41877721a10682fba1fdcb79e))
+- feat(analytics)!: implement advanced tracking, Core Web Vitals, and comprehensive privacy controls ([cb9f92a](https://github.com/sbozh-me/website/commit/cb9f92a99227f5cd401efb18f78b555f3516add7))
+- feat(analytics): add external link tracking and test page ([3a66a92](https://github.com/sbozh-me/website/commit/3a66a920d8e7a6728080d7bb5e60b39eb2f889f8))
+- test(web): add comprehensive unit tests for analytics and privacy ([b3cacb6](https://github.com/sbozh-me/website/commit/b3cacb69040cf7ce496f7cfda0f63f541170fa95))
+- docs(analytics): add deployment documentation and guides ([3679e9b](https://github.com/sbozh-me/website/commit/3679e9b58cae1014ace066cb66bd56ee9eb8926a))
+- docs(privacy): enhance privacy policy with detailed information ([ff40884](https://github.com/sbozh-me/website/commit/ff40884f7846471b433772a90e6cf34803ab1eb4))
+- docs(roadmap): update v0.9.3 deliverables status ([2ee5388](https://github.com/sbozh-me/website/commit/2ee5388c87afa5b867146e904c9445ff0ad46537))
+- docs(roadmap): mark v0.9.x analytics milestones as complete ([8006847](https://github.com/sbozh-me/website/commit/80068479501e204309fd6dac290f241a6b423e45))
+
+
 ## [0.9.1] - 2025-12-14
 
 ### Changes
