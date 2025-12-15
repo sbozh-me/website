@@ -161,8 +161,10 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      # Runtime config (served via /api/config endpoint)
+      # Directus connection
       DIRECTUS_URL: ${DIRECTUS_URL:-https://directus.sbozh.me}
+      DIRECTUS_TOKEN: ${DIRECTUS_TOKEN}
+      # Runtime config (served via /api/config endpoint)
       UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID}
       UMAMI_SCRIPT_URL: ${UMAMI_SCRIPT_URL:-https://analytics.sbozh.me/script.js}
       ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
