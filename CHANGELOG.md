@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.1] - 2025-12-15
+
+### Changes
+
+- feat(legal): add Terms of Use page with header and prose styling ([d67e519](https://github.com/sbozh-me/website/commit/d67e519b34caed1df9eb02d54f3d2d9a80d716ef))
+- docs(legal): postpone error tracking sections in privacy and terms ([1d5d677](https://github.com/sbozh-me/website/commit/1d5d677cbf4b362a59f850a22a39de961b21b271))
+
+
 ## [0.10.0] - 2025-12-15
 
 ### Changes
