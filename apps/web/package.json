@@ -1,6 +1,6 @@
 {
   "name": "@sbozh/web",
-  "version": "0.11.7",
+  "version": "0.11.8-lrc",
   "private": true,
   "license": "MIT",
   "scripts": {

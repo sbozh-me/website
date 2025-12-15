@@ -21,11 +21,8 @@ major-ignore:
 	./scripts/release.sh major --ignore
 
 deploy:
-	@echo "Building web image v$(VERSION)..."
-	docker build -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile .
-	@echo "Pushing to ghcr.io..."
-	docker push $(IMAGE):$(VERSION)
-	docker push $(IMAGE):latest
+	@echo "Building web image v$(VERSION) for linux/amd64..."
+	docker buildx build --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push .
 	@echo "Updating server..."
 	ssh $(SSH_HOST) "cd $(APP_DIR) && \
 		sed -i 's/WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$(VERSION)/' .env && \
