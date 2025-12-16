@@ -58,31 +58,33 @@ export async function GET(
     // Load font
     const spaceGroteskFont = await loadSpaceGroteskFont();
 
-    // Fetch hero image as ArrayBuffer if available
+    // Load hero image from filesystem to avoid container self-referencing issues
     let heroImageData: ArrayBuffer | null = null;
     if (project.heroImage?.src) {
       try {
-        const imageUrl = project.heroImage.src.startsWith("/")
-          ? new URL(project.heroImage.src, request.url).toString()
-          : project.heroImage.src;
-        const imageResponse = await fetch(imageUrl, { cache: "force-cache" });
-        if (imageResponse.ok) {
-          heroImageData = await imageResponse.arrayBuffer();
-        }
+        // Hero images are in public folder, e.g., /projects/pifagor/hero.png -> public/projects/pifagor/hero.png
+        const imagePath = join(process.cwd(), "public", project.heroImage.src);
+        const imageBuffer = await readFile(imagePath);
+        heroImageData = imageBuffer.buffer.slice(
+          imageBuffer.byteOffset,
+          imageBuffer.byteOffset + imageBuffer.byteLength
+        );
       } catch {
-        // Fall back to gradient if image fetch fails
+        // Fall back to gradient if image not found
       }
     }
 
+    // Load logo from filesystem to avoid container self-referencing issues
     let logoImageData: ArrayBuffer | null = null;
     try {
-      const imageUrl = new URL('/android-chrome-192x192.png', request.url).toString()
-      const imageResponse = await fetch(imageUrl, { cache: "force-cache" });
-      if (imageResponse.ok) {
-        logoImageData = await imageResponse.arrayBuffer();
-      }
+      const logoPath = join(process.cwd(), "public/android-chrome-192x192.png");
+      const logoBuffer = await readFile(logoPath);
+      logoImageData = logoBuffer.buffer.slice(
+        logoBuffer.byteOffset,
+        logoBuffer.byteOffset + logoBuffer.byteLength
+      );
     } catch {
-      // Fall back to gradient if image fetch fails
+      // Fall back if logo not found
     }
 
     const statusColor = STATUS_COLORS[project.status];

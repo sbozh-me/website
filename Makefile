@@ -22,7 +22,7 @@ major-ignore:
 
 deploy:
 	@echo "Building web image v$(VERSION) for linux/amd64..."
-	docker buildx build --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push --progress=plain .
+	docker buildx build --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push .
 	@echo "Updating server..."
 	ssh $(SSH_HOST) "cd $(APP_DIR) && \
 		sed -i 's/WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$(VERSION)/' .env && \

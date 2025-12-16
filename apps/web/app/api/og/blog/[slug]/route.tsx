@@ -58,13 +58,21 @@ export async function GET(
     const spaceGroteskFont = await loadSpaceGroteskFont();
 
     // Fetch hero image as ArrayBuffer if available
+    // Fetch directly from Directus to avoid container self-referencing issues
     let heroImageData: ArrayBuffer | null = null;
     if (post.image?.src) {
       try {
-        const imageUrl = post.image.src.startsWith("/")
-          ? new URL(post.image.src, request.url).toString()
-          : post.image.src;
-        const imageResponse = await fetch(imageUrl, { cache: "force-cache" });
+        const directusUrl = process.env.DIRECTUS_URL;
+        const directusToken = process.env.DIRECTUS_TOKEN;
+        // Extract asset ID from /api/assets/{id} path
+        const assetId = post.image.src.replace(/^\/api\/assets\//, "");
+        const imageUrl = directusUrl
+          ? `${directusUrl}/assets/${assetId}`
+          : new URL(post.image.src, request.url).toString();
+        const imageResponse = await fetch(imageUrl, {
+          cache: "force-cache",
+          headers: directusToken ? { Authorization: `Bearer ${directusToken}` } : {},
+        });
         if (imageResponse.ok) {
           heroImageData = await imageResponse.arrayBuffer();
         }
@@ -73,15 +81,17 @@ export async function GET(
       }
     }
 
+    // Load logo from filesystem to avoid container self-referencing issues
     let logoImageData: ArrayBuffer | null = null;
     try {
-      const imageUrl = new URL('/android-chrome-192x192.png', request.url).toString()
-      const imageResponse = await fetch(imageUrl, { cache: "force-cache" });
-      if (imageResponse.ok) {
-        logoImageData = await imageResponse.arrayBuffer();
-      }
+      const logoPath = join(process.cwd(), "public/android-chrome-192x192.png");
+      const logoBuffer = await readFile(logoPath);
+      logoImageData = logoBuffer.buffer.slice(
+        logoBuffer.byteOffset,
+        logoBuffer.byteOffset + logoBuffer.byteLength
+      );
     } catch {
-      // Fall back to gradient if image fetch fails
+      // Fall back if logo not found
     }
     // Truncate long titles
     const displayTitle =
