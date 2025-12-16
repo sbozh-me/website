@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.8] - 2025-12-16
+
+### Changes
+
+- fix(web): replace corrupted Space Grotesk font with valid TTF ([0fcf69c](https://github.com/sbozh-me/website/commit/0fcf69c8e4ef5a03499d374e31d6d52dfec07142))
+- refactor(ci): replace GitHub Actions with local Makefile deployment ([33f6d22](https://github.com/sbozh-me/website/commit/33f6d22b5de3269ffcb7ce36dfe186e61fe95d49))
+- build(deploy): use docker buildx for multi-platform support ([c620817](https://github.com/sbozh-me/website/commit/c6208174bc7aacbcbc53627fc7968d1881dc97fe))
+- chore: add dockerignore and improve build configuration ([111ca94](https://github.com/sbozh-me/website/commit/111ca941b0cf09cc50b39d0eb957a79056fad45f))
+- build(docker): include CHANGELOG, ROADMAP, and BACKLOGIDEAS in Docker images ([5bb7e87](https://github.com/sbozh-me/website/commit/5bb7e87bdce0f455e8bcbdb51984f94f772e1650))
+- refactor(og): simplify open graph image layout and styling ([7117b0c](https://github.com/sbozh-me/website/commit/7117b0ce334eace5171f6f8658c57408f395e750))
+- fix(og): load images from filesystem instead of self-fetch ([f17ac6a](https://github.com/sbozh-me/website/commit/f17ac6a2cd478e6789acf9a4a0accdd494beeb50))
+- refactor(pdf): simplify Chrome setup using puppeteer with bundled Chrome ([e752c4e](https://github.com/sbozh-me/website/commit/e752c4e9e8158c971573461d29f7e54eb96d097e))
+- chore(cv): update PDF filename format ([6cdcf89](https://github.com/sbozh-me/website/commit/6cdcf89f63f710a1146fcd9ffbc5d2f1e58d8ced))
+- refactor(deploy): decompose Makefile deploy targets ([8ef3ccf](https://github.com/sbozh-me/website/commit/8ef3ccfd78048ec6c7d8fc97f4a7432a43f56bcb))
+- feat(deploy): add Umami database initialization to docker-init ([3e5b1a6](https://github.com/sbozh-me/website/commit/3e5b1a6cd97b90d0d31f48fdf9ca53269501377e))
+- docs(deploy): add Umami 502 postmortem ([84a8862](https://github.com/sbozh-me/website/commit/84a886218fe2b44551d4bfeeea8c1cee541b28ba))
+- fix(scripts): correct docker-compose filename and default server ([caf3602](https://github.com/sbozh-me/website/commit/caf3602a4aaf7bbf5615bbaf0dcd24857b578822))
+- docs(deploy): fix dateUmami 502 postmortem ([0420d8a](https://github.com/sbozh-me/website/commit/0420d8a424fb14b58395bdcd0b738ccd8bdf018e))
+- fix(nginx): remove duplicate CORS headers from Umami endpoint ([672a001](https://github.com/sbozh-me/website/commit/672a001c56e66d7605fa5a6617d672050150c1a9))
+- docs(roadmap): update deployment progress and simplify release milestones ([5588cc6](https://github.com/sbozh-me/website/commit/5588cc6faa0cbac5a69344a9230ed775f4cc530f))
+
+
 ## [0.11.7] - 2025-12-15
 
 ### Changes
