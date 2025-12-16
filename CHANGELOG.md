@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2025-12-17
+
+### Changes
+
+- feat(ui): add tooltip to Spark component on homepage ([55c6702](https://github.com/sbozh-me/website/commit/55c67020c94566af8c16ff52957c6f8b600f8fc8))
+
+
 ## [1.0.4] - 2025-12-16
 
 ### Changes
