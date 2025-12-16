@@ -20,7 +20,7 @@ export function CVDownloadButton() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "Sem_Bozhyk_CV.pdf";
+      a.download = "CV_Sem_Bozhyk_Software_Developer.pdf";
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
