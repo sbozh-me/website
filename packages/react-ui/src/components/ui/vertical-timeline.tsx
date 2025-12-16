@@ -139,7 +139,7 @@ function VerticalTimeline({
             >
               <button
                 onClick={() => toggleGroup(group.id)}
-                className="flex items-center gap-3 w-full text-left group py-2"
+                className="flex items-center gap-3 w-full text-left group py-2 cursor-pointer"
               >
                 <NodeComponent isExpanded={isExpanded} isCompleted={group.completed} />
                 <span
