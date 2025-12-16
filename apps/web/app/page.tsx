@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {Spark} from "@/components/Spark";
+import { Spark } from "@/components/Spark";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@sbozh/react-ui/components/ui/tooltip";
 
 const navItems = [
   { name: "Blog", href: "/blog" },
@@ -78,7 +84,18 @@ export default function Home() {
             </motion.h1>
             <motion.p className="mt-4 text-muted-foreground" variants={item}>
               Personal startup
-              <Spark />
+              <TooltipProvider delayDuration={1337}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Spark />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                    <p>Easter egg is under construction</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </motion.p>
           </div>
 
