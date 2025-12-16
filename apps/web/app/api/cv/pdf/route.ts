@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="Sem_Bozhyk_CV.pdf"',
+        "Content-Disposition": 'attachment; filename="CV_Sem_Bozhyk_Software_Developer.pdf"',
       },
     });
   } catch (err) {
