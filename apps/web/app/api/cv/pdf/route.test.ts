@@ -67,7 +67,7 @@ describe("PDF Route", () => {
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining("Sem_Bozhyk_CV.pdf"),
+        body: expect.stringContaining("CV_Sem_Bozhyk_Software_Developer.pdf"),
       })
     );
   });
