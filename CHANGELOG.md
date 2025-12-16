@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2025-12-16
+
+### Changes
+
+- fix(cv): update PDF download filename ([ad97017](https://github.com/sbozh-me/website/commit/ad97017b62fb4f25d38644e79139a436725bcc0d))
+
+
 ## [1.0.0] - 2025-12-16
 
 ### Changes
