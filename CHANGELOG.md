@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2025-12-16
+
+### Changes
+
+- fix(cv): update download button filename ([320c887](https://github.com/sbozh-me/website/commit/320c887500678ca33021eb94ca71a258570087b1))
+
+
 ## [1.0.1] - 2025-12-16
 
 ### Changes
