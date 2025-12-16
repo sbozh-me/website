@@ -111,15 +111,16 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - ~~[0.11.5 - Environment Configuration](roadmap/deploy/0.11.5.md)~~ - .env.local for domains
 - ~~[0.11.6 - Local Backup Script](roadmap/deploy/0.11.6.md)~~ - Download backups to dev machine
 - ~~0.11.7 - Step by step instruction~~
-- 0.11.8 - Acceptable working state on prod
+- ~~0.11.8 - Acceptable working state on prod~~
+- 0.11.9 - Cosmetic changes
 
 > **Tech Stack:** Terraform, Docker, GitHub Actions, GHCR, Nginx, Certbot, Umami
 
-## 1.0.0 - Release
+## 0.12.0 - Release candidate
+- Roadmap with plans for end of Q4 2025 and Q1 2026
 
-- Production launch
-- Final QA
-- Public announcement
-- Test 0.7.3
+## 1.0.0 - Launch
+
+Production-ready release with full blog, CV, and projects functionality.
 
 ---
