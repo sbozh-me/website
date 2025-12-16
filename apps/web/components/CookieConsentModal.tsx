@@ -92,7 +92,7 @@ export function CookieConsentModal() {
       {!open && (
         <DialogTrigger asChild>
           <Button
-            className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse"
+            className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse print:hidden"
             aria-label="Cookie settings"
           >
             <Cookie className="h-5 w-5" />
