@@ -99,7 +99,7 @@ Legal pages with cookie consent, privacy policy, and terms of usage.
 - ~~[0.10.2 - Privacy Controls Styling](roadmap/legal/0.10.2.md)~~ - Updated controls to match modal design
 - ~~0.10.3 - Cosmetic fixes~~
 
-## 0.11.0 - Deployment
+## ~~0.11.0 - Deployment~~ ✅
 
 Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
@@ -116,8 +116,8 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
 > **Tech Stack:** Terraform, Docker, GitHub Actions, GHCR, Nginx, Certbot, Umami
 
-## 0.12.0 - Release candidate
-- Roadmap with plans for end of Q4 2025 and Q1 2026
+## ~~0.12.0 - Release candidate~~ ✅
+- ~~Roadmap with plans for end of Q4 2025 and Q1 2026~~
 
 ## 1.0.0 - Launch
 - Production-ready release with full blog, CV, and projects functionality.
