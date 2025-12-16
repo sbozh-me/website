@@ -14,19 +14,29 @@ const A4_WIDTH_PX = A4_WIDTH_MM * MM_TO_PX;
 
 export function CVScaleWrapper({ children }: CVScaleWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [scaledHeight, setScaledHeight] = useState<number | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     const calculateScale = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current || !contentRef.current) return;
 
       const containerWidth = containerRef.current.offsetWidth;
 
       if (containerWidth < A4_WIDTH_PX) {
         // Scale down to fit container
-        setScale(containerWidth / A4_WIDTH_PX);
+        const newScale = containerWidth / A4_WIDTH_PX;
+        setScale(newScale);
+
+        // Calculate scaled height to prevent empty space
+        const contentHeight = contentRef.current.offsetHeight;
+        setScaledHeight(contentHeight * newScale);
       } else {
         setScale(1);
+        setScaledHeight(undefined);
       }
     };
 
@@ -37,8 +47,13 @@ export function CVScaleWrapper({ children }: CVScaleWrapperProps) {
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full print:!transform-none">
+    <div
+      ref={containerRef}
+      className="w-full print:!transform-none print:!h-auto"
+      style={{ height: scaledHeight }}
+    >
       <div
+        ref={contentRef}
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "top left",
