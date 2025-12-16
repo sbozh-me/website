@@ -2,17 +2,19 @@
 
 Next.js frontend for sbozh.me personal website.
 
-**Version**: 0.8.5 | **Framework**: Next.js 15.5.7 | **License**: MIT
+**Version**: 0.11.9 | **Framework**: Next.js 15 | **License**: MIT
 
 ## Features
 
 - **Projects Section**: Showcase with tabbed navigation (About, Motivation, Roadmap, Changelog)
 - **Blog System**: Directus CMS integration with MDX rendering
-- **CV Page**: Custom markdown parser with PDF export
+- **CV Page**: Custom markdown parser with PDF export (requires pdf-generator service)
+- **Analytics**: Umami integration with Web Vitals tracking
+- **Privacy**: GDPR-compliant cookie consent modal
 - **Contact Page**: Email and social links
 - **Accessibility**: Full ARIA support, keyboard navigation
 - **Testing**: 90%+ coverage with Vitest
-- **SEO**: OpenGraph, sitemap, structured data
+- **SEO**: OpenGraph images, sitemap, structured data
 
 ## Development
 
@@ -39,8 +41,12 @@ cp .env.example .env.local
 |----------|-------------|
 | `DIRECTUS_URL` | Directus API URL (e.g., `http://localhost:8055`) |
 | `DIRECTUS_TOKEN` | Static API token for Directus authentication |
+| `PDF_SERVICE_URL` | PDF generator service URL (default: `http://localhost:3010`) |
+| `UMAMI_WEBSITE_ID` | Umami website ID for analytics |
+| `UMAMI_SCRIPT_URL` | Umami script URL (e.g., `https://analytics.sbozh.me/script.js`) |
+| `ANALYTICS_ENABLED` | Enable analytics tracking (default: `false`) |
 
-Without these variables, the app falls back to mock data.
+Without Directus variables, the app falls back to mock data.
 
 ## Error Handling
 
