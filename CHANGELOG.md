@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2025-12-16
+
+### Changes
+
+- docs: update documentation for v0.11.9 features and deployment ([dc72954](https://github.com/sbozh-me/website/commit/dc729542298bd1102a329f78bc76d89907ba0034))
+- docs(roadmap): enhance subscriptions section and add future milestones ([30a0420](https://github.com/sbozh-me/website/commit/30a04209c1ae4ad6cdf0a4f0584104be560dea78))
+- docs(roadmap): mark 0.11.0 deployment and 0.12.0 release candidate as complete ([477cfe9](https://github.com/sbozh-me/website/commit/477cfe97ab02299d57039413001ca8f291d7a7e4))
+- test(cv): change cv file name ([79a374b](https://github.com/sbozh-me/website/commit/79a374bc44b3b138c1299faf1f08980f89e6a786))
+
+
 ## [0.11.9] - 2025-12-16
 
 ### Changes
