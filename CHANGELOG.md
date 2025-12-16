@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.9] - 2025-12-16
+
+### Changes
+
+- feat(web): add LinkedIn profile URL ([8abae61](https://github.com/sbozh-me/website/commit/8abae61a70d9cc6742097927eba79b274abace07))
+- fix(cv): eliminate empty space below scaled CV on mobile ([14c774e](https://github.com/sbozh-me/website/commit/14c774e5eb91cc5b2cc11e5baf0f0cb3cbf5fc93))
+- fix(ui): center cookie settings button on mobile ([174d1c9](https://github.com/sbozh-me/website/commit/174d1c90095965587e0edbb9ce266ba22dbf5209))
+- fix(ui): scroll to expanded timeline item on click ([2dc2064](https://github.com/sbozh-me/website/commit/2dc2064b596e41324c8a915330482fcd5855e055))
+- docs(roadmap): mark 0.11.9 cosmetic changes as complete ([992119b](https://github.com/sbozh-me/website/commit/992119b72a4ff0f9596a014c172baad8317019ca))
+
+
 ## [0.11.8] - 2025-12-16
 
 ### Changes
