@@ -120,7 +120,20 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - Roadmap with plans for end of Q4 2025 and Q1 2026
 
 ## 1.0.0 - Launch
+- Production-ready release with full blog, CV, and projects functionality.
 
-Production-ready release with full blog, CV, and projects functionality.
+## 1.1.0 - Error tracking (End of Q4 2025)
+- Use a self-hosted solution to track frontend and backend errors
+
+## 1.2.0 - Subscriptions (Q4 2025/Q1 2026)
+
+- **Subscribe** - Email signup with one-click topic selection
+- **Personalize** - Choose content types: blog posts, project updates, CV changes
+- **Control** - Set delivery frequency: instant, digest, or weekly roundup
+- **Engage** - Share thoughts and suggest topics
+- **Alternatives** - RSS feeds for feed reader users
+- **Backend** - Event tracking, processing, and reliable email delivery
+
+## llm.txt (Q1 2025)
 
 ---
