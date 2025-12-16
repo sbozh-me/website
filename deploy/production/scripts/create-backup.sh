@@ -24,7 +24,7 @@ mkdir -p "$BACKUP_DIR"
 
 # Dump PostgreSQL databases
 echo "Dumping PostgreSQL databases..."
-docker compose -f "$APP_DIR/docker-compose.prod.yaml" exec -T database \
+docker compose -f "$APP_DIR/docker-compose.yaml" exec -T database \
   pg_dumpall -U directus > "$BACKUP_DIR/$BACKUP_NAME-db.sql"
 
 DB_SIZE=$(du -h "$BACKUP_DIR/$BACKUP_NAME-db.sql" | cut -f1)

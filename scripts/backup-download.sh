@@ -10,7 +10,7 @@
 
 set -e
 
-SERVER="${1:-pifagor}"
+SERVER="${1:-sbozhme}"
 LOCAL_DIR="$HOME/backups/sbozh-me"
 
 echo "=== sbozh.me Backup Download ==="

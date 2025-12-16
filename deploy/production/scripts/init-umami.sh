@@ -30,7 +30,7 @@ UMAMI_DB="${UMAMI_DB_NAME:-umami}"
 
 echo "Creating Umami database and user..."
 
-docker compose -f "$APP_DIR/docker-compose.prod.yaml" exec -T database psql -U "$DB_USER" -d "$DB_DATABASE" <<EOSQL
+docker compose -f "$APP_DIR/docker-compose.yaml" exec -T database psql -U "$DB_USER" -d "$DB_DATABASE" <<EOSQL
 -- Create umami user if not exists
 DO \$\$
 BEGIN
