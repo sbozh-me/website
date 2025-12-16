@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2025-12-16
+
+### Changes
+
+- fix(ui): hide cookie button in print mode ([8b03a19](https://github.com/sbozh-me/website/commit/8b03a19f70de973f4975ca42e105a2d448008c51))
+
+
 ## [1.0.2] - 2025-12-16
 
 ### Changes
