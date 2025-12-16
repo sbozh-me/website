@@ -1,39 +1,9 @@
 import Fastify from "fastify";
-import puppeteer from "puppeteer-core";
-import { existsSync } from "fs";
+import puppeteer from "puppeteer";
 
 const fastify = Fastify({
   logger: true,
 });
-
-// Chrome paths by platform
-const CHROME_PATHS: Record<string, string[]> = {
-  darwin: [
-    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/Applications/Chromium.app/Contents/MacOS/Chromium",
-  ],
-  linux: ["/usr/bin/chromium", "/usr/bin/google-chrome", "/usr/bin/chromium-browser"],
-  win32: [
-    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-  ],
-};
-
-function getChromePath(): string {
-  if (process.env.CHROME_PATH) {
-    return process.env.CHROME_PATH;
-  }
-
-  const paths = CHROME_PATHS[process.platform] || CHROME_PATHS.linux;
-  for (const path of paths) {
-    if (existsSync(path)) {
-      return path;
-    }
-  }
-
-  // Fallback to first path (will error if not found)
-  return paths[0];
-}
 
 interface GeneratePdfBody {
   url: string;
@@ -50,17 +20,11 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: "new",
-      executablePath: getChromePath(),
+      headless: true,
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-dev-shm-usage",
-        "--disable-gpu",
-        "--disable-software-rasterizer",
-        "--disable-extensions",
-        "--no-zygote",
-        "--disable-breakpad",
       ],
     });
 
@@ -71,7 +35,7 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
       timeout: 30000,
     });
 
-    // Set light theme for PDF (call the same toggle mechanism)
+    // Set light theme for PDF
     await page.evaluate(() => {
       const doc = document.querySelector(".pmdxjs-document");
       if (doc) {
@@ -79,7 +43,6 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
       }
     });
 
-    // Wait for theme change to apply
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const pdf = await page.pdf({

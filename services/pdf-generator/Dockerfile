@@ -4,51 +4,41 @@ FROM node:20-slim
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
-# Install Chromium and dependencies
+# Install Chrome dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    chromium \
+    ca-certificates \
     fonts-liberation \
-    fonts-noto-color-emoji \
-    libnss3 \
-    libatk1.0-0 \
+    libasound2 \
     libatk-bridge2.0-0 \
+    libatk1.0-0 \
     libcups2 \
+    libdbus-1-3 \
     libdrm2 \
-    libxkbcommon0 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libx11-xcb1 \
     libxcomposite1 \
     libxdamage1 \
     libxfixes3 \
     libxrandr2 \
-    libgbm1 \
-    libasound2 \
+    libxshmfence1 \
+    wget \
+    xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Chromium path for Puppeteer
-ENV CHROME_PATH=/usr/bin/chromium
-
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
 # Copy package files
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile --prod || pnpm install --prod
+# Install dependencies (puppeteer will download Chrome)
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false
+RUN npm install --include=dev
 
 # Copy source and build
 COPY tsconfig.json ./
 COPY src ./src
-
-RUN pnpm add -D typescript tsx @types/node && pnpm build
-
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 pdfgen \
-    && chown -R pdfgen:nodejs /app
-
-USER pdfgen
+RUN ./node_modules/.bin/tsc
 
 EXPOSE 3010
 

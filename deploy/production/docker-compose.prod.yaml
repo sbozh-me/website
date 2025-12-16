@@ -158,7 +158,6 @@ services:
     environment:
       NODE_ENV: production
       PORT: "3010"
-      CHROME_PATH: /usr/bin/chromium
     networks:
       - sbozh-me-network
 
