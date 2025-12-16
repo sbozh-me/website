@@ -119,8 +119,8 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 ## ~~0.12.0 - Release candidate~~ ✅
 - ~~Roadmap with plans for end of Q4 2025 and Q1 2026~~
 
-## 1.0.0 - Launch
-- Production-ready release with full blog, CV, and projects functionality.
+## ~~1.0.0 - Launch~~ 🎉✅
+- ~~Production-ready release with full blog, CV, and projects functionality.~~
 
 ## 1.1.0 - Error tracking (End of Q4 2025)
 - Use a self-hosted solution to track frontend and backend errors

@@ -2,13 +2,13 @@
 
 Personal website and portfolio for sbozh.me. Built in public, learned in motion.
 
-**Version**: 0.11.9 | **Status**: Production | **License**: MIT
+**Version**: 1.0.0 | **Status**: Production | **License**: MIT
 
 ## Live
 
 - **Website**: [sbozh.me](https://sbozh.me)
 - **Analytics**: [analytics.sbozh.me](https://analytics.sbozh.me) (Umami)
-- **CMS**: [cms.sbozh.me](https://cms.sbozh.me) (Directus)
+- **CMS**: [directus.sbozh.me](https://cms.sbozh.me) (Directus)
 
 ## Features
 
