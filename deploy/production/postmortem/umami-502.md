@@ -1,6 +1,6 @@
 # Postmortem: Umami 502 Error
 
-**Date:** 2024-12-16
+**Date:** 2025-12-16
 **Duration:** ~1 hour
 **Impact:** Umami analytics dashboard unavailable (502)
 
