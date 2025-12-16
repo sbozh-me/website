@@ -112,7 +112,7 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - ~~[0.11.6 - Local Backup Script](roadmap/deploy/0.11.6.md)~~ - Download backups to dev machine
 - ~~0.11.7 - Step by step instruction~~
 - ~~0.11.8 - Acceptable working state on prod~~
-- 0.11.9 - Cosmetic changes
+- ~~0.11.9 - Cosmetic changes~~
 
 > **Tech Stack:** Terraform, Docker, GitHub Actions, GHCR, Nginx, Certbot, Umami
 
