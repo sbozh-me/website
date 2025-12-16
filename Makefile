@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy redeploy
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra push-web-image switch-web-version swv restart
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -20,19 +20,31 @@ major:
 major-ignore:
 	./scripts/release.sh major --ignore
 
-deploy:
+push-web-image:
 	@echo "Building web image v$(VERSION) for linux/amd64..."
 	docker buildx build --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push .
-	@echo "Updating server..."
+
+switch-web-version swv:
+	@echo "Switching server to web v$(VERSION)..."
 	ssh $(SSH_HOST) "cd $(APP_DIR) && \
 		sed -i 's/WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$(VERSION)/' .env && \
 		docker compose pull web && \
 		docker compose up -d web"
-	@echo "Deployed v$(VERSION)"
+	@echo "Switched to v$(VERSION)"
 
-redeploy:
-	@echo "Redeploying web v$(VERSION)..."
+deploy-web: push-web-image switch-web-version
+	@echo "Deployed web v$(VERSION)"
+
+deploy-infra:
+	@echo "Deploying infrastructure..."
+	./deploy/production/deploy.sh
+	@echo "Infrastructure deployed"
+
+deploy: deploy-web deploy-infra
+
+restart:
+	@echo "Restarting web v$(VERSION)..."
 	ssh $(SSH_HOST) "cd $(APP_DIR) && \
 		docker compose pull web && \
 		docker compose up -d web"
-	@echo "Redeployed"
+	@echo "Restarted"
