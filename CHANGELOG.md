@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2025-12-16
+
+### Changes
+
+- docs: update version to 1.0.0 and finalize roadmap ([7ab4951](https://github.com/sbozh-me/website/commit/7ab495170940087cb92239fe5433cac6554f4ee4))
+
+
 ## [0.12.0] - 2025-12-16
 
 ### Changes
