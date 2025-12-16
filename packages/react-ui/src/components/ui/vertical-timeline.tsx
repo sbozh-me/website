@@ -90,9 +90,29 @@ function VerticalTimeline({
   const [expandedId, setExpandedId] = React.useState<string | null>(
     defaultExpanded ?? data.groups[0]?.id ?? null
   );
+  const groupRefs = React.useRef<Map<string, HTMLDivElement>>(new Map());
 
   const toggleGroup = (id: string) => {
+    const isExpanding = expandedId !== id;
     setExpandedId((current) => (current === id ? null : id));
+
+    // Scroll to the clicked item after expanding
+    if (isExpanding) {
+      // Small delay to allow DOM to update after collapse/expand
+      setTimeout(() => {
+        const element = groupRefs.current.get(id);
+        if (element) {
+          const headerOffset = 96; // Account for fixed header
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 50);
+    }
   };
 
   const defaultFormatLine = variant === "roadmap" ? roadmapFormatLine : changelogFormatLine;
@@ -110,7 +130,13 @@ function VerticalTimeline({
           const hasContent = group.items.length > 0 && group.items.some(item => item.content.length > 0);
 
           return (
-            <div key={group.id} className="relative">
+            <div
+              key={group.id}
+              ref={(el) => {
+                if (el) groupRefs.current.set(group.id, el);
+              }}
+              className="relative"
+            >
               <button
                 onClick={() => toggleGroup(group.id)}
                 className="flex items-center gap-3 w-full text-left group py-2"
