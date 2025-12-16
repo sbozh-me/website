@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.4] - 2025-12-16
+
+### Changes
+
+- fix(ui): add cursor pointer to timeline clickable items ([99a7698](https://github.com/sbozh-me/website/commit/99a76988cb797d1f1daadb5a6d5369306c82af35))
+
+
 ## [1.0.3] - 2025-12-16
 
 ### Changes
