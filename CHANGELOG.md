@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2025-12-18
+
+### Changes
+
+- build(analytics): pin umami version to v3.0.3 ([3460ec4](https://github.com/sbozh-me/website/commit/3460ec4032ed84644cbc94f84207941abbf2ffb4))
+
+
 ## [1.0.5] - 2025-12-17
 
 ### Changes
