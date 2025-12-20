@@ -1,6 +1,6 @@
 # Umami Journeys Bug Report - PostgreSQL 13 Incompatibility
 
-> GitHub Issue: https://github.com/umami-software/umami/issues/NEW
+> GitHub Issue: https://github.com/umami-software/umami/issues/3909
 
 ## Bug Description
 
