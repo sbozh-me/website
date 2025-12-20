@@ -195,7 +195,7 @@ services:
       start_period: 30s
 
   umami:
-    image: ghcr.io/umami-software/umami:postgresql-v3.0.3
+    image: ghcr.io/umami-software/umami:3.0.3
     restart: unless-stopped
     ports:
       - "127.0.0.1:3001:3000"  # Nginx proxy in 0.11.4
