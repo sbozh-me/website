@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # PostgreSQL Database for Umami
   umami-db:
-    image: postgres:15-alpine
+    image: postgres:13-alpine
     container_name: sbozh-umami-db
     environment:
       POSTGRES_DB: umami
@@ -20,7 +20,7 @@ services:
 
   # Umami Analytics
   umami:
-    image: ghcr.io/umami-software/umami:postgresql-v3.0.3
+    image: ghcr.io/umami-software/umami:3.0.3
     container_name: sbozh-umami
     ports:
       - "3001:3000"
