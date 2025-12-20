@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2025-12-20
+
+### Changes
+
+- fix(analytics): separate Umami into dedicated PostgreSQL 15 database ([60cdfb8](https://github.com/sbozh-me/website/commit/60cdfb86e298d9d9d10f7d871572ad4d041e067e))
+
+
 ## [1.0.7] - 2025-12-20
 
 ### Changes
