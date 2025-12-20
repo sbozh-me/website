@@ -7,15 +7,10 @@ services:
     restart: unless-stopped
     volumes:
       - /mnt/sbozh-me-data/postgres:/var/lib/postgresql/data
-      - ./init-umami-db.sh:/docker-entrypoint-initdb.d/init-umami-db.sh:ro
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
-      # Umami database credentials (for init script)
-      UMAMI_DB_USER: ${UMAMI_DB_USER:-umami}
-      UMAMI_DB_PASSWORD: ${UMAMI_DB_PASSWORD}
-      UMAMI_DB_NAME: ${UMAMI_DB_NAME:-umami}
       # Production tuning
       POSTGRES_SHARED_BUFFERS: "1GB"
       POSTGRES_EFFECTIVE_CACHE_SIZE: "3GB"
@@ -194,19 +189,41 @@ services:
       retries: 3
       start_period: 30s
 
+  umami-db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    volumes:
+      - /mnt/sbozh-me-data/umami-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sbozh-me-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   umami:
     image: ghcr.io/umami-software/umami:3.0.3
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3001:3000"  # Nginx proxy in 0.11.4
+      - "127.0.0.1:3001:3000"
     environment:
-      DATABASE_URL: postgresql://${UMAMI_DB_USER:-umami}:${UMAMI_DB_PASSWORD}@database:5432/${UMAMI_DB_NAME:-umami}
+      DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD}@umami-db:5432/umami
       DATABASE_TYPE: postgresql
       APP_SECRET: ${UMAMI_APP_SECRET}
       DISABLE_TELEMETRY: 1
       DISABLE_UPDATES: 1
     depends_on:
-      database:
+      umami-db:
         condition: service_healthy
     networks:
       - sbozh-me-network
