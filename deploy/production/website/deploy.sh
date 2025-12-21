@@ -120,7 +120,6 @@ scp -q "$SCRIPT_DIR/.env" $SSH_HOST:$APP_DIR/.env
 print_success ".env file uploaded"
 
 print_info "Uploading init scripts..."
-scp -q "$SCRIPT_DIR/init-umami-db.sh" $SSH_HOST:$APP_DIR/
 scp -q "$SCRIPT_DIR/docker-init.sh" $SSH_HOST:$APP_DIR/
 ssh $SSH_HOST "chmod +x $APP_DIR/docker-init.sh"
 print_success "Init scripts uploaded"

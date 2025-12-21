@@ -246,7 +246,7 @@ ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose logs -f'
 ssh dev@$SERVER_IP 'df -h'
 
 # Database backup
-ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose exec database pg_dump -U directus sbozh_me > /mnt/ludus-data/backups/backup-$(date +%Y%m%d).sql'
+ssh dev@$SERVER_IP 'cd /opt/sbozh-me && docker compose exec database pg_dump -U directus sbozh_me > /mnt/sbozh-me-data/backups/backup-$(date +%Y%m%d).sql'
 ```
 
 ### SSL Certificate Renewal
@@ -353,9 +353,9 @@ Create a backup cron job:
 ssh dev@$SERVER_IP
 
 # Create backup script
-cat > /root/backup-ludus.sh <<'EOF'
+cat > /root/backup-sbozh-me.sh <<'EOF'
 #!/bin/bash
-BACKUP_DIR="/mnt/ludus-data/backups"
+BACKUP_DIR="/mnt/sbozh-me-data/backups"
 DATE=$(date +%Y%m%d-%H%M%S)
 
 # Database backup
@@ -368,10 +368,10 @@ find $BACKUP_DIR -name "db-*.sql.gz" -mtime +7 -delete
 echo "Backup completed: $BACKUP_DIR/db-$DATE.sql.gz"
 EOF
 
-chmod +x /root/backup-ludus.sh
+chmod +x /root/backup-sbozh-me.sh
 
 # Add to crontab (daily at 2 AM)
-(crontab -l 2>/dev/null; echo "0 2 * * * /root/backup-ludus.sh") | crontab -
+(crontab -l 2>/dev/null; echo "0 2 * * * /root/backup-sbozh-me.sh") | crontab -
 ```
 
 ## Security Checklist

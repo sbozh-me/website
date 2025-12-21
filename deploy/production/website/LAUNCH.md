@@ -259,7 +259,7 @@ Edit `.env` with your values:
 # =============================================================================
 DB_USER=directus
 DB_PASSWORD=your-strong-db-password
-DB_DATABASE=ludus_crm
+DB_DATABASE=sbozh_me
 
 # =============================================================================
 # DIRECTUS CORE
@@ -661,10 +661,10 @@ ssh sbozhme "sudo cat /root/.cloudflare.ini"
 
 ```bash
 # Connect to PostgreSQL
-ssh sbozhme "cd /opt/sbozh-me && docker compose exec database psql -U directus -d ludus_crm"
+ssh sbozhme "cd /opt/sbozh-me && docker compose exec database psql -U directus -d sbozh_me"
 
 # Check database size
-ssh sbozhme "cd /opt/sbozh-me && docker compose exec database psql -U directus -c \"SELECT pg_size_pretty(pg_database_size('ludus_crm'));\""
+ssh sbozhme "cd /opt/sbozh-me && docker compose exec database psql -U directus -c \"SELECT pg_size_pretty(pg_database_size('sbozh_me'));\""
 ```
 
 ### Disk Space
