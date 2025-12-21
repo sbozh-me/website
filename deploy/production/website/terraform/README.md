@@ -162,7 +162,7 @@ volume_size = 100      # Larger volume for more data
 After infrastructure is ready:
 
 1. ✅ Server created
-2. → Deploy application (see `../deploy/` directory)
+2. → Deploy application (see `../` - run `./deploy.sh`)
 3. → Configure Nginx & SSL
 4. → Start services
 

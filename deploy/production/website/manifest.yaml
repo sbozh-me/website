@@ -1,9 +1,0 @@
-# GitOps Manifest
-# Change the tag to deploy a new version
-# GitHub Actions will automatically deploy when this file changes
-
-web:
-  image: ghcr.io/sbozh-me/website
-  tag: 0.11.8-rc-2
-
-# pdf-generator is built locally on server via docker compose build
