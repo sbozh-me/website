@@ -1,0 +1,272 @@
+#cloud-config
+
+# sbozh.me Server Cloud-Init Configuration
+# Automatically installs Docker, Docker Compose, and prepares the server
+# Security: Creates non-root 'dev' user, hardens SSH, disables root SSH login
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - git
+  - vim
+  - htop
+  - ufw
+  - certbot
+  - python3-certbot-nginx
+  - python3-certbot-dns-cloudflare
+  - nginx
+  - sudo
+
+# Create oktavian user with sudo access
+users:
+  - name: oktavian
+    groups: [sudo, docker]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    create_home: true
+    home: /home/oktavian
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+
+# Set root password (for emergency console access only)
+chpasswd:
+  list: |
+    root:${root_password}
+  expire: false
+
+write_files:
+  - path: /etc/sysctl.d/99-sbozh-me.conf
+    content: |
+      # Optimize for Docker and PostgreSQL
+      vm.max_map_count=262144
+      fs.file-max=65536
+      net.core.somaxconn=1024
+      net.ipv4.tcp_max_syn_backlog=2048
+
+  - path: /home/oktavian/health-check.sh
+    permissions: '0755'
+    owner: oktavian:oktavian
+    content: |
+      #!/bin/bash
+      echo "🏥 System Health Check"
+      echo "====================="
+      echo "Docker: $(docker --version)"
+      echo "Docker Compose: $(docker compose version)"
+      echo "Nginx: $(nginx -v 2>&1)"
+      echo "Disk Usage: $(df -h / | tail -1)"
+      echo "Memory: $(free -h | grep Mem)"
+      echo "====================="
+
+  - path: /opt/sbozh-me/scripts/deploy-web.sh
+    permissions: '0755'
+    owner: oktavian:oktavian
+    content: |
+      #!/bin/bash
+      set -e
+
+      # Deploy web service with specified image tag
+      # Usage: ./deploy-web.sh [tag]
+
+      TAG=$${1:-main}
+      APP_DIR="/opt/sbozh-me"
+      ENV_FILE="$APP_DIR/.env"
+
+      echo "Deploying web:$TAG..."
+
+      cd "$APP_DIR"
+
+      # Update image tag in .env
+      if grep -q "WEB_IMAGE_TAG=" "$ENV_FILE"; then
+        sed -i "s/WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$TAG/" "$ENV_FILE"
+      else
+        echo "WEB_IMAGE_TAG=$TAG" >> "$ENV_FILE"
+      fi
+
+      # Pull new image
+      echo "Pulling image..."
+      docker compose pull web
+
+      # Restart web service
+      echo "Restarting web service..."
+      docker compose up -d web
+
+      # Health check
+      echo "Running health check..."
+      sleep 5
+      if curl -sf http://localhost:3000 > /dev/null; then
+        echo "Health check passed"
+        echo "Successfully deployed web:$TAG"
+      else
+        echo "Health check failed!"
+        docker compose logs --tail=50 web
+        exit 1
+      fi
+
+  - path: /opt/sbozh-me/scripts/create-backup.sh
+    permissions: '0755'
+    owner: oktavian:oktavian
+    content: |
+      #!/bin/bash
+      # Create backup of all sbozh.me data
+      # Usage: ./create-backup.sh
+
+      set -e
+
+      BACKUP_DIR="/mnt/sbozh-me-data/backups"
+      APP_DIR="/opt/sbozh-me"
+      DATE=$(date +%Y%m%d-%H%M%S)
+      BACKUP_NAME="sbozh-me-backup-$DATE"
+
+      echo "=== sbozh.me Backup ==="
+      echo "Date: $(date)"
+      mkdir -p "$BACKUP_DIR"
+
+      # Dump PostgreSQL
+      echo "Dumping PostgreSQL..."
+      docker compose -f "$APP_DIR/docker-compose.prod.yaml" exec -T database \
+        pg_dumpall -U directus > "$BACKUP_DIR/$BACKUP_NAME-db.sql"
+
+      # Compress data directories
+      echo "Compressing data..."
+      tar -czf "$BACKUP_DIR/$BACKUP_NAME-data.tar.gz" \
+        -C /mnt/sbozh-me-data \
+        --exclude='backups' \
+        postgres directus 2>/dev/null || true
+
+      # Create final archive
+      echo "Creating final archive..."
+      tar -czf "$BACKUP_DIR/$BACKUP_NAME-full.tar.gz" \
+        -C "$BACKUP_DIR" \
+        "$BACKUP_NAME-db.sql" "$BACKUP_NAME-data.tar.gz"
+
+      # Cleanup temp files
+      rm -f "$BACKUP_DIR/$BACKUP_NAME-db.sql" "$BACKUP_DIR/$BACKUP_NAME-data.tar.gz"
+
+      # Retention: keep last 7 backups
+      ls -t "$BACKUP_DIR"/*-full.tar.gz 2>/dev/null | tail -n +8 | xargs -r rm
+
+      echo "Backup complete: $BACKUP_DIR/$BACKUP_NAME-full.tar.gz"
+
+  - path: /etc/ssh/sshd_config.d/99-sbozh-me-hardening.conf
+    content: |
+      # sbozh.me SSH Hardening
+      # Disable root login
+      PermitRootLogin no
+
+      # Disable password authentication (SSH keys only)
+      PasswordAuthentication no
+      ChallengeResponseAuthentication no
+      PubkeyAuthentication yes
+
+      # Additional security
+      X11Forwarding no
+      MaxAuthTries 3
+      MaxSessions 5
+
+      # Only allow oktavian user
+      AllowUsers oktavian
+
+runcmd:
+  # Apply sysctl changes
+  - sysctl -p /etc/sysctl.d/99-sbozh-me.conf
+
+  # Ensure oktavian home directory has proper permissions
+  - mkdir -p /home/oktavian
+  - chown -R oktavian:oktavian /home/oktavian
+  - chmod 755 /home/oktavian
+
+  # Install Docker
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # Start and enable Docker
+  - systemctl start docker
+  - systemctl enable docker
+
+  # Add oktavian user to docker group (redundant but explicit)
+  - usermod -aG docker oktavian
+
+  # Configure Docker logging
+  - |
+    cat > /etc/docker/daemon.json <<EOF
+    {
+      "log-driver": "json-file",
+      "log-opts": {
+        "max-size": "10m",
+        "max-file": "3"
+      }
+    }
+    EOF
+  - systemctl restart docker
+
+  # Create application directory structure
+  - mkdir -p /opt/sbozh-me/scripts
+  - mkdir -p /mnt/sbozh-me-data/postgres
+  - mkdir -p /mnt/sbozh-me-data/directus/uploads
+  - mkdir -p /mnt/sbozh-me-data/directus/extensions
+  - mkdir -p /mnt/sbozh-me-data/backups
+
+  # Set ownership to oktavian user
+  - chown -R oktavian:oktavian /opt/sbozh-me
+  - chown -R oktavian:oktavian /mnt/sbozh-me-data
+
+  # Set permissions
+  - chmod -R 755 /mnt/sbozh-me-data
+  - chmod -R 777 /mnt/sbozh-me-data/postgres
+
+  # Configure UFW (redundant with Hetzner firewall, but good practice)
+  - ufw --force enable
+  - ufw allow 22/tcp
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+
+  # Stop nginx initially (we'll configure it during deployment)
+  - systemctl stop nginx
+  - systemctl disable nginx
+
+  # Restart SSH to apply hardening
+  - systemctl restart sshd
+
+  # Set up automatic security updates
+  - apt-get install -y unattended-upgrades
+  - dpkg-reconfigure -plow unattended-upgrades
+
+  # Clean up
+  - apt-get autoremove -y
+  - apt-get clean
+
+  # Write completion marker
+  - echo "Cloud-init completed at $(date)" > /home/oktavian/cloud-init-completed.txt
+  - chown oktavian:oktavian /home/oktavian/cloud-init-completed.txt
+  - su - oktavian -c "/home/oktavian/health-check.sh > /home/oktavian/initial-health-check.txt"
+
+final_message: |
+  ╔═══════════════════════════════════════════╗
+  ║   sbozh.me Server Ready for Deployment    ║
+  ╚═══════════════════════════════════════════╝
+
+  Security Configuration:
+  ✓ Non-root user 'oktavian' created
+  ✓ Root SSH login disabled
+  ✓ Password authentication disabled
+  ✓ SSH key authentication only
+
+  System Configuration:
+  ✓ Docker installed
+  ✓ Nginx installed
+  ✓ SSL Certbot ready
+  ✓ Data volume: /mnt/sbozh-me-data
+  ✓ Automatic security updates enabled
+
+  Connect: ssh oktavian@<server-ip>
+  Health check: /home/oktavian/health-check.sh
+
+  Cloud-init setup completed successfully!
