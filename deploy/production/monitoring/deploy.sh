@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Configuration
-SSH_HOST="monitoring"  # SSH config alias for monitoring server
+SSH_HOST="sbozhme-monitoring"  # SSH config alias for monitoring server
 DOMAIN="${1:-monitoring.sbozh.me}"  # Default to monitoring.sbozh.me
 APP_DIR="/opt/monitoring"
 

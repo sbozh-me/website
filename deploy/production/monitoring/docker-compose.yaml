@@ -1,9 +1,10 @@
 name: sbozh-monitoring
 
 x-environment: &default-environment
-  DATABASE_URL: postgres://glitchtip:${POSTGRES_PASSWORD}@database:5432/glitchtip
+  DATABASE_URL: postgres://glitchtip:${POSTGRES_PASSWORD}@monitoring-database:5432/glitchtip
   SECRET_KEY: ${SECRET_KEY}
   PORT: 8000
+  REDIS_URL: redis://monitoring-cache:6379/0
   GLITCHTIP_DOMAIN: ${GLITCHTIP_DOMAIN:-https://monitoring.sbozh.me}
   DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL:-errors@sbozh.me}
   EMAIL_URL: ${EMAIL_URL:-consolemail://}
@@ -16,6 +17,7 @@ services:
   database:
     image: postgres:16-alpine
     container_name: monitoring-database
+    hostname: monitoring-database
     environment:
       POSTGRES_DB: glitchtip
       POSTGRES_USER: glitchtip
@@ -31,7 +33,10 @@ services:
       start_interval: 5s
       start_period: 30s
     networks:
-      - monitoring-network
+      monitoring-network:
+        aliases:
+          - database
+          - monitoring-database
     logging:
       driver: "json-file"
       options:
@@ -42,6 +47,7 @@ services:
   cache:
     image: redis:7-alpine
     container_name: monitoring-cache
+    hostname: monitoring-cache
     command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     restart: unless-stopped
     healthcheck:
@@ -52,7 +58,11 @@ services:
       start_interval: 5s
       start_period: 30s
     networks:
-      - monitoring-network
+      monitoring-network:
+        aliases:
+          - cache
+          - monitoring-cache
+          - redis
     logging:
       driver: "json-file"
       options:
@@ -116,6 +126,8 @@ services:
     container_name: monitoring-migrate
     depends_on:
       database:
+        condition: service_healthy
+      cache:
         condition: service_healthy
     command: "./manage.py migrate"
     environment: *default-environment
