@@ -18,3 +18,11 @@ Ideas and features to consider for future development.
 - **Email Subscription** - Newsletter signup for blog updates
 - **Push Notifications** - Browser notifications for new posts
 
+## Build
+
+- Create a build server with. More RAM, cache. Mini Vercel
+
+## Monitoring
+
+- Add sourceMap to error tracking
+

@@ -122,8 +122,8 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 ## ~~1.0.0 - Launch~~ 🎉✅
 - ~~Production-ready release with full blog, CV, and projects functionality.~~
 
-## 1.1.0 - Error tracking (End of Q4 2025)
-- Use a self-hosted solution to track frontend and backend errors
+## ~~1.1.0 - Error tracking (End of Q4 2025)~~ ✅
+- ~~Use a self-hosted solution to track frontend and backend errors~~
 
 ## 1.2.0 - Subscriptions (Q4 2025/Q1 2026)
 
