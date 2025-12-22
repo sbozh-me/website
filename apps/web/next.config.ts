@@ -29,8 +29,9 @@ export default withSentryConfig(nextConfig, {
 
   // Generate source maps but don't upload them (GlitchTip will fetch them from public URLs)
   sourcemaps: {
-    disable: false,
-    // Don't try to upload to GlitchTip (it doesn't support Sentry's upload API)
-    uploadLegacySourcemaps: false,
+    disable: true,
+    // TODO: Enable when build server has more memory
+    // // Don't try to upload to GlitchTip (it doesn't support Sentry's upload API)
+    // uploadLegacySourcemaps: false,
   },
 });
