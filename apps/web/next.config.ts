@@ -4,6 +4,8 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  // TODO: Enable when build server has more memory
+  // productionBrowserSourceMaps: true, // Enable public source maps for better error tracking
 };
 
 export default withSentryConfig(nextConfig, {
@@ -25,8 +27,10 @@ export default withSentryConfig(nextConfig, {
   // side errors will fail.
   tunnelRoute: "/monitoring",
 
-  // Disable source map upload to Sentry (GlitchTip doesn't support it)
+  // Generate source maps but don't upload them (GlitchTip will fetch them from public URLs)
   sourcemaps: {
-    disable: true,
+    disable: false,
+    // Don't try to upload to GlitchTip (it doesn't support Sentry's upload API)
+    uploadLegacySourcemaps: false,
   },
 });
