@@ -21,7 +21,7 @@ export default function PrivacyPage() {
       <Prose className="mt-12">
         <h2>About Our Analytics</h2>
         <p>
-          We use <strong>Umami Analytics</strong>, a privacy-focused, self-hosted analytics solution.
+          We use <strong><a href="https://umami.is" target="_blank" rel="noopener noreferrer">Umami Analytics</a></strong>, a privacy-focused, self-hosted analytics solution.
           Unlike traditional analytics:
         </p>
         <ul>
@@ -52,26 +52,27 @@ export default function PrivacyPage() {
           but does not identify individual users.
         </p>
 
-        {/*<h2>Error Tracking</h2>*/}
-        {/*<p>*/}
-        {/*  We use error tracking to monitor and fix issues that may affect your experience.*/}
-        {/*  When an error occurs:*/}
-        {/*</p>*/}
-        {/*<ul>*/}
-        {/*  <li>Error messages and stack traces are captured</li>*/}
-        {/*  <li>Browser type and version may be recorded</li>*/}
-        {/*  <li>The page URL where the error occurred is logged</li>*/}
-        {/*</ul>*/}
-        {/*<p>*/}
-        {/*  This data is used solely for debugging and improving the website.*/}
-        {/*  No personal information is included in error reports.*/}
-        {/*</p>postponed*/}
+        <h2>Error Monitoring</h2>
+        <p>
+          We use <strong><a href="https://glitchtip.com" target="_blank" rel="noopener noreferrer">GlitchTip</a></strong> (self-hosted) to track application errors.
+          This helps us fix bugs and improve reliability. Error reports may include:
+        </p>
+        <ul>
+          <li>Technical information such as browser type and version</li>
+          <li>Page URL where the error occurred</li>
+          <li>Error messages and stack traces</li>
+          <li>Device type and operating system</li>
+        </ul>
+        <p>
+          No personal data is intentionally collected. This information is used solely for debugging
+          and improving the website's functionality and user experience.
+        </p>
 
         <h2>Data Retention</h2>
         <p>We retain data only as long as necessary:</p>
         <ul>
           <li><strong>Analytics data:</strong> 90 days</li>
-          {/*<li><strong>Error logs:</strong> 30 days</li>postponed*/}
+          <li><strong>Error logs:</strong> 30 days</li>
           <li><strong>Performance metrics:</strong> 7 days</li>
           <li><strong>Session data:</strong> Until you close your browser</li>
         </ul>
