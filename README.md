@@ -7,8 +7,9 @@ Personal website and portfolio for sbozh.me. Built in public, learned in motion.
 ## Live
 
 - **Website**: [sbozh.me](https://sbozh.me)
-- **Analytics**: [analytics.sbozh.me](https://analytics.sbozh.me) (Umami)
-- **CMS**: [directus.sbozh.me](https://cms.sbozh.me) (Directus)
+- **Analytics**: [analytics.sbozh.me](https://analytics.sbozh.me) ([Umami](https://umami.is))
+- **CMS**: [cms.sbozh.me](https://cms.sbozh.me) ([Directus](https://directus.io))
+- **Monitoring**: [monitoring.sbozh.me](https://monitoring.sbozh.me) ([GlitchTip](https://glitchtip.com))
 
 ## Features
 
@@ -65,8 +66,9 @@ Personal website and portfolio for sbozh.me. Built in public, learned in motion.
 - **UI**: shadcn/ui + Tailwind CSS v4
 - **Animation**: Framer Motion
 - **Testing**: Vitest (90%+ coverage)
-- **CMS**: Directus
-- **Analytics**: Umami
+- **CMS**: [Directus](https://directus.io) (self-hosted)
+- **Analytics**: [Umami](https://umami.is) (self-hosted)
+- **Monitoring**: [GlitchTip](https://glitchtip.com) (self-hosted)
 - **PDF**: Puppeteer microservice
 - **Deployment**: Docker, Nginx, Hetzner
 
@@ -88,10 +90,10 @@ packages/
   eslint-config/        # Shared ESLint config
   typescript-config/    # Shared TypeScript config
 deploy/
+  local/                # Local development services
   production/           # Production deployment configs
-    docker-compose.prod.yaml
-    nginx.conf.template
-    scripts/            # Deployment and backup scripts
+    website/            # Main website infrastructure
+    monitoring/         # GlitchTip error monitoring
 ```
 
 ## Packages
@@ -152,7 +154,8 @@ docker compose up -d
 ```bash
 make deploy           # Deploy web + infrastructure
 make deploy-web       # Deploy web only
-make deploy-infra     # Deploy infrastructure only
+make deploy-infra     # Deploy website infrastructure
+make deploy-monitoring # Deploy monitoring infrastructure
 make push-web-image   # Build and push Docker image
 make swv              # Switch server to current version
 ```

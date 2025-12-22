@@ -7,10 +7,11 @@ Next.js frontend for sbozh.me personal website.
 ## Features
 
 - **Projects Section**: Showcase with tabbed navigation (About, Motivation, Roadmap, Changelog)
-- **Blog System**: Directus CMS integration with MDX rendering
+- **Blog System**: [Directus](https://directus.io) CMS integration with MDX rendering
 - **CV Page**: Custom markdown parser with PDF export (requires pdf-generator service)
-- **Analytics**: Umami integration with Web Vitals tracking
-- **Privacy**: GDPR-compliant cookie consent modal
+- **Analytics**: [Umami](https://umami.is) integration with Web Vitals tracking
+- **Error Monitoring**: [GlitchTip](https://glitchtip.com) integration for error tracking
+- **Privacy**: GDPR-compliant cookie consent modal with full privacy controls
 - **Contact Page**: Email and social links
 - **Accessibility**: Full ARIA support, keyboard navigation
 - **Testing**: 90%+ coverage with Vitest
@@ -45,6 +46,7 @@ cp .env.example .env.local
 | `UMAMI_WEBSITE_ID` | Umami website ID for analytics |
 | `UMAMI_SCRIPT_URL` | Umami script URL (e.g., `https://analytics.sbozh.me/script.js`) |
 | `ANALYTICS_ENABLED` | Enable analytics tracking (default: `false`) |
+| `SENTRY_DSN` | GlitchTip DSN for error monitoring (optional) |
 
 Without Directus variables, the app falls back to mock data.
 
