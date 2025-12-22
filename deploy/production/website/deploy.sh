@@ -111,8 +111,8 @@ print_success "Application directory created: $APP_DIR"
 
 # Copy files to server
 print_header "4️⃣ Copying Application Files"
-print_info "Uploading docker-compose.prod.yaml..."
-scp -q "$SCRIPT_DIR/docker-compose.prod.yaml" $SSH_HOST:$APP_DIR/docker-compose.yaml
+print_info "Uploading docker-compose.yaml..."
+scp -q "$SCRIPT_DIR/docker-compose.yaml" $SSH_HOST:$APP_DIR/docker-compose.yaml
 print_success "docker-compose.yaml uploaded"
 
 print_info "Uploading .env file..."

@@ -1,0 +1,27 @@
+# Hetzner Cloud API Token
+# Get it from: https://console.hetzner.cloud/ -> Security -> API Tokens
+hcloud_token = "your-hetzner-cloud-api-token-here"
+
+# SSH Public Key
+# Generate with: ssh-keygen -t ed25519 -C "monitoring-deploy" -f ~/.ssh/monitoring
+# Then copy from: cat ~/.ssh/monitoring.pub
+ssh_public_key = "ssh-ed25519 AAAAC3... your-email@example.com"
+
+# Root Password (for emergency console access only)
+# SSH root login is disabled for security
+# Generate strong password with: openssl rand -base64 32
+root_password = "your-strong-root-password-here"
+
+# Domain name
+domain = "monitoring.sbozh.me"
+
+# Environment
+environment = "prod"
+
+# Server Configuration
+# GlitchTip needs ~650MB RAM, CPX11 (2GB) is sufficient
+server_type = "cpx11"  # 2 vCPU, 2GB RAM, €4.35/month
+location    = "nbg1"   # Nuremberg, Germany (also: fsn1, hel1, ash, hil)
+
+# Data volume size in GB (20GB sufficient for error tracking)
+volume_size = 20

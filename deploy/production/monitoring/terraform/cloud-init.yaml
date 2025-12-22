@@ -1,8 +1,8 @@
 #cloud-config
 
-# sbozh.me Server Cloud-Init Configuration
+# GlitchTip Monitoring Server Cloud-Init Configuration
 # Automatically installs Docker, Docker Compose, and prepares the server
-# Security: Creates non-root 'dev' user, hardens SSH, disables root SSH login
+# Security: Creates non-root 'oktavian' user, hardens SSH, disables root SSH login
 
 package_update: true
 package_upgrade: true
@@ -41,7 +41,7 @@ chpasswd:
   expire: false
 
 write_files:
-  - path: /etc/sysctl.d/99-sbozh-me.conf
+  - path: /etc/sysctl.d/99-monitoring.conf
     content: |
       # Optimize for Docker and PostgreSQL
       vm.max_map_count=262144
@@ -54,108 +54,50 @@ write_files:
     owner: oktavian:oktavian
     content: |
       #!/bin/bash
-      echo "🏥 System Health Check"
-      echo "====================="
+      echo "=== Monitoring Server Health Check ==="
       echo "Docker: $(docker --version)"
       echo "Docker Compose: $(docker compose version)"
       echo "Nginx: $(nginx -v 2>&1)"
       echo "Disk Usage: $(df -h / | tail -1)"
       echo "Memory: $(free -h | grep Mem)"
-      echo "====================="
+      echo "======================================"
 
-  - path: /opt/sbozh-me/scripts/deploy-web.sh
+  - path: /opt/monitoring/scripts/create-backup.sh
     permissions: '0755'
     owner: oktavian:oktavian
     content: |
       #!/bin/bash
-      set -e
-
-      # Deploy web service with specified image tag
-      # Usage: ./deploy-web.sh [tag]
-
-      TAG=$${1:-main}
-      APP_DIR="/opt/sbozh-me"
-      ENV_FILE="$APP_DIR/.env"
-
-      echo "Deploying web:$TAG..."
-
-      cd "$APP_DIR"
-
-      # Update image tag in .env
-      if grep -q "WEB_IMAGE_TAG=" "$ENV_FILE"; then
-        sed -i "s/WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$TAG/" "$ENV_FILE"
-      else
-        echo "WEB_IMAGE_TAG=$TAG" >> "$ENV_FILE"
-      fi
-
-      # Pull new image
-      echo "Pulling image..."
-      docker compose pull web
-
-      # Restart web service
-      echo "Restarting web service..."
-      docker compose up -d web
-
-      # Health check
-      echo "Running health check..."
-      sleep 5
-      if curl -sf http://localhost:3000 > /dev/null; then
-        echo "Health check passed"
-        echo "Successfully deployed web:$TAG"
-      else
-        echo "Health check failed!"
-        docker compose logs --tail=50 web
-        exit 1
-      fi
-
-  - path: /opt/sbozh-me/scripts/create-backup.sh
-    permissions: '0755'
-    owner: oktavian:oktavian
-    content: |
-      #!/bin/bash
-      # Create backup of all sbozh.me data
+      # Create backup of GlitchTip data
       # Usage: ./create-backup.sh
 
       set -e
 
-      BACKUP_DIR="/mnt/sbozh-me-data/backups"
-      APP_DIR="/opt/sbozh-me"
+      BACKUP_DIR="/mnt/monitoring-data/backups"
+      APP_DIR="/opt/monitoring"
       DATE=$(date +%Y%m%d-%H%M%S)
-      BACKUP_NAME="sbozh-me-backup-$DATE"
+      BACKUP_NAME="glitchtip-backup-$DATE"
 
-      echo "=== sbozh.me Backup ==="
+      echo "=== GlitchTip Backup ==="
       echo "Date: $(date)"
       mkdir -p "$BACKUP_DIR"
 
       # Dump PostgreSQL
       echo "Dumping PostgreSQL..."
       docker compose -f "$APP_DIR/docker-compose.yaml" exec -T database \
-        pg_dumpall -U directus > "$BACKUP_DIR/$BACKUP_NAME-db.sql"
+        pg_dumpall -U glitchtip > "$BACKUP_DIR/$BACKUP_NAME-db.sql"
 
-      # Compress data directories
-      echo "Compressing data..."
-      tar -czf "$BACKUP_DIR/$BACKUP_NAME-data.tar.gz" \
-        -C /mnt/sbozh-me-data \
-        --exclude='backups' \
-        postgres directus 2>/dev/null || true
-
-      # Create final archive
-      echo "Creating final archive..."
-      tar -czf "$BACKUP_DIR/$BACKUP_NAME-full.tar.gz" \
-        -C "$BACKUP_DIR" \
-        "$BACKUP_NAME-db.sql" "$BACKUP_NAME-data.tar.gz"
-
-      # Cleanup temp files
-      rm -f "$BACKUP_DIR/$BACKUP_NAME-db.sql" "$BACKUP_DIR/$BACKUP_NAME-data.tar.gz"
+      # Compress database dump
+      echo "Compressing backup..."
+      gzip "$BACKUP_DIR/$BACKUP_NAME-db.sql"
 
       # Retention: keep last 7 backups
-      ls -t "$BACKUP_DIR"/*-full.tar.gz 2>/dev/null | tail -n +8 | xargs -r rm
+      ls -t "$BACKUP_DIR"/*-db.sql.gz 2>/dev/null | tail -n +8 | xargs -r rm
 
-      echo "Backup complete: $BACKUP_DIR/$BACKUP_NAME-full.tar.gz"
+      echo "Backup complete: $BACKUP_DIR/$BACKUP_NAME-db.sql.gz"
 
-  - path: /etc/ssh/sshd_config.d/99-sbozh-me-hardening.conf
+  - path: /etc/ssh/sshd_config.d/99-monitoring-hardening.conf
     content: |
-      # sbozh.me SSH Hardening
+      # Monitoring Server SSH Hardening
       # Disable root login
       PermitRootLogin no
 
@@ -174,7 +116,7 @@ write_files:
 
 runcmd:
   # Apply sysctl changes
-  - sysctl -p /etc/sysctl.d/99-sbozh-me.conf
+  - sysctl -p /etc/sysctl.d/99-monitoring.conf
 
   # Ensure oktavian home directory has proper permissions
   - mkdir -p /home/oktavian
@@ -208,19 +150,17 @@ runcmd:
   - systemctl restart docker
 
   # Create application directory structure
-  - mkdir -p /opt/sbozh-me/scripts
-  - mkdir -p /mnt/sbozh-me-data/postgres
-  - mkdir -p /mnt/sbozh-me-data/directus/uploads
-  - mkdir -p /mnt/sbozh-me-data/directus/extensions
-  - mkdir -p /mnt/sbozh-me-data/backups
+  - mkdir -p /opt/monitoring/scripts
+  - mkdir -p /mnt/monitoring-data/postgres
+  - mkdir -p /mnt/monitoring-data/backups
 
   # Set ownership to oktavian user
-  - chown -R oktavian:oktavian /opt/sbozh-me
-  - chown -R oktavian:oktavian /mnt/sbozh-me-data
+  - chown -R oktavian:oktavian /opt/monitoring
+  - chown -R oktavian:oktavian /mnt/monitoring-data
 
   # Set permissions
-  - chmod -R 755 /mnt/sbozh-me-data
-  - chmod -R 777 /mnt/sbozh-me-data/postgres
+  - chmod -R 755 /mnt/monitoring-data
+  - chmod -R 777 /mnt/monitoring-data/postgres
 
   # Configure UFW (redundant with Hetzner firewall, but good practice)
   - ufw --force enable
@@ -249,22 +189,22 @@ runcmd:
   - su - oktavian -c "/home/oktavian/health-check.sh > /home/oktavian/initial-health-check.txt"
 
 final_message: |
-  ╔═══════════════════════════════════════════╗
-  ║   sbozh.me Server Ready for Deployment    ║
-  ╚═══════════════════════════════════════════╝
+  =============================================
+     GlitchTip Monitoring Server Ready
+  =============================================
 
   Security Configuration:
-  ✓ Non-root user 'oktavian' created
-  ✓ Root SSH login disabled
-  ✓ Password authentication disabled
-  ✓ SSH key authentication only
+  - Non-root user 'oktavian' created
+  - Root SSH login disabled
+  - Password authentication disabled
+  - SSH key authentication only
 
   System Configuration:
-  ✓ Docker installed
-  ✓ Nginx installed
-  ✓ SSL Certbot ready
-  ✓ Data volume: /mnt/sbozh-me-data
-  ✓ Automatic security updates enabled
+  - Docker installed
+  - Nginx installed
+  - SSL Certbot ready (Cloudflare DNS-01)
+  - Data volume: /mnt/monitoring-data
+  - Automatic security updates enabled
 
   Connect: ssh oktavian@<server-ip>
   Health check: /home/oktavian/health-check.sh

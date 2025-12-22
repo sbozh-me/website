@@ -1,0 +1,142 @@
+# monitoring.sbozh.me Nginx Configuration
+# GlitchTip Error Tracking Service
+# SSL certificate from wildcard (*.sbozh.me)
+
+# Rate limiting zones
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=50r/s;
+limit_req_zone $binary_remote_addr zone=general_limit:10m rate=30r/s;
+
+# Upstream
+upstream glitchtip_backend {
+    server 127.0.0.1:8000;
+    keepalive 32;
+}
+
+# HTTP Server - Redirect to HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name monitoring.sbozh.me;
+
+    # Allow Let's Encrypt challenges
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    # Redirect all other traffic to HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# =============================================================================
+# monitoring.sbozh.me - GlitchTip Error Tracking
+# =============================================================================
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name monitoring.sbozh.me;
+
+    # SSL Configuration (wildcard certificate)
+    ssl_certificate /etc/letsencrypt/live/sbozh.me/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/sbozh.me/privkey.pem;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    # Modern SSL configuration
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
+    ssl_prefer_server_ciphers off;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate /etc/letsencrypt/live/sbozh.me/chain.pem;
+
+    # Security Headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+
+    # Logging
+    access_log /var/log/nginx/monitoring-access.log;
+    error_log /var/log/nginx/monitoring-error.log warn;
+
+    # Max upload size (for source maps and attachments)
+    client_max_body_size 50M;
+
+    # Health check endpoint (no rate limiting)
+    location /_health/ {
+        proxy_pass http://glitchtip_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        access_log off;
+    }
+
+    # Sentry API endpoint - high rate limit for error ingestion
+    # This handles error reports from client applications
+    location /api/ {
+        limit_req zone=api_limit burst=100 nodelay;
+
+        proxy_pass http://glitchtip_backend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+
+        # CORS for Sentry SDK
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS' always;
+        add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,X-Sentry-Auth,sentry-trace,baggage' always;
+
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain; charset=utf-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+    }
+
+    # Dashboard and other routes
+    location / {
+        limit_req zone=general_limit burst=20 nodelay;
+
+        proxy_pass http://glitchtip_backend;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+
+        proxy_buffering off;
+    }
+
+    # Static assets caching
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        proxy_pass http://glitchtip_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+
+        expires 7d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+}
