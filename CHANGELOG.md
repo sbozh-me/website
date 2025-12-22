@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-12-22
+
+### Changes
+
+- docs(analytics): add umami pg13 journeys postmortem ([005cfac](https://github.com/sbozh-me/website/commit/005cfac2684b564148fe6c96b39b5f8f0fb9be13))
+- docs(analytics): add umami pg13 journeys postmortem github issue ([644c51d](https://github.com/sbozh-me/website/commit/644c51d4ba48e911a5c027ea4b9f2a893a13904b))
+- feat(scripts): add git time estimation script ([c41b00e](https://github.com/sbozh-me/website/commit/c41b00efb1adee34d56703ede86498b0185497ce))
+- feat(infra): add GlitchTip error tracking infrastructure ([ff8c602](https://github.com/sbozh-me/website/commit/ff8c602b267c34b88c633123bc3853ea977437ca))
+- refactor: rename errorTracker to errors and move postmortem ([0766a21](https://github.com/sbozh-me/website/commit/0766a21a0259c0a7db461c9897b522057683e16a))
+- refactor(deploy): reorganize production into website and errors dirs ([b9dccf6](https://github.com/sbozh-me/website/commit/b9dccf610bb6ec95612ef69e3cb1b48f7b8450ac))
+- refactor(deploy): rename errors to monitoring ([04aab86](https://github.com/sbozh-me/website/commit/04aab86bdf48d77b6e53cf9f781c00e28f95f8e5))
+- chore(deploy): remove obsolete umami init and deploy scripts ([8546bd9](https://github.com/sbozh-me/website/commit/8546bd900aa1f939b0e29b3d5c7db616f0b5aeeb))
+- docs(analytics): rewrite README and simplify env config ([a0022fc](https://github.com/sbozh-me/website/commit/a0022fc0a13ce6171899972cfe44bca2b0e1689a))
+- docs(deploy): add README for local services ([8f55253](https://github.com/sbozh-me/website/commit/8f55253d815e7b8b9706bc164e70077c8da4482b))
+- feat(infra): add GlitchTip monitoring deployment infrastructure ([cbf3891](https://github.com/sbozh-me/website/commit/cbf38915e526b510d19483b145da90249fed43e2))
+- feat(web): integrate GlitchTip error tracking with dynamic DSN ([8568eea](https://github.com/sbozh-me/website/commit/8568eea68fe71672114e1951cad4b700e1e6df0a))
+- fix(monitoring): resolve Docker networking and service discovery issues ([b0b4dd2](https://github.com/sbozh-me/website/commit/b0b4dd27576fe6aff4acbc9e9e49b1d2051264e2))
+- chore(deploy): rename docker-compose.prod.yaml to docker-compose.yaml ([69c9767](https://github.com/sbozh-me/website/commit/69c9767d22dbd12f03086a044ecb60834a00924f))
+- fix(monitoring): remove duplicate CORS headers from nginx config ([c8bee79](https://github.com/sbozh-me/website/commit/c8bee79770bd444ea0b02e49ac9eaf2f81694b4f))
+- refactor(deploy): restructure infrastructure deployment targets ([2c012e9](https://github.com/sbozh-me/website/commit/2c012e9513c2b06cb0292ce6a272e741750a6c47))
+- docs(web): update privacy policy for GlitchTip error monitoring ([1618685](https://github.com/sbozh-me/website/commit/16186852316d78f11b4df144f6a200dca3c6062e))
+- docs: add GlitchTip monitoring service to READMEs ([3a93538](https://github.com/sbozh-me/website/commit/3a93538ce122106a211ecbaad1db537062500363))
+- feat(web): enable source map generation for GlitchTip error tracking ([eff23bb](https://github.com/sbozh-me/website/commit/eff23bbbfe52ff9e584449669a0f9a3b50bc008b))
+- docs: update roadmap and backlog with monitoring tasks ([997b621](https://github.com/sbozh-me/website/commit/997b621e46fad93d9cc1ba4ff543a2536aea0baf))
+- test(cv): update PDF filename expectation in route test ([0d196da](https://github.com/sbozh-me/website/commit/0d196daa5ac26507759b1a4dc544bdd1b1413199))
+- test(web): remove global-error test file ([502d329](https://github.com/sbozh-me/website/commit/502d329bd20b7195958c121da56302ccd6a426c4))
+
+
 ## [1.0.8] - 2025-12-20
 
 ### Changes
