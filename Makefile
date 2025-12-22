@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra push-web-image switch-web-version swv restart
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring push-web-image switch-web-version swv restart
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -36,9 +36,14 @@ deploy-web: push-web-image switch-web-version
 	@echo "Deployed web v$(VERSION)"
 
 deploy-infra:
-	@echo "Deploying infrastructure..."
-	./deploy/production/deploy.sh
-	@echo "Infrastructure deployed"
+	@echo "Deploying website infrastructure..."
+	./deploy/production/website/deploy.sh
+	@echo "Website infrastructure deployed"
+
+deploy-monitoring:
+	@echo "Deploying monitoring infrastructure..."
+	./deploy/production/monitoring/deploy.sh
+	@echo "Monitoring infrastructure deployed"
 
 deploy: deploy-web deploy-infra
 

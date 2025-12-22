@@ -141,7 +141,7 @@ print_success "Scripts uploaded"
 
 print_info "Uploading services for local build..."
 ssh $SSH_HOST "mkdir -p $APP_DIR/services"
-rsync -aq --exclude='node_modules' --exclude='dist' "$SCRIPT_DIR/../../services/pdf-generator" $SSH_HOST:$APP_DIR/services/
+rsync -aq --exclude='node_modules' --exclude='dist' "$SCRIPT_DIR/../../../services/pdf-generator" $SSH_HOST:$APP_DIR/services/
 print_success "Services uploaded"
 
 # Start services
