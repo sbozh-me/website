@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2025-12-22
+
+### Changes
+
+- perf(web): disable source maps to reduce build memory usage ([6ef2102](https://github.com/sbozh-me/website/commit/6ef2102854fbc78fc9e90de745cf4d2fb87c6d63))
+
+
 ## [1.1.0] - 2025-12-22
 
 ### Changes
