@@ -35,7 +35,7 @@ describe("PDF Route", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toBe(
-      'attachment; filename="Sem_Bozhyk_CV.pdf"'
+      'attachment; filename="CV_Sem_Bozhyk_Software_Developer.pdf"'
     );
   });
 
