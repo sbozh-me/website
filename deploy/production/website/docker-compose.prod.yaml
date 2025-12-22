@@ -175,6 +175,8 @@ services:
       UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID}
       UMAMI_SCRIPT_URL: ${UMAMI_SCRIPT_URL:-https://analytics.sbozh.me/script.js}
       ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
+      # Error tracking (GlitchTip)
+      SENTRY_DSN: ${SENTRY_DSN}
     networks:
       - sbozh-me-network
     logging:

@@ -11,6 +11,7 @@ export function GET() {
       enabled: process.env.ANALYTICS_ENABLED === "true",
       umamiWebsiteId: process.env.UMAMI_WEBSITE_ID ?? "",
       umamiScriptUrl: process.env.UMAMI_SCRIPT_URL ?? "",
+      sentryDSN: process.env.SENTRY_DSN ?? "",
     },
   });
 }

@@ -7,6 +7,7 @@ import { CookieConsentModal } from "@/components/CookieConsentModal";
 import { Footer } from "@/components/Footer";
 import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/providers/PerformanceProvider";
+import { SentryProvider } from "@/providers/SentryProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -62,14 +63,16 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
-        <AnalyticsProvider>
-          <PerformanceProvider>
-            {children}
-            <Footer />
-            <Toaster />
-            <CookieConsentModal />
-          </PerformanceProvider>
-        </AnalyticsProvider>
+        <SentryProvider>
+          <AnalyticsProvider>
+            <PerformanceProvider>
+              {children}
+              <Footer />
+              <Toaster />
+              <CookieConsentModal />
+            </PerformanceProvider>
+          </AnalyticsProvider>
+        </SentryProvider>
       </body>
     </html>
   );

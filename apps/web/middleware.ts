@@ -13,14 +13,31 @@ export function middleware(request: NextRequest) {
     // Keep default if URL parsing fails
   }
 
-  // Configure CSP to allow Umami
+  // Get Sentry/GlitchTip domain from DSN
+  // DSN format: {protocol}://{public_key}@{host}/{project_id}
+  const sentryDsn = process.env.SENTRY_DSN || '';
+  let sentryDomain = '';
+  try {
+    if (sentryDsn) {
+      // Extract host from DSN using regex
+      const match = sentryDsn.match(/@([^/]+)/);
+      if (match) {
+        sentryDomain = match[1];
+      }
+    }
+  } catch {
+    // Keep empty if parsing fails
+  }
+
+  // Configure CSP to allow Umami and Sentry/GlitchTip
+  const externalDomains = [analyticsDomain, sentryDomain].filter(Boolean).join(' ');
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-inline' 'unsafe-eval' ${analyticsDomain};
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob: ${analyticsDomain};
     font-src 'self';
-    connect-src 'self' ${analyticsDomain};
+    connect-src 'self' ${externalDomains};
     frame-ancestors 'none';
     base-uri 'self';
     form-action 'self';
