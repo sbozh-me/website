@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.2] - 2025-12-23
+
+### Changes
+
+- feat(blog): open external links in new tab with security attributes ([2b2f3d3](https://github.com/sbozh-me/website/commit/2b2f3d389f6926520a442c91a33dd79157ebba15))
+
+
 ## [1.1.1] - 2025-12-22
 
 ### Changes
