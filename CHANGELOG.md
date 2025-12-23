@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2025-12-23
+
+### Changes
+
+- docs(seo): add sitemap improvement ideas ([27b05fd](https://github.com/sbozh-me/website/commit/27b05fdf32584590bf314eb2578a8a5217dca1d8))
+- build(deps): update next to 15.5.9 ([7f5379f](https://github.com/sbozh-me/website/commit/7f5379f3f58622cda3ef006ee3f6bd0735ee3cea))
+
+
 ## [1.1.2] - 2025-12-23
 
 ### Changes
