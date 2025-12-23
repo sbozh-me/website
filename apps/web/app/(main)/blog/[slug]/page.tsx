@@ -140,7 +140,25 @@ export default async function BlogPostPage({ params }: PageProps) {
     const { default: Content } = await evaluate(post.tldr, {
       ...runtime,
     } as any);
-    TldrContent = () => <Content />;
+    TldrContent = () => (
+      <Content
+        components={{
+          a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+            // Check if it's an external link
+            const isExternal = props.href &&
+              (props.href.startsWith("http://") ||
+                props.href.startsWith("https://"));
+
+            if (isExternal) {
+              return (
+                <a {...props} target="_blank" rel="noopener noreferrer" />
+              );
+            }
+            return <a {...props} />;
+          },
+        }}
+      />
+    );
   }
 
   // Compile attribution markdown if present
@@ -190,7 +208,23 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </div>
               )}
               <div className="prose">
-                <MDXContent />
+                <MDXContent
+                  components={{
+                    a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+                      // Check if it's an external link
+                      const isExternal = props.href &&
+                        (props.href.startsWith("http://") ||
+                          props.href.startsWith("https://"));
+
+                      if (isExternal) {
+                        return (
+                          <a {...props} target="_blank" rel="noopener noreferrer" />
+                        );
+                      }
+                      return <a {...props} />;
+                    },
+                  }}
+                />
               </div>
               {AttributionContent && (
                 <div className="mt-12 pt-8 border-t border-border">
