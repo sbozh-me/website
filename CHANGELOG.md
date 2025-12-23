@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2025-12-23
+
+### Changes
+
+- docs(roadmap): adjust subscriptions timeline to Q1 2026 ([3e09207](https://github.com/sbozh-me/website/commit/3e09207710fdce95edd8e6ba10af5b21146dda73))
+- feat(discord): add community rules tab and update version to 0.3.3 ([31f278a](https://github.com/sbozh-me/website/commit/31f278a628d532272393489169b5a37c689b5bc0))
+
+
 ## [1.1.3] - 2025-12-23
 
 ### Changes
