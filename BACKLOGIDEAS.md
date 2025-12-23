@@ -12,6 +12,8 @@ Ideas and features to consider for future development.
   - Article schema for blog posts
   - Person/ProfilePage schema for CV
   - WebSite schema with search action
+- Sitemap
+  - Should work better with <lastmod />. Blogpost should have "Edited log" or somethings like that
 
 ## Engagement
 
