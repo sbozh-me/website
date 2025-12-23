@@ -25,6 +25,42 @@ You don't need to be an expert. You don't even need a project yet. If you're cur
 Ready to join? <a href="${siteConfig.links.discordInvite}" target="_blank" rel="noopener noreferrer">Click here to join the Discord server</a>
 `,
 
+  rules: `
+## Community Rules
+
+### 🤝 Respect & Safety
+
+**1. Treat everyone with respect.**
+No harassment, witch hunting, sexism, racism, or hate speech.
+
+**2. No spam or unsolicited self-promotion.**
+Server invites, ads, or DMing members without permission = not okay.
+
+**3. Keep it clean.**
+No NSFW content - text, images, or links.
+
+**4. Report issues to staff.**
+If something feels off, let us know. We want this to be a safe space.
+
+### 🚀 Building Together
+
+**5. Share what you're building.**
+Messy, unfinished, broken - doesn't matter. Show your work.
+
+**6. Ask when you're stuck.**
+No question is too basic. That's why we're here.
+
+**7. Help when you can.**
+If you know the answer, share it. Small help compounds.
+
+**8. Finish things.**
+Starting is easy. We're here to help each other cross the line.
+
+---
+
+*Questions? Ping @staff in Discord.*
+`,
+
   motivation: `
 > Power gathers where people stand together.
 
@@ -67,11 +103,14 @@ Not just another Discord server. A place where projects come to life because the
 - ~~0.2.0 - Provide Registration Link~~
 - ~~0.2.1 - Link attached to project~~
 
-## 0.3.0 - Define rules
-- 0.3.0 - Basic structure created
-- 0.3.1 - Server permissions configured
-- 0.3.2 - Post rules to server
-- 0.3.3 - Post rules to project
+## ~~0.3.0 - Define rules~~ ✅
+- ~~0.3.0 - Basic structure created~~
+- ~~0.3.1 - Server permissions configured~~
+- ~~0.3.2 - Post rules to server~~
+- ~~0.3.3 - Post rules to project~~
+
+## 0.4.0 - First active members
+- 0.4.0 - 10 active members
 
 ## ...
 
