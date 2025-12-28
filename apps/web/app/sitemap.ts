@@ -2,9 +2,24 @@ import type { MetadataRoute } from "next";
 
 import { createBlogRepository } from "@/lib/blog/repository";
 import { getProjects } from "@/lib/projects/data";
+import sitemapData from "@/lib/seo/sitemap-data.json";
 
 // Sitemap fetches dynamic data from Directus, so render dynamically
 export const dynamic = "force-dynamic";
+
+// Helper to get lastModified date for a path
+function getLastModified(path: string): Date {
+  let relativePath = path.replace("https://sbozh.me", "");
+  // Handle root path case
+  if (relativePath === "") {
+    relativePath = "/";
+  }
+  const data = sitemapData[relativePath as keyof typeof sitemapData];
+  if (data?.lastModified) {
+    return new Date(data.lastModified);
+  }
+  return new Date();
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sbozh.me";
@@ -13,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: getLastModified(baseUrl),
       changeFrequency: "monthly",
       priority: 1,
     },
@@ -25,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/projects`,
-      lastModified: new Date(),
+      lastModified: getLastModified(`${baseUrl}/projects`),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -37,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // "about" tab is at /projects/[slug], others at /projects/[slug]/[tab]
     const aboutRoute = {
       url: `${baseUrl}/projects/${project.slug}`,
-      lastModified: new Date(),
+      lastModified: getLastModified(`${baseUrl}/projects/${project.slug}`),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     };
@@ -45,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((tab) => tab.enabled && tab.id !== "about")
       .map((tab) => ({
         url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
-        lastModified: new Date(),
+        lastModified: getLastModified(`${baseUrl}/projects/${project.slug}/${tab.id}`),
         changeFrequency: "weekly" as const,
         priority: 0.7,
       }));
