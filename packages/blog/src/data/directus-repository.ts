@@ -65,6 +65,7 @@ interface DirectusPost {
   tldr: string | null;
   content: string;
   date_published: string;
+  date_updated: string | null;
   reading_time: number;
   persona: DirectusPersona;
   tags: { tags_id: DirectusTag }[];
@@ -166,6 +167,7 @@ export class DirectusRepository implements BlogRepository {
             "slug",
             "excerpt",
             "date_published",
+            "date_updated",
             "reading_time",
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
@@ -280,6 +282,7 @@ export class DirectusRepository implements BlogRepository {
       tldr: post.tldr ?? undefined,
       content: post.content,
       date: post.date_published,
+      lastModified: post.date_updated ?? post.date_published,
       readingTime: post.reading_time,
       persona: this.mapToPersona(post.persona),
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),
@@ -297,6 +300,7 @@ export class DirectusRepository implements BlogRepository {
       slug: post.slug,
       excerpt: post.excerpt,
       date: post.date_published,
+      lastModified: post.date_updated ?? post.date_published,
       readingTime: post.reading_time,
       persona: this.mapToPersona(post.persona),
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),

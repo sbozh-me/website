@@ -16,6 +16,7 @@ export interface Post {
   tldr?: string;
   content: string;
   date: string;
+  lastModified?: string;
   readingTime: number;
   persona: Persona;
   tags: Tag[];
@@ -31,6 +32,7 @@ export interface PostListItem {
   slug: string;
   excerpt: string;
   date: string;
+  lastModified?: string;
   readingTime: number;
   persona: Persona;
   tags: Tag[];

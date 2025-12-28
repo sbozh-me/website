@@ -24,6 +24,28 @@ function getLastModified(path: string): Date {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sbozh.me";
 
+  // Fetch blog data first to get latest post date for /blog route
+  let blogRoutes: MetadataRoute.Sitemap = [];
+  let latestBlogPostDate: Date | undefined;
+  try {
+    const repository = createBlogRepository();
+    const posts = await repository.getPosts();
+
+    // Track the latest post date for the /blog route
+    if (posts.length > 0) {
+      latestBlogPostDate = new Date(posts[0].lastModified || posts[0].date);
+    }
+
+    blogRoutes = posts.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.lastModified || post.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+  } catch (error) {
+    console.error("[Sitemap] Failed to fetch blog posts:", error);
+  }
+
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -34,7 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: latestBlogPostDate || new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -66,21 +88,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }));
     return [aboutRoute, ...otherTabs];
   });
-
-  // Blog posts from Directus
-  let blogRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const repository = createBlogRepository();
-    const posts = await repository.getPosts();
-    blogRoutes = posts.map((post) => ({
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: new Date(post.date),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    }));
-  } catch (error) {
-    console.error("[Sitemap] Failed to fetch blog posts:", error);
-  }
 
   return [...staticRoutes, ...projectRoutes, ...blogRoutes];
 }

@@ -3,25 +3,29 @@
     "version": "1.1.4",
     "lastModified": "2025-12-23T21:17:46+01:00"
   },
+  "/blog": {
+    "version": "1.1.4",
+    "lastModified": "2025-12-23T21:17:46+01:00"
+  },
   "/projects": {
     "version": "1.1.4",
     "lastModified": "2025-12-23T21:17:46+01:00"
   },
   "/projects/discord-community": {
     "version": "0.3.3",
-    "lastModified": "2025-12-28T19:24:13.866Z"
+    "lastModified": "2025-12-28T20:34:07.734Z"
   },
   "/projects/discord-community/motivation": {
     "version": "0.3.3",
-    "lastModified": "2025-12-28T19:24:13.866Z"
+    "lastModified": "2025-12-28T20:34:07.734Z"
   },
   "/projects/discord-community/roadmap": {
     "version": "0.3.3",
-    "lastModified": "2025-12-28T19:24:13.866Z"
+    "lastModified": "2025-12-28T20:34:07.734Z"
   },
   "/projects/discord-community/rules": {
     "version": "0.3.3",
-    "lastModified": "2025-12-28T19:24:13.866Z"
+    "lastModified": "2025-12-28T20:34:07.734Z"
   },
   "/projects/sbozh-me": {
     "version": "1.1.4",

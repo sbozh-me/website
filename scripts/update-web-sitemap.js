@@ -80,7 +80,7 @@ function getLastModifiedFromTag(version) {
   return new Date().toISOString();
 }
 
-// Add common routes (root and /projects)
+// Add common routes (root, /projects)
 sitemapData['/'] = {
   version: packageJson.version,
   lastModified: getLastModifiedFromTag(packageJson.version)
