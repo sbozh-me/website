@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2025-12-29
+
+### Changes
+
+- feat(monitoring): add Umami database and data to backup script ([a26ff32](https://github.com/sbozh-me/website/commit/a26ff32dd93cc2bbda9ccfe7068762551e85133a))
+- feat(web): implement version-aware sitemap with automated maintenance ([0c54e89](https://github.com/sbozh-me/website/commit/0c54e89d1bf29774161d5f8891f8378357b0090f))
+- feat(seo): track blog post updates in sitemap with lastModified dates ([b1fd1a1](https://github.com/sbozh-me/website/commit/b1fd1a1974b33fe2ddd762576472e2c4750dad24))
+- feat(cms): add date_updated field to posts schema ([da78808](https://github.com/sbozh-me/website/commit/da78808a8e3308cd4b8cc97611c15d604f31114f))
+- feat(deploy): auto-update WEB_IMAGE_TAG from package.json ([d123204](https://github.com/sbozh-me/website/commit/d12320490f046a6d1fc49be8a88f3b49e85b8f61))
+- docs(roadmap): mark sitemap milestone complete and renumber subscriptions ([306b4fa](https://github.com/sbozh-me/website/commit/306b4fa774e88aba53b83d2d83ae5fd6372e5952))
+
+
 ## [1.1.4] - 2025-12-23
 
 ### Changes
