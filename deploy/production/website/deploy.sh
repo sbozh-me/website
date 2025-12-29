@@ -74,6 +74,17 @@ if [ ! -f "$SCRIPT_DIR/.env" ]; then
     exit 1
 fi
 
+# Update WEB_IMAGE_TAG in .env from apps/web/package.json
+print_info "Updating WEB_IMAGE_TAG from apps/web/package.json..."
+WEB_VERSION=$(grep '"version"' "$SCRIPT_DIR/../../../apps/web/package.json" | head -1 | sed 's/.*"version": "\(.*\)".*/\1/')
+if [ -n "$WEB_VERSION" ]; then
+    sed -i.bak "s/^WEB_IMAGE_TAG=.*/WEB_IMAGE_TAG=$WEB_VERSION/" "$SCRIPT_DIR/.env"
+    rm "$SCRIPT_DIR/.env.bak"
+    print_success "WEB_IMAGE_TAG updated to $WEB_VERSION"
+else
+    print_warning "Could not read version from apps/web/package.json"
+fi
+
 # Verify SSH connection
 print_header "1️⃣ Verifying SSH Connection"
 if ssh -o ConnectTimeout=5 -o StrictHostKeyChecking=no $SSH_HOST "echo 'SSH OK'" &> /dev/null; then
