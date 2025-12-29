@@ -80,35 +80,38 @@ function getLastModifiedFromTag(version) {
   return new Date().toISOString();
 }
 
-// Add common routes (root, /projects)
-sitemapData['/'] = {
-  version: packageJson.version,
-  lastModified: getLastModifiedFromTag(packageJson.version)
-};
+// Add common routes (root, /projects) - preserve existing version or use package version
+if (!sitemapData['/']) {
+  sitemapData['/'] = { version: packageJson.version };
+}
+sitemapData['/'].lastModified = getLastModifiedFromTag(sitemapData['/'].version);
 
-sitemapData['/projects'] = {
-  version: packageJson.version,
-  lastModified: getLastModifiedFromTag(packageJson.version)
-};
+if (!sitemapData['/projects']) {
+  sitemapData['/projects'] = { version: packageJson.version };
+}
+sitemapData['/projects'].lastModified = getLastModifiedFromTag(sitemapData['/projects'].version);
 
 // Update sitemap data for each project
 projects.forEach(project => {
   const basePath = `/projects/${project.slug}`;
-  const lastModified = getLastModifiedFromTag(project.version);
 
-  // Update main project route
-  sitemapData[basePath] = {
-    version: project.version,
-    lastModified: lastModified
-  };
+  // Preserve existing version or use project version
+  if (!sitemapData[basePath]) {
+    sitemapData[basePath] = { version: project.version };
+  }
+  const version = sitemapData[basePath].version;
+  sitemapData[basePath].lastModified = getLastModifiedFromTag(version);
 
   // Update tab routes
   project.tabs.forEach(tab => {
     const tabPath = `${basePath}/${tab}`;
-    sitemapData[tabPath] = {
-      version: project.version,
-      lastModified: lastModified
-    };
+
+    // Preserve existing version or use project version
+    if (!sitemapData[tabPath]) {
+      sitemapData[tabPath] = { version: project.version };
+    }
+    const tabVersion = sitemapData[tabPath].version;
+    sitemapData[tabPath].lastModified = getLastModifiedFromTag(tabVersion);
   });
 });
 
