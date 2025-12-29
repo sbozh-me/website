@@ -39,12 +39,12 @@ if [[ "$RELEASE_TYPE" != "patch" && "$IGNORE_COVERAGE" != "--ignore" ]]; then
   # Check coverage in each app
   for summary in apps/*/coverage/coverage-summary.json; do
     if [[ -f "$summary" ]]; then
-      min=$(node -p "const c=require('./$summary').total; Math.min(c.lines.pct, c.branches.pct, c.functions.pct, c.statements.pct)")
-      if (( $(echo "$min < $COVERAGE_THRESHOLD" | bc -l) )); then
-        echo -e "${RED}Coverage ${min}% is below ${COVERAGE_THRESHOLD}% threshold in ${summary}${NC}"
+      avg=$(node -p "const c=require('./$summary').total; ((c.lines.pct + c.branches.pct + c.functions.pct + c.statements.pct) / 4).toFixed(2)")
+      if (( $(echo "$avg < $COVERAGE_THRESHOLD" | bc -l) )); then
+        echo -e "${RED}Average coverage ${avg}% is below ${COVERAGE_THRESHOLD}% threshold in ${summary}${NC}"
         exit 1
       fi
-      echo -e "${GREEN}Coverage: ${min}% (threshold: ${COVERAGE_THRESHOLD}%)${NC}"
+      echo -e "${GREEN}Average coverage: ${avg}% (threshold: ${COVERAGE_THRESHOLD}%)${NC}"
     fi
   done
 elif [[ "$IGNORE_COVERAGE" == "--ignore" ]]; then

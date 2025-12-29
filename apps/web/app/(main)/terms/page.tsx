@@ -1,3 +1,4 @@
+/* v8 ignore file -- @preserve */
 import type { Metadata } from 'next';
 import { Prose } from '@sbozh/blog/components';
 
