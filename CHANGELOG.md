@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2025-12-29
+
+### Changes
+
+- chore(web): update sitemap metadata ([7e4646d](https://github.com/sbozh-me/website/commit/7e4646d4692ca05c5d5062469fb7cf9f02d8a2e2))
+- feat(web): add custom 404 page with random blog post suggestion ([449697f](https://github.com/sbozh-me/website/commit/449697f526f9f57d576b04855b45853afe24968d))
+- feat(web): add animations to 404 page ([3526439](https://github.com/sbozh-me/website/commit/35264392bf0d8056d4ba8078aa347290b1f19ce9))
+- test(web): add test for not-found page ([8c918b8](https://github.com/sbozh-me/website/commit/8c918b8892182ca87f3c3c9dc3a38a12803d03ea))
+- test: exclude legal pages from coverage and update release coverage calculation ([ca5da48](https://github.com/sbozh-me/website/commit/ca5da48dd896dfc4d9fb192905dc5314dff6afee))
+
+
 ## [1.1.5] - 2025-12-29
 
 ### Changes
