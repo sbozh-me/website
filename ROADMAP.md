@@ -125,7 +125,12 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 ## ~~1.1.0 - Error tracking (End of Q4 2025)~~ ✅
 - ~~Use a self-hosted solution to track frontend and backend errors~~
 
-## 1.2.0 - Subscriptions (Early Q1 2026)
+## ~~1.2.0 - Reliable Sitemap.xml (Ready for indexation)~~  ✅
+
+- ~~Proper time from blog last updated time~~
+- ~~Projects hardcoded last updates~~
+
+## 1.3.0 - Subscriptions (Early Q1 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes
