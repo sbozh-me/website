@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Track the latest post date for the /blog route
     if (posts.length > 0) {
-      latestBlogPostDate = new Date(posts[0].lastModified || posts[0].date);
+      latestBlogPostDate = new Date(posts[0].date);
     }
 
     blogRoutes = posts.map((post) => ({
