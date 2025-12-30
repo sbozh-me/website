@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2025-12-30
+
+### Changes
+
+- fix(web): use date_published for blog sitemap lastmod ([441efe1](https://github.com/sbozh-me/website/commit/441efe1792f04266b90b2cb1e8f5b69f28869bce))
+
+
 ## [1.2.0] - 2025-12-29
 
 ### Changes
