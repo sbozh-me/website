@@ -28,3 +28,19 @@ Ideas and features to consider for future development.
 
 - Add sourceMap to error tracking
 
+## Analytics
+
+- Blog post read start
+- Blog post read end
+- Rework cookies banner and leave only necessary options for now. Add localStorage integration with blog (viewed).
+
+## Blog
+
+- Add previous post series (right side)
+- Add next post series (bottom)
+- Add categories (Business, Tech, Personal, ...)
+- Filters (date, tags, category, persona)
+
+## Sbozh.me project
+
+- Add personas tab with filtered blog posts
