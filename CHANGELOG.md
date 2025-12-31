@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2025-12-31
+
+### Changes
+
+- feat(blog): add border to table of contents on mobile ([f17c96c](https://github.com/sbozh-me/website/commit/f17c96c175ebd21c0a1ecb40ba9936400c165bbd))
+
+
 ## [1.2.2] - 2025-12-31
 
 ### Changes
