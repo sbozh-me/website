@@ -4,6 +4,15 @@
   /* Sticky positioning only on desktop */
 }
 
+/* Mobile: add border */
+@media (max-width: 1023px) {
+  .toc {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .toc {
     position: sticky;
