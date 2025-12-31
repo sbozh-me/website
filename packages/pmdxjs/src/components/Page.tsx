@@ -35,7 +35,6 @@ export function Page({ children, className }: PageProps) {
         "relative",
         "mx-auto mb-8 last:mb-0",
         "shadow-lg print:shadow-none",
-        "break-after-page",
         "rounded-sm",
         "overflow-hidden",
         className,
