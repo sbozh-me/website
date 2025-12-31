@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.4] - 2025-12-31
+
+### Changes
+
+- docs(backlog): add ideas ([f752227](https://github.com/sbozh-me/website/commit/f752227f8c57c3898e2c93494927547cfbb127be))
+- fix(pmdxjs): remove blank second page from CV print ([b5261b4](https://github.com/sbozh-me/website/commit/b5261b4dec2ba965d0f0305dcf6ea8e172622766))
+
+
 ## [1.2.3] - 2025-12-31
 
 ### Changes
