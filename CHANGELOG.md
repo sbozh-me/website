@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2025-12-31
+
+### Changes
+
+- fix(web): prevent double animation on page load ([76cf807](https://github.com/sbozh-me/website/commit/76cf807a547c4c790a951330dfc9a78558fe132a))
+
+
 ## [1.2.1] - 2025-12-30
 
 ### Changes
