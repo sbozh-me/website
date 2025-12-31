@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.5] - 2025-12-31
+
+### Changes
+
+- feat(web): add X (Twitter) link to footer ([75132a1](https://github.com/sbozh-me/website/commit/75132a1007b98593599e3ff4eadf0aea729ef947))
+
+
 ## [1.2.4] - 2025-12-31
 
 ### Changes
