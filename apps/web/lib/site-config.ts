@@ -4,6 +4,7 @@ export const siteConfig = {
   links: {
     github: "https://github.com/sbozh",
     linkedin: "https://www.linkedin.com/in/sbozhyk",
+    x: "https://x.com/sbozhme",
     discord: "/projects/discord-community",
     discordInvite: "https://discord.gg/f8TTefb5",
   },
