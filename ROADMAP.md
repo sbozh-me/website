@@ -130,7 +130,34 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - ~~Proper time from blog last updated time~~
 - ~~Projects hardcoded last updates~~
 
-## 1.3.0 - Subscriptions (Early Q1 2026)
+## 1.3.0 - Release Notes & Main Page
+
+- Projects collection in Directus
+- Release Notes collection in Directus
+- Projects Changelog and Roadmap redesign into release notes
+- Release notes on Main page
+- Last blog post on main page
+- "What is this" button
+
+## 1.4.0 - Blog enhancement
+
+- Internal link click handle
+- Link hover handle from directus
+- Blog filters (category, tags, personal, date)
+
+## 1.5.0 - Personas introduction
+
+- Layouts in project sbozh.me
+- Extended personas collection
+- Link personas in blog posts
+
+## 1.6.0 - Cookies rework
+
+- Remove marketing option
+- Make more analytics tracking (blog post reading time)
+- Read/unread state tracking for blog, release notes and projects
+
+## 1.7.0 - Subscriptions (Early Q1 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes
@@ -139,6 +166,6 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - **Alternatives** - RSS feeds for feed reader users
 - **Backend** - Event tracking, processing, and reliable email delivery
 
-## llm.txt (Q1 2025)
+## llm.txt (Q1 2026)
 
 ---
