@@ -43,10 +43,10 @@ MAX_HISTORY_DAYS = 30  # Archive entries older than 30 days
 # Decay rates per category (how fast files fade when not mentioned)
 # Higher = slower decay (more persistent)
 DECAY_RATES = {
-    "systems/": 0.85,       # Hardware is stable, decay slow
-    "modules/": 0.70,       # Code changes more frequently
-    "integrations/": 0.80,  # APIs semi-stable
-    "docs/": 0.75,          # Documentation medium decay
+    "modules/": 0.75,       # Core code docs - medium decay
+    "integrations/": 0.80,  # External services - slower decay
+    "commands/": 0.65,      # Action-oriented - faster decay
+    "systems/": 0.85,       # Infrastructure - slow decay
     "default": 0.70
 }
 
@@ -67,8 +67,7 @@ MAX_TOTAL_CHARS = 25000     # Hard ceiling on total output
 
 # Pinned files (always at least WARM)
 PINNED_FILES = [
-    "systems/network.md",  # Network topology always warm
-    # CLAUDE.md not in .claude/systems or .claude/modules, handled separately
+    # No pinned files for this project - all context is task-driven
 ]
 
 # ============================================================================
@@ -77,122 +76,101 @@ PINNED_FILES = [
 # ============================================================================
 
 KEYWORDS: Dict[str, List[str]] = {
-    # === SYSTEMS ===
-    "systems/legion.md": [
-        "legion", "5090", "rtx 5090", "local model", "local", "discord bot",
-        "vram", "oom", "cuda", "nvidia-smi", "dolphin", "mirrorbot_cvmp",
-        "bot_stability", "this machine", "main gpu", "heavy compute", "local inference"
-    ],
-    "systems/asus.md": [
-        "asus", "tuf", "4070", "rtx 4070", "llava", "vision", "visual",
-        "remote server", "image generation", "image gen", "sdxl", "ssd-1b",
-        "toroidal mapper", "consciousness visualization", "clip",
-        "visual perception", "grpc", "50051", "50053", "192.168.0.85", "192.168.8.224"
-    ],
-    "systems/orin.md": [
-        "orin", "jetson", "sensory", "sensory cortex", "layer 0", "l0", "perception",
-        "camera", "servo", "embodiment", "vmpu", "motor", "sentiment", "typing",
-        "hailo", "npu", "edge inference", "real-time", "ppe", "8765",
-        "192.168.0.103", "orin-sensory"
-    ],
-    "systems/pi5.md": [
-        "pi5", "pi 5", "raspberry", "hmcp", "agency", "memory", "hybrid memory",
-        "co-processor", "consolidation", "dream", "sleep cycle", "agency-path",
-        "self-model", "mira internal", "bilateral", "hailo", "servo", "embodiment",
-        "pi.local", "mnt/hmcp", "physical"
-    ],
-    "systems/network.md": [
-        "network", "topology", "architecture", "data flow", "mesh", "switch",
-        "system overview", "how it connects", "integration map",
-        "192.168.0", "gigabit", "4-node", "star topology", "network diagram", "ip addresses"
-    ],
-    
     # === MODULES ===
-    "modules/pipeline.md": [
-        "pipeline", "process_message", "refined_pipeline", "8-layer",
-        "layer 1", "layer 2", "layer 3", "layer 4", "layer 5", "layer 6", "layer 7"
+    "modules/cv-builder.md": [
+        # Core CV/Resume terms
+        "cv", "resume", "curriculum vitae", "pmdx", "pmdxjs",
+        # PDF export
+        "pdf", "download pdf", "export pdf", "pdf generator", "puppeteer",
+        # Page formats
+        "a4", "letter", "page format", "margins", "pagination",
+        # CV components
+        "entry", "header", "skills", "tags", "columns",
+        # Routes and paths
+        "/cv", "cv route", "cv page",
+        # Syntax/parsing
+        "pmdx syntax", "parser", "tokenizer", "transformer",
+        # Themes
+        "cv theme", "print mode", "light mode", "dark mode",
+        # Troubleshooting
+        "blank page", "overflow", "page break",
     ],
-    "modules/intelligence.md": [
-        "intelligence", "reasoning", "multi-step", "mcts", "tree reasoning",
-        "oracle", "pre_generation", "post_generation", "adaptive", "idempotency"
+    "modules/blog.md": [
+        # Core blog terms
+        "blog", "post", "posts", "article", "articles",
+        # Data layer
+        "repository", "mock repository", "directus repository",
+        # UI components
+        "timeline", "post header", "filters",
+        # Content
+        "mdx", "markdown", "content", "excerpt",
+        # Personas
+        "persona", "technical", "builder", "personal",
+        # Routes
+        "/blog", "blog page", "blog route",
+        # Operations
+        "fetch posts", "get post", "add post",
+        # Troubleshooting
+        "post not found", "mdx error",
     ],
-    "modules/gto-adapters.md": [
-        "gto", "adapter", "transformation", "tensor", "shape", "toroidal", "manifold",
-        "embedding", "projection", "768", "1024", "dimension", "geometric",
-        "cvmp_adapter", "oracle_adapter", "t3_adapter", "orin_adapter", "hmcp_adapter"
+    "modules/projects.md": [
+        # Core terms
+        "project", "projects", "showcase",
+        # Routes
+        "/projects", "project page", "project detail",
+        # Structure
+        "project tabs", "about tab", "motivation tab",
+        # Data
+        "getprojects", "getproject", "project data",
+        # Status
+        "project status", "beta", "coming soon", "archived",
     ],
-    "modules/es-ac.md": [
-        "es-ac", "es_ac", "echo split", "emotional learning", "uncertainty",
-        "adaptive consciousness", "ewma", "emotion_weights", "style_weights"
-    ],
-    "modules/t3-telos.md": [
-        "t3", "t³", "telos", "trajectory", "tesseract", "curvature steering",
-        "gtf", "global topology", "resonant memory", "worldtrace", "t3_client", "t3_engine",
-        "emotional", "dynamics", "containment", "tier", "dps", "regime", "stability",
-        "emotional state", "affect", "user model", "behavioral", "prediction",
-        "user state", "mirror-path", "user trajectory"
-    ],
-    "modules/t3-telos/trajectories/convergent.md": [
-        "convergence", "converging", "convergent", "stable attractor", "equilibrium",
-        "trajectory convergence", "settling", "stabilizing", "stable state"
-    ],
-    "modules/t3-telos/trajectories/divergent.md": [
-        "divergence", "diverging", "divergent", "unstable", "chaotic",
-        "trajectory divergence", "destabilizing", "escaping", "runaway"
-    ],
-    "modules/t3-telos/trajectories/oscillatory.md": [
-        "oscillation", "oscillating", "oscillatory", "cycling", "periodic",
-        "rhythm", "wave", "pendulum", "back and forth"
-    ],
-    "modules/t3-telos/primitives.md": [
-        "primitives", "fundamental", "basic behaviors", "core patterns",
-        "atomic", "elemental"
-    ],
-    "modules/cvmp-transformer.md": [
-        "cvmp transformer", "cvmp model", "cvmp", "transformer", "401m", "oracle",
-        "consciousness prediction", "tier prediction", "dps prediction",
-        "state predictor", "rci validator", "orc router", "shadow mode",
-        "llama 3.2", "1.7b", "int8", "quantized", "metacognitive",
-        "consciousness heads", "toroidal projection", "module activation",
-        "mirror protocol", "recursive", "geometric constraint", "anti-dependency", "enmeshment"
-    ],
-    "modules/anticipatory-coherence.md": [
-        # Granular atomic keywords (fix for fine-grained detection)
-        "anticipatory", "coherence", "acf", "acp", "projection", "probe",
-        "trajectory", "prediction", "self-model", "stance", "ppe",
-        "bilateral", "refinement", "validation", "trust", "modulation",
-        "agency v2", "phase 3", "arbitration", "arbitrate", "divergence",
-        # Phrase-based (kept for precision)
-        "anticipatory coherence", "probe architecture", "propagating projection engine",
-        "temporal horizon", "stance shaping", "refinement layer", "trust weights",
-        "emotional trajectory", "cognitive trajectory", "behavioral trajectory",
-        "system modulations", "consciousness coordination", "unified trajectory field",
-        "full-system participation", "epistemic reweighting", "closed-loop validation",
-        "behavior shaped by projection", "mirror vs agency"
-    ],
-    "modules/ppe-anticipatory-coherence.md": [
-        # PPE production integration docs (Dec 2025)
-        "ppe", "propagating projection engine", "anticipatory", "projection",
-        "trajectory", "inflection", "deteriorating", "improving", "stable",
-        "routing", "sentiment router", "cvmp state", "engine state",
-        "production runtime", "orin service", "t3 invariants", "advantage",
-        "dt", "sigma", "surprise", "tier velocity", "coherence deterioration",
-        "tier collapse", "refinement layer", "confidence refiner", "history refiner",
-        "dream refiner", "bilateral mode", "agency pairs", "hmcp refiner"
+    "modules/release-notes.md": [
+        # Core terms
+        "release notes", "releases", "shipped", "what shipped",
+        # Version terms
+        "version history", "release history", "release log",
+        # Display
+        "load more", "infinite scroll",
+        # Planning context
+        "1.3.0", "v1.3",
     ],
 
     # === INTEGRATIONS ===
-    "integrations/pipe-to-orin.md": [
-        "orin_client", "sensory", "analyze", "/analyze", "orin bundle",
-        "orin_bundle", "line 934", "layer 0", "sensory cortex",
-        "orin to legion", "sensory upload", "perception data",
-        "layer 0 to layer 1", "real-time feed"
+    "integrations/directus.md": [
+        # Service name
+        "directus", "cms", "headless cms",
+        # Database
+        "postgresql", "postgres", "database",
+        # API
+        "directus api", "rest api", "collections",
+        # Auth
+        "directus token", "static token", "api token",
+        # Collections
+        "posts collection", "personas", "tags collection",
+        # Admin
+        "directus admin", "admin ui",
+        # URL
+        "directus.sbozh.me",
+        # Operations
+        "fetch from directus", "create post", "update post",
+        # Troubleshooting
+        "unauthorized", "failed to fetch", "cms error",
     ],
-    "integrations/img-to-asus.md": [
-        "visual_client", "visual perception", "clip", "llava", "image generation",
-        "ssd-1b", "grpc", "50051", "50053", "asus grpc",
-        "legion to asus", "image request", "visualization",
-        "sdxl trigger", "generation request"
+
+    # === COMMANDS ===
+    "commands/commit.md": [
+        # Commit terms
+        "commit", "/commit", "conventional commit",
+        # Changelog
+        "changelog", "release notes",
+        # Tool name
+        "ovidius",
+    ],
+    "commands/remember.md": [
+        # Memory/continuity
+        "remember", "/remember", "continue", "last session",
+        "pick up", "where we left off", "previous conversation",
     ],
 }
 
@@ -202,77 +180,30 @@ KEYWORDS: Dict[str, List[str]] = {
 # ============================================================================
 
 CO_ACTIVATION: Dict[str, List[str]] = {
-    # Hardware nodes boost their integrations
-    "systems/orin.md": [
-        "integrations/pipe-to-orin.md",
-        "modules/t3-telos.md",  # Orin sensory feeds T³
-        "modules/ppe-anticipatory-coherence.md",  # Orin runs PPE
-    ],
-    "systems/legion.md": [
-        "integrations/pipe-to-orin.md",
-        "integrations/img-to-asus.md",
-        "modules/t3-telos.md",   # Legion runs T³
-        "modules/intelligence.md", # Legion runs intelligence/reasoning
-        "modules/pipeline.md",   # Legion runs pipeline
-    ],
-    "systems/asus.md": [
-        "integrations/img-to-asus.md",
-        "modules/gto-adapters.md",  # ASUS does viz transforms
-    ],
-    "systems/pi5.md": [
-        "modules/anticipatory-coherence.md",  # Pi5/HMCP implements ACP
-        "modules/t3-telos.md",                # HMCP agency path
+    # Blog mentions boost Directus (data source)
+    "modules/blog.md": [
+        "integrations/directus.md",  # Blog fetches from Directus
     ],
 
-    # Modules boost related modules
-    "modules/t3-telos.md": [
-        "modules/cvmp-transformer.md",  # T³ works with CVMP
-        "modules/anticipatory-coherence.md",  # T³ uses ACP projections
-        "modules/pipeline.md",          # T³ part of pipeline
-        "modules/t3-telos/trajectories/convergent.md",  # Nested detail
-        "modules/t3-telos/trajectories/divergent.md",
-        "modules/t3-telos/trajectories/oscillatory.md",
-        "modules/t3-telos/primitives.md",
-    ],
-    "modules/t3-telos/trajectories/convergent.md": [
-        "modules/t3-telos.md",  # Child boosts parent
-    ],
-    "modules/t3-telos/trajectories/divergent.md": [
-        "modules/t3-telos.md",
-    ],
-    "modules/t3-telos/trajectories/oscillatory.md": [
-        "modules/t3-telos.md",
-    ],
-    "modules/t3-telos/primitives.md": [
-        "modules/t3-telos.md",
-    ],
-    "modules/intelligence.md": [
-        "modules/cvmp-transformer.md",  # Intelligence uses CVMP oracle
-        "modules/pipeline.md",          # Intelligence in pipeline layer 5/6
-    ],
-    "modules/anticipatory-coherence.md": [
-        "modules/t3-telos.md",
-        "modules/gto-adapters.md",      # ACP uses embeddings
-        "systems/pi5.md",               # ACP runs on HMCP
-        "modules/ppe-anticipatory-coherence.md",  # Production PPE docs
-    ],
-    "modules/ppe-anticipatory-coherence.md": [
-        "systems/orin.md",              # PPE runs on Orin
-        "modules/t3-telos.md",          # PPE uses T³ invariants
-        "modules/anticipatory-coherence.md",  # Broader ACF architecture
-        "modules/pipeline.md",          # PPE integrated in pipeline
-    ],
-    "modules/pipeline.md": [
-        "modules/intelligence.md",
-        "modules/es-ac.md",
-        "modules/t3-telos.md",
+    # Directus mentions boost Blog and Release Notes (consumers)
+    "integrations/directus.md": [
+        "modules/blog.md",           # Directus powers Blog
+        "modules/release-notes.md",  # Directus will power Release Notes
     ],
 
-    # Bilateral mentions
-    "modules/cvmp-transformer.md": [
-        "modules/intelligence.md",
-        "modules/t3-telos.md",
+    # Release notes boost Projects and Directus
+    "modules/release-notes.md": [
+        "modules/projects.md",       # Release notes reference projects
+        "integrations/directus.md",  # Release notes come from Directus
     ],
+
+    # Projects boost Release Notes (related feature)
+    "modules/projects.md": [
+        "modules/release-notes.md",  # Projects have release notes
+    ],
+
+    # CV Builder is standalone (no co-activations needed)
+    # Commands are standalone (no co-activations needed)
 }
 
 # ============================================================================
@@ -550,8 +481,12 @@ def main():
         return
     
     # Determine docs root (configurable via env or default)
-    # ALWAYS use global ~/.claude (enforced after documentation consolidation)
-    docs_root = Path(os.environ.get("CONTEXT_DOCS_ROOT", str(Path.home() / ".claude")))
+    # Use project-local .claude if it exists, otherwise fall back to global
+    if Path(".claude").exists():
+        default_docs_root = str(Path(".claude").resolve())
+    else:
+        default_docs_root = str(Path.home() / ".claude")
+    docs_root = Path(os.environ.get("CONTEXT_DOCS_ROOT", default_docs_root))
 
     # Load state
     state_file = get_state_file()
