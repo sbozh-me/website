@@ -73,6 +73,7 @@ interface DirectusPost {
   attribution: string | null;
   og_image: DirectusFile | null;
   og_generate: boolean;
+  is_toc_hidden: boolean;
 }
 
 interface DirectusPersona {
@@ -290,6 +291,7 @@ export class DirectusRepository implements BlogRepository {
       attribution: post.attribution ?? undefined,
       ogImage: post.og_image ? this.mapToImage(post.og_image) : undefined,
       ogGenerate: post.og_generate,
+      isTocHidden: post.is_toc_hidden,
     };
   }
 

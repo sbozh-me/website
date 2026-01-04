@@ -116,8 +116,8 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  // Extract TOC from raw markdown
-  const toc = extractHeadings(post.content);
+  // Extract TOC from raw markdown (skip if hidden)
+  const toc = post.isTocHidden ? [] : extractHeadings(post.content);
 
   // Compile and run MDX
   const { default: MDXContent } = await evaluate(post.content, {

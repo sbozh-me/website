@@ -24,6 +24,7 @@ export interface Post {
   attribution?: string;
   ogImage?: PostImage;
   ogGenerate?: boolean;
+  isTocHidden?: boolean;
 }
 
 export interface PostListItem {
