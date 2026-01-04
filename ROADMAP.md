@@ -144,6 +144,9 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - Internal link click handle
 - Link hover handle from directus
 - Blog filters (category, tags, personal, date)
+- Previous post
+- Next post
+- Connected posts
 
 ## 1.5.0 - Personas introduction
 
