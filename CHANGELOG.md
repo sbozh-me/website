@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.6] - 2026-01-04
+
+### Changes
+
+- docs: simplify README by removing detailed sections ([8469758](https://github.com/sbozh-me/website/commit/8469758b57841c6ff001ce7028fb657bc1fa842b))
+- docs(roadmap): add versions 1.3-1.6 and update subscription timeline ([9462746](https://github.com/sbozh-me/website/commit/946274625a64371ac65680e96962e787a0ded548))
+- docs: add claude cognitive setup interview ([5a09768](https://github.com/sbozh-me/website/commit/5a09768d89dc8adcc71513f2a9ff863ce76e84e8))
+- feat(dx): implement Claude Cognitive persistent context system ([6e5c652](https://github.com/sbozh-me/website/commit/6e5c652f47306f725f509337833ec98d4b05fd91))
+- feat(claude): add cognitive context management scripts ([229d742](https://github.com/sbozh-me/website/commit/229d742b6853fed9d1e1b3591c3b282511e513c3))
+- docs(claude): restructure cognitive context system with Garret agent and focused modules ([33b772b](https://github.com/sbozh-me/website/commit/33b772b21f481b593a14180ad053b099578b142f))
+- chore(claude): add garret skill command ([258b86b](https://github.com/sbozh-me/website/commit/258b86b494598aef16999b600950b705f92adb18))
+- feat(claude): add ROADMAP.md to context router ([2962a4b](https://github.com/sbozh-me/website/commit/2962a4be32085468dcba46f3a05ec87da2a9c578))
+- docs(claude): add Garret cognitive interviewer documentation ([8dd26a6](https://github.com/sbozh-me/website/commit/8dd26a6eceb097a1e02852e5bd2f99f0f5c562e1))
+- chore(directus): use env vars for database credentials ([59041ce](https://github.com/sbozh-me/website/commit/59041ce30b162bcd58836875db4335d1eda1ac32))
+- docs(roadmap): add prev/next post navigation to backlog ([6a6aa99](https://github.com/sbozh-me/website/commit/6a6aa9958ce972fb2dcfd3b25a36093990311a5c))
+- chore(directus): add full schema snapshot ([601f1f1](https://github.com/sbozh-me/website/commit/601f1f126523941e3eef64d7378be6d1249f9e9d))
+- docs(claude): add local Directus workflow and improve Garret guidelines ([47a4ed3](https://github.com/sbozh-me/website/commit/47a4ed37a05910d947f29ab68855710f5da37bce))
+- feat(blog): add per-post ToC visibility control ([ebe0212](https://github.com/sbozh-me/website/commit/ebe0212b6d245e7555bc8fc00fa3eb6164d0125f))
+
+
 ## [1.2.5] - 2025-12-31
 
 ### Changes
