@@ -123,6 +123,7 @@ Example for a new `modules/release-notes.md`:
 - Don't mix current state with future plans
 - Don't document standard patterns (repository pattern, etc.)
 - Don't include "Common Operations" or "Troubleshooting" sections
+- **Don't include hardcoded values that will change** (line numbers, specific IDs, version-specific paths). Describe the concept/pattern instead. Claude can derive specific values at runtime.
 
 ## Conversation Style
 

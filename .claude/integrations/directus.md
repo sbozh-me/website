@@ -252,6 +252,60 @@ Automated backups via Hetzner deployment:
 make backup-cms  # Manual backup trigger
 ```
 
+## Local Development
+
+> **Location**: `deploy/local/directus/`
+> **Port**: 8055
+> **Admin**: http://localhost:8055
+
+### Setup
+```bash
+cd deploy/local/directus
+cp .env.example .env  # Configure credentials
+docker compose up -d
+```
+
+### Restore from Production Backup
+
+Production backups are PostgreSQL cluster dumps containing multiple databases:
+- `sbozh_me` - Directus CMS database
+- `umami` - Analytics database
+
+**Concept**: The dump file uses `\connect <dbname>` to switch between databases. Extract only the Directus portion by finding the lines between `CREATE DATABASE sbozh_me` and `CREATE DATABASE umami`.
+
+**Workflow**:
+1. Extract the backup archive
+2. Locate Directus database section in the SQL dump (search for `CREATE DATABASE sbozh_me` and `CREATE DATABASE umami`)
+3. Extract that portion, skipping the `CREATE DATABASE` statement (already exists locally)
+4. Stop Directus, drop/recreate database, restore, restart
+
+Claude can help extract the correct portion dynamically based on the actual dump file structure.
+
+### Schema Snapshots
+
+Snapshots live in `deploy/local/directus/snapshots/` for schema versioning:
+
+```bash
+# Create snapshot from running instance
+docker exec directus-directus-1 npx directus schema snapshot --yes /directus/snapshot.yaml
+docker cp directus-directus-1:/directus/snapshot.yaml ./snapshots/
+
+# Apply snapshot to another instance
+docker exec directus-directus-1 npx directus schema apply /directus/snapshots/snapshot.yaml
+```
+
+### Environment Variables
+
+Local `.env` file (not committed):
+```bash
+DB_USER=directus
+DB_PASSWORD=[generated-hash]
+DB_DATABASE=sbozh_me
+DIRECTUS_SECRET=[random-string]
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=[your-password]
+```
+
 ## Related Documentation
 
 - Module: `modules/blog.md`
@@ -260,4 +314,4 @@ make backup-cms  # Manual backup trigger
 
 ---
 
-**Last Updated:** 2026-01-02
+**Last Updated:** 2026-01-04
