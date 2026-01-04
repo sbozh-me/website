@@ -67,7 +67,7 @@ MAX_TOTAL_CHARS = 25000     # Hard ceiling on total output
 
 # Pinned files (always at least WARM)
 PINNED_FILES = [
-    # No pinned files for this project - all context is task-driven
+    "../ROADMAP.md",  # Always keep roadmap visible for version goals
 ]
 
 # ============================================================================
@@ -76,6 +76,11 @@ PINNED_FILES = [
 # ============================================================================
 
 KEYWORDS: Dict[str, List[str]] = {
+    # === PROJECT ROOT ===
+    "../ROADMAP.md": [
+        "roadmap", "next version",
+    ],
+
     # === MODULES ===
     "modules/cv-builder.md": [
         # Core CV/Resume terms
@@ -180,6 +185,11 @@ KEYWORDS: Dict[str, List[str]] = {
 # ============================================================================
 
 CO_ACTIVATION: Dict[str, List[str]] = {
+    # ROADMAP ↔ Release Notes (planned vs shipped)
+    "../ROADMAP.md": [
+        "modules/release-notes.md",  # Roadmap links to what's being built
+    ],
+
     # Blog mentions boost Directus (data source)
     "modules/blog.md": [
         "integrations/directus.md",  # Blog fetches from Directus
@@ -191,10 +201,11 @@ CO_ACTIVATION: Dict[str, List[str]] = {
         "modules/release-notes.md",  # Directus will power Release Notes
     ],
 
-    # Release notes boost Projects and Directus
+    # Release notes boost Projects, Directus, and Roadmap
     "modules/release-notes.md": [
         "modules/projects.md",       # Release notes reference projects
         "integrations/directus.md",  # Release notes come from Directus
+        "../ROADMAP.md",             # Release notes link to planned features
     ],
 
     # Projects boost Release Notes (related feature)
