@@ -9,13 +9,16 @@ import os
 from pathlib import Path
 from datetime import datetime
 
+# Project root from environment (set by Claude Code hooks)
+PROJECT_ROOT = Path(os.environ.get("PROJECT_ROOT", Path.cwd()))
+
 # Pool file location (project-local preferred, global fallback)
-PROJECT_POOL = Path(".claude/pool/instance_state.jsonl")
+PROJECT_POOL = PROJECT_ROOT / ".claude/pool/instance_state.jsonl"
 GLOBAL_POOL = Path.home() / ".claude/pool/instance_state.jsonl"
 
 def get_pool_file():
     """Get pool file (project-local first, global fallback)."""
-    if PROJECT_POOL.parent.parent.exists():  # Check if .claude/ exists
+    if (PROJECT_ROOT / ".claude").exists():
         return PROJECT_POOL if PROJECT_POOL.exists() else GLOBAL_POOL
     return GLOBAL_POOL
 

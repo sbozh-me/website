@@ -32,8 +32,11 @@ import re
 # CONFIGURATION
 # ============================================================================
 
+# Project root from environment (set by Claude Code hooks)
+PROJECT_ROOT = Path(os.environ.get("PROJECT_ROOT", Path.cwd()))
+
 # State file location
-PROJECT_STATE = Path(".claude/attn_state.json")
+PROJECT_STATE = PROJECT_ROOT / ".claude/attn_state.json"
 GLOBAL_STATE = Path.home() / ".claude" / "attn_state.json"
 HISTORY_FILE = Path.home() / ".claude" / "attention_history.jsonl"
 
@@ -493,8 +496,9 @@ def main():
     
     # Determine docs root (configurable via env or default)
     # Use project-local .claude if it exists, otherwise fall back to global
-    if Path(".claude").exists():
-        default_docs_root = str(Path(".claude").resolve())
+    project_claude = PROJECT_ROOT / ".claude"
+    if project_claude.exists():
+        default_docs_root = str(project_claude)
     else:
         default_docs_root = str(Path.home() / ".claude")
     docs_root = Path(os.environ.get("CONTEXT_DOCS_ROOT", default_docs_root))
