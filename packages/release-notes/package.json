@@ -1,0 +1,36 @@
+{
+  "name": "@sbozh/release-notes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types/index.ts",
+    "./data": "./src/data/index.ts",
+    "./components": "./src/components/index.ts",
+    "./utils": "./src/utils/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@directus/sdk": "^20.3.0"
+  },
+  "peerDependencies": {
+    "@sbozh/react-ui": "workspace:*",
+    "react": ">=19.2.1"
+  },
+  "devDependencies": {
+    "@sbozh/eslint-config": "workspace:*",
+    "@sbozh/typescript-config": "workspace:*",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.15"
+  }
+}

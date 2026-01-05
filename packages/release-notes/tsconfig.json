@@ -1,0 +1,11 @@
+{
+  "extends": "@sbozh/typescript-config/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@sbozh/release-notes/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "vitest.config.ts"],
+  "exclude": ["node_modules"]
+}
