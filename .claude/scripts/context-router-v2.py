@@ -145,10 +145,7 @@ KEYWORDS: Dict[str, List[str]] = {
     ],
     "modules/design-system.md": [
         # Core terms
-        "design system", "obsidian forge", "design",
-        # Colors
-        "color", "colors", "palette", "amethyst", "purple", "gold", "green",
-        "background", "foreground", "muted", "primary", "secondary", "accent",
+        "design system", "design",
         # Typography
         "typography", "font", "fonts", "space grotesk", "jetbrains mono",
         "line height", "font size", "reading",
@@ -161,6 +158,19 @@ KEYWORDS: Dict[str, List[str]] = {
         "syntax", "code theme", "syntax highlighting",
         # Specific patterns
         "underline", "focus ring", "selection",
+    ],
+    "modules/theming.md": [
+        # Core terms
+        "theme", "themes", "theming", "themeprovider", "usetheme",
+        # Theme names
+        "obsidian forge", "obsidian-forge",
+        # Modes
+        "dark mode", "light mode", "color scheme",
+        # Technical
+        "css variables", "@theme", "data-theme", "@sbozh/themes",
+        # Colors (moved from design-system - theming owns colors)
+        "color", "colors", "palette", "amethyst", "purple", "gold", "green",
+        "background", "foreground", "muted", "primary", "secondary", "accent",
     ],
 
     # === INTEGRATIONS ===
@@ -237,6 +247,14 @@ CO_ACTIVATION: Dict[str, List[str]] = {
 
     # CV Builder is standalone (no co-activations needed)
     # Commands are standalone (no co-activations needed)
+
+    # Theming and Design System are related
+    "modules/theming.md": [
+        "modules/design-system.md",  # Theme colors feed into design system
+    ],
+    "modules/design-system.md": [
+        "modules/theming.md",        # Design system references theming
+    ],
 }
 
 # ============================================================================
