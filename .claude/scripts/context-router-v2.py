@@ -143,6 +143,25 @@ KEYWORDS: Dict[str, List[str]] = {
         # Planning context
         "1.3.0", "v1.3",
     ],
+    "modules/design-system.md": [
+        # Core terms
+        "design system", "obsidian forge", "design",
+        # Colors
+        "color", "colors", "palette", "amethyst", "purple", "gold", "green",
+        "background", "foreground", "muted", "primary", "secondary", "accent",
+        # Typography
+        "typography", "font", "fonts", "space grotesk", "jetbrains mono",
+        "line height", "font size", "reading",
+        # Motion
+        "animation", "motion", "framer motion", "transition", "hover",
+        "fade", "stagger", "reduced motion",
+        # Components
+        "sparkmark", "spark", "toast", "toaster",
+        # Code
+        "syntax", "code theme", "syntax highlighting",
+        # Specific patterns
+        "underline", "focus ring", "selection",
+    ],
 
     # === INTEGRATIONS ===
     "integrations/directus.md": [
