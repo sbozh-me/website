@@ -1,0 +1,25 @@
+{
+  "name": "@sbozh/themes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./context": "./src/theme-context.tsx",
+    "./loader": "./src/theme-loader.ts",
+    "./obsidian-forge": "./src/obsidian-forge/index.css",
+    "./obsidian-forge/*": "./src/obsidian-forge/*"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@sbozh/typescript-config": "workspace:*",
+    "@types/react": "^19.0.1",
+    "typescript": "^5.7.2"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ]
+}

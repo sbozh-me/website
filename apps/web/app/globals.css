@@ -1,59 +1,11 @@
 @import "tailwindcss";
+@import "@sbozh/themes/obsidian-forge";
 @plugin "tailwindcss-animate";
 
 @source "../../../packages/react-ui/src";
 @source "../../../packages/pmdxjs/src";
 @source "../../../packages/blog/src";
-
-@theme {
-  /* Obsidian Forge - Dark, spacious aesthetic */
-  --color-background: #0a0a0f;
-  --color-foreground: #e5e7eb;
-  --color-muted: #18181b;
-  --color-muted-foreground: #6b7280;
-  --color-primary: #8b5cf6;
-  --color-primary-foreground: #fff;
-  --color-secondary: #f59e0b;
-  --color-secondary-foreground: #0a0a0f;
-  --color-accent: #22c55e;
-  --color-accent-foreground: #0a0a0f;
-  --color-border: #27272a;
-  --color-ring: #f59e0b;
-  --color-card: #18181b;
-  --color-card-foreground: #e5e7eb;
-  --color-popover: #18181b;
-  --color-popover-foreground: #e5e7eb;
-  --color-destructive: #ef4444;
-  --color-destructive-foreground: #e5e7eb;
-  --color-input: #27272a;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-
-  /* Toast backgrounds (near-black, tinted) */
-  --toast-bg: #18181b;
-  --toast-bg-success: #0f1a14;
-  --toast-bg-error: #1c1012;
-  --toast-bg-warning: #1a1608;
-  --toast-bg-info: #0f0f1a;
-
-  /* Toast borders */
-  --toast-border: #27272a;
-  --toast-border-success: #22c55e;
-  --toast-border-error: #dc2626;
-  --toast-border-warning: #f59e0b;
-  --toast-border-info: #8b5cf6;
-
-  /* Toast icons */
-  --toast-icon-success: #22c55e;
-  --toast-icon-error: #ef4444;
-  --toast-icon-warning: #f59e0b;
-  --toast-icon-info: #8b5cf6;
-
-  /* Typography */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-}
+@source "../../../packages/themes/src";
 
 /* Base typography */
 html {

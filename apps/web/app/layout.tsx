@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
+import { ThemeProvider } from "@sbozh/themes";
 
 import { CookieConsentModal } from "@/components/CookieConsentModal";
 import { Footer } from "@/components/Footer";
@@ -63,16 +64,18 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
-        <SentryProvider>
-          <AnalyticsProvider>
-            <PerformanceProvider>
-              {children}
-              <Footer />
-              <Toaster />
-              <CookieConsentModal />
-            </PerformanceProvider>
-          </AnalyticsProvider>
-        </SentryProvider>
+        <ThemeProvider>
+          <SentryProvider>
+            <AnalyticsProvider>
+              <PerformanceProvider>
+                {children}
+                <Footer />
+                <Toaster />
+                <CookieConsentModal />
+              </PerformanceProvider>
+            </AnalyticsProvider>
+          </SentryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
