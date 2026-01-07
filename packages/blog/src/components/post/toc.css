@@ -1,4 +1,4 @@
-/* Table of contents styling */
+/* Table of contents styling - uses theme variables */
 
 .toc {
   /* Sticky positioning only on desktop */
@@ -7,28 +7,28 @@
 /* Mobile: add border */
 @media (max-width: 1023px) {
   .toc {
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    padding: 1rem;
+    border: var(--toc-border-width) solid var(--color-border);
+    border-radius: var(--toc-border-radius);
+    padding: var(--toc-padding);
   }
 }
 
 @media (min-width: 1024px) {
   .toc {
     position: sticky;
-    top: 6rem;
-    max-height: calc(100vh - 8rem);
+    top: var(--toc-sticky-top);
+    max-height: calc(100vh - var(--toc-sticky-offset));
     overflow-y: auto;
   }
 }
 
 .toc-title {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--toc-title-size);
+  font-weight: var(--toc-title-weight);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--toc-title-spacing);
   color: var(--color-muted-foreground);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--toc-title-margin);
 }
 
 .toc-list {
@@ -38,7 +38,7 @@
 }
 
 .toc-item {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--toc-item-margin);
 }
 
 .toc-item-2 {
@@ -46,18 +46,18 @@
 }
 
 .toc-item-3 {
-  padding-left: 1rem;
+  padding-left: var(--toc-item-indent);
 }
 
 .toc-link {
   display: block;
-  font-size: 0.875rem;
-  line-height: 1.4;
-  color: var(--color-white);
+  font-size: var(--toc-link-size);
+  line-height: var(--toc-link-line-height);
+  color: var(--color-foreground);
   text-decoration: none;
-  padding: 0.25rem 0.5rem;
+  padding: var(--toc-link-padding);
   margin-left: -0.5rem;
-  transition: all 200ms ease;
+  transition: all var(--toc-transition) ease;
 }
 
 /* Desktop only: muted color and hover/active states */
@@ -71,14 +71,14 @@
   }
 
   .toc-item-active .toc-link {
-    color: var(--color-white);
+    color: var(--color-foreground);
     font-weight: 500;
   }
 }
 
 /* Scrollbar styling for TOC */
 .toc::-webkit-scrollbar {
-  width: 4px;
+  width: var(--toc-scrollbar-width);
 }
 
 .toc::-webkit-scrollbar-track {
@@ -87,7 +87,7 @@
 
 .toc::-webkit-scrollbar-thumb {
   background: var(--color-border);
-  border-radius: 2px;
+  border-radius: var(--toc-scrollbar-radius);
 }
 
 .toc::-webkit-scrollbar-thumb:hover {
