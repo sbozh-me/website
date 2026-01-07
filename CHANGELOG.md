@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.8] - 2026-01-08
+
+### Changes
+
+- fix(themes): add react to devDependencies for Docker build ([1489dc3](https://github.com/sbozh-me/website/commit/1489dc336332bc2ed434ce1823bc06ede1de8c41))
+- chore: update lockfile ([b3d519a](https://github.com/sbozh-me/website/commit/b3d519ae5d8d80daff3bdbc8c56a9a85b7ba2d09))
+
+
 ## [1.2.7] - 2026-01-07
 
 ### Changes
