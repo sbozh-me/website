@@ -3,7 +3,7 @@
 > **Package**: `@sbozh/themes` at `packages/themes/`
 > **Status**: Production (single theme: obsidian-forge)
 
-Multi-theme infrastructure with CSS variables via Tailwind v4's `@theme` block.
+Controlled theming with CSS variables via Tailwind v4's `@theme` block. Enables per-content theming (e.g., different blog posts can have different "atmospheres").
 
 ## Package Structure
 
@@ -14,40 +14,43 @@ packages/themes/src/
 ├── theme-context.tsx  # ThemeProvider + useTheme hook
 ├── index.ts           # Public exports
 └── obsidian-forge/
-    └── index.css      # Obsidian Forge CSS variables
+    ├── index.css      # Theme CSS variables
+    ├── prose.css      # Typography for MDX content
+    ├── code.css       # Syntax highlighting
+    └── toc.css        # Table of contents styling
 ```
 
 ## How It Works
 
-Themes define CSS variables inside `@theme {}` blocks (Tailwind v4 syntax). The theme loader sets `data-theme` on `<html>`, and theme CSS is imported statically.
+Themes define CSS variables inside `@theme {}` blocks (Tailwind v4 syntax). ThemeProvider is **controlled** - parent component passes theme via prop, no internal state or localStorage.
 
 **Key exports:**
-- `ThemeProvider` - Wrap app, handles localStorage persistence
-- `useTheme()` - Returns `{ theme, themeId, setTheme, availableThemes }`
+- `ThemeProvider` - Controlled provider, requires `theme` prop
+- `useTheme()` - Returns `{ theme, themeId }`
 - `THEMES` - Array of registered themes
 - `DEFAULT_THEME` - Currently `"obsidian-forge"`
 
 ## Usage
 
 ```tsx
-// In layout.tsx
-import { ThemeProvider } from "@sbozh/themes";
+// In layout.tsx - controlled via prop
+import { ThemeProvider, DEFAULT_THEME, THEMES } from "@sbozh/themes";
 import "@sbozh/themes/obsidian-forge";
 
-<ThemeProvider>{children}</ThemeProvider>
+const theme = THEMES.find(t => t.id === DEFAULT_THEME);
+<ThemeProvider theme={theme} fallback={<Loading />}>
+  {children}
+</ThemeProvider>
 
 // In components
-const { theme, setTheme, availableThemes } = useTheme();
+const { theme, themeId } = useTheme();
+
+// Import shared CSS for MDX content
+import "@sbozh/themes/obsidian-forge/prose.css";
+import "@sbozh/themes/obsidian-forge/code.css";
 ```
-
-## Adding New Themes
-
-1. Create `src/[theme-name]/index.css` with `@theme {}` block
-2. Add to `THEMES` array in `types.ts`
-3. Export CSS path from package.json if needed
-4. Import theme CSS where used
 
 ## Unusual Decisions
 
-- **Static imports over dynamic loading**: Bundler handles CSS, `loadTheme()` just sets `data-theme` attribute. Simpler than runtime CSS injection.
-- **localStorage key**: `sbozh-theme` - persists user preference across sessions.
+- **Controlled over uncontrolled**: No localStorage persistence. Theme is passed as prop, enabling per-content theming where different pages/posts can specify their atmosphere.
+- **Shared content CSS**: prose.css, code.css, toc.css moved from blog package to themes. Enables reuse across packages (blog, release-notes, etc.).
