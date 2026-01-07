@@ -67,7 +67,7 @@
   /* Prose variables */
   --prose-font-size: 17px;
   --prose-line-height: 1.75;
-  --prose-max-width: 680px;
+  --prose-max-width: none;
   --prose-letter-spacing: 0.01em;
   --prose-image-radius: 0;
   --prose-image-border-width: 1px;
