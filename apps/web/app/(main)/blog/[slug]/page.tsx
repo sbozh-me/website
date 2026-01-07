@@ -14,7 +14,7 @@ import {
   TableOfContents,
 } from "@sbozh/blog/components";
 import { extractHeadings } from "@sbozh/blog/utils";
-import { PageTheme } from "@sbozh/themes";
+import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
 // Disable caching - always fetch fresh data from Directus
@@ -181,6 +181,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <>
       {post.theme && <PageTheme theme={post.theme} />}
+      {post.theme && post.theme !== DEFAULT_THEME && (
+        <ThemeLoaderOverlay spinner={<Image src="/android-chrome-192x192.png" alt="" width={48} height={48} />} />
+      )}
       <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
         <div className="max-w-6xl mx-auto">
           <PostLayout toc={toc}>
