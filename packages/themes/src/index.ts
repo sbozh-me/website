@@ -3,7 +3,7 @@ export type { Theme, ThemeConfig } from "./types";
 export { THEMES, DEFAULT_THEME, themeConfig } from "./types";
 
 // Context
-export { ThemeProvider, useTheme } from "./theme-context";
+export { ThemeProvider, useTheme, PageTheme } from "./theme-context";
 
 // Loader utilities
 export {

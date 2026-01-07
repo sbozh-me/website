@@ -1,112 +1,113 @@
-/* KOGNITIV code styling - Terminal readout from submarine systems */
+/* KOGNITIV code styling - Scoped to data-theme="kognitiv" */
 
 /* Inline code */
-.prose code {
+[data-theme="kognitiv"] .prose code {
   background: var(--kognitiv-bulkhead);
   color: var(--kognitiv-sonar);
-  padding: var(--code-inline-padding);
+  padding: 0.125rem 0.375rem;
   border-radius: var(--code-inline-radius);
-  font-size: var(--code-inline-font-size);
+  font-size: 0.875em;
   font-family: var(--font-mono);
 }
 
-/* Code blocks - Utilitarian terminal output */
-.prose pre {
+/* Code blocks - Terminal output */
+[data-theme="kognitiv"] .prose pre {
   background: var(--code-bg);
-  border: var(--code-block-border-width) solid var(--kognitiv-steel);
+  border: 1px solid var(--kognitiv-steel);
   border-radius: var(--code-block-radius);
-  padding: var(--code-block-padding);
-  margin: var(--code-block-margin) 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
   overflow-x: auto;
-  line-height: var(--code-line-height);
+  line-height: 1.6;
 }
 
-.prose pre code {
+[data-theme="kognitiv"] .prose pre code {
   background: transparent;
   padding: 0;
   border-radius: 0;
-  font-size: var(--code-font-size);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
   color: var(--syntax-text);
 }
 
 /* Syntax highlighting - Cold palette */
-.prose pre code .token.comment,
-.prose pre code .token.prolog,
-.prose pre code .token.doctype,
-.prose pre code .token.cdata {
+[data-theme="kognitiv"] .prose pre code .token.comment,
+[data-theme="kognitiv"] .prose pre code .token.prolog,
+[data-theme="kognitiv"] .prose pre code .token.doctype,
+[data-theme="kognitiv"] .prose pre code .token.cdata {
   color: var(--syntax-comment);
   font-style: italic;
 }
 
-.prose pre code .token.punctuation {
+[data-theme="kognitiv"] .prose pre code .token.punctuation {
   color: var(--syntax-punctuation);
 }
 
-.prose pre code .token.property,
-.prose pre code .token.tag,
-.prose pre code .token.boolean,
-.prose pre code .token.number,
-.prose pre code .token.constant,
-.prose pre code .token.symbol,
-.prose pre code .token.deleted {
+[data-theme="kognitiv"] .prose pre code .token.property,
+[data-theme="kognitiv"] .prose pre code .token.tag,
+[data-theme="kognitiv"] .prose pre code .token.boolean,
+[data-theme="kognitiv"] .prose pre code .token.number,
+[data-theme="kognitiv"] .prose pre code .token.constant,
+[data-theme="kognitiv"] .prose pre code .token.symbol,
+[data-theme="kognitiv"] .prose pre code .token.deleted {
   color: var(--syntax-number);
 }
 
-.prose pre code .token.selector,
-.prose pre code .token.attr-name,
-.prose pre code .token.string,
-.prose pre code .token.char,
-.prose pre code .token.builtin,
-.prose pre code .token.inserted {
+[data-theme="kognitiv"] .prose pre code .token.selector,
+[data-theme="kognitiv"] .prose pre code .token.attr-name,
+[data-theme="kognitiv"] .prose pre code .token.string,
+[data-theme="kognitiv"] .prose pre code .token.char,
+[data-theme="kognitiv"] .prose pre code .token.builtin,
+[data-theme="kognitiv"] .prose pre code .token.inserted {
   color: var(--syntax-string);
 }
 
-.prose pre code .token.operator,
-.prose pre code .token.entity,
-.prose pre code .token.url,
-.prose pre code .token.variable {
+[data-theme="kognitiv"] .prose pre code .token.operator,
+[data-theme="kognitiv"] .prose pre code .token.entity,
+[data-theme="kognitiv"] .prose pre code .token.url,
+[data-theme="kognitiv"] .prose pre code .token.variable {
   color: var(--syntax-operator);
 }
 
-.prose pre code .token.atrule,
-.prose pre code .token.attr-value,
-.prose pre code .token.function,
-.prose pre code .token.class-name {
+[data-theme="kognitiv"] .prose pre code .token.atrule,
+[data-theme="kognitiv"] .prose pre code .token.attr-value,
+[data-theme="kognitiv"] .prose pre code .token.function,
+[data-theme="kognitiv"] .prose pre code .token.class-name {
   color: var(--syntax-function);
 }
 
-.prose pre code .token.keyword {
+[data-theme="kognitiv"] .prose pre code .token.keyword {
   color: var(--syntax-keyword);
 }
 
-.prose pre code .token.regex,
-.prose pre code .token.important {
+[data-theme="kognitiv"] .prose pre code .token.regex,
+[data-theme="kognitiv"] .prose pre code .token.important {
   color: var(--syntax-number);
 }
 
-.prose pre code .token.important,
-.prose pre code .token.bold {
+[data-theme="kognitiv"] .prose pre code .token.important,
+[data-theme="kognitiv"] .prose pre code .token.bold {
   font-weight: 600;
 }
 
-.prose pre code .token.italic {
+[data-theme="kognitiv"] .prose pre code .token.italic {
   font-style: italic;
 }
 
 /* Line highlighting - Sonar ping */
-.prose pre code .line {
+[data-theme="kognitiv"] .prose pre code .line {
   display: block;
 }
 
-.prose pre code .line.highlighted {
+[data-theme="kognitiv"] .prose pre code .line.highlighted {
   background: var(--syntax-highlight-bg);
   border-left: 3px solid var(--syntax-highlight-border);
   padding-left: 1rem;
   margin-left: -1rem;
 }
 
-/* Line numbers - Dim readout */
-.prose pre code .line-number {
+/* Line numbers */
+[data-theme="kognitiv"] .prose pre code .line-number {
   display: inline-block;
   width: 2.5rem;
   text-align: right;

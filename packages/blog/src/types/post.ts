@@ -25,6 +25,7 @@ export interface Post {
   ogImage?: PostImage;
   ogGenerate?: boolean;
   isTocHidden?: boolean;
+  theme?: string;
 }
 
 export interface PostListItem {

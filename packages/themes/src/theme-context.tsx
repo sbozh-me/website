@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   type ReactNode,
 } from "react";
@@ -36,9 +37,8 @@ export function ThemeProvider({
     return exists ? theme : fallback;
   }, [theme, fallback]);
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", resolvedTheme);
-  }, [resolvedTheme]);
+  // Note: data-theme attribute is now set directly on <html> in layout.tsx
+  // PageTheme component can override it for per-page theming
 
   const value = useMemo(
     () => ({
@@ -59,4 +59,34 @@ export function useTheme(): ThemeContextValue {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
+}
+
+interface PageThemeProps {
+  theme: string;
+}
+
+// SSR-safe useLayoutEffect
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/**
+ * Client component that overrides the page theme.
+ * Sets data-theme on mount, resets to default on unmount.
+ * Use in pages that need a different theme than the layout default.
+ */
+export function PageTheme({ theme }: PageThemeProps) {
+  // Use layout effect to set theme before paint, avoiding flash
+  useIsomorphicLayoutEffect(() => {
+    const resolvedTheme = THEMES.some((t) => t.id === theme)
+      ? theme
+      : DEFAULT_THEME;
+
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+
+    return () => {
+      document.documentElement.setAttribute("data-theme", DEFAULT_THEME);
+    };
+  }, [theme]);
+
+  return null;
 }

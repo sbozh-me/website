@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@sbozh/themes/obsidian-forge";
+@import "@sbozh/themes/kognitiv";
 @plugin "tailwindcss-animate";
 
 @source "../../../packages/react-ui/src";

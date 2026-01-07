@@ -2,18 +2,24 @@
  * KOGNITIV Theme
  * Techno-thriller reading experience for Leon Chamai stories
  * Inspiration: Tom Clancy, Cold War command centers, declassified briefings
+ *
+ * Scoped to [data-theme="kognitiv"] for per-article theming
  */
+
+/* IBM Plex fonts - only downloaded when kognitiv theme is active */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
 
 @import "./typography.css";
 @import "./prose.css";
 @import "./code.css";
 @import "./toc.css";
 
-@theme {
+/* Scoped theme variables - override obsidian-forge when data-theme is set */
+[data-theme="kognitiv"] {
   /* === STRUCTURAL === */
-  --color-background: #0d1117;      /* Deep gunmetal - submarine hull */
-  --color-muted: #161b22;           /* Raised surfaces - panel backgrounds */
-  --color-border: #21262d;          /* Borders, dividers - welded seams */
+  --color-background: #0d1117;
+  --color-muted: #161b22;
+  --color-border: #21262d;
   --color-card: #161b22;
   --color-card-foreground: #c9d1d9;
   --color-popover: #161b22;
@@ -21,17 +27,17 @@
   --color-input: #21262d;
 
   /* === TEXT === */
-  --color-foreground: #c9d1d9;      /* Primary text - CRT phosphor decay */
-  --color-muted-foreground: #8b949e; /* Secondary text - timestamps, metadata */
+  --color-foreground: #c9d1d9;
+  --color-muted-foreground: #8b949e;
 
   /* === SIGNALS === */
-  --color-primary: #58a6ff;         /* Links, active elements - sonar ping */
+  --color-primary: #58a6ff;
   --color-primary-foreground: #0d1117;
-  --color-secondary: #d29922;       /* Warnings, highlights - amber alert */
+  --color-secondary: #d29922;
   --color-secondary-foreground: #0d1117;
-  --color-accent: #3fb950;          /* Success states - systems nominal */
+  --color-accent: #3fb950;
   --color-accent-foreground: #0d1117;
-  --color-destructive: #f85149;     /* Restricted content - red stamp */
+  --color-destructive: #f85149;
   --color-destructive-foreground: #0d1117;
   --color-ring: #58a6ff;
 
@@ -54,27 +60,39 @@
   --radius-md: 0;
   --radius-lg: 0;
 
-  /* Toast Backgrounds - Cold, minimal */
-  --toast-bg: #161b22;
-  --toast-bg-success: #0d1117;
-  --toast-bg-error: #0d1117;
-  --toast-bg-warning: #0d1117;
-  --toast-bg-info: #0d1117;
+  /* Typography - IBM Plex for techno-thriller aesthetic */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-  /* Toast Borders */
-  --toast-border: #21262d;
-  --toast-border-success: #3fb950;
-  --toast-border-error: #f85149;
-  --toast-border-warning: #d29922;
-  --toast-border-info: #58a6ff;
+  /* Prose variables */
+  --prose-font-size: 17px;
+  --prose-line-height: 1.75;
+  --prose-max-width: 680px;
+  --prose-letter-spacing: 0.01em;
+  --prose-image-radius: 0;
+  --prose-image-border-width: 1px;
+  --prose-hr-max-width: 120px;
 
-  /* Toast Icons */
-  --toast-icon-success: #3fb950;
-  --toast-icon-error: #f85149;
-  --toast-icon-warning: #d29922;
-  --toast-icon-info: #58a6ff;
+  /* Code variables */
+  --code-bg: #161b22;
+  --code-block-radius: 0;
+  --code-inline-radius: 0;
 
-  /* Typography - System stack, utilitarian */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: "SF Mono", "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+  /* Syntax highlighting */
+  --syntax-text: #c9d1d9;
+  --syntax-comment: #484f58;
+  --syntax-keyword: #58a6ff;
+  --syntax-string: #3fb950;
+  --syntax-number: #d29922;
+  --syntax-function: #d29922;
+  --syntax-property: #d29922;
+  --syntax-operator: #c9d1d9;
+  --syntax-punctuation: #8b949e;
+  --syntax-highlight-bg: rgba(88, 166, 255, 0.1);
+  --syntax-highlight-border: #58a6ff;
+  --syntax-line-number: #484f58;
+
+  /* TOC */
+  --toc-border-radius: 0;
+  --toc-scrollbar-radius: 0;
 }

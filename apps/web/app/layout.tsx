@@ -61,6 +61,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="obsidian-forge"
       className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
