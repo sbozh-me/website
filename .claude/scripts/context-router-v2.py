@@ -172,6 +172,15 @@ KEYWORDS: Dict[str, List[str]] = {
         "color", "colors", "palette", "amethyst", "purple", "gold", "green",
         "background", "foreground", "muted", "primary", "secondary", "accent",
     ],
+    "modules/themes.md": [
+        # Adding themes
+        "add theme", "new theme", "create theme", "adding theme",
+        # Package reference
+        "themes package", "@sbozh/themes",
+        # Technical
+        "theme css", "theme variables", "theme folder", "theme registration",
+        "index.css", "typography.css", "prose.css", "code.css", "toc.css",
+    ],
 
     # === INTEGRATIONS ===
     "integrations/directus.md": [
@@ -248,9 +257,13 @@ CO_ACTIVATION: Dict[str, List[str]] = {
     # CV Builder is standalone (no co-activations needed)
     # Commands are standalone (no co-activations needed)
 
-    # Theming and Design System are related
+    # Theming, Themes (add-theme guide), and Design System are related
     "modules/theming.md": [
         "modules/design-system.md",  # Theme colors feed into design system
+        "modules/themes.md",         # Theming concepts link to adding themes
+    ],
+    "modules/themes.md": [
+        "modules/theming.md",        # Adding themes links to theming concepts
     ],
     "modules/design-system.md": [
         "modules/theming.md",        # Design system references theming

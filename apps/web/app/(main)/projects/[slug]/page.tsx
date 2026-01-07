@@ -5,7 +5,6 @@ import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
 import { getDiscordCommunityTabContent } from "@/lib/projects/content/discord-community";
 import { Spark } from "@/components/Spark";
-import "@sbozh/themes/obsidian-forge/prose";
 
 const mdxComponents = {
   Spark,

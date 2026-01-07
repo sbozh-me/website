@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import type { TOCItem } from "../../utils";
-import "@sbozh/themes/obsidian-forge/toc";
 
 interface TableOfContentsProps {
   items: TOCItem[];
