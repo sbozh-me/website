@@ -15,8 +15,8 @@ import {
 } from "@sbozh/blog/components";
 import { extractHeadings } from "@sbozh/blog/utils";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
-import "@sbozh/blog/styles/prose.css";
-import "@sbozh/blog/styles/code.css";
+import "@sbozh/themes/obsidian-forge/prose";
+import "@sbozh/themes/obsidian-forge/code";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";

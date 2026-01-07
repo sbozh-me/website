@@ -13,9 +13,6 @@
     "./components": "./src/components/index.ts",
     "./hooks": "./src/hooks/index.ts",
     "./utils": "./src/utils/index.ts",
-    "./styles/prose.css": "./src/components/post/prose.css",
-    "./styles/code.css": "./src/components/post/code.css",
-    "./styles/toc.css": "./src/components/post/toc.css",
     "./styles/scroll-to-top.css": "./src/components/post/scroll-to-top.css"
   },
   "scripts": {
@@ -33,6 +30,7 @@
   },
   "peerDependencies": {
     "@sbozh/react-ui": "workspace:*",
+    "@sbozh/themes": "workspace:*",
     "react": ">=19.2.1"
   },
   "devDependencies": {

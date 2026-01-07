@@ -3,98 +3,53 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
-  useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import { DEFAULT_THEME, THEMES, type Theme } from "./types";
-import { loadTheme, switchTheme } from "./theme-loader";
-
-const STORAGE_KEY = "sbozh-theme";
 
 interface ThemeContextValue {
   theme: Theme;
   themeId: string;
-  setTheme: (themeId: string) => void;
-  availableThemes: Theme[];
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-function getStoredTheme(): string {
-  if (typeof window === "undefined") return DEFAULT_THEME;
-  return localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME;
-}
-
-function storeTheme(themeId: string): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, themeId);
-}
-
 interface ThemeProviderProps {
+  theme: string;
+  fallback?: string;
   children: ReactNode;
-  defaultTheme?: string;
 }
 
+/**
+ * Controlled theme provider that applies a theme based on prop.
+ * If the theme doesn't exist in the registry, falls back to the fallback theme.
+ */
 export function ThemeProvider({
+  theme,
+  fallback = DEFAULT_THEME,
   children,
-  defaultTheme = DEFAULT_THEME,
 }: ThemeProviderProps) {
-  const [themeId, setThemeId] = useState(defaultTheme);
-  const [mounted, setMounted] = useState(false);
+  const resolvedTheme = useMemo(() => {
+    const exists = THEMES.some((t) => t.id === theme);
+    return exists ? theme : fallback;
+  }, [theme, fallback]);
 
   useEffect(() => {
-    const stored = getStoredTheme();
-    setThemeId(stored);
-    loadTheme(stored);
-    setMounted(true);
-  }, []);
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+  }, [resolvedTheme]);
 
-  const setTheme = useCallback(
-    (newThemeId: string) => {
-      const theme = THEMES.find((t) => t.id === newThemeId);
-      if (!theme) {
-        console.warn(`Theme "${newThemeId}" not found`);
-        return;
-      }
-
-      switchTheme(themeId, newThemeId);
-      storeTheme(newThemeId);
-      setThemeId(newThemeId);
-    },
-    [themeId]
+  const value = useMemo(
+    () => ({
+      themeId: resolvedTheme,
+      theme: THEMES.find((t) => t.id === resolvedTheme) || THEMES[0],
+    }),
+    [resolvedTheme]
   );
 
-  const theme = THEMES.find((t) => t.id === themeId) || THEMES[0];
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider
-        value={{
-          theme: THEMES.find((t) => t.id === defaultTheme) || THEMES[0],
-          themeId: defaultTheme,
-          setTheme: () => {},
-          availableThemes: THEMES,
-        }}
-      >
-        {children}
-      </ThemeContext.Provider>
-    );
-  }
-
   return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        themeId,
-        setTheme,
-        availableThemes: THEMES,
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
 

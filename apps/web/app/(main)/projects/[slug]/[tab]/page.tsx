@@ -11,7 +11,7 @@ import { parseRoadmapFromContent, parseBacklogFromContent } from "@/lib/roadmap/
 import { VerticalTimeline } from "@sbozh/react-ui/components/ui/vertical-timeline";
 import { RoadmapView } from "@/components/roadmap";
 import { Spark } from "@/components/Spark";
-import "@sbozh/blog/styles/prose.css";
+import "@sbozh/themes/obsidian-forge/prose";
 
 const mdxComponents = {
   Spark,

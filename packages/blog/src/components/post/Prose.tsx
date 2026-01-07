@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import "./prose.css";
-import "./code.css";
+import "@sbozh/themes/obsidian-forge/prose";
+import "@sbozh/themes/obsidian-forge/code";
 
 interface ProseProps {
   children: ReactNode;

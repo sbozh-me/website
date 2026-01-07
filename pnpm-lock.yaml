@@ -135,6 +135,9 @@ importers:
       '@sbozh/react-ui':
         specifier: workspace:*
         version: link:../react-ui
+      '@sbozh/themes':
+        specifier: workspace:*
+        version: link:../themes
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
