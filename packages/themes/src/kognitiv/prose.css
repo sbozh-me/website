@@ -1,0 +1,301 @@
+/* KOGNITIV prose styling - Classified briefing document aesthetic */
+
+.prose {
+  font-size: var(--prose-font-size);
+  line-height: var(--prose-line-height);
+  letter-spacing: var(--prose-letter-spacing);
+  color: var(--kognitiv-phosphor);
+  max-width: var(--prose-max-width);
+}
+
+/* Headings - Understated, stencil feel */
+.prose h1 {
+  font-size: var(--prose-h1-size);
+  font-weight: var(--prose-h1-weight);
+  letter-spacing: var(--prose-h1-letter-spacing);
+  margin-top: var(--prose-h1-margin-top);
+  margin-bottom: var(--prose-h1-margin-bottom);
+  line-height: var(--prose-h1-line-height);
+  color: var(--kognitiv-phosphor);
+}
+
+.prose h2 {
+  font-size: var(--prose-h2-size);
+  font-weight: var(--prose-h2-weight);
+  letter-spacing: var(--prose-h2-letter-spacing);
+  margin-top: var(--prose-h2-margin-top);
+  margin-bottom: var(--prose-h2-margin-bottom);
+  line-height: var(--prose-h2-line-height);
+  scroll-margin-top: var(--prose-scroll-margin);
+  color: var(--kognitiv-phosphor);
+}
+
+.prose h3 {
+  font-size: var(--prose-h3-size);
+  font-weight: var(--prose-h3-weight);
+  letter-spacing: var(--prose-h3-letter-spacing);
+  margin-top: var(--prose-h3-margin-top);
+  margin-bottom: var(--prose-h3-margin-bottom);
+  line-height: var(--prose-h3-line-height);
+  scroll-margin-top: var(--prose-scroll-margin);
+  color: var(--kognitiv-phosphor);
+}
+
+.prose h4 {
+  font-size: var(--prose-h4-size);
+  font-weight: var(--prose-h4-weight);
+  letter-spacing: var(--prose-h4-letter-spacing);
+  margin-top: var(--prose-h4-margin-top);
+  margin-bottom: var(--prose-h4-margin-bottom);
+  scroll-margin-top: var(--prose-scroll-margin);
+  color: var(--kognitiv-phosphor);
+}
+
+/* Paragraphs */
+.prose p {
+  margin-bottom: var(--prose-paragraph-margin);
+}
+
+/* Links - Sonar ping aesthetic */
+.prose a {
+  color: var(--kognitiv-sonar);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.prose a:hover {
+  border-bottom-color: var(--kognitiv-sonar);
+}
+
+/* Lists */
+.prose ul,
+.prose ol {
+  margin-bottom: var(--prose-paragraph-margin);
+  padding-left: var(--prose-list-padding);
+}
+
+.prose li {
+  margin-bottom: var(--prose-list-item-margin);
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+/* Blockquotes - Briefing excerpts */
+.prose blockquote {
+  border-left: var(--prose-blockquote-border-width) solid var(--kognitiv-steel);
+  margin: var(--prose-blockquote-margin) 0;
+  padding: var(--prose-blockquote-padding);
+  background: var(--kognitiv-bulkhead);
+  color: var(--kognitiv-dim);
+  font-style: italic;
+}
+
+.prose blockquote p {
+  margin-bottom: 0;
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Attribution in blockquotes */
+.prose blockquote p:last-child:has(br),
+.prose blockquote footer,
+.prose blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-style: normal;
+  color: var(--kognitiv-ghost);
+}
+
+/* Links in blockquotes */
+.prose blockquote a {
+  color: var(--kognitiv-sonar);
+  font-style: italic;
+}
+
+/* Images - Surveillance photo treatment */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  margin: var(--prose-image-margin) 0;
+  border-radius: var(--prose-image-radius);
+  border: var(--prose-image-border-width) solid var(--kognitiv-steel);
+  filter: contrast(1.05) saturate(0.9);
+}
+
+/* Figure captions - Evidence tags */
+.prose figure figcaption {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--kognitiv-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+}
+
+/* Horizontal rule - Section dividers */
+.prose hr {
+  border: none;
+  height: var(--prose-hr-border-width);
+  background: var(--kognitiv-steel);
+  margin: var(--prose-hr-margin) auto;
+  max-width: var(--prose-hr-max-width);
+  position: relative;
+}
+
+/* Optional: classification marker on hr */
+.prose hr::after {
+  content: "\25C6"; /* Diamond */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--kognitiv-void);
+  padding: 0 0.5rem;
+  color: var(--kognitiv-ghost);
+  font-size: 0.5rem;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--prose-table-margin) 0;
+}
+
+.prose th,
+.prose td {
+  border: var(--prose-table-border-width) solid var(--kognitiv-steel);
+  padding: var(--prose-table-padding);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--kognitiv-bulkhead);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--kognitiv-dim);
+}
+
+/* Strong - Personnel file references */
+.prose strong {
+  color: var(--kognitiv-phosphor);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Emphasis - Dialogue, internal voice */
+.prose em {
+  font-style: italic;
+  color: var(--kognitiv-phosphor);
+  opacity: 0.95;
+}
+
+/* Briefing header block styling */
+.prose .briefing-header {
+  font-family: var(--font-mono);
+  font-size: var(--briefing-font-size);
+  letter-spacing: var(--briefing-letter-spacing);
+  text-transform: uppercase;
+  color: var(--kognitiv-dim);
+  text-align: center;
+  padding: var(--briefing-padding);
+  border-top: 1px solid var(--kognitiv-steel);
+  border-bottom: 1px solid var(--kognitiv-steel);
+  margin: var(--briefing-margin);
+}
+
+/* Status markers */
+.prose .status-marker {
+  font-family: var(--font-mono);
+  font-size: var(--status-font-size);
+  letter-spacing: var(--status-letter-spacing);
+  text-transform: uppercase;
+  color: var(--kognitiv-caution);
+  text-align: center;
+  padding: var(--status-padding);
+  margin: var(--status-margin);
+}
+
+.prose .status-marker.active {
+  color: var(--kognitiv-operational);
+}
+
+.prose .status-marker.classified {
+  color: var(--kognitiv-classified);
+}
+
+/* Tags - Classification markers */
+.prose .tag {
+  font-family: var(--font-mono);
+  font-size: var(--tag-font-size);
+  letter-spacing: var(--tag-letter-spacing);
+  text-transform: uppercase;
+  color: var(--kognitiv-dim);
+  background: var(--kognitiv-bulkhead);
+  border: 1px solid var(--kognitiv-steel);
+  padding: var(--tag-padding);
+  margin-right: 0.5rem;
+  display: inline-block;
+}
+
+/* Redacted text effect */
+.prose .redacted {
+  background: var(--kognitiv-redacted);
+  color: var(--kognitiv-redacted);
+  padding: 0 0.25rem;
+  user-select: none;
+  cursor: not-allowed;
+}
+
+.prose .redacted:hover {
+  background: var(--kognitiv-classified);
+  color: var(--kognitiv-void);
+}
+
+/* Attribution section - Document provenance */
+.prose .attribution {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--kognitiv-steel);
+  font-size: 0.875rem;
+  color: var(--kognitiv-dim);
+}
+
+.prose .attribution h4 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kognitiv-ghost);
+  margin-bottom: 1rem;
+}
+
+.prose .attribution ul {
+  list-style: none;
+  padding: 0;
+}
+
+.prose .attribution li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.prose .attribution li::before {
+  content: "\2022"; /* Bullet */
+  position: absolute;
+  left: 0;
+  color: var(--kognitiv-ghost);
+}

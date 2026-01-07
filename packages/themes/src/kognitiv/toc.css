@@ -1,0 +1,103 @@
+/* KOGNITIV TOC styling - Minimal, almost hidden navigation */
+
+.toc {
+  /* The document is the focus */
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.toc:hover {
+  opacity: 1;
+}
+
+/* Mobile: utilitarian border */
+@media (max-width: 1023px) {
+  .toc {
+    border: var(--toc-border-width) solid var(--kognitiv-steel);
+    border-radius: var(--toc-border-radius);
+    padding: var(--toc-padding);
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .toc {
+    position: sticky;
+    top: var(--toc-sticky-top);
+    max-height: calc(100vh - var(--toc-sticky-offset));
+    overflow-y: auto;
+  }
+}
+
+.toc-title {
+  font-family: var(--font-mono);
+  font-size: var(--toc-title-size);
+  font-weight: var(--toc-title-weight);
+  text-transform: uppercase;
+  letter-spacing: var(--toc-title-spacing);
+  color: var(--kognitiv-ghost);
+  margin-bottom: var(--toc-title-margin);
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  margin-bottom: var(--toc-item-margin);
+}
+
+.toc-item-2 {
+  padding-left: 0;
+}
+
+.toc-item-3 {
+  padding-left: var(--toc-item-indent);
+}
+
+.toc-link {
+  display: block;
+  font-size: var(--toc-link-size);
+  line-height: var(--toc-link-line-height);
+  color: var(--kognitiv-dim);
+  text-decoration: none;
+  padding: var(--toc-link-padding);
+  margin-left: -0.5rem;
+  transition: all var(--toc-transition) ease;
+}
+
+/* Desktop: subtle interaction */
+@media (min-width: 1024px) {
+  .toc-link {
+    color: var(--kognitiv-ghost);
+  }
+
+  .toc-link:hover {
+    color: var(--kognitiv-sonar);
+  }
+
+  .toc-item-active .toc-link {
+    color: var(--kognitiv-phosphor);
+    font-weight: 500;
+  }
+}
+
+/* Scrollbar styling - minimal */
+.toc::-webkit-scrollbar {
+  width: var(--toc-scrollbar-width);
+}
+
+.toc::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc::-webkit-scrollbar-thumb {
+  background: var(--kognitiv-steel);
+  border-radius: var(--toc-scrollbar-radius);
+}
+
+.toc::-webkit-scrollbar-thumb:hover {
+  background: var(--kognitiv-dim);
+}

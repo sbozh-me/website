@@ -1,0 +1,80 @@
+/**
+ * KOGNITIV Theme
+ * Techno-thriller reading experience for Leon Chamai stories
+ * Inspiration: Tom Clancy, Cold War command centers, declassified briefings
+ */
+
+@import "./typography.css";
+@import "./prose.css";
+@import "./code.css";
+@import "./toc.css";
+
+@theme {
+  /* === STRUCTURAL === */
+  --color-background: #0d1117;      /* Deep gunmetal - submarine hull */
+  --color-muted: #161b22;           /* Raised surfaces - panel backgrounds */
+  --color-border: #21262d;          /* Borders, dividers - welded seams */
+  --color-card: #161b22;
+  --color-card-foreground: #c9d1d9;
+  --color-popover: #161b22;
+  --color-popover-foreground: #c9d1d9;
+  --color-input: #21262d;
+
+  /* === TEXT === */
+  --color-foreground: #c9d1d9;      /* Primary text - CRT phosphor decay */
+  --color-muted-foreground: #8b949e; /* Secondary text - timestamps, metadata */
+
+  /* === SIGNALS === */
+  --color-primary: #58a6ff;         /* Links, active elements - sonar ping */
+  --color-primary-foreground: #0d1117;
+  --color-secondary: #d29922;       /* Warnings, highlights - amber alert */
+  --color-secondary-foreground: #0d1117;
+  --color-accent: #3fb950;          /* Success states - systems nominal */
+  --color-accent-foreground: #0d1117;
+  --color-destructive: #f85149;     /* Restricted content - red stamp */
+  --color-destructive-foreground: #0d1117;
+  --color-ring: #58a6ff;
+
+  /* === KOGNITIV-SPECIFIC === */
+  --kognitiv-void: #0d1117;
+  --kognitiv-bulkhead: #161b22;
+  --kognitiv-steel: #21262d;
+  --kognitiv-phosphor: #c9d1d9;
+  --kognitiv-dim: #8b949e;
+  --kognitiv-ghost: #484f58;
+  --kognitiv-sonar: #58a6ff;
+  --kognitiv-caution: #d29922;
+  --kognitiv-operational: #3fb950;
+  --kognitiv-classified: #f85149;
+  --kognitiv-redacted: #0d1117;
+  --kognitiv-terminal: #1f6feb;
+
+  /* Border Radius - Utilitarian, no curves */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+
+  /* Toast Backgrounds - Cold, minimal */
+  --toast-bg: #161b22;
+  --toast-bg-success: #0d1117;
+  --toast-bg-error: #0d1117;
+  --toast-bg-warning: #0d1117;
+  --toast-bg-info: #0d1117;
+
+  /* Toast Borders */
+  --toast-border: #21262d;
+  --toast-border-success: #3fb950;
+  --toast-border-error: #f85149;
+  --toast-border-warning: #d29922;
+  --toast-border-info: #58a6ff;
+
+  /* Toast Icons */
+  --toast-icon-success: #3fb950;
+  --toast-icon-error: #f85149;
+  --toast-icon-warning: #d29922;
+  --toast-icon-info: #58a6ff;
+
+  /* Typography - System stack, utilitarian */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+}
