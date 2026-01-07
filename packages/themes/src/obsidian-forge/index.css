@@ -3,6 +3,8 @@
  * Dark, spacious aesthetic with amethyst and gold accents
  */
 
+@import "./typography.css";
+
 @theme {
   /* Core Colors */
   --color-background: #0a0a0f;

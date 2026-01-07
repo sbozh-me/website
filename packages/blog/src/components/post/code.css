@@ -1,46 +1,45 @@
-/* Code block and inline code styling with Obsidian Forge theme */
+/* Code block and inline code styling - uses theme variables */
 
 /* Inline code */
 .prose code {
   background: var(--color-muted);
   color: var(--color-foreground);
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  padding: var(--code-inline-padding);
+  border-radius: var(--code-inline-radius);
+  font-size: var(--code-inline-font-size);
+  font-family: var(--font-mono);
 }
 
 /* Code blocks */
 .prose pre {
-  background: #0f0f14;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
+  background: var(--code-bg);
+  border: var(--code-block-border-width) solid var(--color-border);
+  border-radius: var(--code-block-radius);
+  padding: var(--code-block-padding);
+  margin: var(--code-block-margin) 0;
   overflow-x: auto;
-  line-height: 1.6;
+  line-height: var(--code-line-height);
 }
 
 .prose pre code {
   background: transparent;
   padding: 0;
   border-radius: 0;
-  font-size: 0.875rem;
-  color: #e5e7eb;
+  font-size: var(--code-font-size);
+  color: var(--syntax-text);
 }
 
-/* Syntax highlighting token colors (Forge theme) */
+/* Syntax highlighting token colors - uses theme variables */
 .prose pre code .token.comment,
 .prose pre code .token.prolog,
 .prose pre code .token.doctype,
 .prose pre code .token.cdata {
-  color: #6b7280;
+  color: var(--syntax-comment);
   font-style: italic;
 }
 
 .prose pre code .token.punctuation {
-  color: #e5e7eb;
+  color: var(--syntax-punctuation);
 }
 
 .prose pre code .token.property,
@@ -50,7 +49,7 @@
 .prose pre code .token.constant,
 .prose pre code .token.symbol,
 .prose pre code .token.deleted {
-  color: #f59e0b;
+  color: var(--syntax-number);
 }
 
 .prose pre code .token.selector,
@@ -59,30 +58,30 @@
 .prose pre code .token.char,
 .prose pre code .token.builtin,
 .prose pre code .token.inserted {
-  color: #22c55e;
+  color: var(--syntax-string);
 }
 
 .prose pre code .token.operator,
 .prose pre code .token.entity,
 .prose pre code .token.url,
 .prose pre code .token.variable {
-  color: #e5e7eb;
+  color: var(--syntax-operator);
 }
 
 .prose pre code .token.atrule,
 .prose pre code .token.attr-value,
 .prose pre code .token.function,
 .prose pre code .token.class-name {
-  color: #f59e0b;
+  color: var(--syntax-function);
 }
 
 .prose pre code .token.keyword {
-  color: #8b5cf6;
+  color: var(--syntax-keyword);
 }
 
 .prose pre code .token.regex,
 .prose pre code .token.important {
-  color: #f59e0b;
+  color: var(--syntax-number);
 }
 
 .prose pre code .token.important,
@@ -100,8 +99,8 @@
 }
 
 .prose pre code .line.highlighted {
-  background: rgba(139, 92, 246, 0.1);
-  border-left: 3px solid #8b5cf6;
+  background: var(--syntax-highlight-bg);
+  border-left: 3px solid var(--syntax-highlight-border);
   padding-left: 1rem;
   margin-left: -1rem;
 }
@@ -112,6 +111,6 @@
   width: 2.5rem;
   text-align: right;
   margin-right: 1.5rem;
-  color: #6b7280;
+  color: var(--syntax-line-number);
   user-select: none;
 }
