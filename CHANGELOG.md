@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.7] - 2026-01-07
+
+### Changes
+
+- refactor(claude): use PROJECT_ROOT env for cognitive script paths ([9ac7534](https://github.com/sbozh-me/website/commit/9ac7534c2abd984b21da733139b6eedf26f7ebb2))
+- feat(release-notes): add release notes package with Directus repository pattern ([96b8213](https://github.com/sbozh-me/website/commit/96b821377bfbd6457802f5f6fe47a2601bda8ca7))
+- docs(claude): add Obsidian Forge design system cognitive context ([7963c4b](https://github.com/sbozh-me/website/commit/7963c4bddfd434d7ad50f6a30d6c0fd744913f15))
+- feat(themes)!: extract theme system into @sbozh/themes package ([ce60797](https://github.com/sbozh-me/website/commit/ce607975935cd52a0977a6658dbe02d1041cd83a))
+- docs(claude): add theming module to cognitive context system ([6290578](https://github.com/sbozh-me/website/commit/6290578f00e9900ff9f72d36fc00a6effa56604b))
+- refactor(themes): extract typography variables to obsidian-forge theme ([e6c3550](https://github.com/sbozh-me/website/commit/e6c35500439d22d817fa519063486faa197fd64b))
+- refactor(themes): add TOC variables to typography theme ([3307563](https://github.com/sbozh-me/website/commit/3307563d3217179dcd90dda18dc74b81bede5b09))
+- refactor(themes): move blog CSS to themes package and refactor ThemeProvider to controlled mode ([6a37cad](https://github.com/sbozh-me/website/commit/6a37cad10ce2a3043d5e1430344fa3c808645a15))
+- docs(claude): update theming module documentation ([b31e980](https://github.com/sbozh-me/website/commit/b31e980ac9801fa5439ff59b8cdd77beb76237c4))
+- refactor(themes): consolidate CSS imports into single theme entry point ([8002b8d](https://github.com/sbozh-me/website/commit/8002b8d559ffb6b270923ed1f2cdb803e8e0e3d8))
+- feat(themes): add KOGNITIV techno-thriller theme ([1ee4068](https://github.com/sbozh-me/website/commit/1ee406860cad344de89d187eb8037bb547de7ffa))
+- docs(claude): update release-notes module documentation ([e89e047](https://github.com/sbozh-me/website/commit/e89e047fd6b61d282e8df7c59f9b7d33d5a60c68))
+- feat(themes): add per-article theming with KOGNITIV theme for techno-thriller aesthetic ([8efd421](https://github.com/sbozh-me/website/commit/8efd421ee6a4139d9139160d062282c015b68f49))
+- fix(blog): center content when TOC hidden and remove prose width limit in KOGNITIV ([7089597](https://github.com/sbozh-me/website/commit/70895979ac108cdd097952b541104a9b6c869f5c))
+- feat(themes): add blocking theme loader overlay ([ea8332c](https://github.com/sbozh-me/website/commit/ea8332c0e56ae9b2d69d86ba4a679531ac028a81))
+- docs(postmortem): add release notes component location analysis ([0d0132b](https://github.com/sbozh-me/website/commit/0d0132b0d2c8507ac09c26a625d347bec860acf3))
+
+
 ## [1.2.6] - 2026-01-04
 
 ### Changes
