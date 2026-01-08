@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { ReleaseListItem } from "../types/release";
 import { formatReleaseDate } from "../utils/date-format";
 import { ReleaseMediaCard } from "./ReleaseMediaCard";
@@ -5,11 +6,14 @@ import { ReleaseMediaCard } from "./ReleaseMediaCard";
 interface ReleaseTimelineEntryProps {
   release: ReleaseListItem;
   isLast?: boolean;
+  /** Pre-rendered MDX content for summary */
+  summaryContent: ReactNode;
 }
 
 export function ReleaseTimelineEntry({
   release,
   isLast = false,
+  summaryContent,
 }: ReleaseTimelineEntryProps) {
   const formattedDate = formatReleaseDate(release.dateReleased);
 
@@ -41,8 +45,10 @@ export function ReleaseTimelineEntry({
           <h3 className="text-lg font-semibold leading-tight text-foreground">
             {release.title}
           </h3>
-          {release.summary && (
-            <p className="mt-2 text-muted-foreground">{release.summary}</p>
+          {summaryContent && (
+            <div className="mt-2 prose prose-sm prose-muted">
+              {summaryContent}
+            </div>
           )}
           {release.media && <ReleaseMediaCard media={release.media} />}
         </div>

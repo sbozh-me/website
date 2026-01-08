@@ -1,20 +1,41 @@
+import type { ReactNode } from "react";
+import { evaluate } from "@mdx-js/mdx";
+import * as runtime from "react/jsx-runtime";
 import { HomeHero } from "@/components/HomeHero";
 import { ReleaseTimeline, ErrorState } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[] }
+  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode> }
   | { success: false; error: string; status?: number };
+
+async function compileSummary(markdown: string): Promise<ReactNode> {
+  const { default: Content } = await evaluate(markdown, {
+    ...runtime,
+  } as any);
+  return <Content />;
+}
 
 async function getReleases(): Promise<ReleasesResult> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
-      return { success: true, releases: [] };
+      return { success: true, releases: [], summaries: {} };
     }
     const releases = await repository.getReleases({ limit: 3 });
-    return { success: true, releases };
+
+    // Compile MDX summaries in parallel
+    const summaryEntries = await Promise.all(
+      releases.map(async (release) => {
+        if (!release.summary) return [release.id, null] as const;
+        const content = await compileSummary(release.summary);
+        return [release.id, content] as const;
+      })
+    );
+    const summaries = Object.fromEntries(summaryEntries);
+
+    return { success: true, releases, summaries };
   } catch (error) {
     console.error("Failed to fetch releases:", error);
     if (error instanceof DirectusError) {
@@ -39,7 +60,7 @@ export default async function Home() {
             <h2 className="mb-8 text-2xl font-semibold tracking-tight">
               Recent Updates
             </h2>
-            <ReleaseTimeline releases={result.releases} />
+            <ReleaseTimeline releases={result.releases} summaries={result.summaries} />
           </section>
         )
       ) : (
