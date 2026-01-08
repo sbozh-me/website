@@ -76,7 +76,7 @@ interface DirectusProject {
 }
 
 interface DirectusSchema {
-  releases: DirectusRelease[];
+  release_notes: DirectusRelease[];
   projects: DirectusProject[];
 }
 
@@ -128,7 +128,7 @@ export class DirectusRepository implements ReleaseRepository {
       this.log("getReleases", "Fetching releases with filter:", directusFilter);
 
       const releases = await this.client.request(
-        readItems("releases", {
+        readItems("release_notes", {
           filter: directusFilter,
           fields: [
             "id",
@@ -157,7 +157,7 @@ export class DirectusRepository implements ReleaseRepository {
       this.log("getRelease", `Fetching release with id "${id}"`);
 
       const releases = await this.client.request(
-        readItems("releases", {
+        readItems("release_notes", {
           filter: { id: { _eq: id } },
           fields: [
             "*",
@@ -185,7 +185,7 @@ export class DirectusRepository implements ReleaseRepository {
     try {
       // Get unique projects from releases
       const releases = await this.client.request(
-        readItems("releases", {
+        readItems("release_notes", {
           fields: [{ project: ["id", "name", "slug"] }] as unknown as (keyof DirectusRelease)[],
         })
       );
