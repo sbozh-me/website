@@ -105,8 +105,7 @@ When user calls you to update an existing file:
 After creating or updating a cognitive file, also update `.claude/scripts/context-router-v2.py`:
 
 1. Add keywords to the `KEYWORDS` dict that will activate the file
-2. Add co-activation relationships if relevant
-3. Keywords should be terms users would naturally use when discussing the topic
+2. Keywords should be terms users would naturally use when discussing the topic
 
 Example for a new `modules/release-notes.md`:
 ```python
@@ -115,6 +114,35 @@ Example for a new `modules/release-notes.md`:
     "what shipped", "version history",
 ],
 ```
+
+### Co-Activation: Be Paranoid
+
+**Co-activation should be RARE.** The goal is to REDUCE context, not load everything.
+
+**Default assumption:** No co-activation needed. Each file stands alone.
+
+**Only co-activate when modules are TRULY INSEPARABLE:**
+- Data layer + its only data source (blog + directus integration)
+- Feature + its required runtime dependency (CV page + PDF service)
+
+**Never co-activate for:**
+- "Might be useful" relationships
+- Error handling modules (errors are rare, don't load error context every time)
+- Shared utilities (they're utilities, not dependencies)
+- Same-category files (two modules being modules doesn't mean they're related)
+
+**The test:** "If I'm working on module A, will I ALWAYS need module B?" If the answer is "sometimes" or "often" - that's NOT co-activation. Only "always" qualifies.
+
+**Confidence threshold for co-activation:**
+- 70%+ sure it's needed = add it silently
+- 30-70% sure = ASK the user before adding
+- <30% sure = don't add, don't ask
+
+**Examples:**
+- Blog + Directus integration = YES (blog literally cannot function without directus)
+- Blog + Error handling = NO (errors are edge cases, not the main flow)
+- CV Builder + PDF service = YES (CV export requires PDF service)
+- CV Builder + Blog = NO (completely independent features)
 
 ## Anti-Patterns (Don't Do)
 
