@@ -59,17 +59,32 @@ const PATTERNS = {
 };
 
 /**
- * Parse entry header: "Company | Role | Dates | Location"
+ * Parse markdown link syntax: [text](url) -> { text, url }
+ */
+function parseMarkdownLink(value: string): { text: string; url?: string } {
+  const linkMatch = value.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+  if (linkMatch) {
+    return { text: linkMatch[1], url: linkMatch[2] };
+  }
+  return { text: value };
+}
+
+/**
+ * Parse entry header: "[Company](url) | Role | Dates | Location"
+ * Supports markdown link syntax for company name
  */
 function parseEntryHeader(value: string): {
   company: string;
+  companyUrl?: string;
   role: string;
   dates: string;
   location?: string;
 } {
   const parts = value.split("|").map((p) => p.trim());
+  const companyParsed = parseMarkdownLink(parts[0] || "");
   return {
-    company: parts[0] || "",
+    company: companyParsed.text,
+    companyUrl: companyParsed.url,
     role: parts[1] || "",
     dates: parts[2] || "",
     location: parts[3],

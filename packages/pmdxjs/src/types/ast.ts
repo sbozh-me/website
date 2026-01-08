@@ -70,6 +70,7 @@ export interface ColumnNode extends BaseNode {
 export interface EntryNode extends BaseNode {
   type: "entry";
   company: string;
+  companyUrl?: string;
   role: string;
   dates: string;
   location?: string;

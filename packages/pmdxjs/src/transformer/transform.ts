@@ -57,6 +57,7 @@ interface KnownComponents {
   Section?: React.ComponentType<{ title: string; children: ReactNode }>;
   Entry?: React.ComponentType<{
     company: string;
+    companyUrl?: string;
     role: string;
     dates: string;
     location?: string;
@@ -291,6 +292,7 @@ function transformEntry(
   return createElement(EntryComponent, {
     key,
     company: node.company,
+    companyUrl: node.companyUrl,
     role: node.role,
     dates: node.dates,
     location: node.location,

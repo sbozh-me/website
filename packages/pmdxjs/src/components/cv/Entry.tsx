@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 
 export interface EntryProps {
   company: string;
+  companyUrl?: string;
   role: string;
   dates: string;
   location?: string;
@@ -19,6 +20,7 @@ export interface EntryProps {
  */
 export function Entry({
   company,
+  companyUrl,
   role,
   dates,
   location,
@@ -30,7 +32,20 @@ export function Entry({
       <div className="flex flex-wrap items-start justify-between gap-x-2">
         <div>
           <span className="pmdxjs-entry-role">{role}</span>
-          <div className="pmdxjs-entry-company">{company}</div>
+          <div className="pmdxjs-entry-company">
+            {companyUrl ? (
+              <a
+                href={companyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline hover:opacity-80"
+              >
+                {company}
+              </a>
+            ) : (
+              company
+            )}
+          </div>
         </div>
         <div className="text-right">
           <div className="pmdxjs-entry-dates">{dates}</div>

@@ -110,6 +110,7 @@ export function createEntryNode(
 ): EntryNode {
   const meta = startToken.meta as {
     company: string;
+    companyUrl?: string;
     role: string;
     dates: string;
     location?: string;
@@ -144,6 +145,7 @@ export function createEntryNode(
   return {
     type: "entry",
     company: meta.company,
+    companyUrl: meta.companyUrl,
     role: meta.role,
     dates: meta.dates,
     location: meta.location,
