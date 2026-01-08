@@ -15,11 +15,10 @@ export function ReleaseTimeline({ releases, summaries }: ReleaseTimelineProps) {
 
   return (
     <section className="w-full">
-      {releases.map((release, index) => (
+      {releases.map((release) => (
         <ReleaseTimelineEntry
           key={release.id}
           release={release}
-          isLast={index === releases.length - 1}
           summaryContent={summaries[release.id]}
         />
       ))}
