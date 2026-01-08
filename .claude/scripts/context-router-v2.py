@@ -181,6 +181,20 @@ KEYWORDS: Dict[str, List[str]] = {
         "theme css", "theme variables", "theme folder", "theme registration",
         "index.css", "typography.css", "prose.css", "code.css", "toc.css",
     ],
+    "modules/error-ui-handling.md": [
+        # Core terms
+        "error", "error handling", "error state", "errorstate",
+        # Pattern terms
+        "graceful degradation", "cms error", "directus error",
+        # Component
+        "warning icon", "error message", "status code",
+        # Class
+        "directuserror", "fromerror",
+        # Result pattern
+        "result type", "success false", "try catch",
+        # Troubleshooting
+        "unable to load", "failed to fetch", "content server",
+    ],
 
     # === INTEGRATIONS ===
     "integrations/directus.md": [
