@@ -8,7 +8,7 @@ import {
 import type { ReleaseRepository } from "./repository";
 import type { ReleaseFilters } from "../types/filters";
 import type { ProjectRef } from "../types/project";
-import type { Release, ReleaseListItem } from "../types/release";
+import type { Release, ReleaseListItem, ReleaseMedia } from "../types/release";
 
 export class DirectusError extends Error {
   constructor(
@@ -53,6 +53,12 @@ export class DirectusError extends Error {
 }
 
 // Directus collection types
+interface DirectusFile {
+  id: string;
+  type: string;
+  title?: string;
+}
+
 interface DirectusRelease {
   id: string;
   version: string;
@@ -60,6 +66,7 @@ interface DirectusRelease {
   summary: string;
   date_released: string;
   project: DirectusProject;
+  media?: DirectusFile | null;
 }
 
 interface DirectusProject {
@@ -82,9 +89,11 @@ export interface DirectusConfig {
 export class DirectusRepository implements ReleaseRepository {
   private client: RestClient<DirectusSchema>;
   private debug: boolean;
+  private baseUrl: string;
 
   constructor(config: DirectusConfig) {
     this.debug = config.debug ?? false;
+    this.baseUrl = config.url;
 
     const client = createDirectus<DirectusSchema>(config.url).with(
       rest({
@@ -128,6 +137,7 @@ export class DirectusRepository implements ReleaseRepository {
             "summary",
             "date_released",
             { project: ["id", "name", "slug"] },
+            { media: ["id", "type", "title"] },
           ] as unknown as (keyof DirectusRelease)[],
           sort: ["-date_released"],
           limit: filters?.limit ?? -1,
@@ -215,6 +225,7 @@ export class DirectusRepository implements ReleaseRepository {
       summary: release.summary,
       dateReleased: release.date_released,
       project: this.mapToProjectRef(release.project),
+      media: this.mapToMedia(release.media),
     };
   }
 
@@ -226,6 +237,18 @@ export class DirectusRepository implements ReleaseRepository {
       summary: release.summary,
       dateReleased: release.date_released,
       project: this.mapToProjectRef(release.project),
+      media: this.mapToMedia(release.media),
+    };
+  }
+
+  private mapToMedia(file: DirectusFile | null | undefined): ReleaseMedia | undefined {
+    if (!file) return undefined;
+
+    const isVideo = file.type?.startsWith("video/");
+    return {
+      type: isVideo ? "video" : "image",
+      url: `${this.baseUrl}/assets/${file.id}`,
+      alt: file.title,
     };
   }
 

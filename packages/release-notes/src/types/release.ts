@@ -1,6 +1,15 @@
 import type { ProjectRef } from "./project";
 
 /**
+ * Media attachment for a release (image or video)
+ */
+export interface ReleaseMedia {
+  type: "image" | "video";
+  url: string;
+  alt?: string;
+}
+
+/**
  * Full release note (for detail view or full display)
  */
 export interface Release {
@@ -10,6 +19,7 @@ export interface Release {
   summary: string;
   dateReleased: string;
   project: ProjectRef;
+  media?: ReleaseMedia;
 }
 
 /**
@@ -23,4 +33,5 @@ export interface ReleaseListItem {
   summary: string;
   dateReleased: string;
   project: ProjectRef;
+  media?: ReleaseMedia;
 }

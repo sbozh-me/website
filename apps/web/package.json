@@ -16,6 +16,7 @@
     "@sbozh/blog": "workspace:*",
     "@sbozh/pmdxjs": "workspace:*",
     "@sbozh/react-ui": "workspace:*",
+    "@sbozh/release-notes": "workspace:*",
     "@sbozh/themes": "workspace:*",
     "@sentry/nextjs": "^10.32.1",
     "framer-motion": "^12.23.25",
