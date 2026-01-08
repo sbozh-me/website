@@ -16,6 +16,8 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/blog/package.json ./packages/blog/
 COPY packages/pmdxjs/package.json ./packages/pmdxjs/
 COPY packages/react-ui/package.json ./packages/react-ui/
+COPY packages/release-notes/package.json ./packages/release-notes/
+COPY packages/themes/package.json ./packages/themes/
 COPY packages/eslint-config/package.json ./packages/eslint-config/
 COPY packages/typescript-config/package.json ./packages/typescript-config/
 

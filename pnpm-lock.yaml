@@ -394,6 +394,10 @@ importers:
         version: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.19.3)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/themes:
+    dependencies:
+      react:
+        specifier: '>=18.0.0'
+        version: 19.2.1
     devDependencies:
       '@sbozh/typescript-config':
         specifier: workspace:*
@@ -401,9 +405,6 @@ importers:
       '@types/react':
         specifier: ^19.0.1
         version: 19.2.7
-      react:
-        specifier: ^19.0.0
-        version: 19.2.1
       typescript:
         specifier: ^5.7.2
         version: 5.9.3
