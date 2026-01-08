@@ -7,6 +7,7 @@
 @source "../../../packages/pmdxjs/src";
 @source "../../../packages/blog/src";
 @source "../../../packages/themes/src";
+@source "../../../packages/release-notes/src";
 
 /* Base typography */
 html {
