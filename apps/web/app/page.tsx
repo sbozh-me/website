@@ -2,12 +2,15 @@ import type { ReactNode } from "react";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { HomeHero } from "@/components/HomeHero";
-import { ReleaseTimeline, ErrorState } from "@sbozh/release-notes/components";
+import { ReleaseTimelineClient, ErrorState } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
+import { loadMoreReleases } from "./actions/releases";
+
+const RELEASES_PER_PAGE = 3;
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode> }
+  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean }
   | { success: false; error: string; status?: number };
 
 async function compileSummary(markdown: string): Promise<ReactNode> {
@@ -21,9 +24,9 @@ async function getReleases(): Promise<ReleasesResult> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
-      return { success: true, releases: [], summaries: {} };
+      return { success: true, releases: [], summaries: {}, hasMore: false };
     }
-    const releases = await repository.getReleases({ limit: 3 });
+    const releases = await repository.getReleases({ limit: RELEASES_PER_PAGE });
 
     // Compile MDX summaries in parallel
     const summaryEntries = await Promise.all(
@@ -35,7 +38,12 @@ async function getReleases(): Promise<ReleasesResult> {
     );
     const summaries = Object.fromEntries(summaryEntries);
 
-    return { success: true, releases, summaries };
+    return {
+      success: true,
+      releases,
+      summaries,
+      hasMore: releases.length === RELEASES_PER_PAGE,
+    };
   } catch (error) {
     console.error("Failed to fetch releases:", error);
     if (error instanceof DirectusError) {
@@ -60,7 +68,12 @@ export default async function Home() {
             <h2 className="mb-8 text-2xl font-semibold tracking-tight">
               Recent Updates
             </h2>
-            <ReleaseTimeline releases={result.releases} summaries={result.summaries} />
+            <ReleaseTimelineClient
+              initialReleases={result.releases}
+              initialSummaries={result.summaries}
+              initialHasMore={result.hasMore}
+              loadMoreAction={loadMoreReleases}
+            />
           </section>
         )
       ) : (
