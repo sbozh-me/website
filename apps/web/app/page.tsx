@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { HomeHero } from "@/components/HomeHero";
-import { ReleaseTimeline, ErrorState } from "@sbozh/release-notes/components";
+import { ReleaseTimelineWithLoadMore, ErrorState } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 
@@ -60,7 +60,10 @@ export default async function Home() {
             <h2 className="mb-8 text-2xl font-semibold tracking-tight">
               Recent Updates
             </h2>
-            <ReleaseTimeline releases={result.releases} summaries={result.summaries} />
+            <ReleaseTimelineWithLoadMore
+              initialReleases={result.releases}
+              initialSummaries={result.summaries}
+            />
           </section>
         )
       ) : (
