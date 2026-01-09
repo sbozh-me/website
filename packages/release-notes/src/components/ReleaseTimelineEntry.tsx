@@ -5,8 +5,8 @@ import { ReleaseMediaCard } from "./ReleaseMediaCard";
 
 interface ReleaseTimelineEntryProps {
   release: ReleaseListItem;
-  /** Pre-rendered MDX content for summary */
-  summaryContent: ReactNode;
+  /** Pre-rendered MDX content (ReactNode) or HTML string for summary */
+  summaryContent: ReactNode | string;
 }
 
 export function ReleaseTimelineEntry({
@@ -45,7 +45,11 @@ export function ReleaseTimelineEntry({
           )}
           {summaryContent && (
             <div className="mt-3 prose prose-sm prose-muted">
-              {summaryContent}
+              {typeof summaryContent === "string" ? (
+                <div dangerouslySetInnerHTML={{ __html: summaryContent }} />
+              ) : (
+                summaryContent
+              )}
             </div>
           )}
           {release.media && <ReleaseMediaCard media={release.media} />}
