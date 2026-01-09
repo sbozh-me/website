@@ -19,6 +19,7 @@ Ideas and features to consider for future development.
 
 - **Email Subscription** - Newsletter signup for blog updates
 - **Push Notifications** - Browser notifications for new posts
+- "What is this" button
 
 ## Build
 

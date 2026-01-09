@@ -134,10 +134,8 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
 - Projects collection in Directus
 - Release Notes collection in Directus
-- Projects Changelog and Roadmap redesign into release notes
 - Release notes on Main page
 - Last blog post on main page
-- "What is this" button
 
 ## 1.4.0 - Blog enhancement
 
