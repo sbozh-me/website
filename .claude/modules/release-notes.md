@@ -1,41 +1,60 @@
 # Release Notes
 
 > **Location**: `packages/release-notes/`
-> **Status**: In Progress (v1.3.0)
+> **Status**: Production (load more button pending)
 
 CMS-driven announcement system. Users see "what shipped" without navigating hardcoded changelog/roadmap tabs.
 
-## What Exists
-
-- **Package**: Types, repository interface, DirectusRepository implemented
-- **Directus**: Collection created with fields: version, title, summary, date_released, project ref
-- **CSS**: Shared prose styles via `packages/themes/` (prose.css, code.css, toc.css)
-
 ## Key Files
 
-- `src/types/release.ts` - Release and ReleaseListItem interfaces
-- `src/data/repository.ts` - Abstract repository interface
-- `src/data/directus-repository.ts` - Directus implementation
-- `src/components/` - Empty, UI lives in apps/web
+**Components** (`src/components/`):
+- `ReleaseTimeline.tsx` - Main container, receives releases + pre-compiled MDX
+- `ReleaseTimelineEntry.tsx` - Individual entry (border-based timeline design)
+- `ReleaseMediaCard.tsx` - Media attachments (images/videos)
+- `ErrorState.tsx` - Error display
+
+**Data** (`src/data/`):
+- `directus-repository.ts` - DirectusRepository with DirectusError class
+- `repository.ts` - Abstract interface
+
+**Types** (`src/types/`):
+- `release.ts` - Release, ReleaseListItem, ReleaseMedia
+- `project.ts` - ProjectRef (links to projects collection)
+- `filters.ts` - ReleaseFilters (project slug, limit)
+
+**Utils** (`src/utils/`):
+- `date-format.ts` - formatReleaseDate(), getRelativeTime()
+
+## Data Flow
+
+1. `apps/web/app/page.tsx` calls `repository.getReleases({ limit: 3 })`
+2. DirectusRepository fetches from `release_notes` collection
+3. Page compiles MDX summaries in parallel using `@mdx-js/mdx evaluate()`
+4. Pre-rendered summaries passed to ReleaseTimeline component
+
+## Directus Collections
+
+- `release_notes` - id, version, title, summary (MDX), date_released, project (M2O), media (file)
+- `projects` - id, name, slug (referenced by release_notes)
 
 ## Design Decisions
 
-- **Timeline layout** (Vercel changelog style): Date left, vertical line with dot, content right
-- **Mobile**: Date moves to top of each entry
-- **Rich content**: Supports prose, code blocks, images, callout boxes
-- **No mock fallback** - show error state if CMS unavailable
+- **Border-based timeline**: Circle sits on left border, border acts as vertical timeline line
+- **MDX compiled server-side**: Summaries rendered in page.tsx, passed pre-compiled to components
+- **Graceful degradation**: Returns empty array if Directus unavailable (no crash)
+- **No mock fallback**: Shows ErrorState if fetch fails
 
 ## Display Locations
 
-| Location | Behavior |
-|----------|----------|
-| Main page | Latest 3, "load more" expands in-place |
-| Project page | Full list with infinite scroll |
+| Location | Status | Behavior |
+|----------|--------|----------|
+| Main page | Done | Shows 3 latest releases |
+| Project page | Future | Full list with infinite scroll |
 
-## Next Step
+## Remaining Work
 
-Building timeline components for main page display.
+- **Load more button**: Loads 3 more releases each click until exhausted
 
 ---
 
-**Last Updated:** 2026-01-07
+**Last Updated:** 2026-01-09
