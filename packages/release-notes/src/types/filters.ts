@@ -6,4 +6,6 @@ export interface ReleaseFilters {
   project?: string;
   /** Limit number of results */
   limit?: number;
+  /** Number of results to skip (for pagination) */
+  offset?: number;
 }
