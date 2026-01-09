@@ -141,6 +141,7 @@ export class DirectusRepository implements ReleaseRepository {
           ] as unknown as (keyof DirectusRelease)[],
           sort: ["-date_released"],
           limit: filters?.limit ?? -1,
+          offset: filters?.offset ?? 0,
         })
       );
 
