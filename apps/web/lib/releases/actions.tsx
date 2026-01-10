@@ -29,7 +29,7 @@ async function compileSummary(markdown: string): Promise<ReactNode> {
   return <Content />;
 }
 
-export async function loadMoreReleases(offset: number): Promise<LoadMoreReleasesResponse> {
+export async function loadMoreReleases(offset: number, projectSlug?: string): Promise<LoadMoreReleasesResponse> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
@@ -40,6 +40,7 @@ export async function loadMoreReleases(offset: number): Promise<LoadMoreReleases
     const releases = await repository.getReleases({
       limit: BATCH_SIZE + 1,
       offset,
+      project: projectSlug,
     });
 
     const hasMore = releases.length > BATCH_SIZE;

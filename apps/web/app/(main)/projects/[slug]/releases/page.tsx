@@ -44,7 +44,7 @@ async function getCurrentVersion(): Promise<string> {
   }
 }
 
-async function getReleases(): Promise<ReleasesResult> {
+async function getReleases(projectSlug: string): Promise<ReleasesResult> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
@@ -52,7 +52,11 @@ async function getReleases(): Promise<ReleasesResult> {
       return { success: true, releases: [], summaries: {}, hasMore: false, currentVersion };
     }
 
-    const allReleases = await repository.getReleases({ limit: INITIAL_LIMIT + 1 });
+    // Filter releases by project
+    const allReleases = await repository.getReleases({
+      project: projectSlug,
+      limit: INITIAL_LIMIT + 1
+    });
     const hasMore = allReleases.length > INITIAL_LIMIT;
     const releases = hasMore ? allReleases.slice(0, INITIAL_LIMIT) : allReleases;
 
@@ -127,7 +131,7 @@ export default async function ReleasesPage({ params, searchParams }: ReleasesPag
   }
 
   // Load all data server-side
-  const releaseNotesData = await getReleases();
+  const releaseNotesData = await getReleases(slug);
   const changelogData = getChangelog();
   const roadmapData = getRoadmap();
 

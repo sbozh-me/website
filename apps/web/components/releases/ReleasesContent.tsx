@@ -73,7 +73,7 @@ export function ReleasesContent({
         </div>
 
         <TabsContent value="notes" className="mt-0">
-          <ReleaseNotesTab data={releaseNotesData} />
+          <ReleaseNotesTab data={releaseNotesData} projectSlug={projectSlug} />
         </TabsContent>
 
         <TabsContent value="changelog" className="mt-0">

@@ -9,9 +9,10 @@ type ReleasesResult =
 
 interface ReleaseNotesTabProps {
   data: ReleasesResult;
+  projectSlug: string;
 }
 
-export function ReleaseNotesTab({ data }: ReleaseNotesTabProps) {
+export function ReleaseNotesTab({ data, projectSlug }: ReleaseNotesTabProps) {
   if (!data.success) {
     return <ErrorState message={data.error} status={data.status} />;
   }
@@ -30,6 +31,7 @@ export function ReleaseNotesTab({ data }: ReleaseNotesTabProps) {
       initialSummaries={data.summaries}
       initialHasMore={data.hasMore}
       currentVersion={data.currentVersion}
+      projectSlug={projectSlug}
     />
   );
 }

@@ -11,6 +11,7 @@ interface ReleaseTimelineWithLoadMoreProps {
   initialSummaries: Record<string, ReactNode>;
   initialHasMore: boolean;
   currentVersion: string;
+  projectSlug: string;
 }
 
 export function ReleaseTimelineWithLoadMore({
@@ -18,6 +19,7 @@ export function ReleaseTimelineWithLoadMore({
   initialSummaries,
   initialHasMore,
   currentVersion,
+  projectSlug,
 }: ReleaseTimelineWithLoadMoreProps) {
   const [releases, setReleases] = useState(initialReleases);
   const [summaries, setSummaries] = useState(initialSummaries);
@@ -26,7 +28,7 @@ export function ReleaseTimelineWithLoadMore({
 
   const handleLoadMore = () => {
     startTransition(async () => {
-      const result = await loadMoreReleases(releases.length);
+      const result = await loadMoreReleases(releases.length, projectSlug);
 
       if (result.success) {
         setReleases((prev) => [...prev, ...result.releases]);
