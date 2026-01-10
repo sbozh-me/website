@@ -45,3 +45,7 @@ Ideas and features to consider for future development.
 ## Sbozh.me project
 
 - Add personas tab with filtered blog posts
+
+## Release notes
+
+- Connect sbozh.me project release notes to changelog
