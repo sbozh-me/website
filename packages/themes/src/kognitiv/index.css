@@ -96,3 +96,9 @@
   --toc-border-radius: 0;
   --toc-scrollbar-radius: 0;
 }
+
+/* Text selection - override Obsidian Forge purple with Kognitiv sonar blue */
+[data-theme="kognitiv"] ::selection {
+  background-color: rgb(88 166 255 / 0.4);
+  color: var(--kognitiv-phosphor);
+}
