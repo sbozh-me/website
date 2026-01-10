@@ -130,12 +130,12 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - ~~Proper time from blog last updated time~~
 - ~~Projects hardcoded last updates~~
 
-## 1.3.0 - Release Notes & Main Page
+## ~~1.3.0 - Release Notes & Main Page~~ ✅
 
-- Projects collection in Directus
-- Release Notes collection in Directus
-- Release notes on Main page
-- Last blog post on main page
+- ~~Projects collection in Directus~~
+- ~~Release Notes collection in Directus~~
+- ~~Release notes on Main page~~
+- ~~Last blog post on main page~~
 
 ## 1.4.0 - Main Page Improvements
 
