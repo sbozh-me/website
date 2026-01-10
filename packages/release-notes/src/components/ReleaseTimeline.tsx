@@ -16,7 +16,7 @@ export function ReleaseTimeline({ releases, summaries, currentVersion }: Release
   }
 
   // Only show "Latest" badge if the first release version matches current app version
-  const firstReleaseIsLatest = currentVersion && releases[0]?.version === currentVersion;
+  const firstReleaseIsLatest = Boolean(currentVersion && releases[0]?.version === currentVersion);
 
   return (
     <div className="w-full">
