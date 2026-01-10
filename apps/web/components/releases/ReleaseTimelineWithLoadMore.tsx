@@ -11,7 +11,7 @@ interface ReleaseTimelineWithLoadMoreProps {
   initialSummaries: Record<string, ReactNode>;
   initialHasMore: boolean;
   currentVersion: string;
-  projectSlug: string;
+  projectSlug?: string;
 }
 
 export function ReleaseTimelineWithLoadMore({
