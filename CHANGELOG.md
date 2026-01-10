@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.9] - 2026-01-10
+
+### Changes
+
+- fix(projects): exclude releases tab from dynamic route generation ([aab0024](https://github.com/sbozh-me/website/commit/aab0024eebecf248a586484f5f299b42076d3e61))
+
+
 ## [1.3.8] - 2026-01-10
 
 ### Changes
