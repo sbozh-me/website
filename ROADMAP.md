@@ -137,7 +137,14 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - Release notes on Main page
 - Last blog post on main page
 
-## 1.4.0 - Blog enhancement
+## 1.4.0 - Main Page Improvements
+
+- Hero section (intro text + optional CTAs)
+- Latest blog post card (cover image, persona dot, excerpt)
+- Limit Recent Updates to 3 + "View all" link
+- Dedicated `/changelog` page for full history
+
+## 1.5.0 - Blog enhancement
 
 - Internal link click handle
 - Link hover handle from directus
@@ -146,19 +153,19 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - Next post
 - Connected posts
 
-## 1.5.0 - Personas introduction
+## 1.6.0 - Personas introduction
 
 - Layouts in project sbozh.me
 - Extended personas collection
 - Link personas in blog posts
 
-## 1.6.0 - Cookies rework
+## 1.7.0 - Cookies rework
 
 - Remove marketing option
 - Make more analytics tracking (blog post reading time)
 - Read/unread state tracking for blog, release notes and projects
 
-## 1.7.0 - Subscriptions (Early Q1 2026)
+## 1.8.0 - Subscriptions (Early Q1 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes

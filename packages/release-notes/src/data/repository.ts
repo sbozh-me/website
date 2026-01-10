@@ -11,6 +11,9 @@ export interface ReleaseRepository {
   /** Get a single release by ID */
   getRelease(id: string): Promise<Release | null>;
 
+  /** Get a single release by slug */
+  getReleaseBySlug(slug: string): Promise<Release | null>;
+
   /** Get all projects that have releases */
   getProjects(): Promise<ProjectRef[]>;
 }

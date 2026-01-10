@@ -61,6 +61,7 @@ interface DirectusFile {
 
 interface DirectusRelease {
   id: string;
+  slug: string;
   version: string;
   title: string;
   summary: string;
@@ -133,6 +134,7 @@ export class DirectusRepository implements ReleaseRepository {
           filter: directusFilter,
           fields: [
             "id",
+            "slug",
             "version",
             "title",
             "summary",
@@ -183,6 +185,35 @@ export class DirectusRepository implements ReleaseRepository {
     }
   }
 
+  async getReleaseBySlug(slug: string): Promise<Release | null> {
+    try {
+      this.log("getReleaseBySlug", `Fetching release with slug "${slug}"`);
+
+      const releases = await this.client.request(
+        readItems("release_notes", {
+          filter: { slug: { _eq: slug } },
+          fields: [
+            "*",
+            { project: ["*"] },
+            { media: ["*"] },
+          ] as unknown as (keyof DirectusRelease)[],
+          limit: 1,
+        })
+      );
+
+      if (releases.length === 0) {
+        this.log("getReleaseBySlug", `Release not found: "${slug}"`);
+        return null;
+      }
+
+      this.log("getReleaseBySlug", `Found release: "${releases[0].title}"`);
+      return this.mapToRelease(releases[0] as DirectusRelease);
+    } catch (error) {
+      this.log("getReleaseBySlug", "Error:", error);
+      throw DirectusError.fromError(error);
+    }
+  }
+
   async getProjects(): Promise<ProjectRef[]> {
     this.log("getProjects", "Fetching all projects with releases");
     try {
@@ -223,6 +254,7 @@ export class DirectusRepository implements ReleaseRepository {
   private mapToRelease(release: DirectusRelease): Release {
     return {
       id: release.id,
+      slug: release.slug,
       version: release.version,
       title: release.title,
       summary: release.summary,
@@ -236,6 +268,7 @@ export class DirectusRepository implements ReleaseRepository {
   private mapToReleaseListItem(release: DirectusRelease): ReleaseListItem {
     return {
       id: release.id,
+      slug: release.slug,
       version: release.version,
       title: release.title,
       summary: release.summary,

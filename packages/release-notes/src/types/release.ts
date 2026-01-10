@@ -19,6 +19,7 @@ export type ReleaseType = "feature" | "fix" | "breaking" | "maintenance";
  */
 export interface Release {
   id: string;
+  slug: string;
   version: string;
   title: string;
   summary: string;
@@ -34,6 +35,7 @@ export interface Release {
  */
 export interface ReleaseListItem {
   id: string;
+  slug: string;
   version: string;
   title: string;
   summary: string;
