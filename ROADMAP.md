@@ -142,8 +142,8 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
 - Hero section (intro text + optional CTAs)
 - Latest blog post card (cover image, persona dot, excerpt)
-- Limit Recent Updates to 3 + "View all" link
-- Dedicated `/changelog` page for full history
+- ~~Limit Recent Updates to 3 + "View all" link~~
+- ~~Dedicated `projects/sbozh-me/releases` page for full history~~
 
 ## 1.5.0 - Blog enhancement
 
