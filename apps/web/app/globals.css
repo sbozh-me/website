@@ -323,10 +323,18 @@ code, pre {
   margin-top: 0;
 }
 
-/* Add subtle hover effect to timeline dots */
+/* Release card hover effects */
+.release-card {
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
 @media (min-width: 768px) {
-  article:hover .absolute.rounded-full.bg-primary {
+  .group:hover .release-card {
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
+  }
+
+  .group:hover .timeline-dot {
     box-shadow: 0 0 0 8px rgba(139, 92, 246, 0.2);
-    transition: box-shadow 0.2s ease;
   }
 }

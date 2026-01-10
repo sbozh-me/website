@@ -10,12 +10,14 @@ interface ReleaseTimelineWithLoadMoreProps {
   initialReleases: ReleaseListItem[];
   initialSummaries: Record<string, ReactNode>;
   initialHasMore: boolean;
+  currentVersion: string;
 }
 
 export function ReleaseTimelineWithLoadMore({
   initialReleases,
   initialSummaries,
   initialHasMore,
+  currentVersion,
 }: ReleaseTimelineWithLoadMoreProps) {
   const [releases, setReleases] = useState(initialReleases);
   const [summaries, setSummaries] = useState(initialSummaries);
@@ -36,7 +38,11 @@ export function ReleaseTimelineWithLoadMore({
 
   return (
     <>
-      <ReleaseTimeline releases={releases} summaries={summaries} />
+      <ReleaseTimeline
+        releases={releases}
+        summaries={summaries}
+        currentVersion={currentVersion}
+      />
       {hasMore && (
         <div className="flex justify-center pt-8">
           <Button

@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
+import { readFile } from "fs/promises";
+import { join } from "path";
 import { HomeHero } from "@/components/HomeHero";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
@@ -8,7 +10,7 @@ import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean }
+  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
 
 async function compileSummary(markdown: string): Promise<ReactNode> {
@@ -20,11 +22,24 @@ async function compileSummary(markdown: string): Promise<ReactNode> {
 
 const INITIAL_LIMIT = 3;
 
+async function getCurrentVersion(): Promise<string> {
+  try {
+    const packageJsonPath = join(process.cwd(), "package.json");
+    const content = await readFile(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(content);
+    return packageJson.version || "0.0.0";
+  } catch (error) {
+    console.error("Failed to read package.json version:", error);
+    return "0.0.0";
+  }
+}
+
 async function getReleases(): Promise<ReleasesResult> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
-      return { success: true, releases: [], summaries: {}, hasMore: false };
+      const currentVersion = await getCurrentVersion();
+      return { success: true, releases: [], summaries: {}, hasMore: false, currentVersion };
     }
 
     // Fetch one extra to check if there are more
@@ -42,7 +57,8 @@ async function getReleases(): Promise<ReleasesResult> {
     );
     const summaries = Object.fromEntries(summaryEntries);
 
-    return { success: true, releases, summaries, hasMore };
+    const currentVersion = await getCurrentVersion();
+    return { success: true, releases, summaries, hasMore, currentVersion };
   } catch (error) {
     console.error("Failed to fetch releases:", error);
     if (error instanceof DirectusError) {
@@ -64,20 +80,21 @@ export default async function Home() {
       {result.success ? (
         result.releases.length > 0 && (
           <section className="w-full max-w-3xl py-16">
-            <h2 className="mb-8 text-2xl font-semibold tracking-tight">
-              Recent Updates
+            <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
+              Release Notes
             </h2>
             <ReleaseTimelineWithLoadMore
               initialReleases={result.releases}
               initialSummaries={result.summaries}
               initialHasMore={result.hasMore}
+              currentVersion={result.currentVersion}
             />
           </section>
         )
       ) : (
         <section className="w-full max-w-3xl py-16">
-          <h2 className="mb-8 text-2xl font-semibold tracking-tight">
-            Recent Updates
+          <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
+            Release Notes
           </h2>
           <ErrorState message={result.error} status={result.status} />
         </section>

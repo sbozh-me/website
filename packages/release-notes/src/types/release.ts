@@ -10,6 +10,11 @@ export interface ReleaseMedia {
 }
 
 /**
+ * Release type for visual categorization
+ */
+export type ReleaseType = "feature" | "fix" | "breaking" | "maintenance";
+
+/**
  * Full release note (for detail view or full display)
  */
 export interface Release {
@@ -20,6 +25,7 @@ export interface Release {
   dateReleased: string;
   project: ProjectRef;
   media?: ReleaseMedia;
+  type?: ReleaseType;
 }
 
 /**
@@ -34,4 +40,5 @@ export interface ReleaseListItem {
   dateReleased: string;
   project: ProjectRef;
   media?: ReleaseMedia;
+  type?: ReleaseType;
 }

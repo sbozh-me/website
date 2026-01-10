@@ -67,6 +67,7 @@ interface DirectusRelease {
   date_released: string;
   project: DirectusProject;
   media?: DirectusFile | null;
+  type?: "feature" | "fix" | "breaking" | "maintenance";
 }
 
 interface DirectusProject {
@@ -136,6 +137,7 @@ export class DirectusRepository implements ReleaseRepository {
             "title",
             "summary",
             "date_released",
+            "type",
             { project: ["id", "name", "slug"] },
             { media: ["id", "type", "title"] },
           ] as unknown as (keyof DirectusRelease)[],
@@ -227,6 +229,7 @@ export class DirectusRepository implements ReleaseRepository {
       dateReleased: release.date_released,
       project: this.mapToProjectRef(release.project),
       media: this.mapToMedia(release.media),
+      type: release.type,
     };
   }
 
@@ -239,6 +242,7 @@ export class DirectusRepository implements ReleaseRepository {
       dateReleased: release.date_released,
       project: this.mapToProjectRef(release.project),
       media: this.mapToMedia(release.media),
+      type: release.type,
     };
   }
 
