@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { readFile } from "fs/promises";
+import { join } from "path";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { projects } from "@/lib/projects/data";
@@ -14,6 +16,17 @@ export const dynamic = "force-dynamic";
 
 interface ReleaseDetailPageProps {
   params: Promise<{ slug: string; releaseSlug: string }>;
+}
+
+async function getCurrentVersion(): Promise<string> {
+  try {
+    const packageJsonPath = join(process.cwd(), "..", "..", "package.json");
+    const content = await readFile(packageJsonPath, "utf-8");
+    const packageJson = JSON.parse(content);
+    return packageJson.version || "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
 }
 
 const RELEASE_TYPE_CONFIG = {
@@ -67,6 +80,8 @@ export default async function ReleaseDetailPage({ params }: ReleaseDetailPagePro
   }
 
   const { release, content } = result;
+  const currentVersion = await getCurrentVersion();
+  const isLatest = Boolean(currentVersion && release.version === currentVersion);
   const formattedDate = formatReleaseDate(release.dateReleased);
   const readingTime = calculateReadingTime(release.summary);
   const typeConfig = release.type ? RELEASE_TYPE_CONFIG[release.type] : null;
@@ -105,6 +120,13 @@ export default async function ReleaseDetailPage({ params }: ReleaseDetailPagePro
           {release.version && (
             <span className="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1 font-mono font-medium">
               {release.version}
+            </span>
+          )}
+
+          {/* Latest badge */}
+          {isLatest && (
+            <span className="inline-flex items-center rounded-full border border-primary px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary">
+              Latest
             </span>
           )}
 
