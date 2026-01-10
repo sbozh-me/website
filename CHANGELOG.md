@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.7] - 2026-01-10
+
+### Changes
+
+- feat(releases): add Latest badge to release detail page ([9392b11](https://github.com/sbozh-me/website/commit/9392b11ad25b2262fd9aa9f04ad84116be6ac2a4))
+- feat(sitemap): add release detail pages to sitemap ([2095842](https://github.com/sbozh-me/website/commit/2095842fc7416892ebd33d2afab510c204b2ccb7))
+
+
 ## [1.3.6] - 2026-01-10
 
 ### Changes
