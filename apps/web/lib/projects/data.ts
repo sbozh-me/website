@@ -19,8 +19,7 @@ export const projects: Project[] = [
     tabs: [
       { id: "about", label: "About", enabled: true },
       { id: "motivation", label: "Motivation", enabled: true },
-      { id: "changelog", label: "Changelog", enabled: true },
-      { id: "roadmap", label: "Roadmap", enabled: true },
+      { id: "releases", label: "Releases", enabled: true },
     ],
     links: [
       { type: "github", label: "Repository", href: "https://github.com/sbozh-me/website" },

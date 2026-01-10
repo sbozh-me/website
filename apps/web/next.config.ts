@@ -6,6 +6,25 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // TODO: Enable when build server has more memory
   // productionBrowserSourceMaps: true, // Enable public source maps for better error tracking
+  async redirects() {
+    return [
+      {
+        source: "/projects/sbozh-me/changelog",
+        destination: "/projects/sbozh-me/releases?tab=changelog",
+        permanent: true,
+      },
+      {
+        source: "/projects/sbozh-me/roadmap",
+        destination: "/projects/sbozh-me/releases?tab=roadmap",
+        permanent: true,
+      },
+      {
+        source: "/release-notes",
+        destination: "/projects/sbozh-me/releases",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {

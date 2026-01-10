@@ -28,7 +28,7 @@ export function ProjectSidebar({ slug, tabs }: ProjectSidebarProps) {
             const isActive =
               tab.id === "about"
                 ? pathname === `/projects/${slug}`
-                : pathname === href;
+                : pathname === href || pathname.startsWith(`${href}/`);
 
             return (
               <li key={tab.id} role="presentation">
