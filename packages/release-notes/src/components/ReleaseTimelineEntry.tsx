@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import type { ReleaseListItem, ReleaseType } from "../types/release";
 import { formatReleaseDate } from "../utils/date-format";
 import { ReleaseMediaCard } from "./ReleaseMediaCard";
@@ -90,8 +91,13 @@ export function ReleaseTimelineEntry({
         {/* Content card */}
         <div className="min-w-0 flex-1 pl-6">
           <div className="release-card rounded-lg border border-border bg-surface/50 p-6 transition-all duration-200">
-            <h3 className="text-lg font-semibold leading-tight text-foreground">
-              {release.title}
+            <h3 className="text-lg font-semibold leading-tight">
+              <Link
+                href={`/projects/${release.project.slug}/releases/${release.slug}`}
+                className="text-foreground hover:text-primary transition-colors"
+              >
+                {release.title}
+              </Link>
             </h3>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               {metadataSection}
@@ -110,8 +116,13 @@ export function ReleaseTimelineEntry({
           {formattedDate}
         </time>
         <div className="release-card rounded-lg border border-border bg-surface/50 p-5 transition-all duration-200">
-          <h3 className="text-lg font-semibold leading-tight text-foreground">
-            {release.title}
+          <h3 className="text-lg font-semibold leading-tight">
+            <Link
+              href={`/projects/${release.project.slug}/releases/${release.slug}`}
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              {release.title}
+            </Link>
           </h3>
           <div className="mt-2 flex flex-wrap items-center gap-2">
             {metadataSection}
