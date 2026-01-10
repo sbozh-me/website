@@ -75,7 +75,7 @@ export function ReleaseTimelineEntry({
       {/* Desktop layout: Date + circle on left, content card on right */}
       <div className="hidden md:flex items-start">
         {/* Date with circle */}
-        <div className="relative shrink-0 w-[110px] pt-1.5">
+        <div className="relative shrink-0 w-[110px] pt-7.5">
           <time
             dateTime={release.dateReleased}
             className="block text-sm text-muted-foreground"
@@ -84,7 +84,7 @@ export function ReleaseTimelineEntry({
           </time>
           {/* Circle - positioned to sit on the timeline */}
           <div
-            className="timeline-dot absolute top-2.5 -right-[0.5px] translate-x-1/2 h-3 w-3 rounded-full bg-primary ring-4 ring-background z-10 transition-shadow duration-200"
+            className="timeline-dot absolute top-8.5 -right-[0.5px] translate-x-1/2 h-3 w-3 rounded-full bg-primary ring-4 ring-background z-10 transition-shadow duration-200"
           />
         </div>
 
