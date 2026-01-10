@@ -9,7 +9,7 @@ interface ScrollToElementProps {
 export function ScrollToElement({ elementId }: ScrollToElementProps) {
   useEffect(() => {
     const element = document.getElementById(elementId);
-    if (element) {
+    if (element?.scrollIntoView) {
       element.scrollIntoView({ behavior: "instant", block: "start" });
     }
   }, [elementId]);
