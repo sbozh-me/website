@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.6] - 2026-01-10
+
+### Changes
+
+- refactor(releases): fix breadcrumb hydration using route groups ([516ea51](https://github.com/sbozh-me/website/commit/516ea519958e523c8652d604a5ff66bcf53460d5))
+- feat(releases): add scroll to title on release detail page ([f507891](https://github.com/sbozh-me/website/commit/f507891c31ffd8943706c1a38fd9f57fd7f9c540))
+- fix(scroll): handle missing scrollIntoView in test environment ([e419b91](https://github.com/sbozh-me/website/commit/e419b91ef54c172f971b2c21d28f40f2f2b253f1))
+
+
 ## [1.3.5] - 2026-01-10
 
 ### Changes
