@@ -46,7 +46,9 @@ describe("sitemap.ts", () => {
     expect(urls).toContain("https://sbozh.me/projects/discord-community");
 
     // Other tabs are at /projects/[slug]/[tab]
-    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/roadmap");
+    // sbozh-me has releases tab (not roadmap)
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/releases");
+    // discord-community has roadmap tab
     expect(urls).toContain("https://sbozh.me/projects/discord-community/roadmap");
   });
 
