@@ -133,7 +133,7 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 ## ~~1.3.0 - Release Notes & Main Page~~ ✅
 
 - ~~Projects collection in Directus~~
-- ~~Release Notes collection in Directus~~
+- ~~Release notes collection in Directus~~
 - ~~Release notes on Main page~~
 - ~~Release notes on project page~~
 - ~~Roadmap and changelog moved to releases~~
