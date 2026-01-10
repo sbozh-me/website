@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2026-01-10
+
+### Changes
+
+- fix(releases): make projectSlug prop optional in ReleaseTimelineWithLoadMore ([7b84bea](https://github.com/sbozh-me/website/commit/7b84bea45b817146201f5c880056e218fa2a8596))
+- fix(release-notes): ensure isLatest prop is boolean type ([4192f6d](https://github.com/sbozh-me/website/commit/4192f6d9c4a80fcf2537201ba8031196ff65faab))
+- fix(release-notes): add next as peer dependency ([16202b8](https://github.com/sbozh-me/website/commit/16202b87a842b5e2077820fc1df447fad71e24ed))
+- chore: update pnpm-lock.yaml ([90f82b8](https://github.com/sbozh-me/website/commit/90f82b8d2c392ef29e7a878372376a55d82211da))
+
+
 ## [1.3.0] - 2026-01-10
 
 ### Changes
