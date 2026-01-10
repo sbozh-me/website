@@ -37,7 +37,7 @@ vi.mock("@/lib/projects/data", () => ({
   projects: [
     {
       slug: "sbozh-me",
-      name: "sbozh.me",
+      title: "sbozh.me",
       tagline: "Personal startup project",
       status: "beta",
     },
@@ -90,7 +90,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "This is a summary of the release. It contains important information about the changes.",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
         type: "feature",
       });
 
@@ -132,7 +132,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: longSummary,
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
       });
 
       const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
@@ -151,7 +151,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
         type: "feature",
       });
 
@@ -177,7 +177,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
       });
 
       const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
@@ -197,7 +197,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
         media: {
           id: "media-1",
           title: "Screenshot",
@@ -224,7 +224,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
         media: undefined,
       });
 
@@ -247,7 +247,7 @@ describe("ReleaseDetailPage", () => {
           title: "Release 1",
           summary: "Summary content",
           dateReleased: "2024-01-01",
-          project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+          project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
           type,
         });
 
@@ -302,7 +302,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
       });
 
       const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
@@ -322,7 +322,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
         type: undefined,
       });
 
@@ -344,7 +344,7 @@ describe("ReleaseDetailPage", () => {
         title: "Release 1",
         summary: "Summary content",
         dateReleased: "2024-01-01",
-        project: { id: "1", name: "sbozh.me", slug: "sbozh-me" },
+        project: { id: "1", title: "sbozh.me", slug: "sbozh-me" },
       });
 
       const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });

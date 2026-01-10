@@ -168,7 +168,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { release } = result;
 
   return {
-    title: `${release.title} - ${project.name}`,
+    title: `${release.title} - ${project.title}`,
     description: release.summary.slice(0, 160),
   };
 }

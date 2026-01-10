@@ -93,7 +93,7 @@ vi.mock("@/lib/projects/data", () => ({
   projects: [
     {
       slug: "sbozh-me",
-      name: "sbozh.me",
+      title: "sbozh.me",
       tagline: "Personal startup project",
       status: "beta",
       tabs: [

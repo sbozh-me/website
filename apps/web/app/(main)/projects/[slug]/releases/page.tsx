@@ -163,7 +163,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return {
-    title: `Releases - ${project.name}`,
-    description: `Release notes, changelog, and roadmap for ${project.name}`,
+    title: `Releases - ${project.title}`,
+    description: `Release notes, changelog, and roadmap for ${project.title}`,
   };
 }

@@ -50,7 +50,7 @@ export function ReleaseTimelineEntry({
             </span>
           )}
           {isLatest && (
-            <span className="inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-background">
+            <span className="inline-flex items-center rounded-full border border-primary px-2 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-primary">
               Latest
             </span>
           )}
