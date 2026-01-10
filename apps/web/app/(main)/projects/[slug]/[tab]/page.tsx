@@ -26,7 +26,8 @@ export async function generateStaticParams() {
 
   for (const project of projects) {
     for (const tab of project.tabs) {
-      if (tab.enabled) {
+      // Skip releases - it has its own dedicated page at /projects/[slug]/releases
+      if (tab.enabled && tab.id !== "releases") {
         params.push({
           slug: project.slug,
           tab: tab.id,
@@ -71,6 +72,12 @@ export default async function TabPage({ params }: TabPageProps) {
   const project = getProject(slug);
 
   if (!project) {
+    notFound();
+  }
+
+  // Releases has its own dedicated page at /projects/[slug]/releases
+  // This prevents route conflicts in production builds
+  if (tab === "releases") {
     notFound();
   }
 
