@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-01-10
+
+### Changes
+
+- fix(docker): add themes and release-notes packages to Dockerfile ([2abc697](https://github.com/sbozh-me/website/commit/2abc697e24b7de3cab64d08756552f3df2ca48f9))
+- docs(claude): update theming module with kognitiv and loader overlay ([a4fed5b](https://github.com/sbozh-me/website/commit/a4fed5b96ceddb5e5091671596abaccae463040b))
+- feat(pmdxjs): add markdown link support for company names in entries ([c165b68](https://github.com/sbozh-me/website/commit/c165b68cf1e6ab492afad9a7b6164cc60af2b01b))
+- feat(release-notes): implement timeline UI and main page integration ([821e609](https://github.com/sbozh-me/website/commit/821e609cb50f3b5b4eb3507d8192af459f12d708))
+- docs(claude): add error UI handling module ([c29e6ce](https://github.com/sbozh-me/website/commit/c29e6ceaf46fc33dacc8ab6c14d000cf56bc7a23))
+- docs(claude): add stricter co-activation guidance to cognitive interviewer ([30eec10](https://github.com/sbozh-me/website/commit/30eec1058aa1a6ce8e2626e05b6b3fdd31686407))
+- fix(release-notes): use correct collection name release_notes ([3db1eed](https://github.com/sbozh-me/website/commit/3db1eed97349c64276812ca83b70cd5912de678a))
+- feat(release-notes): add MDX support for release summaries ([46ab1e7](https://github.com/sbozh-me/website/commit/46ab1e7a8195ba3f317e2b5fd3ee78d6432358bc))
+- refactor(release-notes): simplify timeline layout with border-based design ([b122e9d](https://github.com/sbozh-me/website/commit/b122e9d3ff0292b7b54a867e816329cd495b287d))
+- style(web): update globals.css ([2408ef8](https://github.com/sbozh-me/website/commit/2408ef815af174f4306500702df88cce6e07d24f))
+- docs(roadmap): update v1.3.0 scope and move items to backlog ([e939041](https://github.com/sbozh-me/website/commit/e939041832920ba9742d5131dadedca695a4bd13))
+- refactor(release-notes): improve timeline entry layout and styling ([6f4232f](https://github.com/sbozh-me/website/commit/6f4232f33ec2c59e6d1baf111c6e5b304d7d7a39))
+- docs(release-notes): update module documentation to reflect production state ([68e6a8e](https://github.com/sbozh-me/website/commit/68e6a8e5bbbc8d3f0b618b77ee314340d481221c))
+- feat(release-notes): add pagination with load more button for main page timeline ([c79f0f2](https://github.com/sbozh-me/website/commit/c79f0f24b5e3249c9270082259eae9da5555e44a))
+- feat(release-notes): enhance timeline with Vercel-style design ([07e2772](https://github.com/sbozh-me/website/commit/07e277278b5a57a61e2a6aa298354312979611b4))
+- feat(release-notes): add visual enhancements and version-based latest badge ([5ddd261](https://github.com/sbozh-me/website/commit/5ddd261f976dc62640b3ade8f9537238d50ab269))
+- refactor(release-notes): remove collapse functionality from timeline entries ([48ed34c](https://github.com/sbozh-me/website/commit/48ed34cf8630577a0e0bf4ac9dbb139deff685a9))
+- feat(releases)!: consolidate changelog, roadmap, and release notes into unified /releases page ([b09d4d3](https://github.com/sbozh-me/website/commit/b09d4d30c1e05b679e6b27329625b0bc2ba10a6a))
+- feat(release-notes): add slug-based routing and reading time calculation ([48c1e8b](https://github.com/sbozh-me/website/commit/48c1e8be0df772b99ba00d11dcf948dcc02b1bc4))
+- feat(releases): add individual release detail pages with navigation ([3472b2c](https://github.com/sbozh-me/website/commit/3472b2c4efe7854664c7951c6b733a26b2cab72f))
+- fix(releases): filter release notes by project slug ([65ce88f](https://github.com/sbozh-me/website/commit/65ce88f5cb1a9c8ff37d397b71c0e94ec38e8f69))
+- fix(release-notes): adjust timeline dot vertical alignment ([249439e](https://github.com/sbozh-me/website/commit/249439e0ccd5fb81e97c9a9549736ad3ffad8630))
+- test(releases): add comprehensive tests for release pages and components ([7fe6103](https://github.com/sbozh-me/website/commit/7fe61033e3cfa273c0ec516eaa3bf8751687e003))
+- fix(tests): update sitemap and page tests for releases feature ([34eb7b0](https://github.com/sbozh-me/website/commit/34eb7b090d713ce3e30f92512d356d06b23090c2))
+- test(releases): add error handling test coverage ([16666bf](https://github.com/sbozh-me/website/commit/16666bfd63020128c82e726cd805bc671b91c3b8))
+- fix(releases): use project.title instead of project.name ([f94542e](https://github.com/sbozh-me/website/commit/f94542ea69c738870c0ea4985303e1e5a3ec6cf2))
+
+
 ## [1.2.8] - 2026-01-08
 
 ### Changes
