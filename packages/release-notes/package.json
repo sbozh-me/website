@@ -20,6 +20,7 @@
   },
   "peerDependencies": {
     "@sbozh/react-ui": "workspace:*",
+    "next": ">=15.0.0",
     "react": ">=19.2.1"
   },
   "devDependencies": {
