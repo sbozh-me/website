@@ -356,4 +356,66 @@ describe("ReleasesPage", () => {
       });
     });
   });
+
+  describe("error handling", () => {
+    it("handles getChangelog error gracefully", async () => {
+      // Re-mock fs to throw for CHANGELOG.md
+      const { readFileSync } = await import("fs");
+      vi.mocked(readFileSync).mockImplementation((path: string) => {
+        if (String(path).includes("CHANGELOG.md")) {
+          throw new Error("File not found");
+        }
+        if (String(path).includes("ROADMAP.md")) {
+          return "# Roadmap\n\n## v1.3.0\n\n- [ ] Feature A";
+        }
+        if (String(path).includes("BACKLOGIDEAS.md")) {
+          return "# Backlog\n\n- [ ] Future idea 1";
+        }
+        if (String(path).includes("package.json")) {
+          return JSON.stringify({ version: "1.2.8" });
+        }
+        throw new Error("Unknown file");
+      });
+
+      mockGetReleases.mockResolvedValue([]);
+
+      const params = Promise.resolve({ slug: "sbozh-me" });
+      const searchParams = Promise.resolve({ tab: "changelog" });
+      const Page = await ReleasesPage({ params, searchParams });
+      render(Page);
+
+      // Page should still render without crashing
+      expect(screen.getByText("Changelog")).toBeInTheDocument();
+    });
+
+    it("handles getRoadmap error gracefully", async () => {
+      // Re-mock fs to throw for ROADMAP.md
+      const { readFileSync } = await import("fs");
+      vi.mocked(readFileSync).mockImplementation((path: string) => {
+        if (String(path).includes("CHANGELOG.md")) {
+          return "# Changelog\n\n## v1.2.8 - 2024-01-01\n\n- Feature 1";
+        }
+        if (String(path).includes("ROADMAP.md")) {
+          throw new Error("File not found");
+        }
+        if (String(path).includes("BACKLOGIDEAS.md")) {
+          return "# Backlog\n\n- [ ] Future idea 1";
+        }
+        if (String(path).includes("package.json")) {
+          return JSON.stringify({ version: "1.2.8" });
+        }
+        throw new Error("Unknown file");
+      });
+
+      mockGetReleases.mockResolvedValue([]);
+
+      const params = Promise.resolve({ slug: "sbozh-me" });
+      const searchParams = Promise.resolve({ tab: "roadmap" });
+      const Page = await ReleasesPage({ params, searchParams });
+      render(Page);
+
+      // Page should still render without crashing
+      expect(screen.getByText("Roadmap")).toBeInTheDocument();
+    });
+  });
 });

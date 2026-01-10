@@ -21,10 +21,9 @@ vi.mock("@mdx-js/mdx", () => ({
 }));
 
 // Mock release repository
-const mockGetReleaseBySlug = vi.fn();
 vi.mock("@/lib/releases/repository", () => ({
   createReleaseRepository: vi.fn(() => ({
-    getReleaseBySlug: mockGetReleaseBySlug,
+    getReleaseBySlug: vi.fn(),
   })),
   DirectusError: class DirectusError extends Error {
     constructor(message: string, public status?: number) {
@@ -61,10 +60,18 @@ vi.mock("@sbozh/release-notes/components", () => ({
 }));
 
 import ReleaseDetailPage, { generateStaticParams, generateMetadata } from "./page";
+import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
+
+const mockCreateReleaseRepository = vi.mocked(createReleaseRepository);
+const mockGetReleaseBySlug = vi.fn();
 
 describe("ReleaseDetailPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset to default implementation
+    mockCreateReleaseRepository.mockReturnValue({
+      getReleaseBySlug: mockGetReleaseBySlug,
+    });
   });
 
   describe("generateStaticParams", () => {
@@ -346,6 +353,35 @@ describe("ReleaseDetailPage", () => {
 
       const article = container.querySelector("article");
       expect(article).toHaveClass("prose", "prose-sm", "prose-muted", "max-w-none");
+    });
+  });
+
+  describe("error handling", () => {
+    it("calls notFound when repository is null", async () => {
+      mockCreateReleaseRepository.mockReturnValue(null as any);
+      const { notFound } = await import("next/navigation");
+      const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
+
+      await expect(ReleaseDetailPage({ params })).rejects.toThrow();
+      expect(notFound).toHaveBeenCalled();
+    });
+
+    it("calls notFound when repository throws DirectusError", async () => {
+      mockGetReleaseBySlug.mockRejectedValue(new DirectusError("API Error", 500));
+      const { notFound } = await import("next/navigation");
+      const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
+
+      await expect(ReleaseDetailPage({ params })).rejects.toThrow();
+      expect(notFound).toHaveBeenCalled();
+    });
+
+    it("calls notFound when repository throws generic error", async () => {
+      mockGetReleaseBySlug.mockRejectedValue(new Error("Network error"));
+      const { notFound } = await import("next/navigation");
+      const params = Promise.resolve({ slug: "sbozh-me", releaseSlug: "release-1" });
+
+      await expect(ReleaseDetailPage({ params })).rejects.toThrow();
+      expect(notFound).toHaveBeenCalled();
     });
   });
 });
