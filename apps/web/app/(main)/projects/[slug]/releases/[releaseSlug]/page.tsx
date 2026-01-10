@@ -9,6 +9,8 @@ import { ReleaseMediaCard, CopyUrlButton } from "@sbozh/release-notes/components
 import { formatReleaseDate, calculateReadingTime, formatReadingTime } from "@sbozh/release-notes/utils";
 import type { Release } from "@sbozh/release-notes/types";
 
+export const dynamic = "force-dynamic";
+
 interface ReleaseDetailPageProps {
   params: Promise<{ slug: string; releaseSlug: string }>;
 }
