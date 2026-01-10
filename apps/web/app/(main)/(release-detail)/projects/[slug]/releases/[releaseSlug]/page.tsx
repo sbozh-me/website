@@ -5,6 +5,7 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { projects } from "@/lib/projects/data";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
+import { ScrollToElement } from "@/components/ScrollToElement";
 import { ReleaseMediaCard, CopyUrlButton } from "@sbozh/release-notes/components";
 import { formatReleaseDate, calculateReadingTime, formatReadingTime } from "@sbozh/release-notes/utils";
 import type { Release } from "@sbozh/release-notes/types";
@@ -72,6 +73,8 @@ export default async function ReleaseDetailPage({ params }: ReleaseDetailPagePro
 
   return (
     <div className="w-full max-w-3xl mx-auto">
+      <ScrollToElement elementId="release-title" />
+
       {/* Back link */}
       <Link
         href={`/projects/${slug}/releases`}
@@ -94,7 +97,7 @@ export default async function ReleaseDetailPage({ params }: ReleaseDetailPagePro
 
       {/* Header */}
       <header className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">{release.title}</h1>
+        <h1 id="release-title" className="text-4xl font-bold mb-4 scroll-mt-[100px]">{release.title}</h1>
 
         {/* Meta information */}
         <div className="flex flex-wrap items-center gap-4 text-sm">
