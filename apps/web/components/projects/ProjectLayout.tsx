@@ -9,13 +9,14 @@ import type { Project } from "@/lib/projects/types";
 interface ProjectLayoutProps {
   project: Project;
   children: ReactNode;
+  breadcrumbs?: ReactNode;
 }
 
-export function ProjectLayout({ project, children }: ProjectLayoutProps) {
+export function ProjectLayout({ project, children, breadcrumbs }: ProjectLayoutProps) {
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
       <div className="max-w-6xl mx-auto">
-        <ProjectBreadcrumbs project={project} />
+        {breadcrumbs ?? <ProjectBreadcrumbs project={project} />}
         <ProjectHeader project={project} />
 
         <MobileTabScroll slug={project.slug} tabs={project.tabs} />
