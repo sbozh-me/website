@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.4] - 2026-01-10
+
+### Changes
+
+- docs: update ROADMAP.md ([74f0d82](https://github.com/sbozh-me/website/commit/74f0d826981c53ca1938c0f4f19cdaa3de4e9ec1))
+
+
 ## [1.3.3] - 2026-01-10
 
 ### Changes
