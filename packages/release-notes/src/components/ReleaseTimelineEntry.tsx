@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { ReleaseListItem, ReleaseType } from "../types/release";
 import { formatReleaseDate } from "../utils/date-format";
 import { ReleaseMediaCard } from "./ReleaseMediaCard";
@@ -26,18 +26,6 @@ export function ReleaseTimelineEntry({
   isLatest = false,
 }: ReleaseTimelineEntryProps) {
   const formattedDate = formatReleaseDate(release.dateReleased);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [needsCollapse, setNeedsCollapse] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Check if content exceeds collapse threshold
-  useEffect(() => {
-    if (contentRef.current) {
-      const COLLAPSE_THRESHOLD = 192; // 12rem in pixels (assuming 16px base)
-      setNeedsCollapse(contentRef.current.scrollHeight > COLLAPSE_THRESHOLD);
-    }
-  }, [summaryContent]);
-
   const typeConfig = release.type ? RELEASE_TYPE_CONFIG[release.type] : null;
 
   const metadataSection = (
@@ -73,27 +61,9 @@ export function ReleaseTimelineEntry({
   const contentSection = (
     <>
       {summaryContent && (
-        <div className="relative mt-4">
-          <div
-            ref={contentRef}
-            className={`prose prose-sm prose-muted max-w-none release-summary overflow-hidden transition-all duration-300 ${
-              needsCollapse && !isExpanded ? "max-h-48" : ""
-            }`}
-          >
-            {summaryContent}
-          </div>
-          {needsCollapse && !isExpanded && (
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-surface/50 to-transparent pointer-events-none" />
-          )}
+        <div className="prose prose-sm prose-muted max-w-none release-summary mt-4">
+          {summaryContent}
         </div>
-      )}
-      {needsCollapse && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="mt-2 text-sm text-primary hover:underline focus:outline-none focus:underline"
-        >
-          {isExpanded ? "Show less" : "Show more"}
-        </button>
       )}
       {release.media && <ReleaseMediaCard media={release.media} />}
     </>
