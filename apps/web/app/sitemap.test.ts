@@ -1,11 +1,29 @@
 import { describe, expect, it, vi } from "vitest";
 
-// Mock the repository
+// Mock the blog repository
 vi.mock("@/lib/blog/repository", () => ({
   createBlogRepository: () => ({
     getPosts: vi.fn(async () => [
       { slug: "test-post-1", date: "2024-01-15" },
       { slug: "test-post-2", date: "2024-02-20" },
+    ]),
+  }),
+}));
+
+// Mock the release repository
+vi.mock("@/lib/releases/repository", () => ({
+  createReleaseRepository: () => ({
+    getReleases: vi.fn(async () => [
+      {
+        slug: "v1-3-0",
+        dateReleased: "2025-01-10",
+        project: { slug: "sbozh-me", name: "sbozh.me" },
+      },
+      {
+        slug: "v1-2-0",
+        dateReleased: "2025-01-05",
+        project: { slug: "sbozh-me", name: "sbozh.me" },
+      },
     ]),
   }),
 }));
@@ -91,6 +109,42 @@ describe("sitemap.ts", () => {
     expect(homepage?.changeFrequency).toBe("monthly");
     expect(blog?.changeFrequency).toBe("weekly");
     expect(blogPost?.changeFrequency).toBe("monthly");
+  });
+
+  it("includes release detail routes", async () => {
+    const result = await sitemap();
+    const urls = result.map((entry) => entry.url);
+
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/releases/v1-3-0");
+    expect(urls).toContain("https://sbozh.me/projects/sbozh-me/releases/v1-2-0");
+  });
+
+  it("sets correct lastModified for releases", async () => {
+    const result = await sitemap();
+    const release = result.find((entry) =>
+      entry.url.includes("releases/v1-3-0")
+    );
+
+    expect(release?.lastModified).toEqual(new Date("2025-01-10"));
+  });
+
+  it("sets correct priority for releases", async () => {
+    const result = await sitemap();
+    const release = result.find((entry) =>
+      entry.url.includes("releases/v1-3-0")
+    );
+
+    expect(release?.priority).toBe(0.5);
+  });
+
+  it("uses latest release date for releases tab", async () => {
+    const result = await sitemap();
+    const releasesTab = result.find(
+      (entry) => entry.url === "https://sbozh.me/projects/sbozh-me/releases"
+    );
+
+    // Should use the latest release date (2025-01-10) not static data
+    expect(releasesTab?.lastModified).toEqual(new Date("2025-01-10"));
   });
 });
 

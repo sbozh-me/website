@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { createBlogRepository } from "@/lib/blog/repository";
+import { createReleaseRepository } from "@/lib/releases/repository";
 import { getProjects } from "@/lib/projects/data";
 import sitemapData from "@/lib/seo/sitemap-data.json";
 
@@ -46,6 +47,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[Sitemap] Failed to fetch blog posts:", error);
   }
 
+  // Fetch release data for release detail pages
+  let releaseRoutes: MetadataRoute.Sitemap = [];
+  const latestReleaseDates: Record<string, Date> = {};
+  try {
+    const repository = createReleaseRepository();
+    if (repository) {
+      const releases = await repository.getReleases({});
+
+      // Track the latest release date per project for /projects/[slug]/releases route
+      for (const release of releases) {
+        const projectSlug = release.project.slug;
+        const releaseDate = new Date(release.dateReleased);
+        if (!latestReleaseDates[projectSlug] || releaseDate > latestReleaseDates[projectSlug]) {
+          latestReleaseDates[projectSlug] = releaseDate;
+        }
+      }
+
+      releaseRoutes = releases.map((release) => ({
+        url: `${baseUrl}/projects/${release.project.slug}/releases/${release.slug}`,
+        lastModified: new Date(release.dateReleased),
+        changeFrequency: "monthly" as const,
+        priority: 0.5,
+      }));
+    }
+  } catch (error) {
+    console.error("[Sitemap] Failed to fetch releases:", error);
+  }
+
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -80,14 +109,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
     const otherTabs = project.tabs
       .filter((tab) => tab.enabled && tab.id !== "about")
-      .map((tab) => ({
-        url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
-        lastModified: getLastModified(`${baseUrl}/projects/${project.slug}/${tab.id}`),
-        changeFrequency: "weekly" as const,
-        priority: 0.7,
-      }));
+      .map((tab) => {
+        // Use latest release date for releases tab, similar to /blog
+        const lastModified = tab.id === "releases" && latestReleaseDates[project.slug]
+          ? latestReleaseDates[project.slug]
+          : getLastModified(`${baseUrl}/projects/${project.slug}/${tab.id}`);
+        return {
+          url: `${baseUrl}/projects/${project.slug}/${tab.id}`,
+          lastModified,
+          changeFrequency: "weekly" as const,
+          priority: 0.7,
+        };
+      });
     return [aboutRoute, ...otherTabs];
   });
 
-  return [...staticRoutes, ...projectRoutes, ...blogRoutes];
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes, ...releaseRoutes];
 }
