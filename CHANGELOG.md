@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.2] - 2026-01-10
+
+### Changes
+
+- fix(releases): mark release detail page as dynamic ([507901a](https://github.com/sbozh-me/website/commit/507901ad3ac871f28206f0dcbf8255161a1e9f99))
+
+
 ## [1.3.1] - 2026-01-10
 
 ### Changes
