@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.8] - 2026-01-10
+
+### Changes
+
+- docs(roadmap): mark completed release notes items ([21f4ee1](https://github.com/sbozh-me/website/commit/21f4ee1f353ae74228fe7b9eaabcb7dcb828544a))
+- fix(themes): use kognitiv blue for text selection color ([265981b](https://github.com/sbozh-me/website/commit/265981be3c8ee7ef4f6189083d47b1511ad15720))
+
+
 ## [1.3.7] - 2026-01-10
 
 ### Changes
