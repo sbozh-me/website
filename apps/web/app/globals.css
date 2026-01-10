@@ -305,3 +305,28 @@ code, pre {
 [data-sonner-toast][data-type="info"] [data-icon] {
   color: var(--toast-icon-info);
 }
+
+/* Release Notes Timeline Styles */
+.release-summary h2,
+.release-summary h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.release-summary h2:first-child,
+.release-summary h3:first-child {
+  margin-top: 0;
+}
+
+/* Add subtle hover effect to timeline dots */
+@media (min-width: 768px) {
+  article:hover .absolute.rounded-full.bg-primary {
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0.2);
+    transition: box-shadow 0.2s ease;
+  }
+}
