@@ -15,11 +15,11 @@ describe("ContactPage", () => {
     expect(screen.getByText(/Under construction/)).toBeInTheDocument();
   });
 
-  it("renders Discord link", () => {
+  it("renders LinkedIn link", () => {
     render(<ContactPage />);
-    const discordLink = screen.getByRole("link", { name: /Discord/i });
-    expect(discordLink).toBeInTheDocument();
-    expect(discordLink).toHaveAttribute("href", "/projects/discord-community");
+    const linkedinLink = screen.getByRole("link", { name: /LinkedIn/i });
+    expect(linkedinLink).toBeInTheDocument();
+    expect(linkedinLink).toHaveAttribute("href", "https://www.linkedin.com/in/sbozhyk");
   });
 
   it("renders email link", () => {
