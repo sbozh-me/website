@@ -3,7 +3,8 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { HomeHero } from "@/components/HomeHero";
+import { PersonaCarousel } from "@/components/home";
+import { personaEntities } from "@/data/persona-entities";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
@@ -73,8 +74,8 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
-      <div className="flex min-h-[80vh] flex-col items-center justify-center">
-        <HomeHero />
+      <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16">
+        <PersonaCarousel personas={personaEntities} />
       </div>
 
       {result.success ? (
