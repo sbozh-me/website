@@ -29,7 +29,7 @@ export const projects: Project[] = [
     slug: "discord-community",
     title: "Private Discord Community",
     tagline: "A place where you can ask me questions, discuss my work, and dig deeper into ideas I don’t publish publicly",
-    status: "beta",
+    status: "active",
     heroImage: {
       src: "/images/projects/discord-community-hero.png",
       alt: "Discord community preview",
