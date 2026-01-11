@@ -2,27 +2,24 @@ import { siteConfig } from "@/lib/site-config";
 
 export const discordCommunityContent = {
   about: `
-This is a Discord server for builders.
+This is a private Discord space connected to sbozh.me.
 
-Not just developers - builders of anything. Projects, skills, ideas, side quests, and unfinished work.
+It exists for people who want to go deeper than what I publish publicly.
 
-### Our Goal
+## Here, you can:
 
-The goal is simple: **make progress together**.
+- ask me questions directly
+- discuss my work and decisions
+- explore ideas, drafts, and thoughts I don’t share in public
 
-- Show what you're working on
-- Ask when you're stuck
-- Help when you can
+This is not a general community or a social Discord.
 
-### Who This Is For
+It’s small by design and focused on thoughtful questions and real discussion.
 
-You don't need to be an expert. You don't even need a project yet. If you're curious, learning, or just want to see how others build - you're welcome.
+## Access is private.
 
-> As this community grows, this page will evolve to reflect how we work together.
-
-### Join the Community
-
-Ready to join? <a href="${siteConfig.links.discordInvite}" target="_blank" rel="noopener noreferrer">Click here to join the Discord server</a>
+<a href="${siteConfig.links.substackAccount}" target="_blank" rel="noopener noreferrer">Substack</a> subscribers get access automatically.
+Others may be invited based on a clear expression of interest.
 `,
 
   rules: `
@@ -62,37 +59,35 @@ Starting is easy. We're here to help each other cross the line.
 `,
 
   motivation: `
-> Power gathers where people stand together.
+> **Power gathers where people stand together.**
 
 ### The Origin Story
 
-My first community was a Garry's Mod group. Being part of it pushed me to make my first real project - a TF2 comic built from ragdolls, around 150 frames, edited scene by scene in Photoshop. It placed 3rd in comics of the year.
+My first community was a Garry's Mod group. Being part of it pushed me to make my first real project — a TF2 comic built from ragdolls, around 150 frames, edited scene by scene in Photoshop. It placed 3rd in comics of the year.
 
 **That project existed because the community existed. I saw what others were making, and it gave me the push to try as well.**
 
 ### What Communities Create
 
-Looking back, I'm certain that experience shaped who I became. It taught me to:
-- Build things from scratch
-- Actually finish what I start
-- Enjoy the process of creating
+Looking back, I'm certain that experience shaped who I became. It taught me to build from scratch, finish what I start, and enjoy the process of creating.
 
-And I'm grateful for that - because building something from nothing is a great feeling.
+Building something from nothing is a great feeling. But the best part was never the output — it was the people who showed up alongside me.
 
-### Why Now
+### Why Private
 
-Today, with LLMs and modern tools, creating has never been more accessible.
+Today, with LLMs and modern tools, creating has never been more accessible. What's still rare is genuine connection.
 
-What's still rare is a space that encourages you to:
-- Show up consistently
-- Try new things without fear
-- Keep going when it gets hard
+I'm not interested in scale. I'm interested in depth.
+
+I want to know who's here. I want to understand what you're building and why. I want conversations that go somewhere — and relationships that last beyond a single project.
 
 ### The Vision
 
-That's the kind of place I want to build. A community for people who share that feeling - and want to make things together.
+This is a space for people who want to make things — and want to be known while doing it.
 
-Not just another Discord server. A place where projects come to life because the people are there to make it happen.
+Not a server to scroll. A room to show up to.
+
+If that resonates, introduce yourself. Tell me what you're working on.
 `,
 
   roadmap: `
@@ -109,16 +104,12 @@ Not just another Discord server. A place where projects come to life because the
 - ~~0.3.2 - Post rules to server~~
 - ~~0.3.3 - Post rules to project~~
 
-## 0.4.0 - First active members
-- 0.4.0 - 10 active members
+## ~~1.0.0 - Established Community~~ ✅
+- ~~Direction established~~
 
-## ...
-
-## 1.0.0 - Established Community
-- Active daily discussions
-- Regular community events
-- Member-led initiatives
-- Self-sustaining ecosystem
+## 1.1.0 - First Circle
+- 5-10 members who've introduced themselves
+- At least one project shared
 `,
 
   backlog: `

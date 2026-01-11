@@ -27,15 +27,15 @@ export const projects: Project[] = [
   },
   {
     slug: "discord-community",
-    title: "Discord Community",
-    tagline: "For people who make things.\nShare what you're working on, get help when you're stuck.",
+    title: "Private Discord Community",
+    tagline: "A place where you can ask me questions, discuss my work, and dig deeper into ideas I don’t publish publicly",
     status: "beta",
     heroImage: {
       src: "/images/projects/discord-community-hero.png",
       alt: "Discord community preview",
       position: "bottom",
     },
-    version: "0.3.3",
+    version: "1.0.0",
     meta: [
       { label: "Platform", value: "Discord" },
       { label: "Type", value: "Community" },
@@ -47,7 +47,7 @@ export const projects: Project[] = [
       { id: "roadmap", label: "Roadmap", enabled: true },
     ],
     links: [
-      { type: "discord", label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
+      { type: "discord", label: "Join Discord", href: "/contact", variant: "primary" },
     ],
   },
 ];

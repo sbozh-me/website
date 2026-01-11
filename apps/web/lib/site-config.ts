@@ -7,6 +7,7 @@ export const siteConfig = {
     x: "https://x.com/sbozhme",
     discord: "/projects/discord-community",
     discordInvite: "https://discord.gg/f8TTefb5",
+    substackAccount: "https://substack.com/@sbozhme"
   },
 } as const;
 
