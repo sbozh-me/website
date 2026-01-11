@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.11] - 2026-01-11
+
+### Changes
+
+- fix(projects): update discord invite link ([0a78e53](https://github.com/sbozh-me/website/commit/0a78e53fa5efa22634a6069e44f843fef7ad8576))
+
+
 ## [1.3.10] - 2026-01-11
 
 ### Changes
