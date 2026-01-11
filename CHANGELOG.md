@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.12] - 2026-01-11
+
+### Changes
+
+- chore(projects): update discord community status to active ([2861b7a](https://github.com/sbozh-me/website/commit/2861b7a32762f1352d99f027797b80202792d8d5))
+
+
 ## [1.3.11] - 2026-01-11
 
 ### Changes
