@@ -47,7 +47,7 @@ export const projects: Project[] = [
       { id: "roadmap", label: "Roadmap", enabled: true },
     ],
     links: [
-      { type: "discord", label: "Join Discord", href: "/contact", variant: "primary" },
+      { type: "discord", label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
     ],
   },
 ];

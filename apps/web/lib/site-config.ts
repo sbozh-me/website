@@ -6,7 +6,7 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/sbozhyk",
     x: "https://x.com/sbozhme",
     discord: "/projects/discord-community",
-    discordInvite: "https://discord.gg/f8TTefb5",
+    discordInvite: "https://discord.gg/EANPKPKD",
     substackAccount: "https://substack.com/@sbozhme"
   },
 } as const;
