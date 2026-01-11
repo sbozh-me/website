@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.10] - 2026-01-11
+
+### Changes
+
+- docs: add release notes idea to backlog ([f931bea](https://github.com/sbozh-me/website/commit/f931beaabc20f194b31f8718f445faaa60f5b94d))
+- fix(contact): replace Discord link with LinkedIn ([16637dd](https://github.com/sbozh-me/website/commit/16637dd5a15a1d321784803b948181ddea3911f2))
+- feat(discord): update community to private access model ([8158f0d](https://github.com/sbozh-me/website/commit/8158f0d8d7511d4d500e0be2e0401e9e03888bac))
+
+
 ## [1.3.9] - 2026-01-10
 
 ### Changes
