@@ -140,10 +140,12 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
 ## 1.4.0 - Main Page Improvements
 
-- Hero section (intro text + optional CTAs)
-- Latest blog post card (cover image, persona dot, excerpt)
-- ~~Limit Recent Updates to 3 + "View all" link~~
-- ~~Dedicated `projects/sbozh-me/releases` page for full history~~
+Persona carousel with blog post filtering per persona.
+
+- [1.3.13 - Persona Carousel Layout](roadmap/mainpage/1.3.13.md)
+- [1.3.14 - Blog Post Slider Layout](roadmap/mainpage/1.3.14.md)
+- [1.3.15 - Entities Data + Filter Setup](roadmap/mainpage/1.3.15.md)
+- [1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)
 
 ## 1.5.0 - Blog enhancement
 
