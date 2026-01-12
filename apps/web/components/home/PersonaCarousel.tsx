@@ -15,7 +15,8 @@ interface PersonaCarouselProps {
 const SWIPE_THRESHOLD = 50
 const STAR_DURATION = 3 // seconds
 const CLICKS_TO_SPAWN_STARS = 5
-const MAX_STARS = 37
+const MAX_STARS = 37 * 3
+const DECREASE_CLICKS_DELAY = 200
 
 interface FallingStar {
   id: number
@@ -122,6 +123,8 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     clickCountRef.current += 1
     if (clickCountRef.current >= CLICKS_TO_SPAWN_STARS) {
       spawnStar()
+      spawnStar()
+      spawnStar()
     }
 
     setActiveIndex(([prevIndex]) => {
@@ -207,13 +210,33 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         </div>
       </div>
 
+      {/* Loading logo */}
+      {!containerHeight && (
+        <div className="absolute left-0 right-0 top-[80px] z-0 flex justify-center pointer-events-none md:top-[240px]">
+          <Image
+            src="/android-chrome-192x192.png"
+            alt=""
+            width={64}
+            height={64}
+            priority
+          />
+        </div>
+      )}
+
       {/* Carousel container */}
-      <div className="relative flex w-full items-center justify-center">
+      <div
+        className="relative flex w-full items-center justify-center transition-all duration-500"
+        style={{
+          visibility: containerHeight ? 'visible' : 'hidden',
+          opacity: containerHeight ? 1 : 0,
+          transform: containerHeight ? 'translateY(0)' : 'translateY(-20px)'
+        }}
+      >
         {/* Left Arrow */}
         {showNavigation && (
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px] md:top-1/2 md:-translate-y-1/2"
+            className="absolute -left-3 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px] md:top-1/2 md:-translate-y-1/2"
             aria-label="Previous persona"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -222,12 +245,12 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
         {/* Slide content - fixed dimensions to prevent layout shift */}
         <div
-          className="relative overflow-hidden px-12 md:px-0"
-          style={{ height: containerHeight, width: isMobile ? "90vw" : containerWidth }}
+          className={`relative overflow-hidden ${!isMobile ? 'px-12' : ''} md:px-0`}
+          style={{ height: containerHeight, width: isMobile ? "100%" : containerWidth }}
         >
           {/* Background logo visible during rapid clicking */}
           {(hasInteracted || isRapidClicking) && (
-            <div className="absolute left-0 right-0 top-[80px] z-0 flex justify-center pointer-events-none md:inset-0 md:items-center">
+            <div className="absolute left-0 right-0 top-[70px] z-0 flex justify-center pointer-events-none md:inset-0 md:items-center">
               <Image
                 src="/android-chrome-192x192.png"
                 alt=""
@@ -271,7 +294,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {showNavigation && (
           <button
             onClick={() => navigate(1)}
-            className="absolute right-0 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px] md:top-1/2 md:-translate-y-1/2"
+            className="absolute -right-3 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px] md:top-1/2 md:-translate-y-1/2"
             aria-label="Next persona"
           >
             <ChevronRight className="h-6 w-6" />
@@ -282,9 +305,12 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
       {/* Dot indicators */}
       {showNavigation && (
         <div
-          className={`mt-8 flex gap-2 ${
-            isMobile ? `transition-opacity duration-300 ${containerHeight ? "opacity-100" : "opacity-0"}` : ""
-          }`}
+          className="mt-8 flex gap-2 transition-all duration-500 delay-100"
+          style={{
+            visibility: containerHeight ? 'visible' : 'hidden',
+            opacity: containerHeight ? 1 : 0,
+            transform: containerHeight ? 'translateY(0)' : 'translateY(-20px)'
+          }}
         >
           {personas.map((_, index) => (
             <button
