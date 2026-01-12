@@ -1,9 +1,21 @@
 "use client"
 
+import { useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { toast } from "sonner"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import type { PersonaEntity, CTAButton, PersonaStatus } from "@/types/persona-entity"
+
+const easterEggMessages: { title: string; description: string; duration?: number }[] = [
+  { title: "Currently it's a secret", description: "This button is under construction. Stay tuned!" },
+  { title: "Currently it's a secret", description: "This button is under construction. Stay tuned!" },
+  { title: "Ok. Some light:", description: "It's a character in my story" },
+  { title: "His job is my bet of future", description: "Because people are able to generate software quickly", duration: 6000 },
+  { title: "His story is a meta story", description: "About AI projects boom" },
+  { title: "Seriously", description: "There is nothing more" },
+  { title: "Except...", description: "It's a first character of my World. Stay tuned - sending you back." },
+]
 
 interface PersonaCardProps {
   persona: PersonaEntity
@@ -38,6 +50,14 @@ function getStatusColor(variant: PersonaStatus['variant']): string {
 }
 
 export function PersonaCard({ persona }: PersonaCardProps) {
+  const clickCountRef = useRef(0)
+
+  const handleEasterEggClick = () => {
+    const message = easterEggMessages[clickCountRef.current]
+    toast.info(message.title, { description: message.description, duration: message.duration })
+    clickCountRef.current = (clickCountRef.current + 1) % easterEggMessages.length
+  }
+
   return (
     <div className="flex flex-col items-center text-center">
       {/* Avatar */}
@@ -85,19 +105,33 @@ export function PersonaCard({ persona }: PersonaCardProps) {
 
       {/* CTA Buttons */}
       {persona.ctaButtons.length > 0 && (
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
-          {persona.ctaButtons.map((cta) => (
-            <Button
-              key={cta.label}
-              variant={getButtonVariant(cta.variant)}
-              size="lg"
-              asChild
-            >
-              <Link href={cta.href}>
-                {cta.label}
-              </Link>
-            </Button>
-          ))}
+        <div className="mt-10 pb-1 flex flex-wrap justify-center gap-4">
+          {persona.ctaButtons.map((cta) => {
+            if (cta.action === 'under-construction') {
+              return (
+                <Button
+                  key={cta.label}
+                  variant={getButtonVariant(cta.variant)}
+                  size="lg"
+                  onClick={handleEasterEggClick}
+                >
+                  {cta.label}
+                </Button>
+              )
+            }
+            return (
+              <Button
+                key={cta.label}
+                variant={getButtonVariant(cta.variant)}
+                size="lg"
+                asChild
+              >
+                <Link href={cta.href!}>
+                  {cta.label}
+                </Link>
+              </Button>
+            )
+          })}
         </div>
       )}
     </div>

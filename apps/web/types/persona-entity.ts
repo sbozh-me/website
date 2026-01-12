@@ -1,6 +1,7 @@
 export interface CTAButton {
   label: string
-  href: string
+  href?: string
+  action?: 'under-construction'
   variant: 'primary' | 'secondary' | 'outline'
   icon?: string
 }

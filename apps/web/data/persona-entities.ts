@@ -34,8 +34,7 @@ export const personaEntities: PersonaEntity[] = [
     avatar: "/viktor_bozhenko.png",
     status: { text: "Looking for collaborators", variant: "blue" },
     ctaButtons: [
-      { label: "Blog", href: "/blog", variant: "primary" },
-      { label: "What is this?", href: "/projects/sbozh-me", variant: "outline" }
+      { label: "Who is that?", action: "under-construction", variant: "outline" }
     ],
     blogPersonaSlugs: []
   }
