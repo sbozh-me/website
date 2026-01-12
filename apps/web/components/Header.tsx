@@ -23,7 +23,7 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="border-b border-border">
+    <header className="relative z-10 border-b border-border bg-background">
       <div className="mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 py-6">
         <div className="relative">
           <Link href="/" className="text-xl font-bold tracking-tight">

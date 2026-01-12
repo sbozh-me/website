@@ -13,6 +13,27 @@ interface PersonaCarouselProps {
 }
 
 const SWIPE_THRESHOLD = 50
+const STAR_DURATION = 3 // seconds
+const CLICKS_TO_SPAWN_STARS = 5
+const MAX_STARS = 37
+
+interface FallingStar {
+  id: number
+  x: number
+  size: number
+  rotation: number
+  opacity: number
+}
+
+function createStar(): FallingStar {
+  return {
+    id: Date.now() + Math.random(),
+    x: Math.random() * 100,
+    size: 24 + Math.random() * 48,
+    rotation: Math.random() * 720 - 360,
+    opacity: 0.2 + Math.random() * 0.5,
+  }
+}
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -35,11 +56,18 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isRapidClicking, setIsRapidClicking] = useState(false)
+  const [stars, setStars] = useState<FallingStar[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
   const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined)
   const measureRef = useRef<HTMLDivElement>(null)
   const settleTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const clickCountRef = useRef(0)
+
+  // Remove star after animation completes
+  const removeStar = useCallback((id: number) => {
+    setStars((prev) => prev.filter((s) => s.id !== id))
+  }, [])
 
   // Measure all cards and set fixed dimensions to the largest
   useEffect(() => {
@@ -77,7 +105,13 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     }
     settleTimerRef.current = setTimeout(() => {
       setIsRapidClicking(false)
+      clickCountRef.current = 0
     }, SETTLE_DELAY)
+  }, [])
+
+  // Spawn a falling star (max 37 at a time)
+  const spawnStar = useCallback(() => {
+    setStars((prev) => prev.length >= MAX_STARS ? prev : [...prev, createStar()])
   }, [])
 
   const navigate = useCallback((newDirection: number) => {
@@ -85,24 +119,34 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     setIsRapidClicking(true)
     startSettleTimer()
 
+    clickCountRef.current += 1
+    if (clickCountRef.current >= CLICKS_TO_SPAWN_STARS) {
+      spawnStar()
+    }
+
     setActiveIndex(([prevIndex]) => {
       let nextIndex = prevIndex + newDirection
       if (nextIndex < 0) nextIndex = personas.length - 1
       if (nextIndex >= personas.length) nextIndex = 0
       return [nextIndex, newDirection]
     })
-  }, [personas.length, startSettleTimer])
+  }, [personas.length, startSettleTimer, spawnStar])
 
   const goToSlide = useCallback((index: number) => {
     setHasInteracted(true)
     setIsRapidClicking(true)
     startSettleTimer()
 
+    clickCountRef.current += 1
+    if (clickCountRef.current >= CLICKS_TO_SPAWN_STARS) {
+      spawnStar()
+    }
+
     setActiveIndex(([prevIndex]) => {
       const newDirection = index > prevIndex ? 1 : -1
       return [index, newDirection]
     })
-  }, [startSettleTimer])
+  }, [startSettleTimer, spawnStar])
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -250,6 +294,41 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
               aria-label={`Go to persona ${index + 1}`}
             />
           ))}
+        </div>
+      )}
+
+      {/* Falling stars - one per click */}
+      {stars.length > 0 && (
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+          <AnimatePresence>
+            {stars.map((star) => (
+              <motion.div
+                key={star.id}
+                className="absolute"
+                style={{ left: `${star.x}%`, opacity: star.opacity }}
+                initial={{ y: "-10vh", rotate: 0, scale: 1 }}
+                animate={{
+                  y: "110vh",
+                  rotate: star.rotation,
+                  scale: 0.3,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: STAR_DURATION,
+                  ease: "linear",
+                }}
+                onAnimationComplete={() => removeStar(star.id)}
+              >
+                <Image
+                  src="/android-chrome-192x192.png"
+                  alt=""
+                  width={star.size}
+                  height={star.size}
+                  className="drop-shadow-lg"
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
     </div>
