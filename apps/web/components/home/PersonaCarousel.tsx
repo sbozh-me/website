@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect, useRef } from "react"
+import Image from "next/image"
 import { motion, AnimatePresence, type PanInfo } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { PersonaCard } from "./PersonaCard"
@@ -144,9 +145,21 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
         {/* Slide content */}
         <div
-          className="w-full max-w-lg overflow-hidden px-12 md:px-0"
+          className="relative w-full max-w-lg overflow-hidden px-12 md:px-0"
           style={containerHeight ? { height: containerHeight } : undefined}
         >
+          {/* Background logo visible during transition */}
+          {hasInteracted && (
+            <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+              <Image
+                src="/android-chrome-192x192.png"
+                alt=""
+                width={64}
+                height={64}
+                priority
+              />
+            </div>
+          )}
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={activeIndex}
@@ -165,7 +178,12 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
               onDragEnd={handleDragEnd}
               className={isMobile ? "cursor-grab active:cursor-grabbing" : ""}
             >
-              <PersonaCard persona={personas[activeIndex]} />
+              <div className="relative">
+                <div className="absolute -inset-x-20 -inset-y-10 z-0 bg-background" />
+                <div className="relative z-10">
+                  <PersonaCard persona={personas[activeIndex]} />
+                </div>
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
