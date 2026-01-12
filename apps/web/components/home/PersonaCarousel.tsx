@@ -15,8 +15,7 @@ interface PersonaCarouselProps {
 const SWIPE_THRESHOLD = 50
 const STAR_DURATION = 3 // seconds
 const CLICKS_TO_SPAWN_STARS = 5
-const MAX_STARS = 37 * 3
-const DECREASE_CLICKS_DELAY = 200
+const MAX_STARS = 37 * 2
 
 interface FallingStar {
   id: number
@@ -122,7 +121,6 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
     clickCountRef.current += 1
     if (clickCountRef.current >= CLICKS_TO_SPAWN_STARS) {
-      spawnStar()
       spawnStar()
       spawnStar()
     }

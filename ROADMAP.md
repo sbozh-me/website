@@ -142,7 +142,7 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 
 Persona carousel with blog post filtering per persona.
 
-- [1.3.13 - Persona Carousel Layout](roadmap/mainpage/1.3.13.md)
+- ~~[1.3.13 - Persona Carousel Layout](roadmap/mainpage/1.3.13.md)~~
 - [1.3.14 - Blog Post Slider Layout](roadmap/mainpage/1.3.14.md)
 - [1.3.15 - Entities Data + Filter Setup](roadmap/mainpage/1.3.15.md)
 - [1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)
