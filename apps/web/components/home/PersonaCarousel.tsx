@@ -31,6 +31,15 @@ const slideVariants = {
 export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselProps) {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const navigate = useCallback((newDirection: number) => {
     setHasInteracted(true)
@@ -111,11 +120,11 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
                 x: { type: "spring", stiffness: 300, damping: 30 },
                 opacity: { duration: 0.2 },
               }}
-              drag={showNavigation ? "x" : false}
+              drag={showNavigation && isMobile ? "x" : false}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.2}
               onDragEnd={handleDragEnd}
-              className="cursor-grab active:cursor-grabbing"
+              className={isMobile ? "cursor-grab active:cursor-grabbing" : ""}
             >
               <PersonaCard persona={personas[activeIndex]} />
             </motion.div>
