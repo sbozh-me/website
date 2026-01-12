@@ -1,14 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {usePathname} from "next/navigation";
+import {useState} from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@sbozh/react-ui/components/ui/tooltip";
 
 const navItems = [
-  { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
-  { name: "CV", href: "/cv" },
-  { name: "Projects", href: "/projects" },
+  {name: "Home", href: "/"},
+  {name: "Blog", href: "/blog"},
+  {name: "CV", href: "/cv"},
+  {name: "Projects", href: "/projects"},
 ];
 
 export function Header() {
@@ -18,9 +25,32 @@ export function Header() {
   return (
     <header className="border-b border-border">
       <div className="mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 py-6">
-        <Link href="/" className="text-xl font-bold tracking-tight">
-          sbozh.me
-        </Link>
+        <div className="relative">
+          <Link href="/" className="text-xl font-bold tracking-tight">
+            sbozh.me
+          </Link>
+          <span className="left-0 top-full w-30 ml-2le text-muted-foreground">
+            - Personal startup
+          </span>
+          <TooltipProvider delayDuration={1337}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="cursor-help inline-block">
+                  <Image
+                    src="/favicon-32x32.png"
+                    alt="sbozh.me logo"
+                    width={8}
+                    height={8}
+                    className="inline-block/ mb-2"
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Easter egg is under construction</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
