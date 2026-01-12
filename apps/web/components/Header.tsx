@@ -29,7 +29,7 @@ export function Header() {
           <Link href="/" className="text-xl font-bold tracking-tight">
             sbozh.me
           </Link>
-          <span className="left-0 top-full w-30 ml-2le text-muted-foreground">
+          <span className="left-0 top-full w-30 ml-2 text-muted-foreground">
             - Personal startup
           </span>
           <TooltipProvider delayDuration={1337}>
