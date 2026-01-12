@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import { motion, AnimatePresence, type PanInfo } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { PersonaCard } from "./PersonaCard"
@@ -32,6 +32,26 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
+  const measureRef = useRef<HTMLDivElement>(null)
+
+  // Measure all cards and set fixed height to the tallest one
+  useEffect(() => {
+    const measureCards = () => {
+      if (!measureRef.current) return
+      const cards = measureRef.current.querySelectorAll('[data-measure-card]')
+      let maxHeight = 0
+      cards.forEach((card) => {
+        const height = (card as HTMLElement).offsetHeight
+        if (height > maxHeight) maxHeight = height
+      })
+      if (maxHeight > 0) setContainerHeight(maxHeight)
+    }
+
+    measureCards()
+    window.addEventListener("resize", measureCards)
+    return () => window.removeEventListener("resize", measureCards)
+  }, [personas])
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -93,6 +113,22 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
   return (
     <div className="relative flex flex-col items-center">
+      {/* Hidden measurement container */}
+      <div
+        ref={measureRef}
+        className="pointer-events-none absolute opacity-0"
+        style={{ visibility: "hidden", position: "absolute", top: 0, left: 0, width: "100%" }}
+        aria-hidden="true"
+      >
+        <div className="w-full max-w-lg px-12 md:px-0">
+          {personas.map((persona, index) => (
+            <div key={persona.id} data-measure-card style={{ position: index === 0 ? "relative" : "absolute", top: 0 }}>
+              <PersonaCard persona={persona} />
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Carousel container */}
       <div className="relative flex w-full items-center justify-center">
         {/* Left Arrow */}
@@ -107,7 +143,10 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         )}
 
         {/* Slide content */}
-        <div className="w-full max-w-lg overflow-hidden px-12 md:px-0">
+        <div
+          className="w-full max-w-lg overflow-hidden px-12 md:px-0"
+          style={containerHeight ? { height: containerHeight } : undefined}
+        >
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={activeIndex}
