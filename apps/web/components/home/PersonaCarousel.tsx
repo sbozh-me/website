@@ -63,6 +63,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   const measureRef = useRef<HTMLDivElement>(null)
   const settleTimerRef = useRef<NodeJS.Timeout | null>(null)
   const clickCountRef = useRef(0)
+  const isAnimatingRef = useRef(false)
 
   // Remove star after animation completes
   const removeStar = useCallback((id: number) => {
@@ -115,6 +116,14 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   }, [])
 
   const navigate = useCallback((newDirection: number) => {
+    // Prevent navigation while animation is in progress
+    if (isAnimatingRef.current) return
+
+    isAnimatingRef.current = true
+    setTimeout(() => {
+      isAnimatingRef.current = false
+    }, 100) // Match spring animation duration
+
     setHasInteracted(true)
     setIsRapidClicking(true)
     startSettleTimer()
@@ -134,6 +143,14 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   }, [personas.length, startSettleTimer, spawnStar])
 
   const goToSlide = useCallback((index: number) => {
+    // Prevent navigation while animation is in progress
+    if (isAnimatingRef.current) return
+
+    isAnimatingRef.current = true
+    setTimeout(() => {
+      isAnimatingRef.current = false
+    }, 400) // Match spring animation duration
+
     setHasInteracted(true)
     setIsRapidClicking(true)
     startSettleTimer()
