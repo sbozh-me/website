@@ -135,7 +135,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {showNavigation && (
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px] md:opacity-0 md:group-hover:opacity-100"
+            className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px]"
             aria-label="Previous persona"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -174,7 +174,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {showNavigation && (
           <button
             onClick={() => navigate(1)}
-            className="absolute right-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px] md:opacity-0 md:group-hover:opacity-100"
+            className="absolute right-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px]"
             aria-label="Next persona"
           >
             <ChevronRight className="h-6 w-6" />
