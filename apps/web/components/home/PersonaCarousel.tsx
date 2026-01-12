@@ -30,8 +30,10 @@ const slideVariants = {
 
 export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselProps) {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   const navigate = useCallback((newDirection: number) => {
+    setHasInteracted(true)
     setActiveIndex(([prevIndex]) => {
       let nextIndex = prevIndex + newDirection
       if (nextIndex < 0) nextIndex = personas.length - 1
@@ -41,6 +43,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
   }, [personas.length])
 
   const goToSlide = useCallback((index: number) => {
+    setHasInteracted(true)
     setActiveIndex(([prevIndex]) => {
       const newDirection = index > prevIndex ? 1 : -1
       return [index, newDirection]
@@ -101,7 +104,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
               key={activeIndex}
               custom={direction}
               variants={slideVariants}
-              initial="enter"
+              initial={hasInteracted ? "enter" : false}
               animate="center"
               exit="exit"
               transition={{

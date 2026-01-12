@@ -6,6 +6,7 @@ import { ThemeProvider } from "@sbozh/themes";
 
 import { CookieConsentModal } from "@/components/CookieConsentModal";
 import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/providers/PerformanceProvider";
 import { SentryProvider } from "@/providers/SentryProvider";
@@ -69,6 +70,7 @@ export default function RootLayout({
           <SentryProvider>
             <AnalyticsProvider>
               <PerformanceProvider>
+                <Header />
                 {children}
                 <Footer />
                 <Toaster />
