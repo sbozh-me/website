@@ -198,9 +198,9 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         style={{ visibility: "hidden", position: "absolute", top: 0, left: 0, width: "100%" }}
         aria-hidden="true"
       >
-        <div className="w-full max-w-lg px-12 md:px-0">
-          {personas.map((persona, index) => (
-            <div key={persona.id} data-measure-card style={{ position: index === 0 ? "relative" : "absolute", top: 0 }}>
+        <div className="w-full px-12 md:px-0 flex flex-col">
+          {personas.map((persona) => (
+            <div key={persona.id} data-measure-card>
               <PersonaCard persona={persona} />
             </div>
           ))}
@@ -213,7 +213,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {showNavigation && (
           <button
             onClick={() => navigate(-1)}
-            className="absolute left-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px]"
+            className="absolute left-0 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px] md:top-1/2 md:-translate-y-1/2"
             aria-label="Previous persona"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -223,11 +223,11 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {/* Slide content - fixed dimensions to prevent layout shift */}
         <div
           className="relative overflow-hidden px-12 md:px-0"
-          style={{ height: containerHeight, width: containerWidth }}
+          style={{ height: containerHeight, width: isMobile ? "90vw" : containerWidth }}
         >
           {/* Background logo visible during rapid clicking */}
           {(hasInteracted || isRapidClicking) && (
-            <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute left-0 right-0 top-[80px] z-0 flex justify-center pointer-events-none md:inset-0 md:items-center">
               <Image
                 src="/android-chrome-192x192.png"
                 alt=""
@@ -271,7 +271,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         {showNavigation && (
           <button
             onClick={() => navigate(1)}
-            className="absolute right-0 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px]"
+            className="absolute right-0 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px] md:top-1/2 md:-translate-y-1/2"
             aria-label="Next persona"
           >
             <ChevronRight className="h-6 w-6" />
@@ -281,7 +281,11 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
       {/* Dot indicators */}
       {showNavigation && (
-        <div className="mt-8 flex gap-2">
+        <div
+          className={`mt-8 flex gap-2 ${
+            isMobile ? `transition-opacity duration-300 ${containerHeight ? "opacity-100" : "opacity-0"}` : ""
+          }`}
+        >
           {personas.map((_, index) => (
             <button
               key={index}
