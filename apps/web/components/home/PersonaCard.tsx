@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@sbozh/react-ui/components/ui/button"
-import type { PersonaEntity, CTAButton } from "@/types/persona-entity"
+import type { PersonaEntity, CTAButton, PersonaStatus } from "@/types/persona-entity"
 
 interface PersonaCardProps {
   persona: PersonaEntity
@@ -19,6 +19,21 @@ function getButtonVariant(variant: CTAButton['variant']): 'default' | 'secondary
       return 'outline'
     default:
       return 'default'
+  }
+}
+
+function getStatusColor(variant: PersonaStatus['variant']): string {
+  switch (variant) {
+    case 'green':
+      return 'bg-green-500'
+    case 'yellow':
+      return 'bg-yellow-500'
+    case 'blue':
+      return 'bg-blue-500'
+    case 'purple':
+      return 'bg-purple-500'
+    default:
+      return 'bg-muted-foreground'
   }
 }
 
@@ -55,8 +70,16 @@ export function PersonaCard({ persona }: PersonaCardProps) {
         {persona.title}
       </p>
 
+      {/* Status */}
+      {persona.status && (
+        <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <span className={`h-2 w-2 rounded-full ${getStatusColor(persona.status.variant)} animate-pulse`} />
+          {persona.status.text}
+        </div>
+      )}
+
       {/* Description */}
-      <p className="mt-6 max-w-md text-muted-foreground">
+      <p className="mt-6 max-w-md text-muted-foreground whitespace-pre-line">
         {persona.description}
       </p>
 
