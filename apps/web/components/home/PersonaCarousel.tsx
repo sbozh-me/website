@@ -29,24 +29,32 @@ const slideVariants = {
   }),
 }
 
+const SETTLE_DELAY = 300 // ms to wait before showing card after rapid clicks
+
 export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselProps) {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
+  const [isRapidClicking, setIsRapidClicking] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
+  const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined)
   const measureRef = useRef<HTMLDivElement>(null)
+  const settleTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Measure all cards and set fixed height to the tallest one
+  // Measure all cards and set fixed dimensions to the largest
   useEffect(() => {
     const measureCards = () => {
       if (!measureRef.current) return
       const cards = measureRef.current.querySelectorAll('[data-measure-card]')
       let maxHeight = 0
+      let maxWidth = 0
       cards.forEach((card) => {
-        const height = (card as HTMLElement).offsetHeight
-        if (height > maxHeight) maxHeight = height
+        const el = card as HTMLElement
+        if (el.offsetHeight > maxHeight) maxHeight = el.offsetHeight
+        if (el.offsetWidth > maxWidth) maxWidth = el.offsetWidth
       })
       if (maxHeight > 0) setContainerHeight(maxHeight)
+      if (maxWidth > 0) setContainerWidth(maxWidth)
     }
 
     measureCards()
@@ -62,22 +70,47 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
+  // Start settle timer - card will show after delay
+  const startSettleTimer = useCallback(() => {
+    if (settleTimerRef.current) {
+      clearTimeout(settleTimerRef.current)
+    }
+    settleTimerRef.current = setTimeout(() => {
+      setIsRapidClicking(false)
+    }, SETTLE_DELAY)
+  }, [])
+
   const navigate = useCallback((newDirection: number) => {
     setHasInteracted(true)
+    setIsRapidClicking(true)
+    startSettleTimer()
+
     setActiveIndex(([prevIndex]) => {
       let nextIndex = prevIndex + newDirection
       if (nextIndex < 0) nextIndex = personas.length - 1
       if (nextIndex >= personas.length) nextIndex = 0
       return [nextIndex, newDirection]
     })
-  }, [personas.length])
+  }, [personas.length, startSettleTimer])
 
   const goToSlide = useCallback((index: number) => {
     setHasInteracted(true)
+    setIsRapidClicking(true)
+    startSettleTimer()
+
     setActiveIndex(([prevIndex]) => {
       const newDirection = index > prevIndex ? 1 : -1
       return [index, newDirection]
     })
+  }, [startSettleTimer])
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (settleTimerRef.current) {
+        clearTimeout(settleTimerRef.current)
+      }
+    }
   }, [])
 
   // Notify parent when persona changes
@@ -143,13 +176,13 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
           </button>
         )}
 
-        {/* Slide content */}
+        {/* Slide content - fixed dimensions to prevent layout shift */}
         <div
-          className="relative w-full max-w-lg overflow-hidden px-12 md:px-0"
-          style={containerHeight ? { height: containerHeight } : undefined}
+          className="relative overflow-hidden px-12 md:px-0"
+          style={{ height: containerHeight, width: containerWidth }}
         >
-          {/* Background logo visible during transition */}
-          {hasInteracted && (
+          {/* Background logo visible during rapid clicking */}
+          {(hasInteracted || isRapidClicking) && (
             <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
               <Image
                 src="/android-chrome-192x192.png"
@@ -161,30 +194,32 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
             </div>
           )}
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={activeIndex}
-              custom={direction}
-              variants={slideVariants}
-              initial={hasInteracted ? "enter" : false}
-              animate="center"
-              exit="exit"
-              transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 },
-              }}
-              drag={showNavigation && isMobile ? "x" : false}
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
-              onDragEnd={handleDragEnd}
-              className={isMobile ? "cursor-grab active:cursor-grabbing" : ""}
-            >
-              <div className="relative">
-                <div className="absolute -inset-x-20 -inset-y-10 z-0 bg-background" />
-                <div className="relative z-10">
-                  <PersonaCard persona={personas[activeIndex]} />
+            {!isRapidClicking && (
+              <motion.div
+                key={activeIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial={hasInteracted ? "enter" : false}
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: "spring", stiffness: 300, damping: 30 },
+                  opacity: { duration: 0.2 },
+                }}
+                drag={showNavigation && isMobile ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                className={isMobile ? "cursor-grab active:cursor-grabbing" : ""}
+              >
+                <div className="relative">
+                  <div className="absolute -inset-x-20 -inset-y-10 z-0 bg-background" />
+                  <div className="relative z-10">
+                    <PersonaCard persona={personas[activeIndex]} />
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
 
