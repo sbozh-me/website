@@ -79,11 +79,9 @@ export function BlogPostGrid({ posts, title = "Latest Posts" }: BlogPostGridProp
       <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
         {title}
       </h2>
-      <div className="flex flex-wrap justify-center gap-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         {posts.slice(0, 2).map((post) => (
-          <div key={post.id} className="w-full max-w-[720px] sm:w-full">
-            <BlogPostCard post={post} />
-          </div>
+          <BlogPostCard key={post.id} post={post} />
         ))}
       </div>
       <div className="mt-8 flex justify-center">
