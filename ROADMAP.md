@@ -138,14 +138,14 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 - ~~Release notes on project page~~
 - ~~Roadmap and changelog moved to releases~~
 
-## 1.4.0 - Main Page Improvements
+## ~~1.4.0 - Main Page Improvements~~ ✅
 
 Author carousel with blog post filtering per author.
 
 - ~~[1.3.13 - Author Carousel Layout](roadmap/mainpage/1.3.13.md)~~
 - ~~[1.3.14 - Blog Post Grid Layout](roadmap/mainpage/1.3.14.md)~~
 - ~~[1.3.15 - Authors Data + Filter Setup](roadmap/mainpage/1.3.15.md)~~
-- [1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)
+- ~~[1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)~~
 
 ## 1.5.0 - Blog enhancement
 

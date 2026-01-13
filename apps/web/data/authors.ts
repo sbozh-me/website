@@ -11,7 +11,7 @@ export const authors: Author[] = [
     ctaButtons: [
       { label: "View CV", href: "/cv", variant: "primary" }
     ],
-    blogAuthorSlugs: ["the-founder", "the-architect"]
+    blogAuthorSlugs: ["founder", "architect"]
   },
   {
     id: "semen-bozhyk",
@@ -24,7 +24,7 @@ export const authors: Author[] = [
       { label: "Join Discord", href: "/projects/discord-community", variant: "primary" },
       { label: "#AINTTER", href: "/blog/aintter-as-a-name-for-ai-writing", variant: "outline" }
     ],
-    blogAuthorSlugs: ["moris-grloris"]
+    blogAuthorSlugs: ["moris-gloriss"]
   },
   {
     id: "viktor-bozhenko",
@@ -36,6 +36,6 @@ export const authors: Author[] = [
     ctaButtons: [
       { label: "Who is that?", action: "under-construction", variant: "outline" }
     ],
-    blogAuthorSlugs: []
+    blogAuthorSlugs: ["leon-chamai"]
   }
 ]
