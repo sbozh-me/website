@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { toast } from "sonner"
 import { Button } from "@sbozh/react-ui/components/ui/button"
-import type { PersonaEntity, CTAButton, PersonaStatus } from "@/types/persona-entity"
+import type { Author, CTAButton, AuthorStatus } from "@/types/author"
 
 const easterEggMessages: { title: string; description: string; duration?: number }[] = [
   { title: "Currently it's a secret", description: "This button is under construction. Stay tuned!" },
@@ -17,8 +17,8 @@ const easterEggMessages: { title: string; description: string; duration?: number
   { title: "Except...", description: "It's a first character of my World. Stay tuned - sending you back." },
 ]
 
-interface PersonaCardProps {
-  persona: PersonaEntity
+interface AuthorCardProps {
+  author: Author
 }
 
 function getButtonVariant(variant: CTAButton['variant']): 'default' | 'secondary' | 'outline' {
@@ -34,7 +34,7 @@ function getButtonVariant(variant: CTAButton['variant']): 'default' | 'secondary
   }
 }
 
-function getStatusColor(variant: PersonaStatus['variant']): string {
+function getStatusColor(variant: AuthorStatus['variant']): string {
   switch (variant) {
     case 'green':
       return 'bg-green-500'
@@ -49,7 +49,7 @@ function getStatusColor(variant: PersonaStatus['variant']): string {
   }
 }
 
-export function PersonaCard({ persona }: PersonaCardProps) {
+export function AuthorCard({ author }: AuthorCardProps) {
   const clickCountRef = useRef(0)
 
   const handleEasterEggClick = () => {
@@ -63,10 +63,10 @@ export function PersonaCard({ persona }: PersonaCardProps) {
       {/* Avatar */}
       <div className="relative mb-8">
         <div className="h-40 w-40 overflow-hidden rounded-full border-2 border-border/50 bg-muted">
-          {persona.avatar ? (
+          {author.avatar ? (
             <Image
-              src={persona.avatar}
-              alt={persona.name}
+              src={author.avatar}
+              alt={author.name}
               width={160}
               height={160}
               className="h-full w-full object-cover"
@@ -74,7 +74,7 @@ export function PersonaCard({ persona }: PersonaCardProps) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-4xl text-muted-foreground">
-              {persona.name.charAt(0)}
+              {author.name.charAt(0)}
             </div>
           )}
         </div>
@@ -82,31 +82,31 @@ export function PersonaCard({ persona }: PersonaCardProps) {
 
       {/* Name */}
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-        {persona.name}
+        {author.name}
       </h1>
 
       {/* Title */}
       <p className="mt-4 text-lg text-muted-foreground">
-        {persona.title}
+        {author.title}
       </p>
 
       {/* Status */}
-      {persona.status && (
+      {author.status && (
         <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-          <span className={`h-2 w-2 rounded-full ${getStatusColor(persona.status.variant)} animate-pulse`} />
-          {persona.status.text}
+          <span className={`h-2 w-2 rounded-full ${getStatusColor(author.status.variant)} animate-pulse`} />
+          {author.status.text}
         </div>
       )}
 
       {/* Description */}
       <p className="mt-6 max-w-md text-muted-foreground whitespace-pre-line">
-        {persona.description}
+        {author.description}
       </p>
 
       {/* CTA Buttons */}
-      {persona.ctaButtons.length > 0 && (
+      {author.ctaButtons.length > 0 && (
         <div className="mt-10 pb-1 flex flex-wrap justify-center gap-4">
-          {persona.ctaButtons.map((cta) => {
+          {author.ctaButtons.map((cta) => {
             if (cta.action === 'under-construction') {
               return (
                 <Button

@@ -1,6 +1,6 @@
-import type { PersonaEntity } from "@/types/persona-entity"
+import type { Author } from "@/types/author"
 
-export const personaEntities: PersonaEntity[] = [
+export const authors: Author[] = [
   {
     id: "sem-bozhyk",
     name: "Sem Bozhyk",
@@ -11,7 +11,7 @@ export const personaEntities: PersonaEntity[] = [
     ctaButtons: [
       { label: "View CV", href: "/cv", variant: "primary" }
     ],
-    blogPersonaSlugs: ["the-founder", "the-architect"]
+    blogAuthorSlugs: ["the-founder", "the-architect"]
   },
   {
     id: "semen-bozhyk",
@@ -24,7 +24,7 @@ export const personaEntities: PersonaEntity[] = [
       { label: "Join Discord", href: "/projects/discord-community", variant: "primary" },
       { label: "#AINTTER", href: "/blog/aintter-as-a-name-for-ai-writing", variant: "outline" }
     ],
-    blogPersonaSlugs: ["moris-grloris"]
+    blogAuthorSlugs: ["moris-grloris"]
   },
   {
     id: "viktor-bozhenko",
@@ -36,6 +36,6 @@ export const personaEntities: PersonaEntity[] = [
     ctaButtons: [
       { label: "Who is that?", action: "under-construction", variant: "outline" }
     ],
-    blogPersonaSlugs: []
+    blogAuthorSlugs: []
   }
 ]

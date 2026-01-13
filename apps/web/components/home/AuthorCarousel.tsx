@@ -4,12 +4,12 @@ import { useState, useCallback, useEffect, useRef } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence, type PanInfo } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { PersonaCard } from "./PersonaCard"
-import type { PersonaEntity } from "@/types/persona-entity"
+import { AuthorCard } from "./AuthorCard"
+import type { Author } from "@/types/author"
 
-interface PersonaCarouselProps {
-  personas: PersonaEntity[]
-  onPersonaChange?: (persona: PersonaEntity, index: number) => void
+interface AuthorCarouselProps {
+  authors: Author[]
+  onAuthorChange?: (author: Author, index: number) => void
 }
 
 const SWIPE_THRESHOLD = 50
@@ -52,7 +52,7 @@ const slideVariants = {
 
 const SETTLE_DELAY = 300 // ms to wait before showing card after rapid clicks
 
-export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselProps) {
+export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps) {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isRapidClicking, setIsRapidClicking] = useState(false)
@@ -89,7 +89,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     measureCards()
     window.addEventListener("resize", measureCards)
     return () => window.removeEventListener("resize", measureCards)
-  }, [personas])
+  }, [authors])
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -136,11 +136,11 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
 
     setActiveIndex(([prevIndex]) => {
       let nextIndex = prevIndex + newDirection
-      if (nextIndex < 0) nextIndex = personas.length - 1
-      if (nextIndex >= personas.length) nextIndex = 0
+      if (nextIndex < 0) nextIndex = authors.length - 1
+      if (nextIndex >= authors.length) nextIndex = 0
       return [nextIndex, newDirection]
     })
-  }, [personas.length, startSettleTimer, spawnStar])
+  }, [authors.length, startSettleTimer, spawnStar])
 
   const goToSlide = useCallback((index: number) => {
     // Prevent navigation while animation is in progress
@@ -175,10 +175,10 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     }
   }, [])
 
-  // Notify parent when persona changes
+  // Notify parent when author changes
   useEffect(() => {
-    onPersonaChange?.(personas[activeIndex], activeIndex)
-  }, [activeIndex, personas, onPersonaChange])
+    onAuthorChange?.(authors[activeIndex], activeIndex)
+  }, [activeIndex, authors, onAuthorChange])
 
   // Keyboard navigation
   useEffect(() => {
@@ -203,9 +203,9 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
     }
   }
 
-  if (personas.length === 0) return null
+  if (authors.length === 0) return null
 
-  const showNavigation = personas.length > 1
+  const showNavigation = authors.length > 1
 
   return (
     <div className="relative flex flex-col items-center">
@@ -217,9 +217,9 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
         aria-hidden="true"
       >
         <div className="w-full px-12 md:px-0 flex flex-col">
-          {personas.map((persona) => (
-            <div key={persona.id} data-measure-card>
-              <PersonaCard persona={persona} />
+          {authors.map((author) => (
+            <div key={author.id} data-measure-card>
+              <AuthorCard author={author} />
             </div>
           ))}
         </div>
@@ -252,7 +252,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
           <button
             onClick={() => navigate(-1)}
             className="absolute -left-3 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:left-[-60px] md:top-1/2 md:-translate-y-1/2"
-            aria-label="Previous persona"
+            aria-label="Previous author"
           >
             <ChevronLeft className="h-6 w-6" />
           </button>
@@ -297,7 +297,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
                 <div className="relative">
                   <div className="absolute -inset-x-20 -inset-y-10 z-0 bg-background" />
                   <div className="relative z-10">
-                    <PersonaCard persona={personas[activeIndex]} />
+                    <AuthorCard author={authors[activeIndex]} />
                   </div>
                 </div>
               </motion.div>
@@ -310,7 +310,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
           <button
             onClick={() => navigate(1)}
             className="absolute -right-3 top-[80px] z-10 flex h-10 w-10 items-center justify-center rounded-full bg-muted/50 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:right-[-60px] md:top-1/2 md:-translate-y-1/2"
-            aria-label="Next persona"
+            aria-label="Next author"
           >
             <ChevronRight className="h-6 w-6" />
           </button>
@@ -327,7 +327,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
             transform: containerHeight ? 'translateY(0)' : 'translateY(-20px)'
           }}
         >
-          {personas.map((_, index) => (
+          {authors.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
@@ -336,7 +336,7 @@ export function PersonaCarousel({ personas, onPersonaChange }: PersonaCarouselPr
                   ? "w-6 bg-primary"
                   : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
               }`}
-              aria-label={`Go to persona ${index + 1}`}
+              aria-label={`Go to author ${index + 1}`}
             />
           ))}
         </div>

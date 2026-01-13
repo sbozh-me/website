@@ -6,18 +6,18 @@ export interface CTAButton {
   icon?: string
 }
 
-export interface PersonaStatus {
+export interface AuthorStatus {
   text: string
   variant: 'green' | 'yellow' | 'blue' | 'purple'
 }
 
-export interface PersonaEntity {
+export interface Author {
   id: string
   name: string
   title: string
   description: string
   avatar: string
-  status?: PersonaStatus
+  status?: AuthorStatus
   ctaButtons: CTAButton[]
-  blogPersonaSlugs: string[]
+  blogAuthorSlugs: string[]
 }

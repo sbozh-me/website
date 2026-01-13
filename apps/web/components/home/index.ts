@@ -1,2 +1,2 @@
-export { PersonaCard } from "./PersonaCard"
-export { PersonaCarousel } from "./PersonaCarousel"
+export { AuthorCard } from "./AuthorCard"
+export { AuthorCarousel } from "./AuthorCarousel"
