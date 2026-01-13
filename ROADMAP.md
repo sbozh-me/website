@@ -143,7 +143,7 @@ Hetzner production deployment with CI/CD, GitOps, and backup automation.
 Author carousel with blog post filtering per author.
 
 - ~~[1.3.13 - Author Carousel Layout](roadmap/mainpage/1.3.13.md)~~
-- [1.3.14 - Blog Post Grid Layout](roadmap/mainpage/1.3.14.md)
+- ~~[1.3.14 - Blog Post Grid Layout](roadmap/mainpage/1.3.14.md)~~
 - [1.3.15 - Entities Data + Filter Setup](roadmap/mainpage/1.3.15.md)
 - [1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)
 

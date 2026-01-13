@@ -3,7 +3,7 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { AuthorCarousel } from "@/components/home";
+import { AuthorCarousel, BlogPostGrid, placeholderPosts } from "@/components/home";
 import { authors } from "@/data/authors";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
@@ -77,6 +77,8 @@ export default async function Home() {
       <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16">
         <AuthorCarousel authors={authors} />
       </div>
+
+      <BlogPostGrid posts={placeholderPosts} />
 
       {result.success ? (
         result.releases.length > 0 && (
