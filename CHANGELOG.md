@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.15] - 2026-01-13
+
+### Changes
+
+- feat(home): implement dynamic blog post filtering by author ([ffba1ef](https://github.com/sbozh-me/website/commit/ffba1efce420a06d2349dbf94a124671482a7f2c))
+- perf(home): debounce author carousel navigation requests ([6cef5ca](https://github.com/sbozh-me/website/commit/6cef5ca98dd65b996c62ef07f8a16ac0ff06740a))
+
+
 ## [1.3.14] - 2026-01-13
 
 ### Changes
