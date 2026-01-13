@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.13] - 2026-01-13
+
+### Changes
+
+- docs(roadmap): restructure v1.4.0 main page improvements into iterative releases ([e8151c9](https://github.com/sbozh-me/website/commit/e8151c9850629ab0e123d6735a8c0ea0fb9fd50f))
+- feat(home): add persona carousel with multi-identity navigation ([2172c65](https://github.com/sbozh-me/website/commit/2172c656d7c22e3bd6b4c0a331b0fdff89bd0d6a))
+- chore(dev): add lines of code counter script ([270eeb9](https://github.com/sbozh-me/website/commit/270eeb9153e7a0634cac562ac3c5b25482c5ecdf))
+- feat(layout): move header to root layout and disable initial carousel animation ([1579bb1](https://github.com/sbozh-me/website/commit/1579bb16fb918da2090541c7be6fd425f0da2ee1))
+- feat(header): add personal startup tagline with favicon and easter egg tooltip ([be19a7d](https://github.com/sbozh-me/website/commit/be19a7d68368593d7ca990ad4a5525bdeeb78140))
+- style(header): adjust favicon size and positioning ([e825bb0](https://github.com/sbozh-me/website/commit/e825bb0eb2e25f98bc8128be02d725945d244685))
+- fix(carousel): disable swipe drag on desktop, keep only for mobile ([3062c31](https://github.com/sbozh-me/website/commit/3062c317afb5fd99fee67f33164b796c5fe3089f))
+- fix(carousel): set fixed height based on tallest card to prevent jumping ([584dce3](https://github.com/sbozh-me/website/commit/584dce307014d70740dc853549434e969f271e53))
+- style(carousel): make navigation arrows always visible ([13b3bf1](https://github.com/sbozh-me/website/commit/13b3bf1b883fd7174d5bb5738ba959756d0e5820))
+- feat(carousel): add logo placeholder visible during slide transitions ([e9fbfd4](https://github.com/sbozh-me/website/commit/e9fbfd4205f269fbc45753edab9bd420ea1b7b53))
+- feat(carousel): add debounce for rapid clicking with logo display ([5a28126](https://github.com/sbozh-me/website/commit/5a28126960cb1f67a0ce5c1043c2bd89dd9f596f))
+- feat(carousel): add falling star easter egg after 5 rapid clicks ([a0a9a15](https://github.com/sbozh-me/website/commit/a0a9a1597da31802e4bc68d7c733b1d1d3148c4b))
+- feat(persona): add status badges and avatar images ([fe24202](https://github.com/sbozh-me/website/commit/fe242024c031d8878cb549c966b97cfcde44f485))
+- feat(home): add easter egg to Viktor's 'Who is that?' button ([bbd80a9](https://github.com/sbozh-me/website/commit/bbd80a9fbd68bb94192647e3510591b360d3d09a))
+- fix(home): improve PersonaCarousel mobile layout and measurement ([94f2d15](https://github.com/sbozh-me/website/commit/94f2d150a34b3d3f085d6f40feb737908c38ba12))
+- feat(home): add loading state and fade-in animation to PersonaCarousel ([43fc228](https://github.com/sbozh-me/website/commit/43fc22822a42b3a242fef72b566ccddcf6c41ab2))
+- feat(home): triple star spawn rate and increase max stars ([8d0119b](https://github.com/sbozh-me/website/commit/8d0119bb4f5ec8142c77bc68f11ea1e68417537c))
+- fix(home): prevent animation break on rapid navigation clicks ([52fa950](https://github.com/sbozh-me/website/commit/52fa950d03e3378b01e43c987028202355f7960a))
+
+
 ## [1.3.12] - 2026-01-11
 
 ### Changes
