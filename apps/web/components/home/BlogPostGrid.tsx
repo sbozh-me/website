@@ -1,7 +1,7 @@
 import Link from "next/link"
 import type { PostListItem } from "@sbozh/blog/types"
+import { PostCard } from "@sbozh/blog/components"
 import { Button } from "@sbozh/react-ui/components/ui/button"
-import { BlogPostCard } from "./BlogPostCard"
 
 interface BlogPostGridProps {
   posts: PostListItem[]
@@ -79,9 +79,9 @@ export function BlogPostGrid({ posts, title = "Latest Posts" }: BlogPostGridProp
       <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
         {title}
       </h2>
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        {posts.slice(0, 2).map((post) => (
-          <BlogPostCard key={post.id} post={post} />
+      <div className="flex flex-col">
+        {posts.slice(0, 3).map((post) => (
+          <PostCard key={post.id} post={post} />
         ))}
       </div>
       <div className="mt-8 flex justify-center">

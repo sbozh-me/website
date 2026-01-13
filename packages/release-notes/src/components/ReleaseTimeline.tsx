@@ -22,11 +22,6 @@ export function ReleaseTimeline({ releases, summaries, currentVersion }: Release
     <div className="w-full">
       {/* Timeline container with vertical line - hidden on mobile */}
       <div className="relative hidden md:block">
-        {/* Vertical line connecting dots */}
-        <div
-          className="absolute left-[110px] top-0 bottom-0 w-px bg-border/50"
-          aria-hidden="true"
-        />
         {releases.map((release, index) => (
           <ReleaseTimelineEntry
             key={release.id}
