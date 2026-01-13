@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.14] - 2026-01-13
+
+### Changes
+
+- refactor(home): rename Persona to Author across carousel components ([b225145](https://github.com/sbozh-me/website/commit/b225145475b980dab3d84789944ec82f4bb2bb4f))
+- feat(home): add BlogPostGrid with 2 posts and More posts button ([28f2326](https://github.com/sbozh-me/website/commit/28f2326868aa26eeae3aa9dce815d76a1de6c82b))
+- style(home): make BlogPostGrid responsive with fluid 2-col layout ([917c341](https://github.com/sbozh-me/website/commit/917c34136753e992229329dbe6de5755b573015a))
+- refactor(ui): simplify card styles and use PostCard from blog package ([29f06dc](https://github.com/sbozh-me/website/commit/29f06dc7ffca59372697197571351bcb94926d4f))
+
+
 ## [1.3.13] - 2026-01-13
 
 ### Changes
