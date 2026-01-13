@@ -3,8 +3,10 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { AuthorCarousel, BlogPostGrid, placeholderPosts } from "@/components/home";
+import type { PostListItem } from "@sbozh/blog/types";
+import { HomeContent } from "@/components/home";
 import { authors } from "@/data/authors";
+import { getPostsByAuthors } from "@/actions/blog-posts";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
@@ -70,27 +72,30 @@ async function getReleases(): Promise<ReleasesResult> {
 }
 
 export default async function Home() {
-  const result = await getReleases();
+  // Fetch releases and blog posts in parallel
+  const defaultAuthor = authors[0];
+  const [releasesResult, postsResult] = await Promise.all([
+    getReleases(),
+    getPostsByAuthors(defaultAuthor.blogAuthorSlugs, 3),
+  ]);
+
+  const initialPosts: PostListItem[] = postsResult.success ? postsResult.posts : [];
 
   return (
     <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
-      <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16">
-        <AuthorCarousel authors={authors} />
-      </div>
+      <HomeContent authors={authors} initialPosts={initialPosts} />
 
-      <BlogPostGrid posts={placeholderPosts} />
-
-      {result.success ? (
-        result.releases.length > 0 && (
+      {releasesResult.success ? (
+        releasesResult.releases.length > 0 && (
           <section className="w-full max-w-3xl py-16">
             <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
               Release Notes
             </h2>
             <ReleaseTimelineWithLoadMore
-              initialReleases={result.releases}
-              initialSummaries={result.summaries}
-              initialHasMore={result.hasMore}
-              currentVersion={result.currentVersion}
+              initialReleases={releasesResult.releases}
+              initialSummaries={releasesResult.summaries}
+              initialHasMore={releasesResult.hasMore}
+              currentVersion={releasesResult.currentVersion}
             />
           </section>
         )
@@ -99,7 +104,7 @@ export default async function Home() {
           <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
             Release Notes
           </h2>
-          <ErrorState message={result.error} status={result.status} />
+          <ErrorState message={releasesResult.error} status={releasesResult.status} />
         </section>
       )}
     </main>
