@@ -13,6 +13,8 @@ import {
   Divider,
 } from "@sbozh/pmdxjs/components/cv";
 
+import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
+
 // Link component that handles external links
 function Link(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const isExternal =
@@ -25,7 +27,7 @@ function Link(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <a {...props} />;
 }
 
-// PMDX component that compiles raw PMDXJS syntax
+// PMDX component that compiles raw PMDXJS syntax with responsive scaling
 // Usage: <PMDX source="## Skills\n\n#tag TypeScript" theme="kognitiv-paper" />
 function PMDX({ source, theme }: { source: string; theme?: string }) {
   // Prepend theme config if provided
@@ -43,7 +45,7 @@ function PMDX({ source, theme }: { source: string; theme?: string }) {
     );
   }
 
-  return <>{element}</>;
+  return <PMDXScaleWrapper>{element}</PMDXScaleWrapper>;
 }
 
 // All custom components available in blog MDX
