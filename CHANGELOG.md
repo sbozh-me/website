@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.2] - 2026-01-14
+
+### Changes
+
+- refactor(blog): extract MDX components into dedicated module with PMDXJS support ([396dd0b](https://github.com/sbozh-me/website/commit/396dd0b866a6c0c65ea1d8843b63bade76965034))
+- feat(pmdxjs): add markdown table parsing and rendering support ([3973b05](https://github.com/sbozh-me/website/commit/3973b0540c97ede0528d9b489b820a8b1faac1e3))
+- fix(blog): use source prop for PMDX component to avoid MDX parsing ([36073b0](https://github.com/sbozh-me/website/commit/36073b0157fe36bc4ca84d3ddee582e33cc46734))
+- feat(themes): add kognitiv-paper theme for PMDX documents ([ddf1164](https://github.com/sbozh-me/website/commit/ddf116416fa0d3f60f4aff5edf66fec818c0eca5))
+- fix(blog): clean up PMDX scale wrapper formatting ([656a429](https://github.com/sbozh-me/website/commit/656a42917d1741a209b383cd7beca4990684bae4))
+- fix(404): remove duplicate header component ([54dfc89](https://github.com/sbozh-me/website/commit/54dfc892b7941465ab89e133650ba6f0a91a48bf))
+
+
 ## [1.4.1] - 2026-01-14
 
 ### Changes
