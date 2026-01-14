@@ -62,7 +62,7 @@ export function HomeContent({ authors, initialPosts }: HomeContentProps) {
 
   return (
     <>
-      <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16">
+      <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16 max-sm:w-full">
         <AuthorCarousel authors={authors} onAuthorChange={handleAuthorChange} />
       </div>
 

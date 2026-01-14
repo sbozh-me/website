@@ -239,7 +239,7 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
   const showNavigation = authors.length > 1
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col max-sm:w-full items-center">
       {/* Hidden measurement container */}
       <div
         ref={measureRef}
@@ -279,7 +279,7 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
 
         {/* Slide content - fixed dimensions to prevent layout shift */}
         <div
-          className={`relative overflow-hidden ${!isMobile ? 'px-12' : ''} md:px-0`}
+          className={`relative max-sm:w-full overflow-hidden ${!isMobile ? 'px-12' : ''} md:px-0`}
           style={{ height: containerHeight, width: isMobile ? "100%" : containerWidth }}
         >
           {/* Background logo visible during rapid clicking */}
