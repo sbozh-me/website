@@ -31,8 +31,11 @@ export function ReleaseTimelineEntry({
 
   return (
     <article className="group block rounded-lg border border-border bg-muted p-6 mb-6 transition-all duration-200 hover:border-primary">
-      <h3 className="text-lg font-semibold leading-tight text-foreground group-hover:text-primary transition-colors">
-        <Link href={`/projects/${release.project.slug}/releases/${release.slug}`}>
+      <h3 className="text-lg font-semibold leading-tight text-foreground">
+        <Link
+          href={`/projects/${release.project.slug}/releases/${release.slug}`}
+          className="hover:text-primary transition-colors"
+        >
           {release.title}
         </Link>
       </h3>
