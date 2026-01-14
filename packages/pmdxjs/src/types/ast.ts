@@ -118,6 +118,32 @@ export interface ListItemNode extends BaseNode {
 }
 
 /**
+ * Table node - markdown table
+ */
+export interface TableNode extends BaseNode {
+  type: "table";
+  alignments: ("left" | "center" | "right")[];
+  headers: TableCellNode[];
+  rows: TableRowNode[];
+}
+
+/**
+ * Table row node
+ */
+export interface TableRowNode extends BaseNode {
+  type: "tableRow";
+  cells: TableCellNode[];
+}
+
+/**
+ * Table cell node
+ */
+export interface TableCellNode extends BaseNode {
+  type: "tableCell";
+  children: InlineNode[];
+}
+
+/**
  * Text node - plain text
  */
 export interface TextNode extends BaseNode {
@@ -178,7 +204,8 @@ export type BlockNode =
   | TagsNode
   | DividerNode
   | ParagraphNode
-  | ListNode;
+  | ListNode
+  | TableNode;
 
 /**
  * All content nodes (can appear inside pages, sections, columns)
@@ -193,4 +220,6 @@ export type ASTNode =
   | PageNode
   | ContentNode
   | ListItemNode
+  | TableRowNode
+  | TableCellNode
   | InlineNode;

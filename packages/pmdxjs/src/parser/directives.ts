@@ -15,6 +15,9 @@ import type {
   PageNode,
   ParagraphNode,
   SectionNode,
+  TableCellNode,
+  TableNode,
+  TableRowNode,
   TagsNode,
 } from "../types/ast";
 import type { DocumentConfig } from "../types/config";
@@ -294,5 +297,62 @@ export function createDocumentNode(
     type: "document",
     config,
     children: pages,
+  };
+}
+
+/**
+ * Create a table cell node with inline formatting support
+ */
+export function createTableCellNode(text: string, token?: Token): TableCellNode {
+  return {
+    type: "tableCell",
+    children: parseInline(text),
+    position: token
+      ? {
+          start: { line: token.line, column: token.column },
+          end: { line: token.line, column: token.column },
+        }
+      : undefined,
+  };
+}
+
+/**
+ * Create a table row node
+ */
+export function createTableRowNode(cells: string[], token?: Token): TableRowNode {
+  return {
+    type: "tableRow",
+    cells: cells.map((text) => createTableCellNode(text, token)),
+    position: token
+      ? {
+          start: { line: token.line, column: token.column },
+          end: { line: token.line, column: token.column },
+        }
+      : undefined,
+  };
+}
+
+/**
+ * Create a table node from header row, separator, and data rows
+ */
+export function createTableNode(
+  headerToken: Token,
+  alignments: ("left" | "center" | "right")[],
+  rowTokens: Token[],
+): TableNode {
+  const headerCells = (headerToken.meta?.cells as string[]) || [];
+
+  return {
+    type: "table",
+    alignments,
+    headers: headerCells.map((text) => createTableCellNode(text, headerToken)),
+    rows: rowTokens.map((token) => {
+      const cells = (token.meta?.cells as string[]) || [];
+      return createTableRowNode(cells, token);
+    }),
+    position: {
+      start: { line: headerToken.line, column: headerToken.column },
+      end: { line: headerToken.line, column: headerToken.column },
+    },
   };
 }

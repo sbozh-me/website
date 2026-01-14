@@ -8,6 +8,7 @@ import {
   createPageNode,
   createParagraphNode,
   createSectionNode,
+  createTableNode,
   createTagsNode,
   parseConfig,
 } from "./directives";
@@ -54,6 +55,12 @@ interface ParserState {
     startToken: Token | null;
     content: Token[];
   };
+  tableContext: {
+    active: boolean;
+    headerToken: Token | null;
+    alignments: ("left" | "center" | "right")[];
+    rowTokens: Token[];
+  };
 }
 
 /**
@@ -80,6 +87,37 @@ function createInitialState(): ParserState {
       startToken: null,
       content: [],
     },
+    tableContext: {
+      active: false,
+      headerToken: null,
+      alignments: [],
+      rowTokens: [],
+    },
+  };
+}
+
+/**
+ * Flush pending table into the current context
+ */
+function flushTable(state: ParserState): void {
+  if (state.tableContext.active && state.tableContext.headerToken) {
+    // Complete table with separator - create table node
+    const tableNode = createTableNode(
+      state.tableContext.headerToken,
+      state.tableContext.alignments,
+      state.tableContext.rowTokens,
+    );
+    addToCurrentContext(state, tableNode);
+  } else if (state.tableContext.headerToken) {
+    // Incomplete table (no separator) - convert header back to paragraph
+    const headerToken = state.tableContext.headerToken;
+    addToCurrentContext(state, createParagraphNode(headerToken.value, headerToken));
+  }
+  state.tableContext = {
+    active: false,
+    headerToken: null,
+    alignments: [],
+    rowTokens: [],
   };
 }
 
@@ -87,6 +125,7 @@ function createInitialState(): ParserState {
  * Flush pending list items into the current context
  */
 function flushListItems(state: ParserState): void {
+  flushTable(state);
   if (state.pendingListItems.length > 0) {
     const listNode = createListNode(state.pendingListItems);
     addToCurrentContext(state, listNode);
@@ -323,6 +362,26 @@ function processToken(
 
     case "metadata": {
       // Metadata outside of header context - ignore or handle specially
+      break;
+    }
+
+    case "table_row": {
+      if (!state.tableContext.active) {
+        // First row becomes the header - wait for separator to confirm
+        state.tableContext.headerToken = token;
+      } else {
+        // Data row - add to rows
+        state.tableContext.rowTokens.push(token);
+      }
+      break;
+    }
+
+    case "table_separator": {
+      // Separator confirms we're in a table and provides alignments
+      if (state.tableContext.headerToken) {
+        state.tableContext.active = true;
+        state.tableContext.alignments = (token.meta?.alignments as ("left" | "center" | "right")[]) || [];
+      }
       break;
     }
 

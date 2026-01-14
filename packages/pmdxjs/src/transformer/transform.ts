@@ -27,6 +27,9 @@ import type {
   SectionNode,
   SparkNode,
   StrongNode,
+  TableCellNode,
+  TableNode,
+  TableRowNode,
   TagsNode,
   TextNode,
 } from "../types/ast";
@@ -68,6 +71,17 @@ interface KnownComponents {
   Paragraph?: React.ComponentType<{ children: ReactNode }>;
   List?: React.ComponentType<{ ordered: boolean; children: ReactNode }>;
   ListItem?: React.ComponentType<{ children: ReactNode }>;
+  Table?: React.ComponentType<{
+    alignments: ("left" | "center" | "right")[];
+    headers: ReactNode;
+    children: ReactNode;
+  }>;
+  TableRow?: React.ComponentType<{ children: ReactNode }>;
+  TableCell?: React.ComponentType<{
+    alignment?: "left" | "center" | "right";
+    isHeader?: boolean;
+    children: ReactNode;
+  }>;
 }
 
 /**
@@ -115,6 +129,53 @@ const DefaultList = ({
  */
 const DefaultListItem = ({ children }: { children: ReactNode }) =>
   createElement("li", { className: "pmdxjs-list-item" }, children);
+
+/**
+ * Default table component
+ */
+const DefaultTable = ({
+  headers,
+  children,
+}: {
+  alignments: ("left" | "center" | "right")[];
+  headers: ReactNode;
+  children: ReactNode;
+}) =>
+  createElement(
+    "table",
+    { className: "pmdxjs-table w-full border-collapse text-[10px]" },
+    createElement("thead", { className: "bg-muted/50" }, headers),
+    createElement("tbody", null, children),
+  );
+
+/**
+ * Default table row component
+ */
+const DefaultTableRow = ({ children }: { children: ReactNode }) =>
+  createElement("tr", { className: "pmdxjs-table-row border-b border-border" }, children);
+
+/**
+ * Default table cell component
+ */
+const DefaultTableCell = ({
+  alignment = "left",
+  isHeader = false,
+  children,
+}: {
+  alignment?: "left" | "center" | "right";
+  isHeader?: boolean;
+  children: ReactNode;
+}) => {
+  const textAlign = alignment === "center" ? "text-center" : alignment === "right" ? "text-right" : "text-left";
+  const Tag = isHeader ? "th" : "td";
+  return createElement(
+    Tag,
+    {
+      className: `pmdxjs-table-cell px-2 py-1 ${textAlign} ${isHeader ? "font-semibold" : ""}`,
+    },
+    children,
+  );
+};
 
 /**
  * Transform inline text node to React element
@@ -277,6 +338,81 @@ function transformTags(
 }
 
 /**
+ * Transform a table cell node to React element
+ */
+function transformTableCell(
+  node: TableCellNode,
+  options: TransformOptions,
+  key: number,
+  alignment: "left" | "center" | "right" = "left",
+  isHeader = false,
+): ReactElement {
+  const TableCellComponent = options.components?.TableCell ?? DefaultTableCell;
+  const children = node.children.map((child, i) =>
+    transformInlineNode(child, i),
+  );
+
+  return createElement(TableCellComponent, { key, alignment, isHeader, children });
+}
+
+/**
+ * Transform a table row node to React element
+ */
+function transformTableRow(
+  node: TableRowNode,
+  options: TransformOptions,
+  key: number,
+  alignments: ("left" | "center" | "right")[],
+  isHeader = false,
+): ReactElement {
+  const TableRowComponent = options.components?.TableRow ?? DefaultTableRow;
+  const children = node.cells.map((cell, i) =>
+    transformTableCell(cell, options, i, alignments[i] || "left", isHeader),
+  );
+
+  return createElement(TableRowComponent, { key, children });
+}
+
+/**
+ * Transform a table node to React element
+ */
+function transformTable(
+  node: TableNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const TableComponent = options.components?.Table ?? DefaultTable;
+  const TableRowComponent = options.components?.TableRow ?? DefaultTableRow;
+  const TableCellComponent = options.components?.TableCell ?? DefaultTableCell;
+
+  // Transform header cells
+  const headerCells = node.headers.map((cell, i) => {
+    const children = cell.children.map((child, j) =>
+      transformInlineNode(child, j),
+    );
+    return createElement(TableCellComponent, {
+      key: i,
+      alignment: node.alignments[i] || "left",
+      isHeader: true,
+      children,
+    });
+  });
+  const headerRow = createElement(TableRowComponent, { key: "header", children: headerCells });
+
+  // Transform data rows
+  const dataRows = node.rows.map((row, i) =>
+    transformTableRow(row, options, i, node.alignments, false),
+  );
+
+  return createElement(TableComponent, {
+    key,
+    alignments: node.alignments,
+    headers: headerRow,
+    children: dataRows,
+  });
+}
+
+/**
  * Transform an entry node to React element
  */
 function transformEntry(
@@ -417,6 +553,8 @@ function transformContentNode(
       return transformDivider(node, options, key);
     case "paragraph":
       return transformParagraph(node, options, key);
+    case "table":
+      return transformTable(node, options, key);
     default:
       // Try to handle as custom node
       return transformCustomNode(

@@ -10,6 +10,8 @@ export type TokenType =
   | "entry_end"
   | "columns_start"
   | "columns_end"
+  | "table_row"
+  | "table_separator"
   | "tag"
   | "heading"
   | "metadata"
@@ -46,6 +48,11 @@ const PATTERNS = {
   columnsStart: /^---columns\s+(\d+)\s+(\d+)\s*$/,
   // ---columns-end
   columnsEnd: /^---columns-end\s*$/,
+  // Table row: | cell | cell | cell |
+  tableRow: /^\|(.+)\|$/,
+  // Table separator: |---|---|---| or |:---|:---:|---:|
+  // Must have at least 3 dashes per cell, with optional colons for alignment
+  tableSeparator: /^\|([\s:-]*-{3,}[\s:-]*\|)+$/,
   // #tag SkillName
   tag: /^#tag\s+(.+)$/,
   // ## Heading or # Heading
@@ -232,6 +239,39 @@ export function tokenizeLine(
     return {
       type: "list_item",
       value: listMatch[1],
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Table separator: |---|---|---|
+  if (PATTERNS.tableSeparator.test(trimmed)) {
+    // Parse alignment from separator (e.g., |:---|:---:|---:|)
+    // Remove first | and split by |, filter empty
+    const cells = trimmed.split("|").filter((c) => c.trim().length > 0);
+    const alignments = cells.map((cell) => {
+      const c = cell.trim();
+      if (c.startsWith(":") && c.endsWith(":")) return "center";
+      if (c.endsWith(":")) return "right";
+      return "left";
+    });
+    return {
+      type: "table_separator",
+      value: trimmed,
+      meta: { alignments },
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Table row: | cell | cell | cell |
+  const tableRowMatch = trimmed.match(PATTERNS.tableRow);
+  if (tableRowMatch) {
+    const cells = tableRowMatch[1].split("|").map((c) => c.trim());
+    return {
+      type: "table_row",
+      value: trimmed,
+      meta: { cells },
       line: lineNumber,
       column: 1,
     };
