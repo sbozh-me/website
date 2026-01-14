@@ -26,9 +26,9 @@ function Link(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 // PMDX component that compiles raw PMDXJS syntax
-// Usage: <PMDX>{`:::entry Company | Role | Dates\n- Achievement\n:::`}</PMDX>
-function PMDX({ children }: { children: string }) {
-  const { element, error } = compile(children);
+// Usage: <PMDX source=":::entry Company | Role | Dates\n- Achievement\n:::" />
+function PMDX({ source }: { source: string }) {
+  const { element, error } = compile(source);
 
   if (error) {
     return (
