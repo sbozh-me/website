@@ -19,6 +19,9 @@ export function HomeContent({ authors, initialPosts }: HomeContentProps) {
   const [isPending, startTransition] = useTransition()
   const [currentAuthor, setCurrentAuthor] = useState(authors[0])
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
+  const postsCache = useRef<Map<string, PostListItem[]>>(
+    new Map([[authors[0].id, initialPosts]])
+  )
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -37,11 +40,20 @@ export function HomeContent({ authors, initialPosts }: HomeContentProps) {
       clearTimeout(debounceRef.current)
     }
 
-    // Debounce the fetch request
+    // Debounce all updates (cached or fetched)
     debounceRef.current = setTimeout(() => {
+      // Check cache first
+      const cachedPosts = postsCache.current.get(author.id)
+      if (cachedPosts !== undefined) {
+        setPosts(cachedPosts)
+        return
+      }
+
+      // Fetch if not cached
       startTransition(async () => {
         const result = await getPostsByAuthors(author.blogAuthorSlugs, 3)
         if (result.success) {
+          postsCache.current.set(author.id, result.posts)
           setPosts(result.posts)
         }
       })
