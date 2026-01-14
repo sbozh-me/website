@@ -13,26 +13,60 @@ interface AuthorCarouselProps {
 }
 
 const SWIPE_THRESHOLD = 50
-const STAR_DURATION = 3 // seconds
+const STAR_DURATION = 3000 // ms
 const CLICKS_TO_SPAWN_STARS = 5
-const MAX_STARS = 37 * 2
+const MAX_STARS = 74
 
-interface FallingStar {
-  id: number
-  x: number
-  size: number
-  rotation: number
-  opacity: number
-}
+// Native DOM star spawner - no React state, pure JS
+function spawnNativeStar(container: HTMLDivElement) {
+  if (container.childElementCount >= MAX_STARS) return
 
-function createStar(): FallingStar {
-  return {
-    id: Date.now() + Math.random(),
-    x: Math.random() * 100,
-    size: 24 + Math.random() * 48,
-    rotation: Math.random() * 720 - 360,
-    opacity: 0.2 + Math.random() * 0.5,
+  const star = document.createElement("img")
+  star.src = "/android-chrome-192x192.png"
+  star.alt = ""
+
+  const x = Math.random() * 100
+  const size = 24 + Math.random() * 48
+  const rotation = Math.random() * 720 - 360
+  const opacity = 0.2 + Math.random() * 0.5
+
+  star.style.cssText = `
+    position: absolute;
+    left: ${x}%;
+    top: -10vh;
+    width: ${size}px;
+    height: ${size}px;
+    opacity: ${opacity};
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    will-change: transform;
+  `
+
+  container.appendChild(star)
+
+  // Animate using requestAnimationFrame for smooth 60fps
+  const startTime = performance.now()
+  const startY = -10
+  const endY = 110
+
+  function animate(currentTime: number) {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / STAR_DURATION, 1)
+
+    const y = startY + (endY - startY) * progress
+    const currentRotation = rotation * progress
+    const scale = 1 - 0.7 * progress
+
+    star.style.transform = `translateY(${y}vh) rotate(${currentRotation}deg) scale(${scale})`
+
+    if (progress < 1) {
+      requestAnimationFrame(animate)
+    } else {
+      star.remove()
+    }
   }
+
+  requestAnimationFrame(animate)
 }
 
 const slideVariants = {
@@ -56,19 +90,14 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
   const [hasInteracted, setHasInteracted] = useState(false)
   const [isRapidClicking, setIsRapidClicking] = useState(false)
-  const [stars, setStars] = useState<FallingStar[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
   const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined)
   const measureRef = useRef<HTMLDivElement>(null)
+  const starsContainerRef = useRef<HTMLDivElement>(null)
   const settleTimerRef = useRef<NodeJS.Timeout | null>(null)
   const clickCountRef = useRef(0)
   const isAnimatingRef = useRef(false)
-
-  // Remove star after animation completes
-  const removeStar = useCallback((id: number) => {
-    setStars((prev) => prev.filter((s) => s.id !== id))
-  }, [])
 
   // Measure all cards and set fixed dimensions to the largest
   useEffect(() => {
@@ -110,9 +139,11 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
     }, SETTLE_DELAY)
   }, [])
 
-  // Spawn a falling star (max 37 at a time)
+  // Spawn a falling star using native DOM
   const spawnStar = useCallback(() => {
-    setStars((prev) => prev.length >= MAX_STARS ? prev : [...prev, createStar()])
+    if (starsContainerRef.current) {
+      spawnNativeStar(starsContainerRef.current)
+    }
   }, [])
 
   const navigate = useCallback((newDirection: number) => {
@@ -342,40 +373,11 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
         </div>
       )}
 
-      {/* Falling stars - one per click */}
-      {stars.length > 0 && (
-        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-          <AnimatePresence>
-            {stars.map((star) => (
-              <motion.div
-                key={star.id}
-                className="absolute"
-                style={{ left: `${star.x}%`, opacity: star.opacity }}
-                initial={{ y: "-10vh", rotate: 0, scale: 1 }}
-                animate={{
-                  y: "110vh",
-                  rotate: star.rotation,
-                  scale: 0.3,
-                }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  duration: STAR_DURATION,
-                  ease: "linear",
-                }}
-                onAnimationComplete={() => removeStar(star.id)}
-              >
-                <Image
-                  src="/android-chrome-192x192.png"
-                  alt=""
-                  width={star.size}
-                  height={star.size}
-                  className="drop-shadow-lg"
-                />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      )}
+      {/* Falling stars container - native DOM manipulation */}
+      <div
+        ref={starsContainerRef}
+        className="fixed inset-0 z-0 pointer-events-none overflow-hidden"
+      />
     </div>
   )
 }
