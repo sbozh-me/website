@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { PostCard } from "@sbozh/blog/components";
-import { Header } from "@/components/Header";
 import type { PostListItem } from "@sbozh/blog/types";
 
 export default function NotFound() {
@@ -26,9 +25,7 @@ export default function NotFound() {
   }, []);
 
   return (
-    <>
-      <Header />
-      <div className="flex flex-1 flex-col items-center justify-center px-6 py-24">
+    <div className="flex flex-1 flex-col items-center justify-center px-6 py-24">
         <motion.div
           className="max-w-2xl w-full text-center space-y-8"
           initial={{ opacity: 0, y: 20 }}
@@ -97,6 +94,5 @@ export default function NotFound() {
           </motion.div>
         </motion.div>
       </div>
-    </>
   );
 }
