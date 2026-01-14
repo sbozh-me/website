@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.4] - 2026-01-14
+
+### Changes
+
+- fix(home): prevent carousel collapse during rapid clicking on mobile ([0294a14](https://github.com/sbozh-me/website/commit/0294a14cac99409140fc410a564d8e7e9f8f5158))
+
+
 ## [1.4.3] - 2026-01-14
 
 ### Changes
