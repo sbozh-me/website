@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.3] - 2026-01-14
+
+### Changes
+
+- chore(cv): update CV content ([ffa50eb](https://github.com/sbozh-me/website/commit/ffa50ebe353bb2fa382d825821ac5249635e404a))
+
+
 ## [1.4.2] - 2026-01-14
 
 ### Changes
