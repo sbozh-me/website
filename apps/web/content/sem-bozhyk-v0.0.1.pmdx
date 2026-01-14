@@ -5,170 +5,86 @@ margins: 10 10 10 10
 
 :::page
 
-# GARRET COGNITIVE CONTEXT
+# Sem Bozhyk
 
-subtitle: Experimental Results | SBOZH Development Facility | Prague Station
-contact: V. Bozhenko | 2026-01-14 | CLASSIFICATION: INTERNAL
-
----
-
----columns 66 34
-
-## Executive Summary
-
-Cognitive context produces inverse effects across model capability tiers.
-
-Mid-tier models demonstrate measurable improvement. Flagship model demonstrates measurable degradation.
-
-Recommend tier-specific deployment protocol.
-
-## Protocol
-
-| Parameter | Value |
-|-----------|-------|
-| Task | Pagination feature |
-| Instances | 6 |
-| Variable | Cognitive context |
-| Duration | 7 days |
-| Isolation | Complete |
-
-## Reproduction
-
-```bash
-git checkout 68e6a8e5bbbc8d3f0b618b77ee314340d481221c
-claude
-```
-
-Prompt: `let's work on release notes load more button`
-
-## Primary Data
-
-| Model | Context | Cost | Time | Output |
-|-------|---------|------|------|--------|
-| Sonnet 4.5 | OFF | $1.06 | 23m 19s | 134 loc |
-| Sonnet 4.5 | ON | $0.89 | 9m 59s | 195 loc |
-| Opus 4.5 | OFF | $1.84 | 13m 59s | 188 loc |
-| Opus 4.5 | ON | $1.45 | 10m 34s | 141 loc |
-| Claude Max | OFF | — | — | 7 files |
-| Claude Max | ON | — | — | 11 files |
-
-## Observed Deltas
-
-| Model | Cost | Time | Complexity |
-|-------|------|------|------------|
-| Sonnet 4.5 | -16% | -57% | Neutral |
-| Opus 4.5 | -21% | -24% | -25% |
-| Claude Max | — | — | +57% |
-
----
-
-## Evidence
-
-| PR | Configuration |
-|----|---------------|
-| [#2](https://github.com/sbozh-me/website/pull/2) | Sonnet / OFF |
-| [#3](https://github.com/sbozh-me/website/pull/3) | Sonnet / ON |
-| [#4](https://github.com/sbozh-me/website/pull/4) | Opus / OFF |
-| [#5](https://github.com/sbozh-me/website/pull/5) | Opus / ON |
-| [#6](https://github.com/sbozh-me/website/pull/6) | Max / OFF |
-| [#7](https://github.com/sbozh-me/website/pull/7) | Max / ON |
-
-## Conclusion
-
-Mid-tier models utilized cognitive context as architectural guidance.
-
-Flagship model with cognitive context produced worst results. Without context, flagship produced near-identical code to winner with one unnecessary dependency.
-
-Paid mid-tier with context outperformed flagship without context.
-
-## Recommendation
-
-| Model | Protocol |
-|-------|----------|
-| Sonnet 4.5 | ENABLE |
-| Opus 4.5 | ENABLE |
-| Claude Max | DISABLE |
-
-## Classification
-
-Further analysis pending consultation with Mirror Labs.
-
-**[END BRIEFING]**
-
----columns-end
-
-:::page-end
-
-:::page
-
-# ANALYST OBSERVATIONS
-
-subtitle: Field Notes | V. Bozhenko | Addendum to Primary Report
+subtitle: Senior Software Engineer | Full-Stack JavaScript | AI Integration
+contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | Prague, CZ
 
 ---
 
 ---columns 66 34
 
-## The Paradox
+## Summary
 
-The experiment was designed to prove that context improves output quality. For mid-tier models, it did. Sonnet executed 57% faster. Opus produced 25% less code with equivalent functionality.
+Self-taught Ukrainian engineer. From zero to 20M-session platforms; from side hustle to profitable product. Led teams, shipped payment systems, and built AI features that save hours of work.
 
-Then Claude Max entered the test sequence.
+Now creating [sbozh.me](https://sbozh.me) - a personal startup{*}.
 
-The flagship model with cognitive context produced the worst results of all six instances. Over-componentization. Unnecessary abstraction layers. Security-sensitive patterns where none were required.
+Let’s build something that matters.
 
-Without cognitive context, Max produced code nearly identical to the winning Opus implementation—with one exception: an unnecessary dependency added without justification.
+## Experience
 
-## The Anomaly
+:::entry Rock.estate | Vue.js Developer | Nov 2024 - Oct 2025
+- Built AI chatbot saving agents 2–4h daily
+- Delivered AI features for 100K+ property-data workflows
+- Cut data entry time by 40% with smart forms
+:::
 
-Claude Max exhibited inconsistent behavior across attempts. Initial runs produced severely degraded output. Subsequent runs on identical tasks showed marked improvement.
+:::entry GR8 Tech | React.js Team Lead | Jan 2023 - Aug 2023 | Remote
+- Led team of 5 processing EUR 5M+ monthly payments
+- Reduced payment failures by 23%; achieved 99.99% uptime
+- Mentored juniors, increasing team velocity by 40%
+:::
 
-No explanation was found. Possible factors: session learning, account-level caching, undocumented model behavior. Further investigation required.
+:::entry Private Social Media Company | Key JavaScript Developer | Feb 2020 - Feb 2023 | Remote
+- Maintained features used by 20M daily sessions (99.95% uptime)
+- Built tax reporting for $2M+ daily payouts
+- Optimized photo editor, reducing memory use by 60%
+:::
 
-## Working Theory
-
-Mid-tier models lack architectural intuition. Cognitive context provides corrective guidance—patterns to follow, conventions to respect, boundaries to observe. The system consults the context and builds accordingly.
-
-The flagship already possesses architectural intuition. When provided with cognitive context, it does not treat it as guidance. It treats it as specification. Every pattern mentioned becomes a pattern to implement. Every component referenced becomes a component to create.
-
-The result is analysis paralysis expressed as over-engineering.
+:::entry VVLEN | Founder & Full-Stack Dev | Oct 2016 - Present | Part-time
+- Built e-commerce platform generating EUR 250K annual revenue
+:::
 
 ---
 
-## Behavioral Observations
+## Skills
 
-| Tier | Context Behavior |
-|------|------------------|
-| Mid-tier | Consultation |
-| Flagship | Compliance |
+#tag TypeScript
+#tag JavaScript
+#tag Vue.js 2/3
+#tag React
+#tag Node.js
+#tag Pinia
+#tag TanStack Query
+#tag WebWorker
+#tag WASM
+#tag Canvas
+#tag WebSockets
+#tag Docker
+#tag AWS
+#tag CI/CD
+#tag Team Leadership
+#tag Technical Mentoring
+#tag RxJS
 
-Mid-tier models ask: *What patterns exist?*
+## Achievements
 
-Flagship models assume: *These patterns must be applied.*
+- AI chatbot saving 2–4h daily per agent (Rock.estate)
+- Built EUR 250K e-commerce platform from scratch
+- Vue 2 to Vue 3 migration: +35% performance
+- PCI-compliant system handling $5M+ monthly payments
 
-## Winner Analysis
+## Languages
 
-PR #5 (Opus 4.5 + cognitive) produced optimal results. PR #6 (Max - no cognitive) produced near-identical code with one unnecessary addition.
+- English: B2–C1
+- Ukrainian: Native
+- Czech: Conversational
+- German: Basic
 
-The paid mid-tier model with context outperformed the flagship without context.
+## Education
 
-## Open Questions
-
-What caused Claude Max behavior variance between attempts?
-
-Is there an optimal context volume for each capability tier?
-
-Does documentation context produce different effects than code context?
-
-## Personal Note
-
-I started this experiment chasing a ratio that bothered me. 227:1. The number sat in the dashboard like an accusation.
-
-One week later, the ratio matters less than what I found underneath it. Context is not uniformly beneficial. More information does not guarantee better decisions. The systems we build to help AI think may sometimes prevent it from thinking clearly.
-
-This applies to more than language models.
-
-**[END ADDENDUM]**
+Self-taught since 2015. Learning through real-world projects, open-source work, and technical documentation.
 
 ---columns-end
 
