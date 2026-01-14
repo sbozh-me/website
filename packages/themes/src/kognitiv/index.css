@@ -102,3 +102,263 @@
   background-color: rgb(88 166 255 / 0.4);
   color: var(--kognitiv-phosphor);
 }
+
+/* ==========================================================================
+   KOGNITIV PAPER - Military Intelligence Report Aesthetic
+   Printed declassified document feel, Soviet-era command center output
+   Used for .pmdxjs-document components (CV, reports, etc.)
+   ========================================================================== */
+
+.pmdxjs-document[data-theme="kognitiv-paper"] {
+  /* KOGNITIV PAPER Color Palette */
+  --cv-paper: #f8f6f1;
+  --cv-foreground: #1a1a1a;
+  --cv-muted: #f0ebe3;
+  --cv-muted-foreground: #3a3a3a;
+  --cv-border: #2a2a2a;
+  --cv-primary: #1a1a1a;
+  --cv-secondary: #3a3a3a;
+  --cv-accent: #8b0000;
+
+  /* KOGNITIV-specific tokens */
+  --kognitiv-paper: #f8f6f1;
+  --kognitiv-ink: #1a1a1a;
+  --kognitiv-dim: #3a3a3a;
+  --kognitiv-ghost: #555555;
+  --kognitiv-stamp: #8b0000;
+  --kognitiv-highlight: #d4a017;
+  --kognitiv-border: #2a2a2a;
+
+  /* Typography - Typewriter/Document aesthetic */
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+
+  /* Subtle paper texture */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] strong {
+  color: var(--cv-accent);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] em {
+  color: var(--kognitiv-ink);
+}
+
+/* Page styling - the actual paper */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-page {
+  background-color: var(--kognitiv-paper);
+  color: var(--kognitiv-ink);
+  border: none;
+  box-shadow: none;
+}
+
+/* Header - Document title block */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-header h1 {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--kognitiv-ink);
+  border-bottom: 2px solid var(--kognitiv-ink);
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-header-subtitle {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--kognitiv-dim);
+  text-transform: uppercase;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-header-contact {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--kognitiv-ghost);
+}
+
+/* Classification markers in contact line */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-header-contact-item:last-child {
+  color: var(--kognitiv-stamp);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+}
+
+/* Section headers - Stencil/typewriter feel */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-section h2 {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--kognitiv-ink);
+  border-bottom: 1px solid var(--kognitiv-ink);
+  border-radius: 0;
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-section {
+  margin-bottom: 8px;
+}
+
+/* Entry styling - Field report entries */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-entry {
+  margin-bottom: 6px;
+  padding-left: 0;
+  border-left: none;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-entry-role {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--kognitiv-ink);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-entry-company {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--kognitiv-dim);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-entry-dates,
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-entry-location {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.6875rem;
+  color: var(--kognitiv-ghost);
+  letter-spacing: 0.02em;
+}
+
+/* Tables - Terminal readout aesthetic */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.6875rem;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 4px 0;
+  margin-bottom: 16px;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table th {
+  background-color: #e8e4dc;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  padding: 3px 6px;
+  border: 1px solid var(--kognitiv-border);
+  text-align: left;
+  color: var(--kognitiv-ink);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table td {
+  padding: 2px 6px;
+  border: 1px solid var(--kognitiv-border);
+  color: var(--kognitiv-ink);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table tr:nth-child(even) td {
+  background-color: #f5f2eb;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table tr:nth-child(odd) td {
+  background-color: var(--kognitiv-paper);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table-row {
+  border: none;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-table-cell {
+  border-radius: 0;
+}
+
+/* Tags - Compact utilitarian badges */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-tag {
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1px 5px;
+  background: transparent;
+  border: 1px solid var(--kognitiv-border);
+  border-radius: 0;
+  color: var(--kognitiv-ink);
+}
+
+/* Lists - Compact field notes */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-list {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.75rem;
+  padding-left: 1rem;
+  margin: 2px 0;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-list-item {
+  font-size: 0.75rem;
+  line-height: 1.35;
+  margin-bottom: 1px;
+  color: var(--kognitiv-ink);
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-list-item::marker {
+  color: var(--kognitiv-dim);
+}
+
+/* Paragraphs - Document body text */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-paragraph {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  color: var(--kognitiv-ink);
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Divider - Simple rule */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-divider {
+  border: none;
+  border-top: 1px solid var(--kognitiv-border);
+  margin: 6px 0;
+}
+
+/* Links - Subtle underline */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-link {
+  color: var(--kognitiv-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-link:hover {
+  color: var(--kognitiv-dim);
+}
+
+/* Columns - Clean separation */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-columns {
+  gap: 12px;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-column {
+  border: none;
+}
+
+/* Spark mark - Stamp red / Amber caution */
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-spark span:first-child {
+  color: var(--kognitiv-stamp) !important;
+}
+
+.pmdxjs-document[data-theme="kognitiv-paper"] .pmdxjs-spark span:last-child {
+  color: var(--kognitiv-highlight) !important;
+}

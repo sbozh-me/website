@@ -26,9 +26,14 @@ function Link(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
 }
 
 // PMDX component that compiles raw PMDXJS syntax
-// Usage: <PMDX source=":::entry Company | Role | Dates\n- Achievement\n:::" />
-function PMDX({ source }: { source: string }) {
-  const { element, error } = compile(source);
+// Usage: <PMDX source="## Skills\n\n#tag TypeScript" theme="kognitiv-paper" />
+function PMDX({ source, theme }: { source: string; theme?: string }) {
+  // Prepend theme config if provided
+  const fullSource = theme
+    ? `:::config\ntheme: ${theme}\n:::\n\n:::page\n\n${source}\n\n:::page-end`
+    : source;
+
+  const { element, error } = compile(fullSource);
 
   if (error) {
     return (
