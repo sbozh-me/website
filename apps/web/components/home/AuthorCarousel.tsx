@@ -256,18 +256,6 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
         </div>
       </div>
 
-      {/* Loading logo */}
-      {!containerHeight && (
-        <div className="absolute left-0 right-0 top-[80px] z-0 flex justify-center pointer-events-none md:top-[240px]">
-          <Image
-            src="/android-chrome-192x192.png"
-            alt=""
-            width={64}
-            height={64}
-            priority
-          />
-        </div>
-      )}
 
       {/* Carousel container */}
       <div
