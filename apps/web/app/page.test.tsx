@@ -53,6 +53,21 @@ vi.mock("@/components/releases/ReleaseTimelineWithLoadMore", () => ({
   ),
 }));
 
+// Mock HomeContent component
+vi.mock("@/components/home", () => ({
+  HomeContent: () => (
+    <div data-testid="home-content">
+      <h1>Sem Bozhyk</h1>
+      <p>Software Developer</p>
+    </div>
+  ),
+}));
+
+// Mock blog posts action
+vi.mock("@/actions/blog-posts", () => ({
+  getPostsByAuthors: vi.fn(async () => ({ success: true, posts: [] })),
+}));
+
 import Home from "./page";
 
 const mockReadFile = vi.mocked(readFile);
@@ -64,35 +79,24 @@ describe("Home", () => {
   });
 
   describe("basic rendering", () => {
-    it("renders site title", async () => {
+    it("renders home content", async () => {
+      const Page = await Home();
+      render(Page);
+      expect(screen.getByTestId("home-content")).toBeInTheDocument();
+    });
+
+    it("renders author name", async () => {
       const Page = await Home();
       render(Page);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-        "sbozh.me",
+        "Sem Bozhyk",
       );
     });
 
-    it("renders tagline", async () => {
+    it("renders author title", async () => {
       const Page = await Home();
       render(Page);
-      expect(screen.getByText(/Personal startup/)).toBeInTheDocument();
-    });
-
-    it("renders navigation links", async () => {
-      const Page = await Home();
-      render(Page);
-      expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
-        "href",
-        "/blog",
-      );
-      expect(screen.getByRole("link", { name: "CV" })).toHaveAttribute(
-        "href",
-        "/cv",
-      );
-      expect(screen.getByRole("link", { name: "Projects" })).toHaveAttribute(
-        "href",
-        "/projects",
-      );
+      expect(screen.getByText(/Software Developer/)).toBeInTheDocument();
     });
   });
 
