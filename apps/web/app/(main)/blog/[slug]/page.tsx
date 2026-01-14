@@ -16,6 +16,7 @@ import {
 import { extractHeadings } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
+import { blogMdxComponents } from "@/lib/blog/mdx-components";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";
@@ -211,23 +212,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </div>
               )}
               <div className="prose">
-                <MDXContent
-                  components={{
-                    a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-                      // Check if it's an external link
-                      const isExternal = props.href &&
-                        (props.href.startsWith("http://") ||
-                          props.href.startsWith("https://"));
-
-                      if (isExternal) {
-                        return (
-                          <a {...props} target="_blank" rel="noopener noreferrer" />
-                        );
-                      }
-                      return <a {...props} />;
-                    },
-                  }}
-                />
+                <MDXContent components={blogMdxComponents} />
               </div>
               {AttributionContent && (
                 <div className="mt-12 pt-8 border-t border-border">
