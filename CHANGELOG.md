@@ -6,10 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changes
 
-- chore: mark 1.4.0 main page improvements as complete ([151b895](https://github.com/sbozh-me/website/commit/151b895fee19fe9a9f4de04772796ec7fc85bd97))
-- feat(home): add animations to BlogPostGrid component ([ad677cb](https://github.com/sbozh-me/website/commit/ad677cb5c5fb7b45b0b17d5446e566d4f5764892))
-- perf(home): cache author posts to reduce refetch on carousel navigation ([05046b5](https://github.com/sbozh-me/website/commit/05046b5e4be99a740c7fb602ccd94808789a85a6))
-- chore(release): v1.3.16 ([457fe0e](https://github.com/sbozh-me/website/commit/457fe0e1879f29da16bac1219f88f68aba4d4ed6))
 - perf(home): replace React state stars with native DOM animation ([2f9553c](https://github.com/sbozh-me/website/commit/2f9553c55dfd82f14f7fa18a409a7890e1ebd646))
 - test: update homepage and projects page tests ([b47d680](https://github.com/sbozh-me/website/commit/b47d6809c7b0df9435601da03ac93ba154701c33))
 - docs: add falling stars performance postmortem ([5dfa2f0](https://github.com/sbozh-me/website/commit/5dfa2f0167f5b4bcf809697ba0324967c2c79188))
