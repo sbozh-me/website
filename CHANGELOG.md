@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.1] - 2026-01-14
+
+### Changes
+
+- docs: remove duplicate entries from CHANGELOG.md ([3378300](https://github.com/sbozh-me/website/commit/33783003004a064538e42caab1edda293aee537c))
+- fix(release-notes): remove group-hover from h3 to prevent hover conflict ([b645774](https://github.com/sbozh-me/website/commit/b64577413d31cbc0c791c29e3f158678d6dac56a))
+- refactor(home): remove loading logo from AuthorCarousel ([0a6d53c](https://github.com/sbozh-me/website/commit/0a6d53cdb48a7c0f393cc9b16fe28278b26afe0b))
+
+
 ## [1.4.0] - 2026-01-14
 
 ### Changes
