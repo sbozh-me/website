@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.16] - 2026-01-14
+
+### Changes
+
+- chore: mark 1.4.0 main page improvements as complete ([151b895](https://github.com/sbozh-me/website/commit/151b895fee19fe9a9f4de04772796ec7fc85bd97))
+- feat(home): add animations to BlogPostGrid component ([ad677cb](https://github.com/sbozh-me/website/commit/ad677cb5c5fb7b45b0b17d5446e566d4f5764892))
+- perf(home): cache author posts to reduce refetch on carousel navigation ([05046b5](https://github.com/sbozh-me/website/commit/05046b5e4be99a740c7fb602ccd94808789a85a6))
+
+
 ## [1.3.15] - 2026-01-13
 
 ### Changes
