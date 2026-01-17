@@ -1,15 +1,13 @@
 "use server";
 
-import type { ReactNode } from "react";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "./repository";
 
+// Server action returns raw markdown, not ReactNode (ReactNode can't be serialized)
 export interface LoadMoreReleasesResult {
   success: true;
   releases: ReleaseListItem[];
-  summaries: Record<string, ReactNode>;
+  rawSummaries: Record<string, string | null>;
   hasMore: boolean;
 }
 
@@ -22,18 +20,11 @@ export type LoadMoreReleasesResponse = LoadMoreReleasesResult | LoadMoreReleases
 
 const BATCH_SIZE = 3;
 
-async function compileSummary(markdown: string): Promise<ReactNode> {
-  const { default: Content } = await evaluate(markdown, {
-    ...runtime,
-  } as any);
-  return <Content />;
-}
-
 export async function loadMoreReleases(offset: number, projectSlug?: string): Promise<LoadMoreReleasesResponse> {
   try {
     const repository = createReleaseRepository();
     if (!repository) {
-      return { success: true, releases: [], summaries: {}, hasMore: false };
+      return { success: true, releases: [], rawSummaries: {}, hasMore: false };
     }
 
     // Fetch one extra to check if there are more
@@ -46,17 +37,13 @@ export async function loadMoreReleases(offset: number, projectSlug?: string): Pr
     const hasMore = releases.length > BATCH_SIZE;
     const releasesToReturn = hasMore ? releases.slice(0, BATCH_SIZE) : releases;
 
-    // Compile MDX summaries in parallel
-    const summaryEntries = await Promise.all(
-      releasesToReturn.map(async (release) => {
-        if (!release.summary) return [release.id, null] as const;
-        const content = await compileSummary(release.summary);
-        return [release.id, content] as const;
-      })
-    );
-    const summaries = Object.fromEntries(summaryEntries);
+    // Return raw markdown summaries (will be compiled on client)
+    const rawSummaries: Record<string, string | null> = {};
+    for (const release of releasesToReturn) {
+      rawSummaries[release.id] = release.summary || null;
+    }
 
-    return { success: true, releases: releasesToReturn, summaries, hasMore };
+    return { success: true, releases: releasesToReturn, rawSummaries, hasMore };
   } catch (error) {
     console.error("Failed to load more releases:", error);
     if (error instanceof DirectusError) {

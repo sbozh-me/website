@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useTransition, type ReactNode } from "react";
+import { useState, useTransition, useCallback, type ReactNode } from "react";
+import { evaluate } from "@mdx-js/mdx";
+import * as runtime from "react/jsx-runtime";
 import { ReleaseTimeline } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { Button } from "@sbozh/react-ui/components/ui/button";
@@ -12,6 +14,14 @@ interface ReleaseTimelineWithLoadMoreProps {
   initialHasMore: boolean;
   currentVersion: string;
   projectSlug?: string;
+}
+
+// Compile MDX markdown to React element on the client
+async function compileSummary(markdown: string): Promise<ReactNode> {
+  const { default: Content } = await evaluate(markdown, {
+    ...runtime,
+  } as Parameters<typeof evaluate>[1]);
+  return <Content />;
 }
 
 export function ReleaseTimelineWithLoadMore({
@@ -26,17 +36,29 @@ export function ReleaseTimelineWithLoadMore({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isPending, startTransition] = useTransition();
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     startTransition(async () => {
       const result = await loadMoreReleases(releases.length, projectSlug);
 
       if (result.success) {
+        // Compile raw markdown summaries to React elements on client
+        const compiledSummaries: Record<string, ReactNode> = {};
+        await Promise.all(
+          Object.entries(result.rawSummaries).map(async ([id, markdown]) => {
+            if (markdown) {
+              compiledSummaries[id] = await compileSummary(markdown);
+            } else {
+              compiledSummaries[id] = null;
+            }
+          })
+        );
+
         setReleases((prev) => [...prev, ...result.releases]);
-        setSummaries((prev) => ({ ...prev, ...result.summaries }));
+        setSummaries((prev) => ({ ...prev, ...compiledSummaries }));
         setHasMore(result.hasMore);
       }
     });
-  };
+  }, [releases.length, projectSlug]);
 
   return (
     <>
