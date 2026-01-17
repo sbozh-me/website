@@ -7,7 +7,7 @@ margins: 10 10 10 10
 
 # Sem Bozhyk
 
-subtitle: Senior Software Engineer | Full-Stack JavaScript | AI Integration
+subtitle: Senior Software Engineer | Fintech & Real Estate Platforms | High-Volume Transaction Systems
 contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | Prague, CZ
 
 ---
@@ -16,15 +16,15 @@ contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | Prag
 
 ## Summary
 
-Self-taught Ukrainian engineer. From zero to 20M-session platforms; from side hustle to profitable product. Led teams, shipped payment systems, and built AI features that save hours of work.
+Self-taught Ukrainian engineer based in Prague. From zero to 20M-session platforms; from side hustle to profitable product. Led teams, shipped payment systems, and built AI-powered real estate features.
 
-Now creating [sbozh.me](https://sbozh.me) - a personal startup{*}.
+Comfortable in cross-border remote teams. Result-driven: I ship systems that handle money safely and scale reliably.
 
-Let’s build something that matters.
+Ready to bring this to Web3.
 
 ## Experience
 
-:::entry Rock.estate | Vue.js Developer | Nov 2024 - Oct 2025
+:::entry Rock.estate | Vue.js Developer | Nov 2024 - Present | Remote
 - Built AI chatbot saving agents 2–4h daily
 - Delivered AI features for 100K+ property-data workflows
 - Cut data entry time by 40% with smart forms
@@ -36,14 +36,15 @@ Let’s build something that matters.
 - Mentored juniors, increasing team velocity by 40%
 :::
 
-:::entry Private Social Media Company | Key JavaScript Developer | Feb 2020 - Feb 2023 | Remote
-- Maintained features used by 20M daily sessions (99.95% uptime)
-- Built tax reporting for $2M+ daily payouts
-- Optimized photo editor, reducing memory use by 60%
+:::entry Private Social Platform | Key JS Developer | Feb 2020 - Feb 2023 | Remote
+- Maintained features serving 20M daily sessions (99.95% uptime)
+- Built tax reporting system for $2M+ daily payouts
+- Optimized real-time features, reducing memory usage by 60%
 :::
 
-:::entry VVLEN | Founder & Full-Stack Dev | Oct 2016 - Present | Part-time
-- Built e-commerce platform generating EUR 250K annual revenue
+:::entry Cloudbeds | Vue.js Developer | Nov 2018 - Oct 2019 | Remote
+- Built PCI-compliant payment interfaces
+- Zero security incidents during implementation
 :::
 
 ---
@@ -57,23 +58,20 @@ Let’s build something that matters.
 #tag Node.js
 #tag Pinia
 #tag TanStack Query
-#tag WebWorker
-#tag WASM
-#tag Canvas
 #tag WebSockets
 #tag Docker
 #tag AWS
 #tag CI/CD
 #tag Team Leadership
 #tag Technical Mentoring
-#tag RxJS
 
-## Achievements
+## Relevant for DeFi
 
-- AI chatbot saving 2–4h daily per agent (Rock.estate)
-- Built EUR 250K e-commerce platform from scratch
-- Vue 2 to Vue 3 migration: +35% performance
-- PCI-compliant system handling $5M+ monthly payments
+- High-volume transaction systems
+- Financial compliance (PCI-DSS)
+- Real estate platform experience
+- Real-time state management
+- Cross-border remote teams
 
 ## Languages
 
@@ -87,5 +85,92 @@ Let’s build something that matters.
 Self-taught since 2015. Learning through real-world projects, open-source work, and technical documentation.
 
 ---columns-end
+
+:::page-end
+
+:::page
+
+# Cover Letter
+
+subtitle: Web3 Developer | CoinLocator
+contact: Sem Bozhyk | +420 608 386 115 | sem.bozhyk@sbozh.me | Prague, CZ
+
+---
+
+Hi Stefania,
+
+Thanks for reaching out — CoinLocator caught my attention immediately.
+
+Real estate + staking + governance? I just spent a year at Rock.estate building property platforms for BENELUX market. Before that, I led payment systems processing €5M+ monthly. Your project sits exactly at the intersection of what I've done and where I want to go.
+
+## Why Me
+
+**Real estate is my current domain.** At Rock.estate, I built interfaces for 100K+ property workflows — smart forms, data-intensive UX for valuation specialists. I fell in love with this industry. It's rare, complex, and ripe for disruption. Tokenized real estate feels like the natural next step.
+
+**I build systems that handle money.** At GR8 Tech, I led a team processing €5M+ monthly payments — 99.99% uptime, 23% reduction in payment failures. At Cloudbeds, I shipped PCI-compliant payment interfaces. Transaction reliability isn't abstract to me; it's what I do.
+
+**Web3 is personal, not just professional.** I hold crypto, stake ETH and USDC, believe in Near Protocol. I built an algo trading platform and I'm currently rebuilding it to work with DEX/CEX. I don't have commercial Web3 on my CV yet — but I'm not starting from zero.
+
+**I believe we're early.** Web3 is the natural future of the internet. We're pioneers of something the world will use daily. I don't know when — but it's already happening.
+
+## What I Bring
+
+- Real estate platform experience (Rock.estate, 100K+ properties)
+- High-volume transaction systems (€5M+ monthly, 99.99% uptime)
+- Real-time state management, WebSockets, complex UI
+- Team leadership and mentoring (40% velocity increase)
+- Startup DNA: built VVLEN to €250K revenue from scratch
+
+## Why CoinLocator
+
+Staking, swaps, governance for tokenized real estate — this is exactly where my experience and interests collide. I'm open to part-time or full-time
+
+You can learn more about how I think at [sbozh.me](https://sbozh.me) — my personal startup where I build in public.
+
+Looking forward to talking.
+
+Best,
+Sem Bozhyk
+
+:::page-end
+
+:::page
+
+# Engagement Terms
+
+subtitle: Sem Bozhyk | CoinLocator Collaboration
+contact: +420 608 386 115 | sem.bozhyk@sbozh.me | Prague, CZ
+
+---
+
+## Availability
+
+| Parameter | Details |
+|-----------|---------|
+| Weekly capacity | Up to 50 hours |
+| Timezone | GMT+1 (Prague, CZ) |
+| Notice period | Immediate availability |
+| 6-month outlook | 200 hours/month committed capacity for commercial engagement |
+
+## Compensation
+
+| Structure | Rate |
+|-----------|------|
+| Hourly rate | €35/hour |
+| Engagement type | Contractor |
+
+## Tooling
+
+Daily operational experience with industry-standard collaboration stack:
+
+- **Version Control:** GitHub
+- **Communication:** Slack
+- **Project Management:** Jira
+
+No onboarding required for core tooling.
+
+---
+
+Open to discussing terms based on project scope and engagement structure.
 
 :::page-end

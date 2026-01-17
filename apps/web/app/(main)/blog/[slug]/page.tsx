@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
+import remarkGfm from "remark-gfm";
 import {
   ErrorState,
   PostHeader,
@@ -122,6 +123,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   // Compile and run MDX
   const { default: MDXContent } = await evaluate(post.content, {
     ...runtime,
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -139,6 +141,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (post.tldr) {
     const { default: Content } = await evaluate(post.tldr, {
       ...runtime,
+      remarkPlugins: [remarkGfm],
     } as any);
     TldrContent = () => (
       <Content
@@ -166,6 +169,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (post.attribution) {
     const { default: Content } = await evaluate(post.attribution, {
       ...runtime,
+      remarkPlugins: [remarkGfm],
     } as any);
     // Wrap to add target="_blank" to links
     AttributionContent = () => (
