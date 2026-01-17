@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.6] - 2026-01-17
+
+### Changes
+
+- fix(releases): compile MDX on client to fix load more pagination ([211ad52](https://github.com/sbozh-me/website/commit/211ad52e79cfa0759a695611e04a613bb7683450))
+
+
 ## [1.4.5] - 2026-01-17
 
 ### Changes
