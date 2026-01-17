@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.5] - 2026-01-17
+
+### Changes
+
+- feat(blog): add remark-gfm for strikethrough and GFM support ([4e252a4](https://github.com/sbozh-me/website/commit/4e252a4ea07a4f187c659167b280a6ab2300f9f7))
+
+
 ## [1.4.4] - 2026-01-14
 
 ### Changes
