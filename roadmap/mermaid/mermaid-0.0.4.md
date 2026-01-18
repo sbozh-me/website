@@ -1,4 +1,4 @@
-# mermaid-0.0.2 - Code Language Plugin System
+# mermaid-0.0.4 - Code Language Plugin System
 
 ## Goal
 
@@ -14,7 +14,7 @@ Create an extensible plugin system for code block rendering, allowing language-s
 
 ## Dependencies
 
-Requires [mermaid-0.0.1 - Code Block Parsing Support](./mermaid-0.0.1.md)
+Requires [mermaid-0.0.3 - Code Block Parsing Support](./mermaid-0.0.3.md)
 
 ## Files to Modify
 

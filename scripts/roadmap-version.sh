@@ -27,6 +27,7 @@ fi
 
 ROADMAP_DIR="roadmap/${FEATURE}"
 PACKAGE_JSON="${ROADMAP_DIR}/package.json"
+CHANGELOG="${ROADMAP_DIR}/CHANGELOG.md"
 
 # Create directory if it doesn't exist
 if [[ ! -d "$ROADMAP_DIR" ]]; then
@@ -34,12 +35,14 @@ if [[ ! -d "$ROADMAP_DIR" ]]; then
   mkdir -p "$ROADMAP_DIR"
 fi
 
-# Get current version from package.json or start fresh
+# Get current version and project name from package.json or start fresh
 if [[ -f "$PACKAGE_JSON" ]]; then
   CURRENT=$(node -p "require('./${PACKAGE_JSON}').version")
-  echo -e "${CYAN}Current version: ${FEATURE}@${CURRENT}${NC}"
+  PROJECT_NAME=$(node -p "require('./${PACKAGE_JSON}').name")
+  echo -e "${CYAN}Current version: ${PROJECT_NAME}@${CURRENT}${NC}"
 else
   CURRENT="0.0.0"
+  PROJECT_NAME="@sbozh/roadmap-${FEATURE}"
   echo -e "${CYAN}No package.json found, starting at 0.0.0${NC}"
 fi
 
@@ -53,7 +56,9 @@ case $RELEASE_TYPE in
   patch) NEW="${major}.${minor}.$((patch + 1))" ;;
 esac
 
-echo -e "${YELLOW}Bumping ${FEATURE} to ${NEW}...${NC}"
+DATE=$(date +%Y-%m-%d)
+
+echo -e "${YELLOW}Bumping ${PROJECT_NAME} to ${NEW}...${NC}"
 
 # Create or update package.json
 if [[ -f "$PACKAGE_JSON" ]]; then
@@ -68,12 +73,44 @@ else
   # Create new package.json
   cat > "$PACKAGE_JSON" << EOF
 {
-  "name": "@sbozh/roadmap-${FEATURE}",
+  "name": "${PROJECT_NAME}",
   "version": "${NEW}",
   "private": true,
   "description": "Roadmap tracking for ${FEATURE} feature"
 }
 EOF
+fi
+
+# Update CHANGELOG.md
+if [[ -f "$CHANGELOG" ]]; then
+  # Insert new entry after header
+  HEADER="# Changelog
+
+All notable changes to the ${FEATURE} feature will be documented in this file.
+
+## [${NEW}] - ${DATE}
+
+### Changed
+
+- Version bump to ${NEW}
+"
+  EXISTING=$(tail -n +5 "$CHANGELOG")
+  echo -e "${HEADER}\n${EXISTING}" > "$CHANGELOG"
+  echo -e "${GREEN}Updated ${CHANGELOG}${NC}"
+else
+  # Create new CHANGELOG.md
+  cat > "$CHANGELOG" << EOF
+# Changelog
+
+All notable changes to the ${FEATURE} feature will be documented in this file.
+
+## [${NEW}] - ${DATE}
+
+### Added
+
+- Initial ${FEATURE} feature setup
+EOF
+  echo -e "${GREEN}Created ${CHANGELOG}${NC}"
 fi
 
 # Check if corresponding plan file exists
@@ -86,6 +123,7 @@ fi
 echo -e "${GREEN}Updated ${PACKAGE_JSON} to version ${NEW}${NC}"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  1. Implement changes for ${FEATURE}-${NEW}"
-echo "  2. Commit: git add ${ROADMAP_DIR} && git commit -m 'feat(${FEATURE}): v${NEW}'"
-echo "  3. Tag: git tag ${FEATURE}-${NEW}"
+echo "  1. Update ${CHANGELOG} with actual changes"
+echo "  2. Implement changes for ${FEATURE}-${NEW}"
+echo "  3. Commit: git add ${ROADMAP_DIR} && git commit -m 'feat(${FEATURE}): v${NEW}'"
+echo "  4. Tag: git tag ${FEATURE}-${NEW}"
