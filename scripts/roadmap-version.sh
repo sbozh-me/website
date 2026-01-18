@@ -81,37 +81,25 @@ else
 EOF
 fi
 
-# Update CHANGELOG.md
-if [[ -f "$CHANGELOG" ]]; then
-  # Insert new entry after header
-  HEADER="# Changelog
-
-All notable changes to the ${FEATURE} feature will be documented in this file.
-
-## [${NEW}] - ${DATE}
-
-### Changed
-
-- Version bump to ${NEW}
-"
-  EXISTING=$(tail -n +5 "$CHANGELOG")
-  echo -e "${HEADER}\n${EXISTING}" > "$CHANGELOG"
-  echo -e "${GREEN}Updated ${CHANGELOG}${NC}"
-else
-  # Create new CHANGELOG.md
+# Create CHANGELOG.md if it doesn't exist (but don't auto-add entries)
+if [[ ! -f "$CHANGELOG" ]]; then
   cat > "$CHANGELOG" << EOF
 # Changelog
 
 All notable changes to the ${FEATURE} feature will be documented in this file.
-
-## [${NEW}] - ${DATE}
-
-### Added
-
-- Initial ${FEATURE} feature setup
 EOF
   echo -e "${GREEN}Created ${CHANGELOG}${NC}"
 fi
+
+# Show reminder to update changelog
+echo -e "${YELLOW}Remember to update ${CHANGELOG} with:${NC}"
+echo ""
+echo "## [${NEW}] - ${DATE}"
+echo ""
+echo "### Changed"
+echo ""
+echo "- Your changes here"
+echo ""
 
 # Check if corresponding plan file exists
 PLAN_FILE="${ROADMAP_DIR}/${FEATURE}-${NEW}.md"
