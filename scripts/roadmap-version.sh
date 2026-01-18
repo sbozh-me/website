@@ -28,6 +28,7 @@ fi
 ROADMAP_DIR="roadmap/${FEATURE}"
 PACKAGE_JSON="${ROADMAP_DIR}/package.json"
 CHANGELOG="${ROADMAP_DIR}/CHANGELOG.md"
+REPO_URL="https://github.com/sbozh-me/website"
 
 # Create directory if it doesn't exist
 if [[ ! -d "$ROADMAP_DIR" ]]; then
@@ -62,7 +63,6 @@ echo -e "${YELLOW}Bumping ${PROJECT_NAME} to ${NEW}...${NC}"
 
 # Create or update package.json
 if [[ -f "$PACKAGE_JSON" ]]; then
-  # Update existing package.json
   node -e "
 const fs = require('fs');
 const pkg = JSON.parse(fs.readFileSync('${PACKAGE_JSON}', 'utf8'));
@@ -70,7 +70,6 @@ pkg.version = '${NEW}';
 fs.writeFileSync('${PACKAGE_JSON}', JSON.stringify(pkg, null, 2) + '\n');
 "
 else
-  # Create new package.json
   cat > "$PACKAGE_JSON" << EOF
 {
   "name": "${PROJECT_NAME}",
@@ -81,37 +80,50 @@ else
 EOF
 fi
 
-# Create CHANGELOG.md if it doesn't exist (but don't auto-add entries)
-if [[ ! -f "$CHANGELOG" ]]; then
-  cat > "$CHANGELOG" << EOF
-# Changelog
+# Get commits since last feature tag
+LAST_TAG=$(git tag -l "${FEATURE}-*" --sort=-v:refname | head -1 || echo "")
 
-All notable changes to the ${FEATURE} feature will be documented in this file.
-EOF
-  echo -e "${GREEN}Created ${CHANGELOG}${NC}"
+if [[ -z "$LAST_TAG" ]]; then
+  COMMITS=$(git log --pretty=format:"%H|%s" --reverse -- "${ROADMAP_DIR}" 2>/dev/null || echo "")
+else
+  COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%H|%s" --reverse -- "${ROADMAP_DIR}" 2>/dev/null || echo "")
 fi
 
-# Show reminder to update changelog
-echo -e "${YELLOW}Remember to update ${CHANGELOG} with:${NC}"
-echo ""
-echo "## [${NEW}] - ${DATE}"
-echo ""
-echo "### Changed"
-echo ""
-echo "- Your changes here"
-echo ""
+# Build changelog entry
+ENTRY="## [${FEATURE}-${NEW}] - ${DATE}\n\n### Changes\n\n"
+if [[ -n "$COMMITS" ]]; then
+  while IFS='|' read -r hash msg; do
+    if [[ -n "$hash" ]]; then
+      short_hash=${hash:0:7}
+      ENTRY+="- ${msg} ([${short_hash}](${REPO_URL}/commit/${hash}))\n"
+    fi
+  done <<< "$COMMITS"
+else
+  ENTRY+="- Version bump to ${NEW}\n"
+fi
+
+# Update or create CHANGELOG.md
+echo -e "${YELLOW}Updating ${CHANGELOG}...${NC}"
+if [[ -f "$CHANGELOG" ]]; then
+  HEADER="# Changelog\n\nAll notable changes to the ${FEATURE} feature will be documented in this file.\n\n"
+  EXISTING=$(tail -n +5 "$CHANGELOG")
+  echo -e "${HEADER}${ENTRY}\n${EXISTING}" > "$CHANGELOG"
+else
+  HEADER="# Changelog\n\nAll notable changes to the ${FEATURE} feature will be documented in this file.\n\n"
+  echo -e "${HEADER}${ENTRY}" > "$CHANGELOG"
+fi
+
+echo -e "${GREEN}Updated ${CHANGELOG}${NC}"
 
 # Check if corresponding plan file exists
 PLAN_FILE="${ROADMAP_DIR}/${FEATURE}-${NEW}.md"
 if [[ ! -f "$PLAN_FILE" ]]; then
   echo -e "${YELLOW}Note: Plan file ${PLAN_FILE} does not exist${NC}"
-  echo -e "Create it with the implementation details for this version"
 fi
 
 echo -e "${GREEN}Updated ${PACKAGE_JSON} to version ${NEW}${NC}"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  1. Update ${CHANGELOG} with actual changes"
-echo "  2. Implement changes for ${FEATURE}-${NEW}"
-echo "  3. Commit: git add ${ROADMAP_DIR} && git commit -m 'feat(${FEATURE}): v${NEW}'"
-echo "  4. Tag: git tag ${FEATURE}-${NEW}"
+echo "  1. Review ${CHANGELOG}"
+echo "  2. Commit: git add ${ROADMAP_DIR} && git commit -m 'feat(${FEATURE}): v${NEW}'"
+echo "  3. Tag: git tag ${FEATURE}-${NEW}"
