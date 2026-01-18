@@ -1,6 +1,6 @@
 {
   "name": "@sbozh/roadmap-mermaid",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Roadmap tracking for mermaid feature - PMDXJS code block and Mermaid diagram support"
 }
