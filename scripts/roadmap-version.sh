@@ -84,9 +84,9 @@ fi
 LAST_TAG=$(git tag -l "${FEATURE}-*" --sort=-v:refname | head -1 || echo "")
 
 if [[ -z "$LAST_TAG" ]]; then
-  COMMITS=$(git log --pretty=format:"%H|%s" --reverse -- "${ROADMAP_DIR}" 2>/dev/null || echo "")
+  COMMITS=$(git log --pretty=format:"%H|%s" --reverse 2>/dev/null || echo "")
 else
-  COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%H|%s" --reverse -- "${ROADMAP_DIR}" 2>/dev/null || echo "")
+  COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%H|%s" --reverse 2>/dev/null || echo "")
 fi
 
 # Build changelog entry
