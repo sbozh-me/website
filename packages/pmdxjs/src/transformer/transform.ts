@@ -10,6 +10,7 @@ import {
 } from "../components/cv";
 
 import type {
+  CodeBlockNode,
   ColumnNode,
   ColumnsNode,
   ContentNode,
@@ -81,6 +82,10 @@ interface KnownComponents {
     alignment?: "left" | "center" | "right";
     isHeader?: boolean;
     children: ReactNode;
+  }>;
+  CodeBlock?: React.ComponentType<{
+    language: string | null;
+    children: string;
   }>;
 }
 
@@ -176,6 +181,22 @@ const DefaultTableCell = ({
     children,
   );
 };
+
+/**
+ * Default code block component
+ */
+const DefaultCodeBlock = ({
+  language,
+  children,
+}: {
+  language: string | null;
+  children: string;
+}) =>
+  createElement(
+    "pre",
+    { className: `pmdxjs-code-block ${language ? `language-${language}` : ""} bg-muted/50 p-2 rounded text-[10px] overflow-x-auto` },
+    createElement("code", null, children),
+  );
 
 /**
  * Transform inline text node to React element
@@ -413,6 +434,23 @@ function transformTable(
 }
 
 /**
+ * Transform a code block node to React element
+ */
+function transformCodeBlock(
+  node: CodeBlockNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const CodeBlockComponent = options.components?.CodeBlock ?? DefaultCodeBlock;
+
+  return createElement(CodeBlockComponent, {
+    key,
+    language: node.language,
+    children: node.content,
+  });
+}
+
+/**
  * Transform an entry node to React element
  */
 function transformEntry(
@@ -555,6 +593,8 @@ function transformContentNode(
       return transformParagraph(node, options, key);
     case "table":
       return transformTable(node, options, key);
+    case "code_block":
+      return transformCodeBlock(node, options, key);
     default:
       // Try to handle as custom node
       return transformCustomNode(

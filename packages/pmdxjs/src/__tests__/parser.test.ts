@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { parse } from "../parser";
 
 import type {
+  CodeBlockNode,
   ColumnsNode,
   EntryNode,
   HeaderNode,
@@ -405,6 +406,148 @@ Job stuff.
 
       expect(header.name).toBe("Jane Smith");
       expect(header.subtitle).toBe("Product Designer");
+    });
+  });
+
+  describe("code block parsing", () => {
+    it("should parse code block with language", () => {
+      const source = `:::page
+# Title
+
+\`\`\`typescript
+const greeting = "Hello, world!";
+console.log(greeting);
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const codeBlock = page.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.type).toBe("code_block");
+      expect(codeBlock.language).toBe("typescript");
+      expect(codeBlock.content).toBe('const greeting = "Hello, world!";\nconsole.log(greeting);');
+    });
+
+    it("should parse code block without language", () => {
+      const source = `:::page
+# Title
+
+\`\`\`
+plain code here
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const codeBlock = page.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.type).toBe("code_block");
+      expect(codeBlock.language).toBeNull();
+      expect(codeBlock.content).toBe("plain code here");
+    });
+
+    it("should parse code block inside section", () => {
+      const source = `:::page
+# Name
+
+## Examples
+
+Here's some example code:
+
+\`\`\`javascript
+function add(a, b) {
+  return a + b;
+}
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const section = page.children.find(
+        (c) => c.type === "section",
+      ) as SectionNode;
+      const codeBlock = section.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.type).toBe("code_block");
+      expect(codeBlock.language).toBe("javascript");
+      expect(codeBlock.content).toContain("function add(a, b)");
+    });
+
+    it("should preserve whitespace in code blocks", () => {
+      const source = `:::page
+# Title
+
+\`\`\`python
+def greet():
+    print("Hello")
+    if True:
+        print("World")
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const codeBlock = page.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.content).toBe(`def greet():
+    print("Hello")
+    if True:
+        print("World")`);
+    });
+
+    it("should parse empty code block", () => {
+      const source = `:::page
+# Title
+
+\`\`\`
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const codeBlock = page.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.type).toBe("code_block");
+      expect(codeBlock.content).toBe("");
+    });
+
+    it("should parse mermaid code block", () => {
+      const source = `:::page
+# Architecture
+
+\`\`\`mermaid
+graph TD
+    A[Client] --> B[Server]
+    B --> C[Database]
+\`\`\`
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const codeBlock = page.children.find(
+        (c) => c.type === "code_block",
+      ) as CodeBlockNode;
+
+      expect(codeBlock.type).toBe("code_block");
+      expect(codeBlock.language).toBe("mermaid");
+      expect(codeBlock.content).toContain("graph TD");
     });
   });
 });

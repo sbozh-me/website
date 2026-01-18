@@ -4,6 +4,7 @@ import { parseInline } from "./inline";
 
 import type { Token } from "./tokenizer";
 import type {
+  CodeBlockNode,
   ColumnsNode,
   ContentNode,
   DividerNode,
@@ -353,6 +354,25 @@ export function createTableNode(
     position: {
       start: { line: headerToken.line, column: headerToken.column },
       end: { line: headerToken.line, column: headerToken.column },
+    },
+  };
+}
+
+/**
+ * Create a code block node
+ */
+export function createCodeBlockNode(
+  language: string | null,
+  content: string,
+  startToken: Token,
+): CodeBlockNode {
+  return {
+    type: "code_block",
+    language,
+    content,
+    position: {
+      start: { line: startToken.line, column: startToken.column },
+      end: { line: startToken.line, column: startToken.column },
     },
   };
 }

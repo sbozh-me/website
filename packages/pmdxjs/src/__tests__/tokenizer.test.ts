@@ -211,4 +211,60 @@ subtitle: Engineer
       "Node.js",
     ]);
   });
+
+  it("should tokenize code fence with language", () => {
+    const source = `\`\`\`typescript
+const x = 1;
+\`\`\``;
+
+    const tokens = tokenize(source);
+
+    expect(tokens.map((t) => t.type)).toEqual([
+      "code_fence",
+      "text",
+      "code_fence",
+    ]);
+    expect(tokens[0].meta?.language).toBe("typescript");
+    expect(tokens[0].meta?.isClosing).toBe(false);
+    expect(tokens[1].value).toBe("const x = 1;");
+    expect(tokens[2].meta?.isClosing).toBe(true);
+  });
+
+  it("should tokenize code fence without language", () => {
+    const source = `\`\`\`
+plain code
+\`\`\``;
+
+    const tokens = tokenize(source);
+
+    expect(tokens[0].type).toBe("code_fence");
+    expect(tokens[0].meta?.language).toBeNull();
+    expect(tokens[0].meta?.isClosing).toBe(false);
+  });
+
+  it("should preserve whitespace in code block content", () => {
+    const source = `\`\`\`typescript
+  const indented = true;
+    const moreIndented = false;
+\`\`\``;
+
+    const tokens = tokenize(source);
+
+    expect(tokens[1].value).toBe("  const indented = true;");
+    expect(tokens[2].value).toBe("    const moreIndented = false;");
+  });
+
+  it("should preserve empty lines in code blocks", () => {
+    const source = `\`\`\`
+line1
+
+line3
+\`\`\``;
+
+    const tokens = tokenize(source);
+
+    // Empty line inside code block should be captured as text
+    expect(tokens.length).toBe(5); // fence, line1, empty, line3, fence
+    expect(tokens[2].value).toBe("");
+  });
 });

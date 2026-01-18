@@ -17,6 +17,7 @@ export type TokenType =
   | "metadata"
   | "divider"
   | "list_item"
+  | "code_fence"
   | "text";
 
 /**
@@ -63,6 +64,8 @@ const PATTERNS = {
   divider: /^---\s*$/,
   // - List item
   listItem: /^-\s+(.+)$/,
+  // ``` or ```language - code fence
+  codeFence: /^```(\w*)$/,
 };
 
 /**
@@ -111,13 +114,47 @@ function parseContact(value: string): string[] {
 export function tokenizeLine(
   line: string,
   lineNumber: number,
-  context: { inConfig: boolean; inEntry: boolean },
+  context: { inConfig: boolean; inEntry: boolean; inCodeBlock: boolean },
 ): Token | null {
   const trimmed = line.trim();
 
-  // Empty lines are ignored in tokenization
+  // When inside a code block, check for closing fence first
+  if (context.inCodeBlock) {
+    const codeFenceMatch = trimmed.match(PATTERNS.codeFence);
+    if (codeFenceMatch && codeFenceMatch[1] === "") {
+      // Closing fence (just ```)
+      return {
+        type: "code_fence",
+        value: trimmed,
+        meta: { isClosing: true },
+        line: lineNumber,
+        column: 1,
+      };
+    }
+    // All other lines inside code block are text (preserve original line, not trimmed)
+    return {
+      type: "text",
+      value: line,
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Empty lines are ignored in tokenization (when not in code block)
   if (!trimmed) {
     return null;
+  }
+
+  // Check for code fence opening
+  const codeFenceMatch = trimmed.match(PATTERNS.codeFence);
+  if (codeFenceMatch) {
+    return {
+      type: "code_fence",
+      value: trimmed,
+      meta: { language: codeFenceMatch[1] || null, isClosing: false },
+      line: lineNumber,
+      column: 1,
+    };
   }
 
   // Check for block end (:::) when inside config or entry
@@ -312,7 +349,7 @@ export function tokenizeLine(
 export function tokenize(source: string): Token[] {
   const lines = source.split("\n");
   const tokens: Token[] = [];
-  const context = { inConfig: false, inEntry: false };
+  const context = { inConfig: false, inEntry: false, inCodeBlock: false };
 
   for (let i = 0; i < lines.length; i++) {
     const token = tokenizeLine(lines[i], i + 1, context);
@@ -329,6 +366,13 @@ export function tokenize(source: string): Token[] {
         context.inEntry = true;
       } else if (token.type === "entry_end") {
         context.inEntry = false;
+      } else if (token.type === "code_fence") {
+        // Toggle code block state
+        if (token.meta?.isClosing) {
+          context.inCodeBlock = false;
+        } else {
+          context.inCodeBlock = true;
+        }
       }
     }
   }

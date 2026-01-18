@@ -144,6 +144,17 @@ export interface TableCellNode extends BaseNode {
 }
 
 /**
+ * Code block node - fenced code block
+ */
+export interface CodeBlockNode extends BaseNode {
+  type: "code_block";
+  /** Language identifier (e.g., "typescript", "mermaid"), null for plain blocks */
+  language: string | null;
+  /** Raw content between fences */
+  content: string;
+}
+
+/**
  * Text node - plain text
  */
 export interface TextNode extends BaseNode {
@@ -205,7 +216,8 @@ export type BlockNode =
   | DividerNode
   | ParagraphNode
   | ListNode
-  | TableNode;
+  | TableNode
+  | CodeBlockNode;
 
 /**
  * All content nodes (can appear inside pages, sections, columns)

@@ -1,4 +1,5 @@
 import {
+  createCodeBlockNode,
   createColumnsNode,
   createDividerNode,
   createDocumentNode,
@@ -61,6 +62,12 @@ interface ParserState {
     alignments: ("left" | "center" | "right")[];
     rowTokens: Token[];
   };
+  codeBlockContext: {
+    active: boolean;
+    startToken: Token | null;
+    language: string | null;
+    contentLines: string[];
+  };
 }
 
 /**
@@ -93,6 +100,12 @@ function createInitialState(): ParserState {
       alignments: [],
       rowTokens: [],
     },
+    codeBlockContext: {
+      active: false,
+      startToken: null,
+      language: null,
+      contentLines: [],
+    },
   };
 }
 
@@ -118,6 +131,26 @@ function flushTable(state: ParserState): void {
     headerToken: null,
     alignments: [],
     rowTokens: [],
+  };
+}
+
+/**
+ * Flush pending code block into the current context
+ */
+function flushCodeBlock(state: ParserState): void {
+  if (state.codeBlockContext.active && state.codeBlockContext.startToken) {
+    const codeBlockNode = createCodeBlockNode(
+      state.codeBlockContext.language,
+      state.codeBlockContext.contentLines.join("\n"),
+      state.codeBlockContext.startToken,
+    );
+    addToCurrentContext(state, codeBlockNode);
+  }
+  state.codeBlockContext = {
+    active: false,
+    startToken: null,
+    language: null,
+    contentLines: [],
   };
 }
 
@@ -385,7 +418,31 @@ function processToken(
       break;
     }
 
+    case "code_fence": {
+      if (token.meta?.isClosing) {
+        // Closing fence - flush the code block
+        flushCodeBlock(state);
+      } else {
+        // Opening fence - start collecting code block content
+        flushListItems(state);
+        state.codeBlockContext = {
+          active: true,
+          startToken: token,
+          language: (token.meta?.language as string) || null,
+          contentLines: [],
+        };
+      }
+      break;
+    }
+
     case "text": {
+      // Check if we're inside a code block
+      if (state.codeBlockContext.active) {
+        // Collect text as code block content (preserve original line)
+        state.codeBlockContext.contentLines.push(token.value);
+        break;
+      }
+
       flushListItems(state);
       if (state.entryContext.active) {
         // Text inside entry

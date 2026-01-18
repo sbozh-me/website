@@ -1,6 +1,7 @@
 export type {
   ASTNode,
   BlockNode,
+  CodeBlockNode,
   ColumnNode,
   ColumnsNode,
   ContentNode,
