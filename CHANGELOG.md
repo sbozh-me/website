@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.7] - 2026-01-18
+
+### Changes
+
+- docs(cv): update CV content and remove cover letter ([0209881](https://github.com/sbozh-me/website/commit/0209881138abd3f15ecb1288a9881a4a70001d95))
+
+
 ## [1.4.6] - 2026-01-17
 
 ### Changes
