@@ -8,7 +8,9 @@ import {
   Section as CVSection,
   Tags as CVTags,
 } from "../components/cv";
+import { resolveCodePlugin } from "./code-plugins";
 
+import type { CodeLanguagePlugin } from "../types/plugins";
 import type {
   CodeBlockNode,
   ColumnNode,
@@ -103,6 +105,12 @@ export interface TransformOptions {
    * Custom component overrides
    */
   components?: KnownComponents & CustomComponents;
+
+  /**
+   * Code language plugins for custom code block rendering
+   * Plugins are checked in order; first match wins
+   */
+  codeLanguages?: CodeLanguagePlugin[];
 }
 
 /**
@@ -441,7 +449,27 @@ function transformCodeBlock(
   options: TransformOptions,
   key: number,
 ): ReactElement {
-  const CodeBlockComponent = options.components?.CodeBlock ?? DefaultCodeBlock;
+  const { codeLanguages = [], components } = options;
+
+  // Try to find a plugin for this language
+  const plugin = resolveCodePlugin(node.language, codeLanguages);
+
+  if (plugin) {
+    // Apply optional transform
+    const content = plugin.transform
+      ? plugin.transform(node.content)
+      : node.content;
+
+    return createElement(plugin.component, {
+      key,
+      content,
+      language: node.language!,
+      className: node.language ? `language-${node.language}` : undefined,
+    });
+  }
+
+  // Fallback to default or custom CodeBlock component
+  const CodeBlockComponent = components?.CodeBlock ?? DefaultCodeBlock;
 
   return createElement(CodeBlockComponent, {
     key,

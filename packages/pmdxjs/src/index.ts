@@ -42,6 +42,7 @@ export type { DocumentContextValue, TransformOptions } from "./transformer";
 export type {
   ASTNode,
   BlockNode,
+  CodeBlockNode,
   ColumnNode,
   ColumnsNode,
   ContentNode,
@@ -63,6 +64,9 @@ export type {
 } from "./types";
 
 export type { DocumentConfig, DocumentFormat, Margins } from "./types";
+
+// Plugin types
+export type { CodeBlockProps, CodeLanguagePlugin } from "./types";
 
 // Component exports
 export { Column, Columns, Document, Page } from "./components";

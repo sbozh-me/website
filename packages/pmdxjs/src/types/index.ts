@@ -24,4 +24,6 @@ export type {
 
 export type { DocumentConfig, DocumentFormat, Margins } from "./config";
 
+export type { CodeBlockProps, CodeLanguagePlugin } from "./plugins";
+
 export { DEFAULT_CONFIG } from "./config";

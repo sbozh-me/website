@@ -174,4 +174,166 @@ margins: 15 15 15 15
     expect(screen.getByTestId("custom-header")).toBeInTheDocument();
     expect(screen.getByText("Custom Name")).toBeInTheDocument();
   });
+
+  it("transforms code block with default component", () => {
+    const source = `
+:::page
+# Title
+
+\`\`\`typescript
+const x = 1;
+\`\`\`
+
+:::page-end
+`;
+
+    const ast = parse(source);
+    const element = transform(ast);
+
+    render(element);
+
+    expect(screen.getByText("const x = 1;")).toBeInTheDocument();
+    expect(document.querySelector("pre")).toBeInTheDocument();
+    expect(document.querySelector("code")).toBeInTheDocument();
+  });
+
+  it("transforms code block with custom plugin", () => {
+    const source = `
+:::page
+# Title
+
+\`\`\`mermaid
+graph TD
+\`\`\`
+
+:::page-end
+`;
+
+    const MermaidComponent = ({
+      content,
+      language,
+    }: {
+      content: string;
+      language: string;
+    }) => (
+      <div data-testid="mermaid-block" data-language={language}>
+        {content}
+      </div>
+    );
+
+    const mermaidPlugin = {
+      languages: ["mermaid", "mmd"],
+      component: MermaidComponent,
+    };
+
+    const ast = parse(source);
+    const element = transform(ast, {
+      codeLanguages: [mermaidPlugin],
+    });
+
+    render(element);
+
+    const mermaidBlock = screen.getByTestId("mermaid-block");
+    expect(mermaidBlock).toBeInTheDocument();
+    expect(mermaidBlock).toHaveAttribute("data-language", "mermaid");
+    expect(screen.getByText("graph TD")).toBeInTheDocument();
+  });
+
+  it("applies plugin transform function", () => {
+    const source = `
+:::page
+# Title
+
+\`\`\`json
+  {"key":"value"}
+\`\`\`
+
+:::page-end
+`;
+
+    const JsonComponent = ({ content }: { content: string }) => (
+      <div data-testid="json-block">{content}</div>
+    );
+
+    const jsonPlugin = {
+      languages: ["json"],
+      component: JsonComponent,
+      transform: (content: string) => content.trim(),
+    };
+
+    const ast = parse(source);
+    const element = transform(ast, {
+      codeLanguages: [jsonPlugin],
+    });
+
+    render(element);
+
+    const jsonBlock = screen.getByTestId("json-block");
+    expect(jsonBlock.textContent).toBe('{"key":"value"}');
+  });
+
+  it("uses default component when no plugin matches", () => {
+    const source = `
+:::page
+# Title
+
+\`\`\`python
+print("hello")
+\`\`\`
+
+:::page-end
+`;
+
+    const mermaidPlugin = {
+      languages: ["mermaid"],
+      component: () => <div data-testid="mermaid">Mermaid</div>,
+    };
+
+    const ast = parse(source);
+    const element = transform(ast, {
+      codeLanguages: [mermaidPlugin],
+    });
+
+    render(element);
+
+    // Should NOT use mermaid plugin
+    expect(screen.queryByTestId("mermaid")).not.toBeInTheDocument();
+    // Should use default pre/code
+    expect(screen.getByText('print("hello")')).toBeInTheDocument();
+    expect(document.querySelector("pre")).toBeInTheDocument();
+  });
+
+  it("respects plugin priority order", () => {
+    const source = `
+:::page
+# Title
+
+\`\`\`typescript
+const x = 1;
+\`\`\`
+
+:::page-end
+`;
+
+    const FirstPlugin = {
+      languages: ["typescript"],
+      component: () => <div data-testid="first">First Plugin</div>,
+    };
+
+    const SecondPlugin = {
+      languages: ["typescript", "ts"],
+      component: () => <div data-testid="second">Second Plugin</div>,
+    };
+
+    const ast = parse(source);
+    const element = transform(ast, {
+      codeLanguages: [FirstPlugin, SecondPlugin],
+    });
+
+    render(element);
+
+    // First plugin should win
+    expect(screen.getByTestId("first")).toBeInTheDocument();
+    expect(screen.queryByTestId("second")).not.toBeInTheDocument();
+  });
 });
