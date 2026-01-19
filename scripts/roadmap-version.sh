@@ -84,10 +84,21 @@ fi
 LAST_TAG=$(git tag -l "${FEATURE}-*" --sort=-v:refname | head -1 || echo "")
 
 if [[ -z "$LAST_TAG" ]]; then
-  COMMITS=$(git log --pretty=format:"%H|%s" --reverse 2>/dev/null || echo "")
-else
-  COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%H|%s" --reverse 2>/dev/null || echo "")
+  echo -e "${RED}Error: No existing tag found for feature '${FEATURE}'${NC}"
+  echo -e "Create initial tag first: git tag ${FEATURE}-0.0.0"
+  exit 1
 fi
+
+# Check if tag is ancestor of HEAD (handles rebased history)
+if ! git merge-base --is-ancestor "$LAST_TAG" HEAD 2>/dev/null; then
+  echo -e "${RED}Error: Tag ${LAST_TAG} is not in current branch history${NC}"
+  echo -e "This usually happens after a rebase. Fix by re-tagging:"
+  echo -e "  git tag -d ${LAST_TAG}"
+  echo -e "  git tag ${LAST_TAG} <correct-commit>"
+  exit 1
+fi
+
+COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%H|%s" --reverse 2>/dev/null || echo "")
 
 # Build changelog entry
 ENTRY="## [${FEATURE}-${NEW}] - ${DATE}\n\n### Changes\n\n"
