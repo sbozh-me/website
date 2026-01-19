@@ -2,6 +2,12 @@
 
 All notable changes to the mermaid feature will be documented in this file.
 
+## [mermaid-0.0.4] - 2026-01-19
+
+### Changes
+
+- feat(pmdxjs): add code language plugin system for custom code block rendering ([2e3675b](https://github.com/sbozh-me/website/commit/2e3675b2d8b8f5dc8f29601e59133cf50e5712e4))
+
 ## [mermaid-0.0.3] - 2026-01-19
 
 ### Changes
