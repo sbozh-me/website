@@ -155,6 +155,19 @@ export interface CodeBlockNode extends BaseNode {
 }
 
 /**
+ * Image node - embedded image with optional dimensions
+ */
+export interface ImageNode extends BaseNode {
+  type: "image";
+  /** Image URL or path */
+  src: string;
+  /** Optional width (pixels or percentage) */
+  width?: string;
+  /** Optional height (pixels or percentage) */
+  height?: string;
+}
+
+/**
  * Text node - plain text
  */
 export interface TextNode extends BaseNode {
@@ -217,7 +230,8 @@ export type BlockNode =
   | ParagraphNode
   | ListNode
   | TableNode
-  | CodeBlockNode;
+  | CodeBlockNode
+  | ImageNode;
 
 /**
  * All content nodes (can appear inside pages, sections, columns)

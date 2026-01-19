@@ -336,4 +336,63 @@ const x = 1;
     expect(screen.getByTestId("first")).toBeInTheDocument();
     expect(screen.queryByTestId("second")).not.toBeInTheDocument();
   });
+
+  it("transforms image with default component", () => {
+    const source = `
+:::page
+# Title
+
+:::image /test-image.png | 300 | 200
+
+:::page-end
+`;
+
+    const ast = parse(source);
+    const element = transform(ast);
+
+    render(element);
+
+    const img = document.querySelector("img");
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute("src", "/test-image.png");
+    expect(img).toHaveStyle({ width: "300px", height: "200px" });
+  });
+
+  it("transforms image with custom component", () => {
+    const source = `
+:::page
+# Title
+
+:::image /custom.jpg | 100%
+
+:::page-end
+`;
+
+    const CustomImage = ({
+      src,
+      width,
+    }: {
+      src: string;
+      width?: string;
+      height?: string;
+    }) => (
+      <div data-testid="custom-image" data-src={src} data-width={width}>
+        Custom Image
+      </div>
+    );
+
+    const ast = parse(source);
+    const element = transform(ast, {
+      components: {
+        Image: CustomImage,
+      },
+    });
+
+    render(element);
+
+    const customImg = screen.getByTestId("custom-image");
+    expect(customImg).toBeInTheDocument();
+    expect(customImg).toHaveAttribute("data-src", "/custom.jpg");
+    expect(customImg).toHaveAttribute("data-width", "100%");
+  });
 });

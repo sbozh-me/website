@@ -10,6 +10,7 @@ export type {
   EmphasisNode,
   EntryNode,
   HeaderNode,
+  ImageNode,
   InlineNode,
   LinkNode,
   ListItemNode,

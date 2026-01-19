@@ -9,6 +9,7 @@ import type {
   ColumnsNode,
   EntryNode,
   HeaderNode,
+  ImageNode,
   ListNode,
   SectionNode,
   TagsNode,
@@ -548,6 +549,112 @@ graph TD
       expect(codeBlock.type).toBe("code_block");
       expect(codeBlock.language).toBe("mermaid");
       expect(codeBlock.content).toContain("graph TD");
+    });
+  });
+
+  describe("image parsing", () => {
+    it("should parse image with src only", () => {
+      const source = `:::page
+# Title
+
+:::image /path/to/image.png
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const image = page.children.find(
+        (c) => c.type === "image",
+      ) as ImageNode;
+
+      expect(image.type).toBe("image");
+      expect(image.src).toBe("/path/to/image.png");
+      expect(image.width).toBeUndefined();
+      expect(image.height).toBeUndefined();
+    });
+
+    it("should parse image with width", () => {
+      const source = `:::page
+# Title
+
+:::image /screenshot.jpg | 300
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const image = page.children.find(
+        (c) => c.type === "image",
+      ) as ImageNode;
+
+      expect(image.type).toBe("image");
+      expect(image.src).toBe("/screenshot.jpg");
+      expect(image.width).toBe("300");
+      expect(image.height).toBeUndefined();
+    });
+
+    it("should parse image with width and height", () => {
+      const source = `:::page
+# Title
+
+:::image https://example.com/photo.png | 200 | 150
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const image = page.children.find(
+        (c) => c.type === "image",
+      ) as ImageNode;
+
+      expect(image.type).toBe("image");
+      expect(image.src).toBe("https://example.com/photo.png");
+      expect(image.width).toBe("200");
+      expect(image.height).toBe("150");
+    });
+
+    it("should parse image with percentage dimensions", () => {
+      const source = `:::page
+# Title
+
+:::image /logo.svg | 100% | 50%
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const image = page.children.find(
+        (c) => c.type === "image",
+      ) as ImageNode;
+
+      expect(image.type).toBe("image");
+      expect(image.src).toBe("/logo.svg");
+      expect(image.width).toBe("100%");
+      expect(image.height).toBe("50%");
+    });
+
+    it("should parse image inside section", () => {
+      const source = `:::page
+# Name
+
+## Screenshots
+
+:::image /app.png | 400
+
+:::page-end`;
+
+      const ast = parse(source);
+      const page = ast.children[0];
+      const section = page.children.find(
+        (c) => c.type === "section",
+      ) as SectionNode;
+      const image = section.children.find(
+        (c) => c.type === "image",
+      ) as ImageNode;
+
+      expect(image.type).toBe("image");
+      expect(image.src).toBe("/app.png");
+      expect(image.width).toBe("400");
     });
   });
 });

@@ -18,6 +18,7 @@ export type TokenType =
   | "divider"
   | "list_item"
   | "code_fence"
+  | "image"
   | "text";
 
 /**
@@ -45,6 +46,8 @@ const PATTERNS = {
   pageEnd: /^:::page-end\s*$/,
   // :::entry Company | Role | Dates | Location
   entryStart: /^:::entry\s+(.+)$/,
+  // :::image src | width | height
+  image: /^:::image\s+(\S+)(?:\s*\|\s*(\S+))?(?:\s*\|\s*(\S+))?\s*$/,
   // ---columns 60 40
   columnsStart: /^---columns\s+(\d+)\s+(\d+)\s*$/,
   // ---columns-end
@@ -207,6 +210,22 @@ export function tokenizeLine(
       type: "entry_start",
       value: trimmed,
       meta: parseEntryHeader(entryMatch[1]),
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Image
+  const imageMatch = trimmed.match(PATTERNS.image);
+  if (imageMatch) {
+    return {
+      type: "image",
+      value: trimmed,
+      meta: {
+        src: imageMatch[1],
+        width: imageMatch[2] || undefined,
+        height: imageMatch[3] || undefined,
+      },
       line: lineNumber,
       column: 1,
     };

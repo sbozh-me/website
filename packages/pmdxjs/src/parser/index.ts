@@ -5,6 +5,7 @@ import {
   createDocumentNode,
   createEntryNode,
   createHeaderNode,
+  createImageNode,
   createListNode,
   createPageNode,
   createParagraphNode,
@@ -415,6 +416,13 @@ function processToken(
         state.tableContext.active = true;
         state.tableContext.alignments = (token.meta?.alignments as ("left" | "center" | "right")[]) || [];
       }
+      break;
+    }
+
+    case "image": {
+      // Image directive - single line, no closing tag
+      flushListItems(state);
+      addToCurrentContext(state, createImageNode(token));
       break;
     }
 

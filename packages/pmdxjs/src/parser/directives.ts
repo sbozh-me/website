@@ -11,6 +11,7 @@ import type {
   DocumentNode,
   EntryNode,
   HeaderNode,
+  ImageNode,
   ListItemNode,
   ListNode,
   PageNode,
@@ -373,6 +374,28 @@ export function createCodeBlockNode(
     position: {
       start: { line: startToken.line, column: startToken.column },
       end: { line: startToken.line, column: startToken.column },
+    },
+  };
+}
+
+/**
+ * Create an image node
+ */
+export function createImageNode(token: Token): ImageNode {
+  const meta = token.meta as {
+    src: string;
+    width?: string;
+    height?: string;
+  };
+
+  return {
+    type: "image",
+    src: meta.src,
+    width: meta.width,
+    height: meta.height,
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
     },
   };
 }

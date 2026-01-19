@@ -5,6 +5,7 @@ import {
   Divider as CVDivider,
   Entry as CVEntry,
   Header as CVHeader,
+  Image as CVImage,
   Section as CVSection,
   Tags as CVTags,
 } from "../components/cv";
@@ -21,6 +22,7 @@ import type {
   EmphasisNode,
   EntryNode,
   HeaderNode,
+  ImageNode,
   InlineNode,
   LinkNode,
   ListItemNode,
@@ -88,6 +90,12 @@ interface KnownComponents {
   CodeBlock?: React.ComponentType<{
     language: string | null;
     children: string;
+  }>;
+  Image?: React.ComponentType<{
+    src: string;
+    width?: string;
+    height?: string;
+    alt?: string;
   }>;
 }
 
@@ -479,6 +487,24 @@ function transformCodeBlock(
 }
 
 /**
+ * Transform an image node to React element
+ */
+function transformImage(
+  node: ImageNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const ImageComponent = options.components?.Image ?? CVImage;
+
+  return createElement(ImageComponent, {
+    key,
+    src: node.src,
+    width: node.width,
+    height: node.height,
+  });
+}
+
+/**
  * Transform an entry node to React element
  */
 function transformEntry(
@@ -623,6 +649,8 @@ function transformContentNode(
       return transformTable(node, options, key);
     case "code_block":
       return transformCodeBlock(node, options, key);
+    case "image":
+      return transformImage(node, options, key);
     default:
       // Try to handle as custom node
       return transformCustomNode(
