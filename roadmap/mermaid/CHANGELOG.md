@@ -2,6 +2,13 @@
 
 All notable changes to the mermaid feature will be documented in this file.
 
+## [mermaid-0.0.6] - 2026-01-19
+
+### Changes
+
+- docs(roadmap): add mermaid v0.0.6 release plan ([9ba5997](https://github.com/sbozh-me/website/commit/9ba599748f5d4b8731e0fb7183430b5ab232b630))
+- feat(pmdxjs): add image directive support ([33e90f9](https://github.com/sbozh-me/website/commit/33e90f98d2a5f28e8bb5046aa66abedff48d8c72))
+
 ## [mermaid-0.0.5] - 2026-01-19
 
 ### Changes
