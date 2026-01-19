@@ -2,6 +2,12 @@
 
 All notable changes to the mermaid feature will be documented in this file.
 
+## [mermaid-0.0.5] - 2026-01-19
+
+### Changes
+
+- feat(pmdxjs-mermaid): add mermaid diagram plugin for PMDXJS ([21ba4cf](https://github.com/sbozh-me/website/commit/21ba4cff3aeb08f72e815fa15116d6b7aced7365))
+
 ## [mermaid-0.0.4] - 2026-01-19
 
 ### Changes
