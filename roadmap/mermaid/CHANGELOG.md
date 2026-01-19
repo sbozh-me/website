@@ -2,6 +2,14 @@
 
 All notable changes to the mermaid feature will be documented in this file.
 
+## [mermaid-0.0.3] - 2026-01-19
+
+### Changes
+
+- feat(pmdxjs): add code block parsing for mermaid support ([120a3f8](https://github.com/sbozh-me/website/commit/120a3f899e2b58e32697d98f2e2ce117f6de821b))
+- fix(tooling): require existing tag and validate ancestry in roadmap-version ([b702b11](https://github.com/sbozh-me/website/commit/b702b11804faf7e95ffe547c46d0e3ab917b8286))
+- fix(tooling): combine commit and tag in roadmap-version next steps ([a4fa877](https://github.com/sbozh-me/website/commit/a4fa877c923b8b4fbbca3485d8d06ca46f153451))
+
 ## [mermaid-0.0.2] - 2026-01-18
 
 ### Changes
