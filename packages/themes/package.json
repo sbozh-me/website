@@ -9,7 +9,8 @@
     "./context": "./src/theme-context.tsx",
     "./loader": "./src/theme-loader.ts",
     "./obsidian-forge": "./src/obsidian-forge/index.css",
-    "./kognitiv": "./src/kognitiv/index.css"
+    "./kognitiv": "./src/kognitiv/index.css",
+    "./roman-empire": "./src/roman-empire/index.css"
   },
   "peerDependencies": {
     "react": ">=18.0.0"

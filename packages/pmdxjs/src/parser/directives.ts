@@ -1,3 +1,5 @@
+import { encodeQrPath } from "../lib/qr";
+import { parseAmount, toIBAN, toSPAYD } from "../lib/payment";
 import { DEFAULT_CONFIG } from "../types/config";
 
 import { parseInline } from "./inline";
@@ -10,17 +12,32 @@ import type {
   DocumentNode,
   EntryNode,
   HeaderNode,
+  InvoiceNode,
   ListItemNode,
   ListNode,
   PageNode,
   ParagraphNode,
+  PartyNode,
+  QrNode,
   SectionNode,
+  SignNode,
   TableCellNode,
   TableNode,
   TableRowNode,
   TagsNode,
+  TotalNode,
 } from "../types/ast";
 import type { DocumentConfig } from "../types/config";
+
+/** Split a raw block line into "key: value". Returns null for non key:value. */
+function parseKeyValue(line: string): { key: string; value: string } | null {
+  const idx = line.indexOf(":");
+  if (idx <= 0) return null;
+  return {
+    key: line.slice(0, idx).trim().toLowerCase(),
+    value: line.slice(idx + 1).trim(),
+  };
+}
 
 /**
  * Parse config block tokens into DocumentConfig
@@ -203,6 +220,148 @@ export function createTagsNode(tagTokens: Token[]): TagsNode {
           end: { line: tagTokens[0].line, column: tagTokens[0].column },
         }
       : undefined,
+  };
+}
+
+/**
+ * Create an invoice masthead node from a :::invoice block's lines.
+ */
+export function createInvoiceNode(
+  startToken: Token,
+  contentTokens: Token[],
+): InvoiceNode {
+  const fields: Record<string, string> = {};
+  for (const token of contentTokens) {
+    const kv = parseKeyValue(token.value);
+    if (kv) fields[kv.key] = kv.value;
+  }
+
+  return {
+    type: "invoice",
+    title: fields.title || "Faktura",
+    subtitle: fields.subtitle || fields.eyebrow,
+    number: fields.number,
+    issued: fields.issued || fields.issue,
+    due: fields.due,
+    payment: fields.payment,
+    position: {
+      start: { line: startToken.line, column: startToken.column },
+      end: { line: startToken.line, column: startToken.column },
+    },
+  };
+}
+
+/**
+ * Create a party node (supplier/customer) from a :::party block.
+ * First line is the name; remaining lines are address/contact detail.
+ */
+export function createPartyNode(
+  startToken: Token,
+  contentTokens: Token[],
+): PartyNode {
+  const role = (startToken.meta?.role as string) || "";
+  const lines = contentTokens
+    .map((t) => t.value.trim())
+    .filter((v) => v.length > 0);
+  const [name = "", ...rest] = lines;
+
+  return {
+    type: "party",
+    role,
+    name,
+    lines: rest,
+    position: {
+      start: { line: startToken.line, column: startToken.column },
+      end: { line: startToken.line, column: startToken.column },
+    },
+  };
+}
+
+/**
+ * Create a total node from a :::total line ("amount" or "amount | label").
+ */
+export function createTotalNode(token: Token): TotalNode {
+  const [amount, label] = token.value.split("|").map((p) => p.trim());
+  return {
+    type: "total",
+    amount: amount || "",
+    label: label || "Celkem k úhradě",
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
+    },
+  };
+}
+
+/**
+ * Create a signature node from a :::sign line.
+ */
+export function createSignNode(token: Token): SignNode {
+  // ":::sign Name | /image.png" — name and optional signature image
+  const [name, image] = token.value.split("|").map((p) => p.trim());
+  return {
+    type: "sign",
+    name: name || undefined,
+    image: image || undefined,
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
+    },
+  };
+}
+
+/**
+ * Create a QR payment node from a :::qr block. Encodes the Czech "QR Platba"
+ * (SPAYD) payload into an SVG path at parse time.
+ */
+export function createQrNode(
+  startToken: Token,
+  contentTokens: Token[],
+): QrNode {
+  const fields: Record<string, string> = {};
+  for (const token of contentTokens) {
+    const kv = parseKeyValue(token.value);
+    if (kv) fields[kv.key] = kv.value;
+  }
+
+  const account = fields.acc || fields.account || "";
+  const currency = (fields.currency || fields.cc || "CZK").toUpperCase();
+  const variableSymbol = fields.vs || fields.variablesymbol || fields.variable;
+  const message = fields.msg || fields.message;
+  const amount = fields.amount || fields.am;
+
+  // Prefer an explicitly provided IBAN; otherwise derive it from the account.
+  const iban = fields.iban
+    ? fields.iban.replace(/\s+/g, "").toUpperCase()
+    : account
+      ? toIBAN(account)
+      : "";
+  const payload = iban
+    ? toSPAYD({
+        iban,
+        amount: amount ? parseAmount(amount) : undefined,
+        currency,
+        variableSymbol,
+        message,
+      })
+    : "";
+  const { size, path } = encodeQrPath(payload || " ");
+
+  return {
+    type: "qr",
+    account,
+    iban,
+    amount,
+    currency,
+    variableSymbol,
+    message,
+    payload,
+    qrSize: size,
+    qrPath: path,
+    position: {
+      start: { line: startToken.line, column: startToken.column },
+      end: { line: startToken.line, column: startToken.column },
+    },
   };
 }
 

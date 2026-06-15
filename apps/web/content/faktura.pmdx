@@ -1,0 +1,57 @@
+:::config
+format: A4
+margins: 16 16 16 16
+theme: invoice
+:::
+
+:::page
+
+:::invoice
+title: Faktura
+number: 20260001
+issued: 01.09.2026
+due: 15.09.2026
+payment: převodem
+:::
+
+---columns 50 50
+
+:::party Dodavatel
+Ukázkový Dodavatel
+Vzorová 1
+110 00 Praha 1
+Česká republika
+tel: +420 000 000 000
+dodavatel@example.com
+IČO: 00000000
+Nejsem plátce DPH
+:::
+
+---
+
+:::party Odběratel
+Ukázkový Odběratel s.r.o.
+Příkladová 2
+602 00 Brno
+:::
+
+---columns-end
+
+| Označení položky | Množství | Cena za MJ | Celkem |
+|------------------|---------:|-----------:|-------:|
+| Ukázková služba, sada | 1 ks | 1000 Kč | 1000 Kč |
+
+:::total 1000 Kč
+
+:::qr
+acc: 1234567890/0100
+iban: CZ6508000000192000145399
+amount: 1000
+vs: 20260001
+currency: CZK
+msg: Faktura 20260001
+:::
+
+:::sign Ukázkový Dodavatel | /podpis.png
+
+:::page-end

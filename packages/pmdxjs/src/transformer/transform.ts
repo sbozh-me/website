@@ -8,6 +8,13 @@ import {
   Section as CVSection,
   Tags as CVTags,
 } from "../components/cv";
+import {
+  InvoiceHeader,
+  Party,
+  PaymentQR,
+  Sign,
+  Total,
+} from "../components/invoice";
 
 import type {
   ColumnNode,
@@ -19,12 +26,16 @@ import type {
   EntryNode,
   HeaderNode,
   InlineNode,
+  InvoiceNode,
   LinkNode,
   ListItemNode,
   ListNode,
   PageNode,
   ParagraphNode,
+  PartyNode,
+  QrNode,
   SectionNode,
+  SignNode,
   SparkNode,
   StrongNode,
   TableCellNode,
@@ -32,6 +43,7 @@ import type {
   TableRowNode,
   TagsNode,
   TextNode,
+  TotalNode,
 } from "../types/ast";
 import type { ReactElement, ReactNode } from "react";
 
@@ -67,6 +79,28 @@ interface KnownComponents {
     children: ReactNode;
   }>;
   Tags?: React.ComponentType<{ items: string[] }>;
+  Invoice?: React.ComponentType<{
+    title?: string;
+    number?: string;
+    issued?: string;
+    due?: string;
+    payment?: string;
+  }>;
+  Party?: React.ComponentType<{
+    role: string;
+    name: string;
+    lines?: string[];
+  }>;
+  Total?: React.ComponentType<{ label?: string; amount: string }>;
+  Sign?: React.ComponentType<{ name?: string; image?: string }>;
+  PaymentQR?: React.ComponentType<{
+    account: string;
+    amount?: string;
+    currency?: string;
+    variableSymbol?: string;
+    qrPath: string;
+    qrSize: number;
+  }>;
   Divider?: React.ComponentType<object>;
   Paragraph?: React.ComponentType<{ children: ReactNode }>;
   List?: React.ComponentType<{ ordered: boolean; children: ReactNode }>;
@@ -527,6 +561,90 @@ function transformCustomNode(
 }
 
 /**
+ * Transform an invoice masthead node to React element
+ */
+function transformInvoice(
+  node: InvoiceNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.Invoice ?? InvoiceHeader;
+  return createElement(Component, {
+    key,
+    title: node.title,
+    number: node.number,
+    issued: node.issued,
+    due: node.due,
+    payment: node.payment,
+  });
+}
+
+/**
+ * Transform a party node to React element
+ */
+function transformParty(
+  node: PartyNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.Party ?? Party;
+  return createElement(Component, {
+    key,
+    role: node.role,
+    name: node.name,
+    lines: node.lines,
+  });
+}
+
+/**
+ * Transform a total node to React element
+ */
+function transformTotal(
+  node: TotalNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.Total ?? Total;
+  return createElement(Component, {
+    key,
+    label: node.label,
+    amount: node.amount,
+  });
+}
+
+/**
+ * Transform a signature node to React element
+ */
+function transformSign(
+  node: SignNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.Sign ?? Sign;
+  return createElement(Component, { key, name: node.name, image: node.image });
+}
+
+/**
+ * Transform a QR payment node to React element
+ */
+function transformQr(
+  node: QrNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.PaymentQR ?? PaymentQR;
+  return createElement(Component, {
+    key,
+    account: node.account,
+    amount: node.amount,
+    currency: node.currency,
+    variableSymbol: node.variableSymbol,
+    qrPath: node.qrPath,
+    qrSize: node.qrSize,
+  });
+}
+
+/**
  * Transform a content node to React element
  */
 function transformContentNode(
@@ -537,6 +655,16 @@ function transformContentNode(
   switch (node.type) {
     case "header":
       return transformHeader(node, options, key);
+    case "invoice":
+      return transformInvoice(node, options, key);
+    case "party":
+      return transformParty(node, options, key);
+    case "total":
+      return transformTotal(node, options, key);
+    case "sign":
+      return transformSign(node, options, key);
+    case "qr":
+      return transformQr(node, options, key);
     case "section":
       return transformSection(node, options, key);
     case "columns":

@@ -47,3 +47,6 @@ apps/web/content/cv*
 # Ignore signature image
 apps/web/public/podpis.png
 backups/
+
+# Real invoices stay local; faktura.pmdx in git is a sample
+apps/web/content/faktura.*.pmdx

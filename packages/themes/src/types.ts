@@ -20,6 +20,11 @@ export const THEMES: Theme[] = [
     name: "KOGNITIV",
     description: "Techno-thriller reading experience - Cold War command centers, declassified briefings",
   },
+  {
+    id: "roman-empire",
+    name: "Roman Empire",
+    description: "Imperial decree & senatorial letter aesthetic - ancient parchment, Roman inscriptions",
+  },
 ];
 
 export const DEFAULT_THEME = "obsidian-forge";

@@ -1,0 +1,419 @@
+/**
+ * ROMAN EMPIRE Theme — "Modern-Tech Roman"
+ *
+ * Senatorial dossier rendered by an engineer: carved letterforms,
+ * stone-and-bronze materiality, mathematical proportion, zero ornamental excess.
+ *
+ * Palette (fixed, no additions):
+ *   Background:        #F4EFE6  travertine / aged vellum
+ *   Primary text:      #1C1A17  basalt black
+ *   Secondary text:    #5C5346  weathered stone
+ *   Accent / rules:    #6E4A1F  oxidized bronze — used sparingly
+ *   Imperial highlight: #4A1C2A  Tyrian purple — name & section markers ONLY
+ *   Hairline dividers: #C9BFA8  lime-mortar
+ *
+ * Typography:
+ *   Headings:  Cinzel (small-caps, weight 600)
+ *   Body:      Inter (10.5pt, line-height 1.55)
+ *   Metrics:   JetBrains Mono (KPIs, dates, tech terms)
+ */
+
+/* ── Fonts ─────────────────────────────────────────────────────────────────── */
+
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap");
+
+/* JetBrains Mono is loaded by the base theme (obsidian-forge). If used
+   standalone, add: @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"); */
+
+@import "./typography.css";
+@import "./prose.css";
+@import "./code.css";
+@import "./toc.css";
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   BLOG VARIANT — dark mode for article reading
+   Scoped to [data-theme="roman-empire"]
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="roman-empire"] {
+  /* Structural */
+  --color-background: #1C1A17;
+  --color-muted: #25221D;
+  --color-border: #3A362E;
+  --color-card: #25221D;
+  --color-card-foreground: #E8E2D6;
+  --color-popover: #25221D;
+  --color-popover-foreground: #E8E2D6;
+  --color-input: #3A362E;
+
+  /* Text */
+  --color-foreground: #E8E2D6;
+  --color-muted-foreground: #5C5346;
+
+  /* Signals */
+  --color-primary: #6E4A1F;
+  --color-primary-foreground: #F4EFE6;
+  --color-secondary: #4A1C2A;
+  --color-secondary-foreground: #E8E2D6;
+  --color-accent: #6E4A1F;
+  --color-accent-foreground: #E8E2D6;
+  --color-destructive: #8B3A3A;
+  --color-destructive-foreground: #E8E2D6;
+  --color-ring: #6E4A1F;
+
+  /* Roman tokens (dark-adapted) */
+  --roman-travertine: #1C1A17;
+  --roman-basalt: #E8E2D6;
+  --roman-stone: #5C5346;
+  --roman-bronze: #6E4A1F;
+  --roman-purple: #4A1C2A;
+  --roman-mortar: #3A362E;
+
+  /* No curves */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Prose */
+  --prose-font-size: 17px;
+  --prose-line-height: 1.55;
+  --prose-max-width: none;
+  --prose-letter-spacing: normal;
+  --prose-image-radius: 0;
+  --prose-image-border-width: 1px;
+  --prose-hr-max-width: 160px;
+
+  /* Code */
+  --code-bg: #25221D;
+  --code-block-radius: 0;
+  --code-inline-radius: 0;
+
+  /* Syntax highlighting — bronze/stone palette */
+  --syntax-text: #E8E2D6;
+  --syntax-comment: #5C5346;
+  --syntax-keyword: #6E4A1F;
+  --syntax-string: #8B7355;
+  --syntax-number: #6E4A1F;
+  --syntax-function: #6E4A1F;
+  --syntax-property: #5C5346;
+  --syntax-operator: #E8E2D6;
+  --syntax-punctuation: #5C5346;
+  --syntax-highlight-bg: rgba(110, 74, 31, 0.12);
+  --syntax-highlight-border: #6E4A1F;
+  --syntax-line-number: #5C5346;
+
+  /* TOC */
+  --toc-border-radius: 0;
+  --toc-scrollbar-radius: 0;
+}
+
+/* Selection — bronze tint */
+[data-theme="roman-empire"] ::selection {
+  background-color: rgb(110 74 31 / 0.35);
+  color: #E8E2D6;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   PAPER VARIANT — "roman-empire-paper"
+   Senatorial dossier: travertine background, basalt ink, bronze rules.
+   Targets .pmdxjs-document for CV / PDF generation.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] {
+  /* ── Palette ──────────────────────────────────────────────────────────── */
+  --cv-paper:            #F4EFE6;
+  --cv-foreground:       #1C1A17;
+  --cv-muted:            #EDE7DB;
+  --cv-muted-foreground: #5C5346;
+  --cv-border:           #C9BFA8;
+  --cv-primary:          #4A1C2A;
+  --cv-secondary:        #6E4A1F;
+  --cv-accent:           #6E4A1F;
+
+  /* Roman tokens */
+  --roman-travertine: #F4EFE6;
+  --roman-basalt:     #1C1A17;
+  --roman-stone:      #5C5346;
+  --roman-bronze:     #6E4A1F;
+  --roman-purple:     #4A1C2A;
+  --roman-mortar:     #C9BFA8;
+
+  /* ── Base typography — Inter 10.5pt ───────────────────────────────────── */
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;       /* ≈ 10.5pt */
+  line-height: 1.55;
+  letter-spacing: normal;
+  color: var(--roman-basalt);
+
+  /* No background textures. Travertine is a color, not a JPG. */
+}
+
+
+/* ── Page ───────────────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-page {
+  background-color: var(--roman-travertine);
+  color: var(--roman-basalt);
+  border: none;
+  box-shadow: none;
+}
+
+
+/* ── Header / Name ──────────────────────────────────────────────────────── */
+/* Name sits alone, centered, with a single bronze rule beneath it. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-header h1 {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--roman-purple);
+  text-align: center;
+  border-bottom: 0.5pt solid var(--roman-bronze);
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+}
+
+/* Subtitle — role line */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-header-subtitle {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--roman-stone);
+  text-align: center;
+}
+
+/* Contact ribbon — monospace, centered, interpunct-separated */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-header-contact {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.03em;
+  color: var(--roman-stone);
+  text-transform: uppercase;
+  justify-content: center;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-header-contact a,
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-header-contact span {
+  color: var(--roman-stone);
+}
+
+
+/* ── Sections ───────────────────────────────────────────────────────────── */
+/* Small-caps Cinzel, left-aligned, 0.5pt bronze underline. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-section h2 {
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant: small-caps;
+  text-transform: lowercase;    /* forces small-caps rendering */
+  letter-spacing: 0.25em;
+  color: var(--roman-purple);
+  border-bottom: 0.5pt solid var(--roman-bronze);
+  border-radius: 0;
+  padding-bottom: 2px;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  width: 100%;
+  text-align: left;
+}
+
+/* No decorative pseudo-elements on section headers. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-section {
+  margin-bottom: 8px;
+}
+
+
+/* ── Entries (experience, education) ────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-entry {
+  margin-bottom: 8px;
+  padding-left: 0;
+  border-left: none;
+}
+
+/* Role title — Inter semibold, basalt */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-entry-role {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--roman-basalt);
+}
+
+/* Company — Inter regular */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-entry-company {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--roman-stone);
+}
+
+/* Dates and location — monospace, right-aligned, no italics */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-entry-dates,
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-entry-location {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  font-style: normal;
+  color: var(--roman-stone);
+  letter-spacing: 0.02em;
+}
+
+
+/* ── Tables ─────────────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-table {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 4px 0 12px;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-table th {
+  background-color: var(--cv-muted);
+  font-family: "Cinzel", Georgia, serif;
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  padding: 3px 6px;
+  border-bottom: 0.5pt solid var(--roman-bronze);
+  text-align: left;
+  color: var(--roman-basalt);
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-table td {
+  padding: 2px 6px;
+  border-bottom: 0.5pt solid var(--roman-mortar);
+  color: var(--roman-basalt);
+}
+
+
+/* ── Tags (skills) ──────────────────────────────────────────────────────── */
+/* Monospace, lowercase, inline. The "/" separator is visual via CSS. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-tags {
+  gap: 0 !important;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-tag {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: var(--roman-basalt);
+}
+
+/* Separator between tags: " / " */
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-tag + .pmdxjs-tag::before {
+  content: " / ";
+  color: var(--roman-mortar);
+}
+
+
+/* ── Lists ──────────────────────────────────────────────────────────────── */
+/* Triangle bullet "▸" instead of standard disc. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-list {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  padding-left: 1rem;
+  margin: 2px 0;
+  list-style-type: "▸ ";
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-list-item {
+  font-size: 0.75rem;
+  line-height: 1.55;
+  margin-bottom: 1px;
+  color: var(--roman-basalt);
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-list-item::marker {
+  color: var(--roman-bronze);
+}
+
+
+/* ── Paragraphs ─────────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-paragraph {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  margin-bottom: 4px;
+  color: var(--roman-basalt);
+}
+
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+/* Single 0.5pt bronze rule. No ornamental glyphs. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-divider {
+  border: none;
+  border-top: 0.5pt solid var(--roman-bronze);
+  margin: 8px 0;
+}
+
+
+/* ── Links ──────────────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-link {
+  color: var(--roman-bronze);
+  text-decoration: underline;
+  text-decoration-thickness: 0.5pt;
+  text-underline-offset: 2px;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-link:hover {
+  color: var(--roman-stone);
+}
+
+
+/* ── Inline emphasis ────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] strong {
+  font-weight: 600;
+  color: var(--roman-basalt);
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] em {
+  font-style: italic;
+  color: var(--roman-stone);
+}
+
+
+/* ── Columns ────────────────────────────────────────────────────────────── */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-columns {
+  gap: 20px;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-column {
+  border: none;
+}
+
+
+/* ── SparkMark {*} ──────────────────────────────────────────────────────── */
+/* Bronze + purple, matching the two accent colors. */
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-spark span:first-child {
+  color: var(--roman-bronze) !important;
+}
+
+.pmdxjs-document[data-theme="roman-empire-paper"] .pmdxjs-spark span:last-child {
+  color: var(--roman-purple) !important;
+}

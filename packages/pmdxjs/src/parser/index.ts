@@ -4,12 +4,17 @@ import {
   createDocumentNode,
   createEntryNode,
   createHeaderNode,
+  createInvoiceNode,
   createListNode,
   createPageNode,
   createParagraphNode,
+  createPartyNode,
+  createQrNode,
   createSectionNode,
+  createSignNode,
   createTableNode,
   createTagsNode,
+  createTotalNode,
   parseConfig,
 } from "./directives";
 import { tokenize } from "./tokenizer";
@@ -193,14 +198,34 @@ function addToCurrentContext(state: ParserState, node: ContentNode): void {
 }
 
 /**
- * Process a single token
+ * Collect the raw `text` tokens of a block directive up to its end token.
+ * Returns the collected content and the index of the end token (or the token
+ * count if the block was never closed).
+ */
+function collectRawBlock(
+  tokens: Token[],
+  startIndex: number,
+  endType: Token["type"],
+): { content: Token[]; endIndex: number } {
+  const content: Token[] = [];
+  let i = startIndex + 1;
+  while (i < tokens.length && tokens[i].type !== endType) {
+    content.push(tokens[i]);
+    i++;
+  }
+  return { content, endIndex: i };
+}
+
+/**
+ * Process a single token. May return an index to fast-forward the main loop
+ * past a block directive's already-consumed content.
  */
 function processToken(
   state: ParserState,
   token: Token,
   tokens: Token[],
   index: number,
-): void {
+): number | void {
   switch (token.type) {
     case "config_start": {
       // Collect config tokens until config_end
@@ -286,6 +311,49 @@ function processToken(
         startToken: null,
         content: [],
       };
+      break;
+    }
+
+    case "invoice_start": {
+      const { content, endIndex } = collectRawBlock(
+        tokens,
+        index,
+        "invoice_end",
+      );
+      flushTags(state);
+      addToCurrentContext(state, createInvoiceNode(token, content));
+      return endIndex;
+    }
+
+    case "party_start": {
+      const { content, endIndex } = collectRawBlock(tokens, index, "party_end");
+      flushTags(state);
+      addToCurrentContext(state, createPartyNode(token, content));
+      return endIndex;
+    }
+
+    case "qr_start": {
+      const { content, endIndex } = collectRawBlock(tokens, index, "qr_end");
+      flushTags(state);
+      addToCurrentContext(state, createQrNode(token, content));
+      return endIndex;
+    }
+
+    case "invoice_end":
+    case "party_end":
+    case "qr_end":
+      // Already consumed by the matching *_start case
+      break;
+
+    case "total_line": {
+      flushTags(state);
+      addToCurrentContext(state, createTotalNode(token));
+      break;
+    }
+
+    case "sign_line": {
+      flushTags(state);
+      addToCurrentContext(state, createSignNode(token));
       break;
     }
 
@@ -411,7 +479,10 @@ export function parse(source: string): DocumentNode {
 
   // Process tokens
   for (let i = 0; i < tokens.length; i++) {
-    processToken(state, tokens[i], tokens, i);
+    const skipTo = processToken(state, tokens[i], tokens, i);
+    if (typeof skipTo === "number") {
+      i = skipTo;
+    }
   }
 
   // Flush any remaining content

@@ -86,6 +86,69 @@ export interface TagsNode extends BaseNode {
 }
 
 /**
+ * Invoice masthead node - title, number and document dates (:::invoice)
+ */
+export interface InvoiceNode extends BaseNode {
+  type: "invoice";
+  title: string;
+  /** Optional small line above the title (e.g. document kind). */
+  subtitle?: string;
+  number?: string;
+  issued?: string;
+  due?: string;
+  payment?: string;
+}
+
+/**
+ * Party node - a supplier/customer block (:::party Role)
+ */
+export interface PartyNode extends BaseNode {
+  type: "party";
+  role: string;
+  name: string;
+  lines: string[];
+}
+
+/**
+ * Total node - prominent amount-due bar (:::total)
+ */
+export interface TotalNode extends BaseNode {
+  type: "total";
+  label: string;
+  amount: string;
+}
+
+/**
+ * Signature node - signing line (:::sign)
+ */
+export interface SignNode extends BaseNode {
+  type: "sign";
+  name?: string;
+  /** Optional signature image URL drawn above the signing line. */
+  image?: string;
+}
+
+/**
+ * QR payment node - bank details + scannable "QR Platba" (:::qr)
+ *
+ * The SVG path and IBAN/SPAYD payload are precomputed during parsing so the
+ * renderer needs no QR dependency.
+ */
+export interface QrNode extends BaseNode {
+  type: "qr";
+  account: string;
+  /** IBAN — used only to build the QR payload, not shown on the invoice. */
+  iban: string;
+  amount?: string;
+  currency: string;
+  variableSymbol?: string;
+  message?: string;
+  payload: string;
+  qrSize: number;
+  qrPath: string;
+}
+
+/**
  * Divider node - horizontal rule
  */
 export interface DividerNode extends BaseNode {
@@ -205,7 +268,12 @@ export type BlockNode =
   | DividerNode
   | ParagraphNode
   | ListNode
-  | TableNode;
+  | TableNode
+  | InvoiceNode
+  | PartyNode
+  | TotalNode
+  | SignNode
+  | QrNode;
 
 /**
  * All content nodes (can appear inside pages, sections, columns)

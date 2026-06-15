@@ -8,6 +8,14 @@ export type TokenType =
   | "page_end"
   | "entry_start"
   | "entry_end"
+  | "invoice_start"
+  | "invoice_end"
+  | "party_start"
+  | "party_end"
+  | "qr_start"
+  | "qr_end"
+  | "total_line"
+  | "sign_line"
   | "columns_start"
   | "columns_end"
   | "table_row"
@@ -18,6 +26,18 @@ export type TokenType =
   | "divider"
   | "list_item"
   | "text";
+
+/**
+ * Parsing context: which block (if any) we are currently inside. Raw blocks
+ * (invoice/party/qr) capture their inner lines verbatim.
+ */
+export interface TokenizerContext {
+  inConfig: boolean;
+  inEntry: boolean;
+  inInvoice: boolean;
+  inParty: boolean;
+  inQr: boolean;
+}
 
 /**
  * Token produced by the tokenizer
@@ -44,6 +64,16 @@ const PATTERNS = {
   pageEnd: /^:::page-end\s*$/,
   // :::entry Company | Role | Dates | Location
   entryStart: /^:::entry\s+(.+)$/,
+  // :::invoice (block of key: value lines)
+  invoiceStart: /^:::invoice\s*$/,
+  // :::party Dodavatel (block of free-form lines)
+  partyStart: /^:::party\s+(.+)$/,
+  // :::qr (block of key: value payment fields)
+  qrStart: /^:::qr\s*$/,
+  // :::total 1 700 Kč  (optionally "amount | label")
+  totalLine: /^:::total\s+(.+)$/,
+  // :::sign Mgr. Radka Suchá  (name optional)
+  signLine: /^:::sign\s*(.*)$/,
   // ---columns 60 40
   columnsStart: /^---columns\s+(\d+)\s+(\d+)\s*$/,
   // ---columns-end
@@ -111,26 +141,33 @@ function parseContact(value: string): string[] {
 export function tokenizeLine(
   line: string,
   lineNumber: number,
-  context: { inConfig: boolean; inEntry: boolean },
+  context: Partial<TokenizerContext>,
 ): Token | null {
   const trimmed = line.trim();
 
-  // Empty lines are ignored in tokenization
+  // Empty lines are ignored in tokenization (except raw blocks, which may
+  // want to preserve spacing — but invoices don't need that, so skip).
   if (!trimmed) {
     return null;
   }
 
-  // Check for block end (:::) when inside config or entry
-  if (
-    (context.inConfig || context.inEntry) &&
-    PATTERNS.blockEnd.test(trimmed)
-  ) {
-    return {
-      type: context.inConfig ? "config_end" : "entry_end",
-      value: trimmed,
-      line: lineNumber,
-      column: 1,
-    };
+  // Check for block end (:::) when inside a block directive
+  if (PATTERNS.blockEnd.test(trimmed)) {
+    if (context.inConfig)
+      return { type: "config_end", value: trimmed, line: lineNumber, column: 1 };
+    if (context.inEntry)
+      return { type: "entry_end", value: trimmed, line: lineNumber, column: 1 };
+    if (context.inInvoice)
+      return { type: "invoice_end", value: trimmed, line: lineNumber, column: 1 };
+    if (context.inParty)
+      return { type: "party_end", value: trimmed, line: lineNumber, column: 1 };
+    if (context.inQr)
+      return { type: "qr_end", value: trimmed, line: lineNumber, column: 1 };
+  }
+
+  // Inside a raw block, capture every line verbatim as text
+  if (context.inInvoice || context.inParty || context.inQr) {
+    return { type: "text", value: trimmed, line: lineNumber, column: 1 };
   }
 
   // Config start
@@ -170,6 +207,50 @@ export function tokenizeLine(
       type: "entry_start",
       value: trimmed,
       meta: parseEntryHeader(entryMatch[1]),
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Invoice masthead start
+  if (PATTERNS.invoiceStart.test(trimmed)) {
+    return { type: "invoice_start", value: trimmed, line: lineNumber, column: 1 };
+  }
+
+  // Party block start
+  const partyMatch = trimmed.match(PATTERNS.partyStart);
+  if (partyMatch) {
+    return {
+      type: "party_start",
+      value: trimmed,
+      meta: { role: partyMatch[1].trim() },
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // QR payment block start
+  if (PATTERNS.qrStart.test(trimmed)) {
+    return { type: "qr_start", value: trimmed, line: lineNumber, column: 1 };
+  }
+
+  // Total line (single-line directive)
+  const totalMatch = trimmed.match(PATTERNS.totalLine);
+  if (totalMatch) {
+    return {
+      type: "total_line",
+      value: totalMatch[1].trim(),
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Signature line (single-line directive)
+  const signMatch = trimmed.match(PATTERNS.signLine);
+  if (signMatch) {
+    return {
+      type: "sign_line",
+      value: signMatch[1].trim(),
       line: lineNumber,
       column: 1,
     };
@@ -312,7 +393,13 @@ export function tokenizeLine(
 export function tokenize(source: string): Token[] {
   const lines = source.split("\n");
   const tokens: Token[] = [];
-  const context = { inConfig: false, inEntry: false };
+  const context: TokenizerContext = {
+    inConfig: false,
+    inEntry: false,
+    inInvoice: false,
+    inParty: false,
+    inQr: false,
+  };
 
   for (let i = 0; i < lines.length; i++) {
     const token = tokenizeLine(lines[i], i + 1, context);
@@ -321,14 +408,37 @@ export function tokenize(source: string): Token[] {
       tokens.push(token);
 
       // Update context
-      if (token.type === "config_start") {
-        context.inConfig = true;
-      } else if (token.type === "config_end") {
-        context.inConfig = false;
-      } else if (token.type === "entry_start") {
-        context.inEntry = true;
-      } else if (token.type === "entry_end") {
-        context.inEntry = false;
+      switch (token.type) {
+        case "config_start":
+          context.inConfig = true;
+          break;
+        case "config_end":
+          context.inConfig = false;
+          break;
+        case "entry_start":
+          context.inEntry = true;
+          break;
+        case "entry_end":
+          context.inEntry = false;
+          break;
+        case "invoice_start":
+          context.inInvoice = true;
+          break;
+        case "invoice_end":
+          context.inInvoice = false;
+          break;
+        case "party_start":
+          context.inParty = true;
+          break;
+        case "party_end":
+          context.inParty = false;
+          break;
+        case "qr_start":
+          context.inQr = true;
+          break;
+        case "qr_end":
+          context.inQr = false;
+          break;
       }
     }
   }

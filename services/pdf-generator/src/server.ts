@@ -8,10 +8,15 @@ const fastify = Fastify({
 interface GeneratePdfBody {
   url: string;
   filename?: string;
+  theme?: string;
 }
 
 fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
-  const { url, filename = "document.pdf" } = request.body;
+  const {
+    url,
+    filename = "document.pdf",
+    theme = "roman-empire-paper",
+  } = request.body;
 
   if (!url) {
     return reply.status(400).send({ error: "URL is required" });
@@ -35,13 +40,13 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
       timeout: 30000,
     });
 
-    // Set light theme for PDF
-    await page.evaluate(() => {
+    // Apply the requested document theme for PDF (defaults to CV parchment)
+    await page.evaluate((themeName) => {
       const doc = document.querySelector(".pmdxjs-document");
       if (doc) {
-        doc.setAttribute("data-theme", "light");
+        doc.setAttribute("data-theme", themeName);
       }
-    });
+    }, theme);
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 

@@ -19,6 +19,14 @@ export type {
   WatermarkProps,
 } from "./components/cv";
 
+export type {
+  InvoiceHeaderProps,
+  PartyProps,
+  PaymentQRProps,
+  SignProps,
+  TotalProps,
+} from "./components/invoice";
+
 export type { UsePMDXJSOptions, UsePMDXJSResult } from "./hooks";
 
 export type {
@@ -51,15 +59,20 @@ export type {
   EntryNode,
   HeaderNode,
   InlineNode,
+  InvoiceNode,
   LinkNode,
   ListItemNode,
   ListNode,
   PageNode,
   ParagraphNode,
+  PartyNode,
+  QrNode,
   SectionNode,
+  SignNode,
   StrongNode,
   TagsNode,
   TextNode,
+  TotalNode,
 } from "./types";
 
 export type { DocumentConfig, DocumentFormat, Margins } from "./types";
@@ -80,6 +93,15 @@ export {
   Tags,
   Watermark,
 } from "./components/cv";
+
+// Invoice component exports
+export {
+  InvoiceHeader,
+  Party,
+  PaymentQR,
+  Sign,
+  Total,
+} from "./components/invoice";
 
 // Hook exports
 export { usePMDXJS } from "./hooks";
