@@ -1,4 +1,5 @@
 import type { Author } from "@/types/author"
+import { siteConfig } from "@/lib/site-config"
 
 export const authors: Author[] = [
   {
@@ -21,7 +22,7 @@ export const authors: Author[] = [
     avatar: "/semen_bozhyk.png",
     status: { text: "In active fundraising mode", variant: "yellow" },
     ctaButtons: [
-      { label: "Join Discord", href: "/projects/discord-community", variant: "primary" },
+      { label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
       { label: "#AINTTER", href: "/blog/aintter-as-a-name-for-ai-writing", variant: "outline" }
     ],
     blogAuthorSlugs: ["moris-gloriss"]

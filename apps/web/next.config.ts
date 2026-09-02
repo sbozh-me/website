@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
         destination: "/projects/sbozh-me/releases",
         permanent: true,
       },
+      {
+        // Discord community project was retired in v1.5.0
+        source: "/projects/discord-community/:path*",
+        destination: "/projects",
+        permanent: true,
+      },
     ];
   },
 };

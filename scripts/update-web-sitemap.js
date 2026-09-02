@@ -26,42 +26,23 @@ if (fs.existsSync(sitemapDataPath)) {
   sitemapData = JSON.parse(fs.readFileSync(sitemapDataPath, 'utf8'));
 }
 
-// Parse projects from data.ts (simplified parsing)
+// Parse projects from data.ts (simplified parsing).
+// Every project block runs from its `slug:` to its `tabs: [...]` array. A project
+// with a literal `version: "x.y.z"` uses it; sbozh-me (version from package.json)
+// and any project without a literal version fall back to the root package version.
 const projects = [];
-
-// Extract sbozh-me project
-const sbozhMatch = projectsContent.match(/slug:\s*"sbozh-me"[\s\S]*?tabs:\s*\[([^\]]*)\]/);
-if (sbozhMatch) {
+const projectBlockRegex = /slug:\s*"([^"]+)"([\s\S]*?)tabs:\s*\[([^\]]*)\]/g;
+for (const match of projectsContent.matchAll(projectBlockRegex)) {
+  const slug = match[1];
+  const versionMatch = match[2].match(/version:\s*"([^"]+)"/);
+  const version = versionMatch ? versionMatch[1] : packageJson.version;
   const tabs = [];
-  const tabMatches = sbozhMatch[1].matchAll(/id:\s*"([^"]+)"/g);
-  for (const match of tabMatches) {
-    if (match[1] !== 'about') { // Skip about tab as it's the main route
-      tabs.push(match[1]);
+  for (const tabMatch of match[3].matchAll(/id:\s*"([^"]+)"/g)) {
+    if (tabMatch[1] !== 'about') { // Skip about tab as it's the main route
+      tabs.push(tabMatch[1]);
     }
   }
-  projects.push({
-    slug: 'sbozh-me',
-    version: packageJson.version,
-    tabs: tabs
-  });
-}
-
-// Extract discord-community project
-const discordMatch = projectsContent.match(/slug:\s*"discord-community"[\s\S]*?version:\s*"([^"]+)"[\s\S]*?tabs:\s*\[([^\]]*)\]/);
-if (discordMatch) {
-  const version = discordMatch[1];
-  const tabs = [];
-  const tabMatches = discordMatch[2].matchAll(/id:\s*"([^"]+)"/g);
-  for (const match of tabMatches) {
-    if (match[1] !== 'about') { // Skip about tab as it's the main route
-      tabs.push(match[1]);
-    }
-  }
-  projects.push({
-    slug: 'discord-community',
-    version: version,
-    tabs: tabs
-  });
+  projects.push({ slug, version, tabs });
 }
 
 // Function to get last modified date from version tag

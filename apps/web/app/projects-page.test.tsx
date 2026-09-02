@@ -15,14 +15,14 @@ vi.mock("@/lib/projects/data", () => ({
       version: "0.8.4",
     },
     {
-      slug: "discord-community",
-      title: "Discord Community",
-      tagline: "Community project",
-      status: "active",
+      slug: "tecraft",
+      title: "tecraft.cz",
+      tagline: "Crystal keepsakes project",
+      status: "beta",
       heroImage: { src: "/test2.jpg", alt: "Test 2" },
-      meta: [{ label: "Type", value: "Community" }],
+      meta: [{ label: "Type", value: "E-shop" }],
       tabs: [{ id: "about", label: "About", enabled: true }],
-      version: "0.1.0",
+      version: "0.11.3",
     },
   ]),
 }));
@@ -65,7 +65,7 @@ describe("ProjectsPage", () => {
     it("should render all projects", () => {
       render(<ProjectsPage />);
       expect(screen.getByText("sbozh.me")).toBeInTheDocument();
-      expect(screen.getByText("Discord Community")).toBeInTheDocument();
+      expect(screen.getByText("tecraft.cz")).toBeInTheDocument();
     });
 
     it("should render project cards with correct data", () => {
@@ -76,8 +76,8 @@ describe("ProjectsPage", () => {
       expect(screen.getByText("0.8.4")).toBeInTheDocument();
 
       // Check second project
-      expect(screen.getByText("Community project")).toBeInTheDocument();
-      expect(screen.getByText("0.1.0")).toBeInTheDocument();
+      expect(screen.getByText("Crystal keepsakes project")).toBeInTheDocument();
+      expect(screen.getByText("0.11.3")).toBeInTheDocument();
     });
   });
 

@@ -42,14 +42,14 @@ vi.mock("@/lib/projects/data", () => ({
         ],
       };
     }
-    if (slug === "discord-community") {
+    if (slug === "tecraft") {
       return {
-        slug: "discord-community",
-        title: "Discord Community",
-        version: "0.1.0",
+        slug: "tecraft",
+        title: "tecraft.cz",
+        version: "0.11.3",
         tabs: [
           { id: "about", label: "About", enabled: true },
-          { id: "roadmap", label: "Roadmap", enabled: true },
+          { id: "motivation", label: "Motivation", enabled: true },
         ],
       };
     }
@@ -64,9 +64,9 @@ vi.mock("@/lib/projects/data", () => ({
       ],
     },
     {
-      slug: "discord-community",
+      slug: "tecraft",
       tabs: [
-        { id: "roadmap", enabled: true },
+        { id: "motivation", enabled: true },
       ],
     },
   ]),
@@ -82,17 +82,13 @@ vi.mock("@/lib/projects/content/sbozh-me", () => ({
   }),
 }));
 
-vi.mock("@/lib/projects/content/discord-community", () => ({
-  getDiscordCommunityTabContent: vi.fn((tabId) => {
-    if (tabId === "guidelines") {
-      return "## Guidelines\n\nGuidelines content for Discord Community.";
+vi.mock("@/lib/projects/content/tecraft", () => ({
+  getTecraftTabContent: vi.fn((tabId) => {
+    if (tabId === "motivation") {
+      return "## Motivation\n\nMotivation content for tecraft.cz.";
     }
     return null;
   }),
-  getDiscordCommunityRoadmapData: vi.fn(() => ({
-    roadmap: "## 0.1.0\n\n- Task 1",
-    backlog: "## Ideas\n\n- Idea 1",
-  })),
 }));
 
 // Mock parsers
@@ -144,7 +140,7 @@ describe("TabPage", () => {
       const params = await generateStaticParams();
       expect(params).toContainEqual({ slug: "sbozh-me", tab: "roadmap" });
       expect(params).toContainEqual({ slug: "sbozh-me", tab: "changelog" });
-      expect(params).toContainEqual({ slug: "discord-community", tab: "roadmap" });
+      expect(params).toContainEqual({ slug: "tecraft", tab: "motivation" });
     });
   });
 
@@ -173,14 +169,6 @@ describe("TabPage", () => {
       expect(screen.getByText("Progress: 5/10")).toBeInTheDocument();
     });
 
-    it("renders discord-community roadmap", async () => {
-      const params = Promise.resolve({ slug: "discord-community", tab: "roadmap" });
-      const Page = await TabPage({ params });
-      render(Page);
-
-      expect(screen.getByText("Roadmap")).toBeInTheDocument();
-      expect(screen.getByTestId("roadmap-view")).toBeInTheDocument();
-    });
   });
 
   describe("MDX content rendering", () => {
@@ -193,6 +181,15 @@ describe("TabPage", () => {
       render(Page);
 
       expect(screen.getByText("Mocked MDX Content")).toBeInTheDocument();
+    });
+
+    it("renders tecraft motivation content", async () => {
+      const params = Promise.resolve({ slug: "tecraft", tab: "motivation" });
+      const Page = await TabPage({ params });
+      render(Page);
+
+      expect(screen.getByText("Mocked MDX Content")).toBeInTheDocument();
+      expect(screen.getByText(/Motivation content for tecraft/)).toBeInTheDocument();
     });
 
     it("renders coming soon when no content", async () => {

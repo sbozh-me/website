@@ -5,7 +5,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
-import { getDiscordCommunityTabContent, getDiscordCommunityRoadmapData } from "@/lib/projects/content/discord-community";
+import { getTecraftTabContent } from "@/lib/projects/content/tecraft";
 import { parseChangelogFromContent } from "@/lib/changelog/parser";
 import { parseRoadmapFromContent, parseBacklogFromContent } from "@/lib/roadmap/parser";
 import { VerticalTimeline } from "@sbozh/react-ui/components/ui/vertical-timeline";
@@ -43,8 +43,8 @@ function getTabContent(slug: string, tabId: string): string | null {
   if (slug === "sbozh-me") {
     return getSbozhMeTabContent(tabId);
   }
-  if (slug === "discord-community") {
-    return getDiscordCommunityTabContent(tabId);
+  if (slug === "tecraft") {
+    return getTecraftTabContent(tabId);
   }
   return null;
 }
@@ -99,25 +99,6 @@ export default async function TabPage({ params }: TabPageProps) {
 
   if (slug === "sbozh-me" && tab === "roadmap") {
     const { roadmapData, backlogData, completedCount, totalCount } = getRoadmapData();
-    return (
-      <div>
-        <h2 className="!text-2xl font-semibold mb-6">Roadmap</h2>
-        <RoadmapView
-          roadmapData={roadmapData}
-          backlogData={backlogData}
-          completedCount={completedCount}
-          totalCount={totalCount}
-          currentVersion={project.version}
-        />
-      </div>
-    );
-  }
-
-  if (slug === "discord-community" && tab === "roadmap") {
-    const { roadmap, backlog } = getDiscordCommunityRoadmapData();
-    const { data: roadmapData, completedCount, totalCount } = parseRoadmapFromContent(roadmap);
-    const backlogData = parseBacklogFromContent(backlog);
-
     return (
       <div>
         <h2 className="!text-2xl font-semibold mb-6">Roadmap</h2>

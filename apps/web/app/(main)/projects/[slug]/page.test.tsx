@@ -29,11 +29,11 @@ vi.mock("@/lib/projects/data", () => ({
         status: "beta",
       };
     }
-    if (slug === "discord-community") {
+    if (slug === "tecraft") {
       return {
-        slug: "discord-community",
-        title: "Discord Community",
-        tagline: "Community project",
+        slug: "tecraft",
+        title: "tecraft.cz",
+        tagline: "Crystal keepsakes project",
         status: "beta",
       };
     }
@@ -41,7 +41,7 @@ vi.mock("@/lib/projects/data", () => ({
   }),
   getProjects: vi.fn(() => [
     { slug: "sbozh-me" },
-    { slug: "discord-community" },
+    { slug: "tecraft" },
   ]),
 }));
 
@@ -55,10 +55,10 @@ vi.mock("@/lib/projects/content/sbozh-me", () => ({
   }),
 }));
 
-vi.mock("@/lib/projects/content/discord-community", () => ({
-  getDiscordCommunityTabContent: vi.fn((tabId) => {
+vi.mock("@/lib/projects/content/tecraft", () => ({
+  getTecraftTabContent: vi.fn((tabId) => {
     if (tabId === "about") {
-      return "## About Discord Community\n\nThis is the about content for Discord Community.";
+      return "## About tecraft.cz\n\nThis is the about content for tecraft.cz.";
     }
     return null;
   }),
@@ -72,7 +72,7 @@ describe("ProjectPage", () => {
       const params = await generateStaticParams();
       expect(params).toEqual([
         { slug: "sbozh-me" },
-        { slug: "discord-community" },
+        { slug: "tecraft" },
       ]);
     });
   });
@@ -87,8 +87,8 @@ describe("ProjectPage", () => {
       expect(prose).toBeInTheDocument();
     });
 
-    it("renders discord-community project content", async () => {
-      const params = Promise.resolve({ slug: "discord-community" });
+    it("renders tecraft project content", async () => {
+      const params = Promise.resolve({ slug: "tecraft" });
       const Page = await ProjectPage({ params });
       render(Page);
 

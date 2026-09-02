@@ -4,16 +4,16 @@ import { getProjects } from "@/lib/projects/data";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Things I'm building in public - websites, communities, and tools.",
+  description: "Things I'm building in public - websites, products, and tools.",
   openGraph: {
     type: "website",
     title: "Projects | sbozh.me",
-    description: "Things I'm building in public - websites, communities, and tools.",
+    description: "Things I'm building in public - websites, products, and tools.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Projects | sbozh.me",
-    description: "Things I'm building in public - websites, communities, and tools.",
+    description: "Things I'm building in public - websites, products, and tools.",
   },
 };
 

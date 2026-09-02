@@ -7,22 +7,6 @@
     "version": "1.0.0",
     "lastModified": "2025-12-16T06:14:45+01:00"
   },
-  "/projects/discord-community": {
-    "version": "1.1.4",
-    "lastModified": "2025-12-23T21:17:46+01:00"
-  },
-  "/projects/discord-community/motivation": {
-    "version": "1.0.0",
-    "lastModified": "2025-12-16T06:14:45+01:00"
-  },
-  "/projects/discord-community/roadmap": {
-    "version": "1.1.4",
-    "lastModified": "2025-12-23T21:17:46+01:00"
-  },
-  "/projects/discord-community/rules": {
-    "version": "1.1.4",
-    "lastModified": "2025-12-23T21:17:46+01:00"
-  },
   "/projects/sbozh-me": {
     "version": "1.0.0",
     "lastModified": "2025-12-16T06:14:45+01:00"
@@ -34,5 +18,13 @@
   "/projects/sbozh-me/releases": {
     "version": "1.3.0",
     "lastModified": "2026-01-10T06:00:00+01:00"
+  },
+  "/projects/tecraft": {
+    "version": "1.5.0",
+    "lastModified": "2026-09-02T22:30:00+02:00"
+  },
+  "/projects/tecraft/motivation": {
+    "version": "1.5.0",
+    "lastModified": "2026-09-02T22:30:00+02:00"
   }
 }

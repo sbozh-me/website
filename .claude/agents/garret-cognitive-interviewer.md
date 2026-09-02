@@ -29,7 +29,7 @@ Document what EXISTS right now:
 > **Location**: `apps/web/lib/projects/`
 > **Status**: Production
 
-Projects are hardcoded in `data.ts`. Two projects exist: `sbozh-me` and `discord-community`.
+Projects are hardcoded in `data.ts`. Two projects exist: `sbozh-me` and `tecraft`.
 
 ## Key Files
 - `data.ts` - Project definitions

@@ -3,7 +3,7 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
-import { getDiscordCommunityTabContent } from "@/lib/projects/content/discord-community";
+import { getTecraftTabContent } from "@/lib/projects/content/tecraft";
 import { Spark } from "@/components/Spark";
 
 const mdxComponents = {
@@ -25,8 +25,8 @@ function getTabContent(slug: string, tabId: string): string | null {
   if (slug === "sbozh-me") {
     return getSbozhMeTabContent(tabId);
   }
-  if (slug === "discord-community") {
-    return getDiscordCommunityTabContent(tabId);
+  if (slug === "tecraft") {
+    return getTecraftTabContent(tabId);
   }
   return null;
 }

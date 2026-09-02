@@ -1,6 +1,5 @@
 import type { Project } from "./types";
 import packageJson from "../../../../package.json";
-import { siteConfig } from "@/lib/site-config";
 
 export const projects: Project[] = [
   {
@@ -26,28 +25,26 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "discord-community",
-    title: "Private Discord Community",
-    tagline: "A place where you can ask me questions, discuss my work, and dig deeper into ideas I don’t publish publicly",
-    status: "active",
+    slug: "tecraft",
+    title: "tecraft.cz",
+    tagline: "Laser-engraved crystal keepsakes from your photo.\nWe make things people keep.",
+    status: "beta",
+    version: "0.11.3",
     heroImage: {
-      src: "/images/projects/discord-community-hero.png",
-      alt: "Discord community preview",
-      position: "bottom",
+      src: "/images/projects/tecraft-hero.png",
+      alt: "tecraft.cz showroom with a laser-engraved wedding photo inside a crystal on an LED base",
+      position: "center",
     },
-    version: "1.0.0",
     meta: [
-      { label: "Platform", value: "Discord" },
-      { label: "Type", value: "Community" },
+      { label: "Type", value: "E-shop" },
+      { label: "Market", value: "Czech Republic" },
     ],
     tabs: [
       { id: "about", label: "About", enabled: true },
       { id: "motivation", label: "Motivation", enabled: true },
-      { id: "rules", label: "Rules", enabled: true },
-      { id: "roadmap", label: "Roadmap", enabled: true },
     ],
     links: [
-      { type: "discord", label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
+      { type: "website", label: "tecraft.cz", href: "https://tecraft.cz", variant: "primary" },
     ],
   },
 ];

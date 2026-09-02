@@ -61,13 +61,15 @@ describe("sitemap.ts", () => {
 
     // About tab is at /projects/[slug], not /projects/[slug]/about
     expect(urls).toContain("https://sbozh.me/projects/sbozh-me");
-    expect(urls).toContain("https://sbozh.me/projects/discord-community");
+    expect(urls).toContain("https://sbozh.me/projects/tecraft");
 
     // Other tabs are at /projects/[slug]/[tab]
     // sbozh-me has releases tab (not roadmap)
     expect(urls).toContain("https://sbozh.me/projects/sbozh-me/releases");
-    // discord-community has roadmap tab
-    expect(urls).toContain("https://sbozh.me/projects/discord-community/roadmap");
+    // tecraft has motivation tab
+    expect(urls).toContain("https://sbozh.me/projects/tecraft/motivation");
+    // retired discord-community project is gone
+    expect(urls.some((url) => url.includes("discord-community"))).toBe(false);
   });
 
   it("sets correct lastModified for blog posts", async () => {

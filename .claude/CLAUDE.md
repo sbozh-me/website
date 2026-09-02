@@ -227,6 +227,10 @@ A dark, spacious aesthetic with deliberate motion.
 
 ## Recent Changes
 
+**2026-09-02:**
+- Retired the Discord community project (old URLs redirect to /projects)
+- Added tecraft.cz project (laser-engraved crystal e-shop, `apps/web/lib/projects/content/tecraft.ts`)
+
 **2026-01-02:**
 - Implemented Claude Cognitive for persistent context
 - Fixed CV pagination (removed blank second page)

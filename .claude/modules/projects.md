@@ -14,12 +14,12 @@ Projects showcase things being built in public. Currently hardcoded.
 
 ## Current Projects
 
-| Slug | Status |
-|------|--------|
-| `sbozh-me` | beta |
-| `discord-community` | beta |
+| Slug | Status | Tabs |
+|------|--------|------|
+| `sbozh-me` | beta | about, motivation, releases |
+| `tecraft` | beta | about, motivation |
 
-Each project has tabs: about, motivation, changelog, roadmap.
+Tab content lives in `content/<slug>.ts` (MDX strings). `discord-community` was retired in v1.5.0; its old URLs redirect to `/projects` (see `next.config.ts`).
 
 ## Unusual Decisions
 
@@ -29,4 +29,4 @@ Each project has tabs: about, motivation, changelog, roadmap.
 
 ---
 
-**Last Updated:** 2026-01-03
+**Last Updated:** 2026-09-02
