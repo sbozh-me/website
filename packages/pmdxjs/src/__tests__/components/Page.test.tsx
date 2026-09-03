@@ -52,6 +52,29 @@ describe("Page", () => {
     });
   });
 
+  it("renders the config logo in the bottom-right corner", () => {
+    render(
+      <Document config={{ format: "A4", margins: [15, 20, 25, 30], logo: "/logo.png" }}>
+        <Page>Content</Page>
+      </Document>,
+    );
+
+    const logo = document.querySelector(".pmdxjs-page-logo") as HTMLImageElement;
+    expect(logo).toBeInTheDocument();
+    expect(logo.getAttribute("src")).toBe("/logo.png");
+    expect(logo).toHaveStyle({ position: "absolute", right: "20mm", bottom: "25mm" });
+  });
+
+  it("renders no logo without config.logo", () => {
+    render(
+      <Document>
+        <Page>Content</Page>
+      </Document>,
+    );
+
+    expect(document.querySelector(".pmdxjs-page-logo")).not.toBeInTheDocument();
+  });
+
   it("applies className", () => {
     render(
       <Document>

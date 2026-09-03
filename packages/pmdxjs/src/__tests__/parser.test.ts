@@ -39,6 +39,28 @@ theme: obsidian-forge
       expect(ast.config.theme).toBe("obsidian-forge");
     });
 
+    it("should parse an optional logo", () => {
+      const source = `:::config
+logo: /logo.png
+:::
+
+:::page
+# Test
+:::page-end`;
+
+      const ast = parse(source);
+
+      expect(ast.config.logo).toBe("/logo.png");
+    });
+
+    it("should leave logo undefined when not specified", () => {
+      const ast = parse(`:::page
+# Test
+:::page-end`);
+
+      expect(ast.config.logo).toBeUndefined();
+    });
+
     it("should use default config when not specified", () => {
       const source = `:::page
 # Test

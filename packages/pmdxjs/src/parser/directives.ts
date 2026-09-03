@@ -66,6 +66,9 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
         case "theme":
           config.theme = value;
           break;
+        case "logo":
+          if (value) config.logo = value;
+          break;
       }
     }
   }

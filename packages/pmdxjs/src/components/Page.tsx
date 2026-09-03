@@ -22,6 +22,8 @@ const PAGE_SIZES = {
  * Page component - represents a single page in the document
  *
  * Applies page sizing based on format (A4/Letter) and margins from config.
+ * When the document config carries a `logo`, it is drawn in the bottom-right
+ * corner of the content area on every page.
  */
 export function Page({ children, className }: PageProps) {
   const config = useDocumentConfig();
@@ -46,6 +48,22 @@ export function Page({ children, className }: PageProps) {
       }}
     >
       {children}
+      {config.logo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className="pmdxjs-page-logo"
+          src={config.logo}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            right: `${marginRight}mm`,
+            bottom: `${marginBottom}mm`,
+            width: "9mm",
+            height: "auto",
+          }}
+        />
+      )}
     </div>
   );
 }

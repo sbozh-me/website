@@ -2,6 +2,7 @@
 format: A4
 margins: 18 18 18 18
 theme: normal
+logo: /android-chrome-512x512.png
 :::
 
 :::page

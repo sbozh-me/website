@@ -15,6 +15,8 @@ export interface DocumentConfig {
   format: DocumentFormat;
   margins: Margins;
   theme?: string;
+  /** Optional logo image URL, drawn in the bottom-right corner of every page */
+  logo?: string;
 }
 
 /**
