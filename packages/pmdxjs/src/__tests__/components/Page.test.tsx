@@ -59,10 +59,39 @@ describe("Page", () => {
       </Document>,
     );
 
+    const corner = document.querySelector(".pmdxjs-page-corner");
+    expect(corner).toHaveStyle({ position: "absolute", right: "20mm", bottom: "25mm" });
     const logo = document.querySelector(".pmdxjs-page-logo") as HTMLImageElement;
     expect(logo).toBeInTheDocument();
     expect(logo.getAttribute("src")).toBe("/logo.png");
-    expect(logo).toHaveStyle({ position: "absolute", right: "20mm", bottom: "25mm" });
+    expect(document.querySelector(".pmdxjs-page-qr")).not.toBeInTheDocument();
+  });
+
+  it("renders a qr code with label and centred logo", () => {
+    render(
+      <Document
+        config={{
+          format: "A4",
+          margins: [20, 20, 20, 20],
+          logo: "/logo.png",
+          qr: "https://sbozh.me/cv",
+          qrLabel: "Actual web-version",
+          qrSize: 3,
+          qrPath: "M0 0h1v1h-1zM2 2h1v1h-1z",
+        }}
+      >
+        <Page>Content</Page>
+      </Document>,
+    );
+
+    const link = document.querySelector("a.pmdxjs-page-qr") as HTMLAnchorElement;
+    expect(link.getAttribute("href")).toBe("https://sbozh.me/cv");
+    expect(document.querySelector(".pmdxjs-page-qr-code path")?.getAttribute("d")).toBe(
+      "M0 0h1v1h-1zM2 2h1v1h-1z",
+    );
+    expect(document.querySelector(".pmdxjs-page-qr-label")).toHaveTextContent("Actual web-version →");
+    expect(document.querySelector(".pmdxjs-page-qr-logo")?.getAttribute("src")).toBe("/logo.png");
+    expect(document.querySelector(".pmdxjs-page-logo")).not.toBeInTheDocument();
   });
 
   it("renders no logo without config.logo", () => {
@@ -72,7 +101,7 @@ describe("Page", () => {
       </Document>,
     );
 
-    expect(document.querySelector(".pmdxjs-page-logo")).not.toBeInTheDocument();
+    expect(document.querySelector(".pmdxjs-page-corner")).not.toBeInTheDocument();
   });
 
   it("applies className", () => {

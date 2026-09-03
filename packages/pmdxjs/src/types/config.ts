@@ -15,8 +15,17 @@ export interface DocumentConfig {
   format: DocumentFormat;
   margins: Margins;
   theme?: string;
-  /** Optional logo image URL, drawn in the bottom-right corner of every page */
+  /** Optional logo image URL, drawn in the bottom-right corner of every page
+   *  (inside the QR code when `qr` is set). */
   logo?: string;
+  /** Optional URL rendered as a QR code in the bottom-right corner of every page */
+  qr?: string;
+  /** Optional caption shown left of the QR code, followed by an arrow */
+  qrLabel?: string;
+  /** Precomputed QR modules per side (set by the parser when `qr` is present) */
+  qrSize?: number;
+  /** Precomputed SVG path of the QR's dark modules (set by the parser) */
+  qrPath?: string;
 }
 
 /**

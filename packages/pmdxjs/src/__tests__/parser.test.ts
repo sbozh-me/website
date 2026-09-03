@@ -53,6 +53,24 @@ logo: /logo.png
       expect(ast.config.logo).toBe("/logo.png");
     });
 
+    it("should encode a qr url and keep its label", () => {
+      const source = `:::config
+qr: https://sbozh.me/cv
+qr-label: Actual web-version
+:::
+
+:::page
+# Test
+:::page-end`;
+
+      const ast = parse(source);
+
+      expect(ast.config.qr).toBe("https://sbozh.me/cv");
+      expect(ast.config.qrLabel).toBe("Actual web-version");
+      expect(ast.config.qrSize).toBeGreaterThan(20);
+      expect(ast.config.qrPath).toMatch(/^M\d+ \d+h1v1h-1z/);
+    });
+
     it("should leave logo undefined when not specified", () => {
       const ast = parse(`:::page
 # Test

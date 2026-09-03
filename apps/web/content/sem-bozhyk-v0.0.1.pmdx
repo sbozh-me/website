@@ -3,6 +3,8 @@ format: A4
 margins: 18 18 18 18
 theme: normal
 logo: /android-chrome-512x512.png
+qr: https://sbozh.me/cv
+qr-label: Actual web-version
 :::
 
 :::page

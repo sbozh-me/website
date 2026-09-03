@@ -69,8 +69,21 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
         case "logo":
           if (value) config.logo = value;
           break;
+        case "qr":
+          if (value) config.qr = value;
+          break;
+        case "qr-label":
+          if (value) config.qrLabel = value;
+          break;
       }
     }
+  }
+
+  if (config.qr) {
+    // High error correction so a logo can sit over the centre of the code.
+    const { size, path } = encodeQrPath(config.qr, "H");
+    config.qrSize = size;
+    config.qrPath = path;
   }
 
   return config;

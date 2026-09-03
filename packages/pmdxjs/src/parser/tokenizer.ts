@@ -89,6 +89,8 @@ const PATTERNS = {
   heading: /^(#{1,6})\s+(.+)$/,
   // key: value (for subtitle:, contact:, etc.)
   metadata: /^(\w+):\s*(.+)$/,
+  // key-with-dashes: value (config block only)
+  configMetadata: /^([\w-]+):\s*(.+)$/,
   // --- (horizontal rule, but not columns)
   divider: /^---\s*$/,
   // - List item
@@ -168,6 +170,20 @@ export function tokenizeLine(
   // Inside a raw block, capture every line verbatim as text
   if (context.inInvoice || context.inParty || context.inQr) {
     return { type: "text", value: trimmed, line: lineNumber, column: 1 };
+  }
+
+  // Inside the config block, keys may contain hyphens (e.g. `qr-label:`)
+  if (context.inConfig) {
+    const configMatch = trimmed.match(PATTERNS.configMetadata);
+    if (configMatch) {
+      return {
+        type: "metadata",
+        value: configMatch[2],
+        meta: { key: configMatch[1].toLowerCase(), parsedValue: configMatch[2] },
+        line: lineNumber,
+        column: 1,
+      };
+    }
   }
 
   // Config start
