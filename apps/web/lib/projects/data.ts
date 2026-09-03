@@ -37,7 +37,6 @@ export const projects: Project[] = [
     },
     meta: [
       { label: "Type", value: "E-shop" },
-      { label: "Market", value: "Czech Republic" },
     ],
     tabs: [
       { id: "about", label: "About", enabled: true },
