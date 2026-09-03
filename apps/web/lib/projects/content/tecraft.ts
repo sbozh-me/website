@@ -42,12 +42,6 @@ tecraft is that project: a real shop, real orders, real delivery, and a product 
 The usual way to sell this is a stock photo and a promise. I didn't want to sell a promise. I wanted the customer to see *their* photo inside *their* crystal, turning in the light, before they pay - and to move it, crop it and add a line of text themselves.
 
 That is why the storefront is one continuous 3D scene instead of a product page, and why most of the engineering went into a glass shader nobody asked for.
-
-## Why build it this way
-
-The interesting question was never "can I make an e-shop". It was: how far can one person, working with AI agents, take a product that needs a real-time renderer, image models, a checkout, carriers, invoices and a second language - without the codebase turning into mud?
-
-The answer so far is a written discipline: laws the agents read before they act, closed doors they are not allowed to reopen, a handoff document that outlives any single session. That process is the part I am most likely to reuse. The crystal is the part that makes it worth it.
 `,
 };
 
