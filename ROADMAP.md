@@ -147,7 +147,12 @@ Author carousel with blog post filtering per author.
 - ~~[1.3.15 - Authors Data + Filter Setup](roadmap/mainpage/1.3.15.md)~~
 - ~~[1.3.16 - Blog Filters Working](roadmap/mainpage/1.3.16.md)~~
 
-## 1.5.0 - Blog enhancement
+## ~~1.5.0 - New Product: tecraft.cz~~ ✅
+- ~~Retire the Discord community project (old URLs redirect to `/projects`)~~
+- ~~Add tecraft.cz to the projects showcase (about, motivation, live hero image)~~
+- ~~Generalize the sitemap update script for any number of projects~~
+
+## 1.6.0 - Blog enhancement
 
 - Internal link click handle
 - Link hover handle from directus
@@ -156,19 +161,19 @@ Author carousel with blog post filtering per author.
 - Next post
 - Connected posts
 
-## 1.6.0 - Personas introduction
+## 1.7.0 - Personas introduction
 
 - Layouts in project sbozh.me
 - Extended personas collection
 - Link personas in blog posts
 
-## 1.7.0 - Cookies rework
+## 1.8.0 - Cookies rework
 
 - Remove marketing option
 - Make more analytics tracking (blog post reading time)
 - Read/unread state tracking for blog, release notes and projects
 
-## 1.8.0 - Subscriptions (Early Q1 2026)
+## 1.9.0 - Subscriptions (Q3 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes
@@ -177,6 +182,6 @@ Author carousel with blog post filtering per author.
 - **Alternatives** - RSS feeds for feed reader users
 - **Backend** - Event tracking, processing, and reliable email delivery
 
-## llm.txt (Q1 2026)
+## llm.txt (Q3 2026)
 
 ---

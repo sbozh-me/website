@@ -254,7 +254,7 @@ A dark, spacious aesthetic with deliberate motion.
 - Last blog post on main page
 - "What is this" button
 
-See `ROADMAP.md` for full roadmap through v1.7.0 (Subscriptions).
+See `ROADMAP.md` for full roadmap through v1.9.0 (Subscriptions).
 
 ---
 
