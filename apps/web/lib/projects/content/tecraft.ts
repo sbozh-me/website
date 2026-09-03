@@ -22,10 +22,6 @@ The shop is bilingual - Czech at the root, English at \`/en\` - and the whole st
 Next.js 15, React 19, Tailwind CSS v4 and three.js via React Three Fiber - the same stack as sbozh.me, pushed a lot harder. Around the storefront sit small services: an order and pickup-point service, a preview service that runs the photo models (background mask, depth) on the server, a GPU worker that bakes the HD laser point cloud, and an invoice renderer that takes a PMDX document and returns a PDF - the same PMDXJS parser that renders the [CV](/cv) on this site.
 
 Manufacturing is in Prague, in small batches.
-
-## Building in public
-
-tecraft is where the way of working I describe on sbozh.me gets stress-tested on a real product with real customers. Most of the code is written with AI agents under a written standing discipline - a set of "laws" committed to the repository that every agent has to read before it touches anything. What ships is reviewed by a human. What fails is written down as a closed door, so nobody walks into it twice.
 `,
 
   motivation: `
