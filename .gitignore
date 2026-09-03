@@ -43,3 +43,7 @@ coverage
 # Ignore CV drafts except the main one
 apps/web/content/cv*
 !apps/web/content/sem-bozhyk-v0.0.1.pmdx
+
+# Ignore signature image
+apps/web/public/podpis.png
+backups/

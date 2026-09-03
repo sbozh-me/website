@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring push-web-image switch-web-version swv restart
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring push-web-image switch-web-version swv restart backup
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -53,3 +53,6 @@ restart:
 		docker compose pull web && \
 		docker compose up -d web"
 	@echo "Restarted"
+
+backup:
+	./scripts/backup.sh
