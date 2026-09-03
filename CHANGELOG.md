@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.1] - 2026-09-03
+
+### Changes
+
+- feat(themes): add normal document theme and switch CV to it ([1dc8414](https://github.com/sbozh-me/website/commit/1dc84142f7b52cf707d2bc6144f83ac815ee7bf5))
+- feat(themes): refine normal CV theme and add dark variant ([b563e09](https://github.com/sbozh-me/website/commit/b563e09af56cb87f30db93c6c43d39932c85d4df))
+
+
 ## [1.5.0] - 2026-09-03
 
 ### Changes
