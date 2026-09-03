@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
-type Theme = "normal" | "dark";
+type Theme = "normal" | "normal-dark";
 
 export function CVThemeToggle() {
   const [theme, setTheme] = useState<Theme>("normal");
@@ -17,7 +17,7 @@ export function CVThemeToggle() {
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "normal" ? "dark" : "normal";
+    const newTheme = theme === "normal" ? "normal-dark" : "normal";
     setTheme(newTheme);
     updateDocument(newTheme);
   };

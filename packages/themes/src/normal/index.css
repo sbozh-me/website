@@ -1,54 +1,74 @@
 /**
- * NORMAL Theme — plain white paper, light type
+ * NORMAL Theme — plain paper, light type
  *
  * A neutral document look: white paper, soft grey ink, thin hairlines,
- * no display face and no colour accents. Built for the CV / PDF pipeline
- * as a quiet counterpart to roman-empire-paper.
+ * no display face and no colour accents. Built for the CV / PDF pipeline.
  *
- * Palette:
- *   Paper:            #FFFFFF
- *   Ink:              #262626
- *   Secondary text:   #6B7280
- *   Headings:         #525252
- *   Hairlines:        #E5E7EB
- *   Table header bg:  #F5F5F5
+ * Two variants share every typographic rule (matched with [data-theme^="normal"])
+ * and differ only in palette:
+ *   "normal"       — light. Screen paper is a faint off-white so the card does
+ *                    not glare on the dark site; print forces pure white
+ *                    (see the @media print block in apps/web/app/globals.css).
+ *   "normal-dark"  — the same page after dark. Neutral graphite paper, light ink.
  *
  * Typography:
- *   Everything:  Inter — body 300, emphasis 500, headings 500 (10.5pt base)
+ *   Everything:  Inter — body 300 on large screens, 400 on small screens and
+ *                in print (light weights print faint); emphasis 500;
+ *                section headings 600; name 400 at 1.9rem.
  *   Metrics:     JetBrains Mono (dates, contact, tags)
  */
 
 /* ── Fonts ─────────────────────────────────────────────────────────────────── */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 
 /* JetBrains Mono is loaded by the base theme (obsidian-forge). */
 
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   PAPER — "normal"
-   Targets .pmdxjs-document for CV / PDF generation.
+   PALETTES
    ══════════════════════════════════════════════════════════════════════════════ */
 
 .pmdxjs-document[data-theme="normal"] {
-  /* ── Palette ──────────────────────────────────────────────────────────── */
-  --cv-paper:            #FFFFFF;
+  --cv-paper:            #FAFAFA;
   --cv-foreground:       #262626;
-  --cv-muted:            #F5F5F5;
+  --cv-muted:            #F0F0F0;
   --cv-muted-foreground: #6B7280;
   --cv-border:           #E5E7EB;
-  --cv-primary:          #525252;
+  --cv-primary:          #404040;
   --cv-secondary:        #6B7280;
-  --cv-accent:           #525252;
+  --cv-accent:           #404040;
 
-  /* Normal tokens */
-  --normal-paper:    #FFFFFF;
   --normal-ink:      #262626;
   --normal-grey:     #6B7280;
-  --normal-heading:  #525252;
+  --normal-heading:  #404040;
   --normal-hairline: #E5E7EB;
+  --normal-rule:     #D4D4D8;   /* slightly darker line under the name */
+}
 
-  /* ── Base typography — Inter Light 10.5pt ─────────────────────────────── */
+.pmdxjs-document[data-theme="normal-dark"] {
+  --cv-paper:            #141417;
+  --cv-foreground:       #E5E5E5;
+  --cv-muted:            #1E1E23;
+  --cv-muted-foreground: #9CA3AF;
+  --cv-border:           #2E2E34;
+  --cv-primary:          #D4D4D8;
+  --cv-secondary:        #9CA3AF;
+  --cv-accent:           #D4D4D8;
+
+  --normal-ink:      #E5E5E5;
+  --normal-grey:     #9CA3AF;
+  --normal-heading:  #D4D4D8;
+  --normal-hairline: #2E2E34;
+  --normal-rule:     #3F3F46;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SHARED RULES — both variants
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.pmdxjs-document[data-theme^="normal"] {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;       /* ≈ 10.5pt */
   font-weight: 300;
@@ -60,30 +80,34 @@
 
 /* ── Page ───────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-page {
-  background-color: var(--normal-paper);
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-page {
+  background-color: var(--cv-paper);
   color: var(--normal-ink);
   border: none;
   box-shadow: none;
 }
 
+.pmdxjs-document[data-theme="normal-dark"] .pmdxjs-page {
+  border: 0.5pt solid var(--normal-hairline);
+}
+
 
 /* ── Header / Name ──────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-header h1 {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-header h1 {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
-  font-size: 1.6rem;
-  font-weight: 300;
-  letter-spacing: 0.04em;
+  font-size: 1.9rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   text-transform: none;
   color: var(--normal-ink);
   text-align: center;
-  border-bottom: 0.5pt solid var(--normal-hairline);
+  border-bottom: 0.5pt solid var(--normal-rule);
   padding-bottom: 6px;
   margin-bottom: 4px;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-header-subtitle {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-header-subtitle {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
@@ -92,7 +116,7 @@
   text-align: center;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-header-contact {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-header-contact {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.625rem;
   font-weight: 400;
@@ -102,18 +126,18 @@
   justify-content: center;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-header-contact a,
-.pmdxjs-document[data-theme="normal"] .pmdxjs-header-contact span {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-header-contact a,
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-header-contact span {
   color: var(--normal-grey);
 }
 
 
 /* ── Sections ───────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-section h2 {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-section h2 {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   font-variant: normal;
   text-transform: uppercase;
   letter-spacing: 0.14em;
@@ -127,20 +151,20 @@
   text-align: left;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-section {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-section {
   margin-bottom: 8px;
 }
 
 
 /* ── Entries (experience, education) ────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-entry {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-entry {
   margin-bottom: 8px;
   padding-left: 0;
   border-left: none;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-entry-role {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-entry-role {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
@@ -148,15 +172,15 @@
   color: var(--normal-ink);
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-entry-company {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-entry-company {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
   color: var(--normal-grey);
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-entry-dates,
-.pmdxjs-document[data-theme="normal"] .pmdxjs-entry-location {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-entry-dates,
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-entry-location {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.625rem;
   font-style: normal;
@@ -168,7 +192,7 @@
 
 /* ── Tables ─────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-table {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-table {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
@@ -177,11 +201,11 @@
   margin: 4px 0 12px;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-table th {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-table th {
   background-color: var(--cv-muted);
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-variant: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 0.625rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -191,7 +215,7 @@
   color: var(--normal-heading);
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-table td {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-table td {
   padding: 2px 6px;
   border-bottom: 0.5pt solid var(--normal-hairline);
   color: var(--normal-ink);
@@ -200,11 +224,11 @@
 
 /* ── Tags (skills) ──────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-tags {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-tags {
   gap: 0 !important;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-tag {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-tag {
   font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.625rem;
   font-weight: 400;
@@ -217,15 +241,15 @@
   color: var(--normal-ink);
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-tag + .pmdxjs-tag::before {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-tag + .pmdxjs-tag::before {
   content: " / ";
-  color: var(--normal-hairline);
+  color: var(--normal-rule);
 }
 
 
 /* ── Lists ──────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-list {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-list {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
@@ -234,21 +258,21 @@
   list-style-type: "– ";
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-list-item {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-list-item {
   font-size: 0.75rem;
   line-height: 1.55;
   margin-bottom: 1px;
   color: var(--normal-ink);
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-list-item::marker {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-list-item::marker {
   color: var(--normal-grey);
 }
 
 
 /* ── Paragraphs ─────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-paragraph {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-paragraph {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
@@ -260,7 +284,7 @@
 
 /* ── Divider ────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-divider {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-divider {
   border: none;
   border-top: 0.5pt solid var(--normal-hairline);
   margin: 8px 0;
@@ -269,27 +293,27 @@
 
 /* ── Links ──────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-link {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-link {
   color: var(--normal-ink);
   text-decoration: underline;
-  text-decoration-color: var(--normal-hairline);
+  text-decoration-color: var(--normal-rule);
   text-decoration-thickness: 0.5pt;
   text-underline-offset: 2px;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-link:hover {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-link:hover {
   color: var(--normal-grey);
 }
 
 
 /* ── Inline emphasis ────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] strong {
+.pmdxjs-document[data-theme^="normal"] strong {
   font-weight: 500;
   color: var(--normal-ink);
 }
 
-.pmdxjs-document[data-theme="normal"] em {
+.pmdxjs-document[data-theme^="normal"] em {
   font-style: italic;
   color: var(--normal-grey);
 }
@@ -297,11 +321,11 @@
 
 /* ── Columns ────────────────────────────────────────────────────────────── */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-columns {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-columns {
   gap: 20px;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-column {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-column {
   border: none;
 }
 
@@ -309,10 +333,27 @@
 /* ── SparkMark {*} ──────────────────────────────────────────────────────── */
 /* Two greys. No colour on plain paper. */
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-spark span:first-child {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-spark span:first-child {
   color: var(--normal-heading) !important;
 }
 
-.pmdxjs-document[data-theme="normal"] .pmdxjs-spark span:last-child {
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-spark span:last-child {
   color: var(--normal-grey) !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   WEIGHT FALLBACK — light type only where it stays legible
+   Small screens and print get the regular weight.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px), print {
+  .pmdxjs-document[data-theme^="normal"],
+  .pmdxjs-document[data-theme^="normal"] .pmdxjs-paragraph,
+  .pmdxjs-document[data-theme^="normal"] .pmdxjs-list,
+  .pmdxjs-document[data-theme^="normal"] .pmdxjs-table,
+  .pmdxjs-document[data-theme^="normal"] .pmdxjs-entry-company,
+  .pmdxjs-document[data-theme^="normal"] .pmdxjs-header-subtitle {
+    font-weight: 400;
+  }
 }

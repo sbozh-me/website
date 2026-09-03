@@ -237,8 +237,8 @@ code, pre {
     --cv-border: #C9BFA8 !important;
   }
 
-  /* Force normal (white paper) palette for CV in print */
-  .pmdxjs-document[data-theme="normal"] {
+  /* Force white paper for the normal theme in print, even when printed from dark */
+  .pmdxjs-document[data-theme^="normal"] {
     --cv-paper: #FFFFFF !important;
     --cv-foreground: #262626 !important;
     --cv-muted: #F5F5F5 !important;
