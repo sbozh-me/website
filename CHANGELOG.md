@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.2] - 2026-09-04
+
+### Changes
+
+- feat(pmdxjs): support optional page logo in document config ([b25bb5e](https://github.com/sbozh-me/website/commit/b25bb5e622ed99667411fb6f916e11c4907c5105))
+- feat(pmdxjs): render QR code with centred logo in page corner ([dea8e67](https://github.com/sbozh-me/website/commit/dea8e67e134d10a43ef9e0558ea76fbd1d5d9ba6))
+- feat(pmdxjs): style page corner QR annotation as handwritten note ([a56a5ae](https://github.com/sbozh-me/website/commit/a56a5ae7297e1fc76c0e701341bfeba7a2b6413d))
+- feat(pmdxjs): add optional version line under page corner QR/logo ([ccb8999](https://github.com/sbozh-me/website/commit/ccb89992b8593aa529b2a99eadf8256a3adf5d2d))
+- docs(cv): update CV content ([3e2c338](https://github.com/sbozh-me/website/commit/3e2c33894bfc2d3b90d0ca8444735d6a66ddefff))
+
+
 ## [1.5.1] - 2026-09-03
 
 ### Changes
