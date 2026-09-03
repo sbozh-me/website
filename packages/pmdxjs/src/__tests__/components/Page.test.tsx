@@ -89,7 +89,8 @@ describe("Page", () => {
     expect(document.querySelector(".pmdxjs-page-qr-code path")?.getAttribute("d")).toBe(
       "M0 0h1v1h-1zM2 2h1v1h-1z",
     );
-    expect(document.querySelector(".pmdxjs-page-qr-label")).toHaveTextContent("Actual web-version →");
+    expect(document.querySelector(".pmdxjs-page-qr-label-text")).toHaveTextContent("Actual web-version");
+    expect(document.querySelector(".pmdxjs-page-qr-arrow")).toBeInTheDocument();
     expect(document.querySelector(".pmdxjs-page-qr-logo")?.getAttribute("src")).toBe("/logo.png");
     expect(document.querySelector(".pmdxjs-page-logo")).not.toBeInTheDocument();
   });

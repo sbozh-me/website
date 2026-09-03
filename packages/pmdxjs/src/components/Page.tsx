@@ -57,8 +57,9 @@ export function Page({ children, className }: PageProps) {
             right: `${marginRight}mm`,
             bottom: `${marginBottom}mm`,
             display: "flex",
-            alignItems: "center",
-            gap: "3mm",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: "1mm",
           }}
         >
           {config.qr && config.qrPath ? (
@@ -67,14 +68,33 @@ export function Page({ children, className }: PageProps) {
                 <span
                   className="pmdxjs-page-qr-label"
                   style={{
-                    fontSize: "0.6rem",
+                    display: "inline-flex",
+                    alignItems: "flex-start",
+                    gap: "1mm",
+                    marginRight: "1mm",
+                    fontSize: "0.7rem",
                     lineHeight: 1.2,
-                    letterSpacing: "0.02em",
                     color: "var(--cv-muted-foreground, #6b7280)",
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {config.qrLabel} →
+                  <span className="pmdxjs-page-qr-label-text">{config.qrLabel}</span>
+                  <svg
+                    className="pmdxjs-page-qr-arrow"
+                    viewBox="0 0 32 32"
+                    width="7mm"
+                    height="7mm"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    {/* hand-drawn sweep: out to the right, then down into the code */}
+                    <path d="M3 6 C 20 2, 28 10, 22 27" />
+                    <path d="M14 22 L 22 27 L 28 19" />
+                  </svg>
                 </span>
               )}
               <a
@@ -84,9 +104,9 @@ export function Page({ children, className }: PageProps) {
                 style={{
                   position: "relative",
                   display: "block",
-                  width: "18mm",
-                  height: "18mm",
-                  padding: "1mm",
+                  width: "26mm",
+                  height: "26mm",
+                  padding: "1.2mm",
                   boxSizing: "border-box",
                   background: "#ffffff",
                   borderRadius: "1mm",
@@ -115,8 +135,8 @@ export function Page({ children, className }: PageProps) {
                       position: "absolute",
                       left: "50%",
                       top: "50%",
-                      width: "5.5mm",
-                      height: "5.5mm",
+                      width: "7.5mm",
+                      height: "7.5mm",
                       transform: "translate(-50%, -50%)",
                       background: "#ffffff",
                       padding: "0.5mm",
