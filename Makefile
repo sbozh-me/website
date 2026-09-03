@@ -2,6 +2,9 @@
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
+# Build on the amd64 buildx builder hosted on the tecraft server (no QEMU).
+# Override for a local build: make push-web-image BUILDX_BUILDER=desktop-linux
+BUILDX_BUILDER ?= tecraft-builder
 SSH_HOST := sbozhme
 APP_DIR := /opt/sbozh-me
 
@@ -22,7 +25,7 @@ major-ignore:
 
 push-web-image:
 	@echo "Building web image v$(VERSION) for linux/amd64..."
-	docker buildx build --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push .
+	docker buildx build --builder $(BUILDX_BUILDER) --platform linux/amd64 -t $(IMAGE):$(VERSION) -t $(IMAGE):latest -f apps/web/Dockerfile --push .
 
 switch-web-version swv:
 	@echo "Switching server to web v$(VERSION)..."
