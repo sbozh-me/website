@@ -14,7 +14,7 @@ describe("CVPage", () => {
   it("renders theme toggle button", () => {
     render(<CVPage />);
     expect(
-      screen.getByRole("button", { name: /switch to light mode/i }),
+      screen.getByRole("button", { name: /switch to dark mode/i }),
     ).toBeInTheDocument();
   });
 

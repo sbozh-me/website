@@ -70,8 +70,8 @@ describe("loadMoreReleases", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.summaries).toHaveProperty("1");
-        expect(result.summaries["1"]).toBeDefined();
+        expect(result.rawSummaries).toHaveProperty("1");
+        expect(result.rawSummaries["1"]).toBeDefined();
       }
     });
 
@@ -82,7 +82,7 @@ describe("loadMoreReleases", () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.summaries["1"]).toBeNull();
+        expect(result.rawSummaries["1"]).toBeNull();
       }
     });
   });
@@ -187,7 +187,7 @@ describe("loadMoreReleases", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.releases).toHaveLength(0);
-        expect(result.summaries).toEqual({});
+        expect(result.rawSummaries).toEqual({});
         expect(result.hasMore).toBe(false);
       }
     });
@@ -203,7 +203,7 @@ describe("loadMoreReleases", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.releases).toHaveLength(0);
-        expect(result.summaries).toEqual({});
+        expect(result.rawSummaries).toEqual({});
         expect(result.hasMore).toBe(false);
       }
     });

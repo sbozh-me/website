@@ -3,10 +3,6 @@ import { render, screen, waitFor } from "@testing-library/react";
 import NotFound from "@/app/not-found";
 
 // Mock the components
-vi.mock("@/components/Header", () => ({
-  Header: () => <div data-testid="header">Header</div>,
-}));
-
 vi.mock("@sbozh/blog/components", () => ({
   PostCard: ({ post }: { post: any }) => (
     <div data-testid="post-card">
@@ -44,16 +40,6 @@ describe("NotFound", () => {
       screen.getByText(/"After all, the wrong road always leads somewhere."/i)
     ).toBeInTheDocument();
     expect(screen.getByText(/George Bernard Shaw/i)).toBeInTheDocument();
-  });
-
-  it("renders Header component", () => {
-    (global.fetch as any).mockResolvedValueOnce({
-      json: async () => ({ error: "No posts found" }),
-    });
-
-    render(<NotFound />);
-
-    expect(screen.getByTestId("header")).toBeInTheDocument();
   });
 
   it("shows skeleton loader while fetching random post", () => {

@@ -79,7 +79,7 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [],
-        summaries: {},
+        rawSummaries: {},
         hasMore: false,
       });
 
@@ -102,7 +102,7 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [newRelease],
-        summaries: { "2": <div>Summary 2</div> },
+        rawSummaries: { "2": "Summary 2" },
         hasMore: false,
       });
 
@@ -120,7 +120,7 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [{ ...mockRelease, id: "2" }],
-        summaries: {},
+        rawSummaries: {},
         hasMore: false,
       });
 
@@ -154,7 +154,7 @@ describe("ReleaseTimelineWithLoadMore", () => {
       resolvePromise!({
         success: true,
         releases: [],
-        summaries: {},
+        rawSummaries: {},
         hasMore: false,
       });
     });
@@ -208,7 +208,7 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [],
-        summaries: {},
+        rawSummaries: {},
         hasMore: false,
       });
 
