@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.3] - 2026-09-04
+
+### Changes
+
+- chore(deploy): build web image on the tecraft-builder buildx node ([14efc44](https://github.com/sbozh-me/website/commit/14efc449d5dc92809669d499941e166d0778577b))
+- feat(projects): render tecraft images from its logo studio ([3ee00b4](https://github.com/sbozh-me/website/commit/3ee00b4b12aebb77a07d2557e3afa14b05a9c982))
+- chore(social): remove discord integration ([a5e2a32](https://github.com/sbozh-me/website/commit/a5e2a327271614136ab595727aa5f62726a882df))
+
+
 ## [1.5.2] - 2026-09-04
 
 ### Changes
