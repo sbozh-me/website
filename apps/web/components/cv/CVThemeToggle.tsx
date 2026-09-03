@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
-type Theme = "roman-empire-paper" | "dark";
+type Theme = "normal" | "dark";
 
 export function CVThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("roman-empire-paper");
+  const [theme, setTheme] = useState<Theme>("normal");
 
   const updateDocument = (newTheme: Theme) => {
     const doc = document.querySelector(".pmdxjs-document");
@@ -17,7 +17,7 @@ export function CVThemeToggle() {
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === "roman-empire-paper" ? "dark" : "roman-empire-paper";
+    const newTheme = theme === "normal" ? "dark" : "normal";
     setTheme(newTheme);
     updateDocument(newTheme);
   };
@@ -27,9 +27,9 @@ export function CVThemeToggle() {
       variant="outline"
       size="sm"
       onClick={toggleTheme}
-      aria-label={`Switch to ${theme === "roman-empire-paper" ? "dark" : "parchment"} mode`}
+      aria-label={`Switch to ${theme === "normal" ? "dark" : "light"} mode`}
     >
-      {theme === "roman-empire-paper" ? (
+      {theme === "normal" ? (
         <>
           <MoonIcon />
           Dark
@@ -37,7 +37,7 @@ export function CVThemeToggle() {
       ) : (
         <>
           <SunIcon />
-          Parchment
+          Light
         </>
       )}
     </Button>

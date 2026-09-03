@@ -10,7 +10,8 @@
     "./loader": "./src/theme-loader.ts",
     "./obsidian-forge": "./src/obsidian-forge/index.css",
     "./kognitiv": "./src/kognitiv/index.css",
-    "./roman-empire": "./src/roman-empire/index.css"
+    "./roman-empire": "./src/roman-empire/index.css",
+    "./normal": "./src/normal/index.css"
   },
   "peerDependencies": {
     "react": ">=18.0.0"

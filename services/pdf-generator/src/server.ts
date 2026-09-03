@@ -15,7 +15,7 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
   const {
     url,
     filename = "document.pdf",
-    theme = "roman-empire-paper",
+    theme = "normal",
   } = request.body;
 
   if (!url) {
@@ -40,7 +40,7 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
       timeout: 30000,
     });
 
-    // Apply the requested document theme for PDF (defaults to CV parchment)
+    // Apply the requested document theme for PDF (defaults to the CV's white paper)
     await page.evaluate((themeName) => {
       const doc = document.querySelector(".pmdxjs-document");
       if (doc) {

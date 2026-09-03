@@ -2,6 +2,7 @@
 @import "@sbozh/themes/obsidian-forge";
 @import "@sbozh/themes/kognitiv";
 @import "@sbozh/themes/roman-empire";
+@import "@sbozh/themes/normal";
 @plugin "tailwindcss-animate";
 
 @source "../../../packages/react-ui/src";
@@ -234,6 +235,15 @@ code, pre {
     --cv-muted: #EDE7DB !important;
     --cv-muted-foreground: #5C5346 !important;
     --cv-border: #C9BFA8 !important;
+  }
+
+  /* Force normal (white paper) palette for CV in print */
+  .pmdxjs-document[data-theme="normal"] {
+    --cv-paper: #FFFFFF !important;
+    --cv-foreground: #262626 !important;
+    --cv-muted: #F5F5F5 !important;
+    --cv-muted-foreground: #6B7280 !important;
+    --cv-border: #E5E7EB !important;
   }
 
   .pmdxjs-page {

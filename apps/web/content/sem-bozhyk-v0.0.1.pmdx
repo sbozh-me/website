@@ -1,7 +1,7 @@
 :::config
 format: A4
 margins: 18 18 18 18
-theme: roman-empire-paper
+theme: normal
 :::
 
 :::page
