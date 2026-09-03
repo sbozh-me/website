@@ -78,6 +78,7 @@ describe("Page", () => {
           qrLabel: "Actual web-version",
           qrSize: 3,
           qrPath: "M0 0h1v1h-1zM2 2h1v1h-1z",
+          version: "v20.26.09",
         }}
       >
         <Page>Content</Page>
@@ -93,6 +94,7 @@ describe("Page", () => {
     expect(document.querySelector(".pmdxjs-page-qr-arrow")).toBeInTheDocument();
     expect(document.querySelector(".pmdxjs-page-qr-logo")?.getAttribute("src")).toBe("/logo.png");
     expect(document.querySelector(".pmdxjs-page-logo")).not.toBeInTheDocument();
+    expect(document.querySelector(".pmdxjs-page-version")).toHaveTextContent("v20.26.09");
   });
 
   it("renders no logo without config.logo", () => {

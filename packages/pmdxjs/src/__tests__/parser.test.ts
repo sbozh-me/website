@@ -57,6 +57,7 @@ logo: /logo.png
       const source = `:::config
 qr: https://sbozh.me/cv
 qr-label: Actual web-version
+version: v20.26.09
 :::
 
 :::page
@@ -67,6 +68,7 @@ qr-label: Actual web-version
 
       expect(ast.config.qr).toBe("https://sbozh.me/cv");
       expect(ast.config.qrLabel).toBe("Actual web-version");
+      expect(ast.config.version).toBe("v20.26.09");
       expect(ast.config.qrSize).toBeGreaterThan(20);
       expect(ast.config.qrPath).toMatch(/^M\d+ \d+h1v1h-1z/);
     });

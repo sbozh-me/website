@@ -23,8 +23,8 @@ const PAGE_SIZES = {
  *
  * Applies page sizing based on format (A4/Letter) and margins from config.
  * The bottom-right corner of the content area can carry a `logo`, or a `qr`
- * code (with the logo in its centre and an optional `qr-label` caption) —
- * both come from the document config and repeat on every page.
+ * code (with the logo in its centre and an optional `qr-label` caption), and
+ * a `version` line beneath — all from the document config, on every page.
  */
 export function Page({ children, className }: PageProps) {
   const config = useDocumentConfig();
@@ -49,7 +49,7 @@ export function Page({ children, className }: PageProps) {
       }}
     >
       {children}
-      {(config.qr || config.logo) && (
+      {(config.qr || config.logo || config.version) && (
         <div
           className="pmdxjs-page-corner"
           style={{
@@ -156,6 +156,20 @@ export function Page({ children, className }: PageProps) {
               aria-hidden="true"
               style={{ width: "9mm", height: "auto", display: "block" }}
             />
+          )}
+          {config.version && (
+            <span
+              className="pmdxjs-page-version"
+              style={{
+                fontSize: "0.55rem",
+                lineHeight: 1.2,
+                letterSpacing: "0.04em",
+                color: "var(--cv-muted-foreground, #6b7280)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {config.version}
+            </span>
           )}
         </div>
       )}

@@ -352,6 +352,13 @@
   color: var(--normal-heading);
 }
 
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-page-version {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-weight: 400;
+  color: var(--normal-grey) !important;
+  margin-top: 0.5mm;
+}
+
 
 /* ── SparkMark {*} ──────────────────────────────────────────────────────── */
 /* Two greys. No colour on plain paper. */

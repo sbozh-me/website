@@ -75,6 +75,9 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
         case "qr-label":
           if (value) config.qrLabel = value;
           break;
+        case "version":
+          if (value) config.version = value;
+          break;
       }
     }
   }

@@ -26,6 +26,8 @@ export interface DocumentConfig {
   qrSize?: number;
   /** Precomputed SVG path of the QR's dark modules (set by the parser) */
   qrPath?: string;
+  /** Optional document version, printed under the corner QR / logo */
+  version?: string;
 }
 
 /**
