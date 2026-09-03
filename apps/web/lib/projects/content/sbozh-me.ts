@@ -18,7 +18,7 @@ Three things:
 
 **For you** - a way to learn who I am and what I'm capable of. If you're hiring, collaborating, or just curious - the answer lives here, documented as I go.
 
-**For builders** - proof that you can start with what you have. If watching my process helps you begin your own project, that's a win. If you need guidance through the early chaos - mentoring and consulting conversations are open. Reach me through [Discord](https://discord.gg/EANPKPKD) or [book a call](/contact).
+**For builders** - proof that you can start with what you have. If watching my process helps you begin your own project, that's a win. If you need guidance through the early chaos - mentoring and consulting conversations are open. Just [book a call](/contact).
 
 ## Open Source & AI Development
 

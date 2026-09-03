@@ -11,7 +11,7 @@ export interface ProjectTab {
   enabled: boolean;
 }
 
-export type ProjectLinkType = "github" | "discord" | "website" | "docs";
+export type ProjectLinkType = "github" | "website" | "docs";
 
 export interface ProjectLink {
   type: ProjectLinkType;

@@ -42,33 +42,6 @@ export function useExternalLinkTracking() {
     console.log('[Analytics] Repository click tracked:', data);
   };
 
-  const trackDiscordInviteClick = (data: {
-    inviteCode?: string;
-    serverName?: string;
-    location?: string;
-  }) => {
-    // Track as analytics event
-    analyticsEvents.track({
-      category: EventCategory.Social,
-      action: EventAction.Click,
-      label: 'discord_invite',
-      metadata: {
-        inviteCode: data.inviteCode,
-        serverName: data.serverName || 'sbozh.me',
-        location: data.location || 'unknown',
-        timestamp: Date.now(),
-      },
-    });
-
-    // Track in user journey
-    userJourney.track('clicked_discord_invite', {
-      serverName: data.serverName,
-      location: data.location,
-    });
-
-    console.log('[Analytics] Discord invite click tracked:', data);
-  };
-
   const trackExternalLink = (data: ExternalLinkData) => {
     // Generic external link tracking
     analyticsEvents.track({
@@ -94,7 +67,6 @@ export function useExternalLinkTracking() {
 
   return {
     trackRepositoryClick,
-    trackDiscordInviteClick,
     trackExternalLink,
   };
 }

@@ -1,13 +1,12 @@
 'use client';
 
-import { Github, MessageCircle, Globe, BookOpen, SquarePlus } from "lucide-react";
+import { Github, Globe, BookOpen } from "lucide-react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import type { Project, ProjectLinkType } from "@/lib/projects/types";
 import { useExternalLinkTracking } from "@/hooks/useExternalLinkTracking";
 
 const linkIcons: Record<ProjectLinkType, React.ComponentType<{ className?: string }>> = {
   github: Github,
-  discord: SquarePlus,
   website: Globe,
   docs: BookOpen,
 };
@@ -18,7 +17,7 @@ interface ProjectLinksProps {
 }
 
 export function ProjectLinks({ project, mobile = false }: ProjectLinksProps) {
-  const { trackRepositoryClick, trackDiscordInviteClick, trackExternalLink } = useExternalLinkTracking();
+  const { trackRepositoryClick, trackExternalLink } = useExternalLinkTracking();
 
   if (!project.links?.length) {
     return null;
@@ -31,16 +30,6 @@ export function ProjectLinks({ project, mobile = false }: ProjectLinksProps) {
         repository: link.href,
         projectName: project.title,
         platform: 'github',
-        location: 'project_sidebar',
-      });
-    }
-    // Track Discord invite clicks
-    else if (link.type === 'discord') {
-      // Extract invite code from URL if possible
-      const inviteCode = link.href.match(/discord\.gg\/([a-zA-Z0-9]+)/)?.[1];
-      trackDiscordInviteClick({
-        inviteCode,
-        serverName: project.title,
         location: 'project_sidebar',
       });
     }

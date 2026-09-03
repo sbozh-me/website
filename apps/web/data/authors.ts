@@ -1,5 +1,4 @@
 import type { Author } from "@/types/author"
-import { siteConfig } from "@/lib/site-config"
 
 export const authors: Author[] = [
   {
@@ -18,13 +17,10 @@ export const authors: Author[] = [
     id: "semen-bozhyk",
     name: "Semen Bozhyk",
     title: "Builder and Creator",
-    description: "I turn ideas into reality, even weird ones.\n Join me on Discord or subscribe to follow the journey.",
+    description: "I turn ideas into reality, even weird ones.\n Subscribe to follow the journey.",
     avatar: "/semen_bozhyk.png",
     status: { text: "In active fundraising mode", variant: "yellow" },
-    ctaButtons: [
-      { label: "Join Discord", href: siteConfig.links.discordInvite, variant: "primary" },
-      { label: "#AINTTER", href: "/blog/aintter-as-a-name-for-ai-writing", variant: "outline" }
-    ],
+    ctaButtons: [],
     blogAuthorSlugs: ["moris-gloriss"]
   },
   {
