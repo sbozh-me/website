@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0] - 2026-09-03
+
+### Changes
+
+- feat(projects): replace discord community showcase with tecraft.cz ([0eb0f49](https://github.com/sbozh-me/website/commit/0eb0f494d5934921a12d22bb78c66dee2a00d741))
+- chore(scripts): add production database and uploads backup script ([8922ce3](https://github.com/sbozh-me/website/commit/8922ce3fc9d8f634457443e2e2079accf476f27d))
+- docs(roadmap): mark 1.5.0 tecraft.cz complete and shift later versions ([3a9eec3](https://github.com/sbozh-me/website/commit/3a9eec3d3213900d9dc28f5cece4be3b54ac6ed0))
+- feat(pmdxjs): add invoice/faktura document type with Czech QR payment ([ecc8172](https://github.com/sbozh-me/website/commit/ecc8172a13666c1955e23a46b4cfa0bbbd56d6c1))
+- fix(projects): remove AI process aside from tecraft motivation copy ([db1ea37](https://github.com/sbozh-me/website/commit/db1ea375229e4e8f263047e32f00d6094c6b1a22))
+- fix(projects): remove building-in-public aside from tecraft about copy ([289905a](https://github.com/sbozh-me/website/commit/289905af65a7826711e2579d7e78d1279620cee9))
+- fix(projects): drop market meta from tecraft project card ([2c672ed](https://github.com/sbozh-me/website/commit/2c672ed72ce41fa49174852812748f9c5477672a))
+- fix(cv): restore CV source file after invoice work ([81f2b64](https://github.com/sbozh-me/website/commit/81f2b64260d538db98e980f68a62b71eebef3fd7))
+- test(web): update stale releases, 404 and CV tests ([051fde5](https://github.com/sbozh-me/website/commit/051fde527bd4c4483c2c6fb227a9cb8ef8bebea8))
+
+
 ## [1.4.7] - 2026-01-18
 
 ### Changes
