@@ -12,7 +12,7 @@ export function ProjectHeader({ project }: ProjectHeaderProps) {
       {/* Hero image */}
       <div className="aspect-[2/1] md:aspect-[4/1] relative overflow-hidden rounded-lg">
         <Image
-          src={project.heroImage.src}
+          src={project.heroImage.headerSrc ?? project.heroImage.src}
           alt={project.heroImage.alt}
           fill
           className="object-cover"

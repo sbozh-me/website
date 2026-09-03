@@ -60,10 +60,12 @@ export async function GET(
 
     // Load hero image from filesystem to avoid container self-referencing issues
     let heroImageData: ArrayBuffer | null = null;
-    if (project.heroImage?.src) {
+    const heroSrc = project.heroImage?.headerSrc ?? project.heroImage?.src;
+    if (heroSrc) {
       try {
         // Hero images are in public folder, e.g., /projects/pifagor/hero.png -> public/projects/pifagor/hero.png
-        const imagePath = join(process.cwd(), "public", project.heroImage.src);
+        // The title is drawn over the image, so prefer the text-free header backdrop when there is one.
+        const imagePath = join(process.cwd(), "public", heroSrc);
         const imageBuffer = await readFile(imagePath);
         heroImageData = imageBuffer.buffer.slice(
           imageBuffer.byteOffset,

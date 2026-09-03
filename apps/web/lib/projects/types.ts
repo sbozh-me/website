@@ -25,7 +25,13 @@ export interface Project {
   title: string;
   tagline: string;
   status: ProjectStatus;
-  heroImage: { src: string; alt: string; position?: "top" | "center" | "bottom" };
+  heroImage: {
+    src: string;
+    alt: string;
+    position?: "top" | "center" | "bottom";
+    /** Optional wide backdrop for the project header, used when the card image carries its own text */
+    headerSrc?: string;
+  };
   meta: ProjectMeta[];
   tabs: ProjectTab[];
   links?: ProjectLink[];

@@ -32,7 +32,8 @@ export const projects: Project[] = [
     version: "0.11.3",
     heroImage: {
       src: "/images/projects/tecraft-hero.png",
-      alt: "tecraft.cz showroom with a laser-engraved wedding photo inside a crystal on an LED base",
+      headerSrc: "/images/projects/tecraft-header.png",
+      alt: "tecraft Gifts wordmark over the wooden-loft showroom",
       position: "center",
     },
     meta: [
