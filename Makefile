@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring push-web-image switch-web-version swv restart backup
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring deploy-pdf push-web-image switch-web-version swv restart backup
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -47,6 +47,12 @@ deploy-monitoring:
 	@echo "Deploying monitoring infrastructure..."
 	./deploy/production/monitoring/deploy.sh
 	@echo "Monitoring infrastructure deployed"
+
+deploy-pdf:
+	@echo "Deploying pdf-generator service..."
+	rsync -aq --exclude='node_modules' --exclude='dist' services/pdf-generator $(SSH_HOST):$(APP_DIR)/services/
+	ssh $(SSH_HOST) "cd $(APP_DIR) && docker compose build pdf-generator && docker compose up -d pdf-generator"
+	@echo "pdf-generator deployed"
 
 deploy: deploy-web deploy-infra
 

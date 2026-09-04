@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
       body: JSON.stringify({
         url: `${baseUrl}/cv`,
         filename: "CV_Sem_Bozhyk_Software_Developer.pdf",
+        // The service applies this theme to the document before printing;
+        // name it explicitly so the PDF never depends on the service default.
+        theme: "normal",
       }),
     });
 
