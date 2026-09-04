@@ -253,15 +253,15 @@ and the home page).
    source of truth for what shipped and for `date_released`.
 3. **`git log <prev-tag>..v<version>`** and `git show --stat` — only when a changelog line
    is too terse to explain the user-facing effect.
-4. **Tone reference** — the previously published notes, e.g. `release-notes/*.md` in this
-   repo or the live pages under `https://sbozh.me/projects/sbozh-me/releases/`.
+4. **Tone reference** — the previously published notes: any local drafts left in
+   `release-notes/*.md`, or the live pages under `https://sbozh.me/projects/sbozh-me/releases/`.
 
 Never run `git add`, `git commit`, `git tag` or anything that changes git state in this mode.
 
 ### Output
 
-Write `release-notes/<version>.md` (create the folder if needed), then print the file path and
-the complete content. The file MUST follow this format exactly:
+Write `release-notes/<version>.md` (create the folder if needed; it is git-ignored, the notes
+live in Directus), then print the file path and the complete content. The file MUST follow this format exactly:
 
 ```markdown
 # Release note 1.5.3

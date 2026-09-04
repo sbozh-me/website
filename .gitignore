@@ -50,3 +50,6 @@ backups/
 
 # Real invoices stay local; faktura.pmdx in git is a sample
 apps/web/content/faktura.*.pmdx
+
+# Release note drafts from /commit notes (pasted into Directus, not tracked)
+release-notes/

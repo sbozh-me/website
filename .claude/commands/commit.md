@@ -29,8 +29,8 @@ Parameter handling:
      the current version from the root `package.json`
    - Source of truth: the matching `## [x.y.z]` entries in `CHANGELOG.md`, plus `git log`
      between the version tags when a changelog line needs detail
-   - Output: write `release-notes/<version>.md` in the exact format from the agent
-     definition, then print the file path and the full file content
+   - Output: write `release-notes/<version>.md` (folder is git-ignored) in the exact format
+     from the agent definition, then print the file path and the full file content
    - Do NOT commit, stage, or touch git state in this mode; the file is for pasting into the
      Directus `release_notes` collection
 
