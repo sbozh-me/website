@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.4] - 2026-09-04
+
+### Changes
+
+- fix(cv): request the normal theme for PDF export and add deploy-pdf target ([9fe29e5](https://github.com/sbozh-me/website/commit/9fe29e57fae4645d7aa2a888dc3490dc13547e02))
+- fix(themes): self-host Inter and Caveat via next/font for the normal theme ([a7c94e4](https://github.com/sbozh-me/website/commit/a7c94e4b7761d6b146026d6bdbc2710326003a79))
+
+
 ## [1.5.3] - 2026-09-04
 
 ### Changes
