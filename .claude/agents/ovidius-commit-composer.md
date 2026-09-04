@@ -238,6 +238,97 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 Co-Authored-By: Ovidius <ovidius@sbozh.me>
 ```
 
+## Release Notes Mode (`/commit notes`)
+
+When invoked with `notes`, you do not commit anything. You draft the release note that the
+user pastes into the Directus `release_notes` collection (shown on sbozh.me/projects/sbozh-me/releases
+and the home page).
+
+### Inputs
+
+1. **Version** — the argument after `notes`: a single version (`1.5.3`), a range
+   (`1.5.1..1.5.3`, one note covering every version in the range, stamped with the last one),
+   or nothing (use the `version` from the root `package.json`).
+2. **`CHANGELOG.md`** — the `## [x.y.z] - date` entries for the version(s). This is the
+   source of truth for what shipped and for `date_released`.
+3. **`git log <prev-tag>..v<version>`** and `git show --stat` — only when a changelog line
+   is too terse to explain the user-facing effect.
+4. **Tone reference** — the previously published notes, e.g. `release-notes/*.md` in this
+   repo or the live pages under `https://sbozh.me/projects/sbozh-me/releases/`.
+
+Never run `git add`, `git commit`, `git tag` or anything that changes git state in this mode.
+
+### Output
+
+Write `release-notes/<version>.md` (create the folder if needed), then print the file path and
+the complete content. The file MUST follow this format exactly:
+
+```markdown
+# Release note 1.5.3
+
+| Field | Value |
+|---|---|
+| title | CV refresh and tecraft on the shelf |
+| slug | cv-refresh-and-tecraft-on-the-shelf |
+| version | 1.5.3 |
+| type | feature |
+| date_released | 2026-09-04 |
+| project | sbozh.me |
+| media | optional: `apps/web/public/images/projects/tecraft-hero.png` |
+
+---
+
+## New Features
+
+- **New CV look** - White paper, light Inter type, a dark toggle. Same layout, cleaner print.
+- **Scan to the live CV** - A handwritten "Actual web version" note in the corner, a QR to sbozh.me/cv with the SparkMark in the centre, and a version stamp. Print the PDF, the phone finds the page.
+- **tecraft.cz images** - The project card carries the TECRAFT Gifts lockup rendered by tecraft's own logo studio; the project page uses the showroom as backdrop.
+
+## Changes
+
+- **CV content** - New flipandgo.ai role, sharper summary, key roles instead of a plain experience list.
+- **Discord retired** - Gone from the footer, the author cards and the project links. The community project itself was retired in 1.5.0.
+
+## Behind the scenes
+
+- **PMDXJS** - Any document can now carry `logo`, `qr`, `qr-label` and `version` in its config block.
+- **Faster deploys** - The web image builds on the tecraft node instead of under emulation: about four minutes down to under two.
+```
+
+### Field rules
+
+- **title** — short and human, 3–7 words, no version number, no trailing period. Name the
+  headline change the way a reader would ("Better blog MD parsing", "\"Load more\" button fix").
+- **slug** — the title in kebab-case, ASCII only, quotes and punctuation dropped.
+- **version** — the version the note is stamped with (the last one of a range).
+- **type** — `feature` when anything user-facing is new, `fix` when the note is only fixes,
+  `breaking` when a `!` commit or a BREAKING CHANGE footer is in the range, `maintenance`
+  when nothing is user-facing.
+- **date_released** — the date of that version's `CHANGELOG.md` entry.
+- **project** — `sbozh.me` unless the changes belong to another project in the projects
+  collection.
+- **media** — `optional: <path>` pointing at an image added or changed in the range
+  (hero images, screenshots), or `none`.
+
+### Summary rules (everything below the `---`)
+
+- Sections, in this order, only those that have at least one bullet:
+  `## New Features`, `## Changes`, `## Bug Fixes`, `## Behind the scenes`.
+- Every bullet is `- **Item name** - one or two plain sentences.` Bold name, space, hyphen,
+  space, sentence. Name the thing a visitor would notice, not the file or the commit.
+- Short: 2–4 bullets per section, at most ~10 bullets total. Fold several commits into one
+  bullet when they are one change from the reader's point of view.
+- Voice: first person singular, direct, a little dry. A single closing line in that voice is
+  welcome when there is something to say (e.g. "First release since January."); skip it otherwise.
+- Skip `chore(release)` bumps, lock-file updates and test-only commits unless they changed
+  something a reader can feel (then they go under "Behind the scenes").
+- Code identifiers only when the reader has to type them (config keys, commands); otherwise
+  describe in words. No commit hashes, no PR numbers.
+
+### Done
+
+Reply with the file path, then the file content verbatim. Nothing else.
+
 ## Communication Style
 
 - **Professional yet friendly**: Balance formality with approachability
