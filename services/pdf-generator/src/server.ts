@@ -48,6 +48,8 @@ fastify.post<{ Body: GeneratePdfBody }>("/generate", async (request, reply) => {
       }
     }, theme);
 
+    // Webfonts are fetched lazily; make sure every face is in before printing.
+    await page.evaluate(() => document.fonts.ready);
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     const pdf = await page.pdf({

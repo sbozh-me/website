@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono, Inter, Caveat } from "next/font/google";
 
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 import { ThemeProvider } from "@sbozh/themes";
@@ -20,6 +20,22 @@ const spaceGrotesk = Space_Grotesk({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
+});
+
+// Document faces for the PMDXJS "normal" theme (CV / PDF). Self-hosted by
+// next/font so the PDF service's Chromium gets them from the site itself.
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin", "latin-ext"],
+  weight: ["500"],
+  variable: "--font-caveat",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -63,7 +79,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="obsidian-forge"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
         <ThemeProvider theme="obsidian-forge">
