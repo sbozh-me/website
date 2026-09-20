@@ -5,7 +5,7 @@ theme: normal
 logo: /android-chrome-512x512.png
 qr: https://sbozh.me/cv
 qr-label: Actual web version
-version: v20.26.09
+version: v20.26.219
 :::
 
 :::page
@@ -57,13 +57,16 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 
 ## Skills
 
+#tag AI-automation
+#tag Claude code
+#tag Self-hosted AI
+#tag Runpod
 #tag TypeScript
 #tag JavaScript
-#tag Vue.js 2/3
+#tag Vue.js
 #tag React
 #tag Node.js
-#tag Pinia
-#tag TanStack Query
+#tag Bun
 #tag WebWorker
 #tag WASM
 #tag Canvas
@@ -72,11 +75,14 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 #tag AWS
 #tag CI/CD
 #tag AI SaaS Integration
-#tag Technical Mentoring
 #tag RxJS
 
 ## Achievements
 
+- Finished Full-Lifecycle Product Development ([tecraft.cz](https://tecraft.cz))
+- AI-automated B2B solution for sales MVP developed
+- Was hired 15+ times with 25$/h av.
+- You can track exact moment when I changed this line on my website
 - Vue 2 to Vue 3 migration: +35% performance, led as Team Leader
 - WASM + WebWorker platformless solution shipped to production
 

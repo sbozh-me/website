@@ -345,7 +345,7 @@
   transform: rotate(-4deg);
   transform-origin: right bottom;
   display: inline-block;
-  margin-top: 0.5mm;
+  margin-top: -3.1415mm;
 }
 
 .pmdxjs-document[data-theme^="normal"] .pmdxjs-page-qr-arrow {
