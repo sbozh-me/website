@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.5] - 2026-09-21
+
+### Changes
+
+- feat(commit): add notes mode that drafts release notes with ovidius ([3e511a9](https://github.com/sbozh-me/website/commit/3e511a9f9df99a9604935d6d7fa31900d91f7ee1))
+- docs(release-notes): add 1.5.4 note ([eaadd5c](https://github.com/sbozh-me/website/commit/eaadd5cb5cdde17e06809af755c033b3dfd44bc6))
+- chore(release-notes): git-ignore drafted notes ([ffc4635](https://github.com/sbozh-me/website/commit/ffc46359e6b7c23c9eaf217fa065377dffc81558))
+- docs(cv): refresh content and tighten QR label spacing ([b9172db](https://github.com/sbozh-me/website/commit/b9172db4d343713b9c2c47dea15d74ac9dcc68ed))
+
+
 ## [1.5.4] - 2026-09-04
 
 ### Changes
