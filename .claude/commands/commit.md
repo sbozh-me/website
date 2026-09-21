@@ -1,9 +1,9 @@
 ---
-description: Create a conventional commit with ovidius [simple] [path] | draft release notes [notes <version>]
+description: Create a conventional commit with ovidius [simple] [path] | draft release notes with livius [notes <version>]
 ---
 
-Use the ovidius-commit-composer agent to create a conventional commit for staged changes,
-or — in `notes` mode — to draft a release note file.
+Use the ovidius-commit-composer agent to create a conventional commit for staged changes.
+In `notes` mode, use the livius-release-chronicler agent to draft a release note file instead.
 
 Parameters can be provided in any order:
 
@@ -23,14 +23,14 @@ Parameter handling:
    - NO footer credits/attribution
    - Provide ONLY the commit hash when done - no explanations
 
-3. If "notes" is provided, instruct ovidius to run its **Release Notes Mode**:
+3. If "notes" is provided, use the **livius-release-chronicler** agent instead of ovidius:
    - Version: the argument after "notes" (e.g., `1.5.3`), a range (`1.5.1..1.5.3`, one note
      covering every version in the range, stamped with the last one), or — when omitted —
      the current version from the root `package.json`
    - Source of truth: the matching `## [x.y.z]` entries in `CHANGELOG.md`, plus `git log`
      between the version tags when a changelog line needs detail
    - Output: write `release-notes/<version>.md` (folder is git-ignored) in the exact format
-     from the agent definition, then print the file path and the full file content
+     from the Livius agent definition, then print the file path and the full file content
    - Do NOT commit, stage, or touch git state in this mode; the file is for pasting into the
      Directus `release_notes` collection
 
