@@ -52,4 +52,7 @@ backups/
 apps/web/content/faktura.*.pmdx
 
 # Release note drafts from /commit notes (pasted into Directus, not tracked)
-release-notes/
+/release-notes/
+
+# Local git worktrees created by Claude Code
+.claude/worktrees/
