@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.6] - 2026-09-21
+
+### Changes
+
+- refactor(commit): delegate release notes to livius ([060f7b2](https://github.com/sbozh-me/website/commit/060f7b21f5b3d211575a912965ffddea7ff46e58))
+- chore(gitignore): fix rule scope, ignore worktrees ([ec08d20](https://github.com/sbozh-me/website/commit/ec08d202bc3d8e79737ddb56076d7cc9a93ea99f))
+- docs(cv): rework key roles entries ([b48e334](https://github.com/sbozh-me/website/commit/b48e334e7b17544678a944e1c9e769fbc6bcd740))
+- docs(cv): add cloudflare and t-shaped skill tags ([c5dcd6d](https://github.com/sbozh-me/website/commit/c5dcd6de5249087242a837eacf8eaa46261c1e66))
+
+
 ## [1.5.5] - 2026-09-21
 
 ### Changes
