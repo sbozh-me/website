@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.8] - 2026-09-22
+
+### Changes
+
+- feat(pmdxjs): add a secondary corner QR code ([f64f2bc](https://github.com/sbozh-me/website/commit/f64f2bcae2d7591188ad43e6c6d0ab53ba5e5491))
+- feat(cv): add references QR code behind a /link redirect ([e9364e4](https://github.com/sbozh-me/website/commit/e9364e492bf97e6d3bfd53f85b54f22854eb80d0))
+- style(pmdxjs): lower the secondary QR caption ([592263b](https://github.com/sbozh-me/website/commit/592263b20eef22123955c7cd4a3c4d6e409f71f6))
+- docs(cv): rework summary, skills and achievements ([9167a12](https://github.com/sbozh-me/website/commit/9167a12e930a4aa6aea10716840a7106fbe2824b))
+
+
 ## [1.5.7] - 2026-09-22
 
 ### Changes
