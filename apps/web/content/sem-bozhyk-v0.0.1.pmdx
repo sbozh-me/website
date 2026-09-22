@@ -5,7 +5,7 @@ theme: normal
 logo: /android-chrome-512x512.png
 qr: https://sbozh.me/cv
 qr-label: Actual web version
-version: v20.26.219
+version: v20.26.229
 :::
 
 :::page
@@ -35,11 +35,10 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 - Automated development pipeline: Figma + Linear + Claude Code workflows
 :::
 
-:::entry Rock.estate | Vue.js Developer | Nov 2024 - Oct 2025 | Hybrid
-- Built production AI chatbot in 2 weeks solo, saving agents 2–4h daily
-:::
-
-:::entry Vue 3 migration · E2E · Outstaffing | Freelance | Sep 2021 – Nov 2024 | 5 contracts · NDA
+:::entry JavaScript developer | Freelance | Sep 2021 – Oct 2025 | 6 contracts · NDA
+- Built AI chatbot solo in 2 weeks, designed for internal team support
+- Platformless quantitative trading solution designed and implemented (EDA, design patterns)
+- Hundreds of tests written
 :::
 
 :::entry GR8 Tech | React.js Team Lead | Jan 2023 - Aug 2023 | Remote
