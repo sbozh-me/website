@@ -4,11 +4,11 @@ margins: 12 12 12 12
 theme: normal
 logo: /android-chrome-512x512.png
 qr: https://sbozh.me/cv
-qr-label: Actual web version
+qr-label: Web version
 qr-secondary: https://sbozh.me/link/unfiltered-references
 qr-secondary-label: References, unfiltered
 qr-secondary-logo: /images/star.svg
-version: v20.26.229
+version: v20.26.229b
 :::
 
 :::page
@@ -26,6 +26,8 @@ contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | gith
 
 Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platforms; from side hustle to profitable product. Led teams, shipped PCI-compliant payment systems, and built AI features that save hours of work daily.
 
+I think in business outcomes first: revenue, risk, cost, and time to market.
+
 ## Key Roles
 
 :::entry sbozh.me | Founder & Engineer | Dec 2025 - Present | Own venture
@@ -41,7 +43,6 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 :::entry JavaScript developer | Freelance | Sep 2021 – Oct 2025 | 6 contracts · NDA
 - Built AI chatbot solo in 2 weeks, designed for internal team support
 - Platformless quantitative trading solution designed and implemented (EDA, design patterns)
-- Hundreds of tests written
 :::
 
 :::entry GR8 Tech | React.js Team Lead | Jan 2023 - Aug 2023 | Remote
@@ -59,7 +60,15 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 
 ## Skills
 
+#tag system design
+#tag event-driven architecture
+#tag T-Shaped
+#tag design patterns
+#tag product thinking
+#tag risk management
+#tag cost optimization
 #tag AI-automation
+#tag AI SaaS Integration
 #tag Claude code
 #tag Self-hosted AI
 #tag Runpod
@@ -67,6 +76,7 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 #tag JavaScript
 #tag Vue.js
 #tag React
+#tag RxJS
 #tag Node.js
 #tag Bun
 #tag WebWorker
@@ -75,18 +85,14 @@ Self-taught engineer, 11 years and 15+ contracts. From zero to 20M-session platf
 #tag WebSockets
 #tag Docker
 #tag AWS
-#tag CI/CD
-#tag AI SaaS Integration
-#tag RxJS
 #tag Cloudflare
-#tag T-Shaped
+#tag CI/CD
 
 ## Achievements
 
 - Finished Full-Lifecycle Product Development ([tecraft.cz](https://tecraft.cz))
-- AI-automated B2B solution for sales MVP developed
-- Was hired 15+ times with 25$/h av.
-- You can track exact moment when I changed this line on my website
+- 15+ contracts across fintech, real estate, high-traffic social media, trading, e-commerce, AI and more
+- You can track the exact moment when I changed this line on my website
 - Vue 2 to Vue 3 migration: +35% performance, led as Team Leader
 - WASM + WebWorker platformless solution shipped to production
 
