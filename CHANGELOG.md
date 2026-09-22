@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.7] - 2026-09-22
+
+### Changes
+
+- docs(cv): merge Rock.estate and freelance entries into one role ([9013b43](https://github.com/sbozh-me/website/commit/9013b43a0afbfe28343b9a28457c1e13b80e6953))
+
+
 ## [1.5.6] - 2026-09-21
 
 ### Changes
