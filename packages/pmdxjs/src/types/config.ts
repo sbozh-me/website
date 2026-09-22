@@ -26,6 +26,16 @@ export interface DocumentConfig {
   qrSize?: number;
   /** Precomputed SVG path of the QR's dark modules (set by the parser) */
   qrPath?: string;
+  /** Optional second URL, rendered as a QR code left of the main one */
+  qrSecondary?: string;
+  /** Optional caption shown under the main QR code, with an arrow up into the secondary one */
+  qrSecondaryLabel?: string;
+  /** Optional image URL for the centre of the secondary QR code (defaults to `logo`) */
+  qrSecondaryLogo?: string;
+  /** Precomputed secondary QR modules per side (set by the parser) */
+  qrSecondarySize?: number;
+  /** Precomputed SVG path of the secondary QR's dark modules (set by the parser) */
+  qrSecondaryPath?: string;
   /** Optional document version, printed under the corner QR / logo */
   version?: string;
 }

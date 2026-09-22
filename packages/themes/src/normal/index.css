@@ -348,6 +348,12 @@
   margin-top: -3.1415mm;
 }
 
+/* Caption beside a code: the arrow rises from the end of the line. */
+.pmdxjs-document[data-theme^="normal"] .pmdxjs-page-qr-label-beside .pmdxjs-page-qr-label-text {
+  margin-top: 0;
+  margin-bottom: -1mm;
+}
+
 .pmdxjs-document[data-theme^="normal"] .pmdxjs-page-qr-arrow {
   color: var(--normal-heading);
 }

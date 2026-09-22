@@ -58,7 +58,10 @@ interface KnownComponents {
     config: DocumentNode["config"];
     children: ReactNode;
   }>;
-  Page?: React.ComponentType<{ children: ReactNode }>;
+  Page?: React.ComponentType<{
+    children: ReactNode;
+    columns?: [number, number];
+  }>;
   Columns?: React.ComponentType<{
     ratio: [number, number];
     children: ReactNode;
@@ -705,8 +708,13 @@ function transformPage(
   const children = node.children.map((child, i) =>
     transformContentNode(child, options, i),
   );
+  // The page corner can line up with the last column layout on the page
+  let columns: ColumnsNode["ratio"] | undefined;
+  for (const child of node.children) {
+    if (child.type === "columns") columns = child.ratio;
+  }
 
-  return createElement(PageComponent, { key, children });
+  return createElement(PageComponent, { key, columns, children });
 }
 
 /**

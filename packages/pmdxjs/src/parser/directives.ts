@@ -75,6 +75,15 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
         case "qr-label":
           if (value) config.qrLabel = value;
           break;
+        case "qr-secondary":
+          if (value) config.qrSecondary = value;
+          break;
+        case "qr-secondary-label":
+          if (value) config.qrSecondaryLabel = value;
+          break;
+        case "qr-secondary-logo":
+          if (value) config.qrSecondaryLogo = value;
+          break;
         case "version":
           if (value) config.version = value;
           break;
@@ -87,6 +96,12 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
     const { size, path } = encodeQrPath(config.qr, "H");
     config.qrSize = size;
     config.qrPath = path;
+  }
+
+  if (config.qrSecondary) {
+    const { size, path } = encodeQrPath(config.qrSecondary, "H");
+    config.qrSecondarySize = size;
+    config.qrSecondaryPath = path;
   }
 
   return config;

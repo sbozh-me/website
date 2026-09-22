@@ -4,6 +4,9 @@ import { cn } from "../lib/utils";
 
 import type { ReactNode } from "react";
 
+/** Gap between columns in pixels. The page corner uses it to line up with the last column. */
+export const DEFAULT_COLUMN_GAP = 20;
+
 export interface ColumnsProps {
   ratio: [number, number];
   children: ReactNode;
@@ -21,7 +24,7 @@ export function Columns({
   ratio,
   children,
   className,
-  gap = 20,
+  gap = DEFAULT_COLUMN_GAP,
 }: ColumnsProps) {
   const [left, right] = ratio;
 

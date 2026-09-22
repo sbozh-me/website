@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
+import type { ReactNode } from "react";
+
 import { parse } from "../parser";
 import { transform } from "../transformer";
 
@@ -149,6 +151,45 @@ margins: 15 15 15 15
 
     const page = document.querySelector(".pmdxjs-page");
     expect(page).toHaveStyle({ width: "210mm" });
+  });
+
+  it("passes each page's column ratio to the Page component", () => {
+    const source = `
+:::page
+# With columns
+
+---columns 62 38
+
+## Left
+
+---
+
+## Right
+
+---columns-end
+
+:::page-end
+
+:::page
+# Without columns
+:::page-end
+`;
+
+    const ratios: Array<[number, number] | undefined> = [];
+    const RecordingPage = ({
+      columns,
+      children,
+    }: {
+      columns?: [number, number];
+      children: ReactNode;
+    }) => {
+      ratios.push(columns);
+      return <div>{children}</div>;
+    };
+
+    render(transform(parse(source), { components: { Page: RecordingPage } }));
+
+    expect(ratios).toEqual([[62, 38], undefined]);
   });
 
   it("supports custom components via options", () => {

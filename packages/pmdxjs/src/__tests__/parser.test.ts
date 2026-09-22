@@ -73,6 +73,41 @@ version: v20.26.09
       expect(ast.config.qrPath).toMatch(/^M\d+ \d+h1v1h-1z/);
     });
 
+    it("should encode a secondary qr url and keep its label", () => {
+      const source = `:::config
+qr: https://sbozh.me/cv
+qr-secondary: https://lnkd.in/p/dKG-q7EC
+qr-secondary-label: References, unfiltered
+qr-secondary-logo: /images/star.svg
+:::
+
+:::page
+# Test
+:::page-end`;
+
+      const ast = parse(source);
+
+      expect(ast.config.qrSecondary).toBe("https://lnkd.in/p/dKG-q7EC");
+      expect(ast.config.qrSecondaryLabel).toBe("References, unfiltered");
+      expect(ast.config.qrSecondaryLogo).toBe("/images/star.svg");
+      expect(ast.config.qrSecondarySize).toBeGreaterThan(20);
+      expect(ast.config.qrSecondaryPath).toMatch(/^M\d+ \d+h1v1h-1z/);
+      expect(ast.config.qrSecondaryPath).not.toBe(ast.config.qrPath);
+    });
+
+    it("should leave the secondary qr undefined when not specified", () => {
+      const ast = parse(`:::config
+qr: https://sbozh.me/cv
+:::
+
+:::page
+# Test
+:::page-end`);
+
+      expect(ast.config.qrSecondary).toBeUndefined();
+      expect(ast.config.qrSecondaryPath).toBeUndefined();
+    });
+
     it("should leave logo undefined when not specified", () => {
       const ast = parse(`:::page
 # Test
