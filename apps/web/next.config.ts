@@ -29,6 +29,13 @@ const nextConfig: NextConfig = {
         destination: "/projects",
         permanent: true,
       },
+      {
+        // Printed as a QR code on the CV; temporary, so the target can be
+        // swapped without reprinting if the LinkedIn post ever moves
+        source: "/link/unfiltered-references",
+        destination: "https://lnkd.in/p/dKG-q7EC",
+        permanent: false,
+      },
     ];
   },
 };

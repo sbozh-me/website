@@ -1,10 +1,13 @@
 :::config
 format: A4
-margins: 18 18 18 18
+margins: 12 12 12 12
 theme: normal
 logo: /android-chrome-512x512.png
 qr: https://sbozh.me/cv
 qr-label: Actual web version
+qr-secondary: https://sbozh.me/link/unfiltered-references
+qr-secondary-label: References, unfiltered
+qr-secondary-logo: /images/star.svg
 version: v20.26.229
 :::
 
@@ -12,7 +15,7 @@ version: v20.26.229
 
 # Sem Bozhyk
 
-subtitle: Software Engineer | JavaScript | AI-Assisted Development
+subtitle: Product-minded Software Engineer | JavaScript | AI-Assisted Development
 contact: +420 608 386 115 | sem.bozhyk@sbozh.me | linkedin.com/in/sbozhyk | github.com/sbozh | Prague, CZ
 
 ---
