@@ -313,7 +313,7 @@ export function Page({ children, className, columns }: PageProps) {
                     gridArea: "secondary",
                     justifySelf: "start",
                     alignSelf: "end",
-                    marginBottom: "2mm",
+                    marginBottom: "-2mm",
                     marginLeft: "3mm",
                     paddingRight: "2mm",
                     transform: `translateX(calc(-100% - ${SECONDARY_CAPTION_GAP}))`,
