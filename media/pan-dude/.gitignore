@@ -1,0 +1,5 @@
+# Source clips and rendered videos are too large for git; rebuild with build.sh
+*.mp4
+*.png
+*.jpg
+words.ass
