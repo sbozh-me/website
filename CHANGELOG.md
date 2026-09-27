@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.9] - 2026-09-27
+
+### Changes
+
+- fix(api): stream range requests for asset proxy ([f26570e](https://github.com/sbozh-me/website/commit/f26570e84712d9cadd27c9db0094a39f822e0f87))
+- build(deploy): add Directus schema migration tooling ([b4e4aa4](https://github.com/sbozh-me/website/commit/b4e4aa4ce68758499bb0ee100f119362deea94f1))
+- test(blog): expect lastModified in mapped post list items ([43d1db7](https://github.com/sbozh-me/website/commit/43d1db71544507d59a9993bb0dedad0162b455dd))
+- feat(blog): add hero image attribution caption ([0f9aae8](https://github.com/sbozh-me/website/commit/0f9aae8d4292789126e54ec406653a63452dbca0))
+- Merge branch 'fix/asset-proxy-range-requests' ([00201bd](https://github.com/sbozh-me/website/commit/00201bd8eede9146afff1660e90878d8c7a02843))
+
+
 ## [1.5.8] - 2026-09-22
 
 ### Changes
