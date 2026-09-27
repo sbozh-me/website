@@ -121,6 +121,7 @@ describe("DirectusRepository", () => {
         slug: "test-post",
         excerpt: "Test excerpt",
         date: "2025-01-15",
+        lastModified: "2025-01-15",
         readingTime: 5,
         persona: {
           id: "persona-1",
