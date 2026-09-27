@@ -35,6 +35,7 @@ const mockDirectusPost = {
   persona: mockDirectusPersona,
   tags: [{ tags_id: mockDirectusTag }],
   image: mockDirectusFile,
+  image_attribution: "Photo by [Jane](https://example.com)",
   attribution: "Test attribution",
 };
 
@@ -50,6 +51,7 @@ const mockDirectusPostNoImage = {
   id: "post-3",
   slug: "no-image-post",
   image: null,
+  image_attribution: null,
   attribution: null,
 };
 
@@ -357,6 +359,22 @@ describe("DirectusRepository", () => {
       const post = await repository.getPost("test-post");
 
       expect(post?.attribution).toBe("Test attribution");
+    });
+
+    it("maps image attribution correctly", async () => {
+      mockRequest.mockResolvedValueOnce([mockDirectusPost]);
+
+      const post = await repository.getPost("test-post");
+
+      expect(post?.imageAttribution).toBe("Photo by [Jane](https://example.com)");
+    });
+
+    it("handles null image attribution", async () => {
+      mockRequest.mockResolvedValueOnce([mockDirectusPostNoImage]);
+
+      const post = await repository.getPost("no-image-post");
+
+      expect(post?.imageAttribution).toBeUndefined();
     });
 
     it("handles null attribution", async () => {

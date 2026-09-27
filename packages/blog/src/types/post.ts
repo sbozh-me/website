@@ -21,6 +21,7 @@ export interface Post {
   persona: Persona;
   tags: Tag[];
   image?: PostImage;
+  imageAttribution?: string;
   attribution?: string;
   ogImage?: PostImage;
   ogGenerate?: boolean;

@@ -186,6 +186,50 @@ describe("BlogPostPage", () => {
     expect(screen.getByText("John Doe")).toBeInTheDocument();
   });
 
+  it("renders image attribution as a caption under the hero image", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Test Post",
+      slug: "test-post",
+      excerpt: "Test excerpt",
+      content: "## Test Content\n\nSome content here.",
+      date: "2025-01-01",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+      image: { src: "/hero.jpg", alt: "Hero", width: 1600, height: 900 },
+      imageAttribution: "Photo by [Jane Roe](https://unsplash.com/@jane) on Unsplash",
+    };
+
+    const params = Promise.resolve({ slug: "test-post" });
+    render(await BlogPostPage({ params }));
+
+    const link = screen.getByRole("link", { name: "Jane Roe" });
+    expect(link.closest("figcaption")).not.toBeNull();
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(screen.queryByText("Attribution")).not.toBeInTheDocument();
+  });
+
+  it("skips image attribution when post has no hero image", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Test Post",
+      slug: "test-post",
+      excerpt: "Test excerpt",
+      content: "## Test Content\n\nSome content here.",
+      date: "2025-01-01",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+      imageAttribution: "Photo by Jane Roe",
+    };
+
+    const params = Promise.resolve({ slug: "test-post" });
+    render(await BlogPostPage({ params }));
+
+    expect(screen.queryByText("Photo by Jane Roe")).not.toBeInTheDocument();
+  });
+
   it("uses default dimensions when image has no width/height", async () => {
     mockPostOverride = {
       id: "test",

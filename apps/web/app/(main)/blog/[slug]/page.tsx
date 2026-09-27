@@ -164,24 +164,13 @@ export default async function BlogPostPage({ params }: PageProps) {
     );
   }
 
-  // Compile attribution markdown if present
-  let AttributionContent: React.ComponentType | null = null;
-  if (post.attribution) {
-    const { default: Content } = await evaluate(post.attribution, {
-      ...runtime,
-      remarkPlugins: [remarkGfm],
-    } as any);
-    // Wrap to add target="_blank" to links
-    AttributionContent = () => (
-      <Content
-        components={{
-          a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-            <a {...props} target="_blank" rel="noopener noreferrer" />
-          ),
-        }}
-      />
-    );
-  }
+  // Compile attribution markdown (content credits and hero image credit)
+  const AttributionContent = post.attribution
+    ? await compileCreditMarkdown(post.attribution)
+    : null;
+  const ImageAttributionContent = post.image && post.imageAttribution
+    ? await compileCreditMarkdown(post.imageAttribution)
+    : null;
 
   return (
     <>
@@ -201,14 +190,21 @@ export default async function BlogPostPage({ params }: PageProps) {
                 </div>
               )}
               {post.image && (
-                <Image
-                  src={post.image.src}
-                  alt={post.image.alt}
-                  width={post.image.width || 1920}
-                  height={post.image.height || 1080}
-                  className="w-full h-auto rounded-lg my-8"
-                  priority
-                />
+                <figure className="my-8">
+                  <Image
+                    src={post.image.src}
+                    alt={post.image.alt}
+                    width={post.image.width || 1920}
+                    height={post.image.height || 1080}
+                    className="w-full h-auto rounded-lg"
+                    priority
+                  />
+                  {ImageAttributionContent && (
+                    <figcaption className="mt-2 text-right text-[11px] leading-snug text-muted-foreground/70 [&_a]:underline [&_a]:decoration-muted-foreground/30 [&_a]:underline-offset-2 [&_a:hover]:text-muted-foreground [&_p]:m-0">
+                      <ImageAttributionContent />
+                    </figcaption>
+                  )}
+                </figure>
               )}
               {toc && toc.length > 0 && (
                 <div className="lg:hidden mb-8">
@@ -235,6 +231,25 @@ export default async function BlogPostPage({ params }: PageProps) {
       <ScrollToTop />
     </>
   );
+}
+
+// Compile a short credit line of markdown; links open in a new tab
+async function compileCreditMarkdown(source: string): Promise<React.ComponentType> {
+  const { default: Content } = await evaluate(source, {
+    ...runtime,
+    remarkPlugins: [remarkGfm],
+  } as any);
+  return function CreditContent() {
+    return (
+      <Content
+        components={{
+          a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+            <a {...props} target="_blank" rel="noopener noreferrer" />
+          ),
+        }}
+      />
+    );
+  };
 }
 
 export async function generateStaticParams() {
