@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring deploy-pdf push-web-image switch-web-version swv restart backup
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring deploy-pdf push-web-image switch-web-version swv restart backup schema-pull schema-snapshot schema-diff schema-apply schema-diff-prod schema-apply-prod
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -65,3 +65,31 @@ restart:
 
 backup:
 	./scripts/backup.sh
+
+# ── Directus schema ──────────────────────────────────────────────────────────
+# A schema change is a MIGRATION, never a re-creation. docker-init.sh only
+# applies the snapshot on the first run; these targets alter it in place.
+#
+# The loop: `make schema-pull` (prod → snapshot) → `make schema-apply` (onto
+# local) → change the collection in the local Directus admin app →
+# `make schema-snapshot` → commit → `make schema-diff-prod` to read what would
+# change → `make schema-apply-prod`, before deploying the web version that
+# reads the new fields.
+
+schema-pull:
+	./deploy/scripts/schema.sh pull
+
+schema-snapshot:
+	./deploy/scripts/schema.sh snapshot local
+
+schema-diff:
+	./deploy/scripts/schema.sh diff local
+
+schema-apply:
+	./deploy/scripts/schema.sh apply local
+
+schema-diff-prod:
+	./deploy/scripts/schema.sh diff prod
+
+schema-apply-prod:
+	./deploy/scripts/schema.sh apply prod

@@ -51,7 +51,7 @@ services:
         max-file: "3"
 
   directus:
-    image: directus/directus:11
+    image: directus/directus:11.17.4
     restart: unless-stopped
     ports:
       - "127.0.0.1:8055:8055"  # Only accessible via localhost (Nginx proxy)
