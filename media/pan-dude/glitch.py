@@ -60,6 +60,12 @@ SPIN_DUR = 0.55  # s, ease-out
 # frame at the cut. Output goes to glitch-tracked.ass / glitch-tracked.filter.
 TRACKED = os.environ.get("VARIANT") == "tracked"
 SUFFIX = "-tracked" if TRACKED else ""
+
+# SCRIPT=corporate: the corporate script (corporate.GLITCH_LINES) in this same glitch look,
+# written to glitch-corporate[-tracked].ass / .filter; the censored letter is the P of PITCH
+if os.environ.get("SCRIPT") == "corporate":
+    from corporate import GLITCH_CENSOR_OFFSET as CENSOR_OFFSET, GLITCH_LINES as LINES
+    SUFFIX = "-corporate" + SUFFIX
 TRACK_X = 419
 TRACK_Y = [(33.54, 290), (33.75, 305), (34.0, 324), (34.5, 349), (35.0, 369),
            (35.5, 394), (36.0, 422), (36.5, 455), (36.92, 485)]  # (s, y), linear in between

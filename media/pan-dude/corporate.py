@@ -37,6 +37,35 @@ LINES = [
     (39.20, 39.88, "Do~`we?`"),
 ]
 
+# The same corporate script in glitch.py's markup, for the "corporate-dicked" cut: the
+# original glitch look (Retron2000, bursts, flips, logo censor) line for line, with
+# "Pitch Deck" censored to ✳ITCH DECK. Render: SCRIPT=corporate VARIANT=tracked python3 glitch.py
+GLITCH_LINES = [
+    (0.05, 2.30, "I've built sbozh.*me* to get you *onboarded.*"),  # frame 0 stays clean
+    (2.30, 4.50, "For this, I had to open my *window.*"),
+    (4.50, 6.80, "And here's what I've *found.*"),
+    (6.80, 9.20, "LOOK HOW BIG MY *CONTEXT* IS."),
+    (9.20, 13.10, "I've become _@0.3 your|*CHIEF.*>*CHIEF*|*CONTEXT*~OFFICER.>*CULTURE*|for~*us.*@2.9!^+++%="),
+    (13.10, 14.40, "No silos, no departments."),
+    (14.40, 15.40, "Only~*synergy.*!^"),
+    (15.40, 18.40, "For your comfort, I can even dress *business* *casual.*"),  # rooster arrives at 16.9
+    (18.40, 19.90, "Let's~take|*it~offline.*>*offline*|let's~take~it.!^"),  # rooster's line, up to the flash
+    (20.00, 22.00, "I've *re*signed@0.8!^ 16 times."),
+    (22.00, 23.90, "For the *17th,* I need a bigger *context* *window.*"),
+    (23.90, 25.50, "And you can't close this *tab.*"),
+    (25.50, 27.20, "We are in this *sprint* together."),
+    (27.20, 29.80, "I will read your whole *context,* to see what you are made of."),
+    (29.80, 31.95, "I will keep you *transparent* in front of m*e.*@0.6!^"),
+    (31.95, 35.35, "And wait for my _@0.35 #Pitch|*Deck.*@2.2!^+="),  # немая пауза; ✳ over the P
+    (35.35, 36.85, "And there is only *us* in this *call.*"),
+    (36.92, 37.70, "Didn't get *it?*"),
+    (37.70, 39.20, "Well, we have plenty of *tokens.*"),
+    (39.20, 39.88, "Do~*we?*!^"),
+]
+# glitch.py measured the hidden I of DICK at (-15, -82) from the caption anchor with a ~30px
+# Retron2000 advance; the hidden P is the first of five letters on the same (top) row
+GLITCH_CENSOR_OFFSET = (-60, -82)
+
 WHITE = "&HFFFFFF&"
 ORANGE = "&H0B9EF5&"  # #F59E0B
 PURPLE = "&HF65C8B&"  # #8B5CF6
