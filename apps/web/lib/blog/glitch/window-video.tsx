@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 
 import { useGlitchesEnabled } from "./window";
 import "./glitch.css";
@@ -12,10 +12,33 @@ interface WindowVideoProps {
   off: string;
   onPoster?: string;
   offPoster?: string;
+  /** Optional mobile cuts (e.g. vertical Shorts), used below the md breakpoint. */
+  mobileOn?: string;
+  mobileOff?: string;
+  mobileOnPoster?: string;
+  mobileOffPoster?: string;
   /** Accessible name for the videos. */
   title?: string;
   /** Set by remark-glitch on a `==WINDOW OFF==` page so the server renders the OFF video. */
   windowOff?: boolean;
+}
+
+/** Tailwind's md breakpoint: below it the mobile cuts play. */
+export const MOBILE_QUERY = "(max-width: 767px)";
+
+function subscribeMobile(onChange: () => void) {
+  const query = window.matchMedia?.(MOBILE_QUERY);
+  query?.addEventListener("change", onChange);
+  return () => query?.removeEventListener("change", onChange);
+}
+
+/** Server and first paint: desktop. Only the poster depends on it; the <source media> picks the file. */
+function useIsMobile() {
+  return useSyncExternalStore(
+    subscribeMobile,
+    () => window.matchMedia?.(MOBILE_QUERY).matches ?? false,
+    () => false,
+  );
 }
 
 /**
@@ -25,9 +48,25 @@ interface WindowVideoProps {
  *
  * Both stay mounted; the hidden one is paused. The cuts share their footage timeline, so
  * the one coming in picks up at the other's timestamp and only the captions change.
+ *
+ * With `mobileOn` / `mobileOff` (e.g. vertical Shorts cuts), phones get those instead. The
+ * browser picks the file from <source media> when it loads, so a phone never downloads the
+ * desktop cut; each pair must share its own timeline for the ON/OFF sync.
  */
-export function WindowVideo({ on, off, onPoster, offPoster, title, windowOff = false }: WindowVideoProps) {
+export function WindowVideo({
+  on,
+  off,
+  onPoster,
+  offPoster,
+  mobileOn,
+  mobileOff,
+  mobileOnPoster,
+  mobileOffPoster,
+  title,
+  windowOff = false,
+}: WindowVideoProps) {
   const open = useGlitchesEnabled(windowOff);
+  const mobile = useIsMobile();
   const onRef = useRef<HTMLVideoElement>(null);
   const offRef = useRef<HTMLVideoElement>(null);
   const first = useRef(true);
@@ -44,11 +83,18 @@ export function WindowVideo({ on, off, onPoster, offPoster, title, windowOff = f
     });
   }, [open]);
 
-  const video = (src: string, poster: string | undefined, active: boolean, ref: typeof onRef) => (
+  const video = (
+    src: string,
+    poster: string | undefined,
+    mobileSrc: string | undefined,
+    mobilePoster: string | undefined,
+    active: boolean,
+    ref: typeof onRef,
+  ) => (
     <video
       ref={ref}
-      src={src}
-      poster={poster}
+      src={mobileSrc ? undefined : src}
+      poster={(mobile && mobilePoster) || poster}
       hidden={!active}
       autoPlay={active}
       preload={active ? "auto" : "metadata"}
@@ -56,13 +102,20 @@ export function WindowVideo({ on, off, onPoster, offPoster, title, windowOff = f
       muted
       playsInline
       aria-label={title}
-    />
+    >
+      {mobileSrc && (
+        <>
+          <source src={mobileSrc} media={MOBILE_QUERY} />
+          <source src={src} />
+        </>
+      )}
+    </video>
   );
 
   return (
     <div className="window-video" data-window={open ? "on" : "off"}>
-      {video(on, onPoster, open, onRef)}
-      {video(off, offPoster, !open, offRef)}
+      {video(on, onPoster, mobileOn, mobileOnPoster, open, onRef)}
+      {video(off, offPoster, mobileOff, mobileOffPoster, !open, offRef)}
     </div>
   );
 }

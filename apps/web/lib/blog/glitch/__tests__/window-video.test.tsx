@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { WindowToggle, setGlitchesEnabled } from "../window";
-import { WindowVideo } from "../window-video";
+import { MOBILE_QUERY, WindowVideo } from "../window-video";
 
 let play: ReturnType<typeof vi.spyOn>;
 let pause: ReturnType<typeof vi.spyOn>;
@@ -106,5 +106,65 @@ describe("WindowVideo", () => {
     const { container } = page();
     expect(() => fireEvent.click(screen.getByRole("button"))).not.toThrow();
     expect(videos(container).off.hidden).toBe(false);
+  });
+
+  describe("mobile cuts", () => {
+    const mobilePage = () =>
+      render(
+        <WindowVideo
+          on="/on.mp4"
+          off="/off.mp4"
+          onPoster="/on.jpg"
+          offPoster="/off.jpg"
+          mobileOn="/on-9x16.mp4"
+          mobileOff="/off-9x16.mp4"
+          mobileOnPoster="/on-9x16.jpg"
+          mobileOffPoster="/off-9x16.jpg"
+        />,
+      );
+
+    const matchMedia = (matches: boolean) =>
+      vi.stubGlobal(
+        "matchMedia",
+        vi.fn(() => ({ matches, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
+      );
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("lets the browser pick the mobile or desktop file by media query", () => {
+      matchMedia(false);
+      const { on, off } = videos(mobilePage().container);
+      expect(on).not.toHaveAttribute("src");
+      const sources = Array.from(on.querySelectorAll("source"));
+      expect(sources.map((s) => [s.getAttribute("src"), s.getAttribute("media")])).toEqual([
+        ["/on-9x16.mp4", MOBILE_QUERY],
+        ["/on.mp4", null],
+      ]);
+      expect(off.querySelector("source")).toHaveAttribute("src", "/off-9x16.mp4");
+    });
+
+    it("uses the desktop posters on a wide screen", () => {
+      matchMedia(false);
+      const { on, off } = videos(mobilePage().container);
+      expect(on).toHaveAttribute("poster", "/on.jpg");
+      expect(off).toHaveAttribute("poster", "/off.jpg");
+    });
+
+    it("uses the mobile posters on a phone", () => {
+      matchMedia(true);
+      const { on, off } = videos(mobilePage().container);
+      expect(on).toHaveAttribute("poster", "/on-9x16.jpg");
+      expect(off).toHaveAttribute("poster", "/off-9x16.jpg");
+    });
+
+    it("renders the desktop poster on the server", () => {
+      const html = renderToStaticMarkup(
+        <WindowVideo on="/on.mp4" off="/off.mp4" onPoster="/on.jpg" mobileOn="/m.mp4" mobileOnPoster="/m.jpg" />,
+      );
+      expect(html).toContain('poster="/on.jpg"');
+      expect(html).toContain('media="(max-width: 767px)"');
+    });
   });
 });
