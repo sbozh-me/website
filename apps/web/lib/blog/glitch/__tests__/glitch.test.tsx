@@ -253,6 +253,40 @@ describe("Glitch", () => {
       expect(colour(container)).toBe("var(--glitch-red)");
     });
 
+    it("links are teal with the underline marker; a picked colour still wins", () => {
+      const { container } = render(
+        <Glitch rng={seeded(1)}>
+          <GlitchState link>билета</GlitchState>
+          <GlitchState link color="red">
+            ticket
+          </GlitchState>
+        </Glitch>,
+      );
+      expect(colour(container)).toBe("var(--glitch-echo)");
+      expect(main(container).hasAttribute("data-link")).toBe(true);
+      setVisible(true);
+      advance(4 * (1000 / 24) + 1);
+      expect(visibleText(container)).toBe("ticket");
+      expect(colour(container)).toBe("var(--glitch-red)");
+      expect(main(container).hasAttribute("data-link")).toBe(true);
+    });
+
+    it("only a linked state gets the underline", () => {
+      const { container } = render(
+        <Glitch rng={seeded(1)}>
+          <GlitchState>склад</GlitchState>
+          <GlitchState link>
+            <a href="/projects/tecraft">Tecraft</a>
+          </GlitchState>
+        </Glitch>,
+      );
+      expect(main(container).hasAttribute("data-link")).toBe(false);
+      setVisible(true);
+      advance(4 * (1000 / 24) + 1);
+      expect(main(container).hasAttribute("data-link")).toBe(true);
+      expect(main(container).querySelector("a")?.getAttribute("href")).toBe("/projects/tecraft");
+    });
+
     it("ignores unknown colours", () => {
       const { container } = render(
         <Glitch>

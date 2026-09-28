@@ -12,6 +12,8 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   ==LOL|No||yes==     -> <GlitchState plain>         `||` state looks like the article text
  *   ==||yes|No==        -> plain base: reads as normal text until it glitches
  *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red prefix picks a colour
+ *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
+ *   ==a|[b](url)==      -> only the state holding the link is a link
  *   ==text==            -> <mark>                      plain Obsidian highlight
  *
  * Works on the mdast (not the raw string), so code, inline code and URLs are never touched.
@@ -102,7 +104,9 @@ function transformHighlights(node: Nodes) {
 
   const children = node.children as PhrasingContent[];
   if (!children.some((child) => child.type === "text" && MARK.test(child.value))) return;
-  node.children = pairMarks(tokenize(children));
+  // `[==a|b==](url)`: every state of a glitch inside a link is a link
+  const inLink = node.type === "link" || node.type === "linkReference";
+  node.children = pairMarks(tokenize(children), inLink);
 }
 
 function tokenize(children: PhrasingContent[]): Token[] {
@@ -129,7 +133,7 @@ function tokenize(children: PhrasingContent[]): Token[] {
   return tokens;
 }
 
-function pairMarks(tokens: Token[]): PhrasingContent[] {
+function pairMarks(tokens: Token[], inLink: boolean): PhrasingContent[] {
   const out: PhrasingContent[] = [];
   let openAt = -1;
 
@@ -141,7 +145,7 @@ function pairMarks(tokens: Token[]): PhrasingContent[] {
       else out.push(text("=="));
     } else if (token.canClose) {
       const inner = out.splice(openAt);
-      out.push(...(buildHighlight(inner) ?? [text("=="), ...inner, text("==")]));
+      out.push(...(buildHighlight(inner, inLink) ?? [text("=="), ...inner, text("==")]));
       openAt = -1;
     } else if (token.canOpen) {
       out.splice(openAt, 0, text("=="));
@@ -162,7 +166,7 @@ interface State {
   color?: string;
 }
 
-function buildHighlight(inner: PhrasingContent[]): PhrasingContent[] | null {
+function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingContent[] | null {
   const states = splitStates(inner);
   states.forEach((state) => (state.nodes = trimState(state.nodes)));
   // A leading `||` makes the base itself plain: `==||yes|No==`
@@ -199,6 +203,7 @@ function buildHighlight(inner: PhrasingContent[]): PhrasingContent[] | null {
         jsx("GlitchState", nodes, [
           ...(color ? [attribute("color", color)] : []),
           ...(plain ? [attribute("plain")] : []),
+          ...(inLink || nodes.some(isLink) ? [attribute("link")] : []),
         ]),
       ),
       blink ? [attribute("blink")] : [],
@@ -266,6 +271,10 @@ function jsx(
   attributes: MdxJsxAttribute[] = [],
 ): MdxJsxTextElement {
   return { type: "mdxJsxTextElement", name, attributes, children };
+}
+
+function isLink(node: PhrasingContent) {
+  return node.type === "link" || node.type === "linkReference";
 }
 
 /** JSX attribute; without a value it's a boolean `name` (true). */

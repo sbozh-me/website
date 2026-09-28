@@ -46,6 +46,8 @@ interface StateStyle {
   color: string;
   /** Article font and colour instead of the glitch weight; no resting notch. */
   plain: boolean;
+  /** Is (or holds) a link: teal by default, big overhanging underline. */
+  link: boolean;
 }
 
 interface EngineProps {
@@ -220,6 +222,7 @@ function GlitchEngine({
       } as CSSProperties)),
   });
   const plain = (style?: StateStyle) => (style?.plain ? "" : undefined);
+  const link = shown?.link ? "" : undefined;
   const content = renderState(state);
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
   const cover = mode === "return" && state !== 0 && !look ? "" : undefined;
@@ -243,6 +246,7 @@ function GlitchEngine({
             <span
               className="glitch-copy glitch-echo"
               data-plain={plain(shown)}
+              data-link={link}
               style={move(current.dx + current.echo, current.dy + 2)}
             >
               {content}
@@ -250,6 +254,7 @@ function GlitchEngine({
             <span
               className="glitch-copy glitch-echo glitch-echo-dark"
               data-plain={plain(shown)}
+              data-link={link}
               style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
             >
               {content}
@@ -262,6 +267,7 @@ function GlitchEngine({
           className="glitch-copy"
           data-tone={current.tone}
           data-plain={plain(shown)}
+          data-link={link}
           data-cover={cover}
           style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
         >
@@ -273,6 +279,7 @@ function GlitchEngine({
             className="glitch-copy"
             data-tone={current.tone}
             data-plain={plain(shown)}
+            data-link={link}
             data-cover={cover}
             style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
           >
@@ -297,6 +304,8 @@ interface GlitchStateProps {
   color?: string;
   /** Shown in the article's own font and colour (`||` in the syntax). */
   plain?: boolean;
+  /** Is a link or holds one. */
+  link?: boolean;
 }
 
 /** One meaning of a glitch word; `==base|alt==` makes two. */
@@ -305,9 +314,15 @@ export function GlitchState({ children }: GlitchStateProps) {
 }
 
 function stateStyle(state: ReactNode, index: number): StateStyle {
-  const { color, plain = false } = isValidElement<GlitchStateProps>(state) ? state.props : {};
-  const fallback = plain ? "var(--glitch-plain)" : index === 0 ? GLITCH_COLORS.purple : GLITCH_COLORS.gold;
-  return { color: (color && GLITCH_COLORS[color]) || fallback, plain };
+  const { color, plain = false, link = false } = isValidElement<GlitchStateProps>(state) ? state.props : {};
+  const fallback = link
+    ? GLITCH_COLORS.teal
+    : plain
+      ? "var(--glitch-plain)"
+      : index === 0
+        ? GLITCH_COLORS.purple
+        : GLITCH_COLORS.gold;
+  return { color: (color && GLITCH_COLORS[color]) || fallback, plain, link };
 }
 
 /** A word that glitches into its other meanings and back: `==себя|US==`, `==a|b|c==`. */

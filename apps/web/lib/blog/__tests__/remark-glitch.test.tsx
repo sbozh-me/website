@@ -14,8 +14,22 @@ const components = {
   DickPitch: () => createElement("c-brand"),
   Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) =>
     createElement("c-glitch", { "data-blink": blink ? "" : undefined }, children),
-  GlitchState: ({ children, color, plain }: { children: ReactNode; color?: string; plain?: boolean }) =>
-    createElement("c-state", { "data-color": color, "data-plain": plain ? "" : undefined }, children),
+  GlitchState: ({
+    children,
+    color,
+    plain,
+    link,
+  }: {
+    children: ReactNode;
+    color?: string;
+    plain?: boolean;
+    link?: boolean;
+  }) =>
+    createElement(
+      "c-state",
+      { "data-color": color, "data-plain": plain ? "" : undefined, "data-link": link ? "" : undefined },
+      children,
+    ),
 };
 
 async function render(source: string) {
@@ -160,6 +174,24 @@ describe("remarkGlitch", () => {
 
     it("a colour prefix alone is an empty state", async () => {
       expect(await render("==a|teal:==")).toBe("<p>==a|teal:==</p>");
+    });
+
+    it("marks every state of a glitch inside a link", async () => {
+      expect(await render("без [==билета|red:ticket==](/blog/x) ты")).toBe(
+        '<p>без <a href="/blog/x"><c-glitch>' +
+          '<c-state data-link="">билета</c-state>' +
+          '<c-state data-color="red" data-link="">ticket</c-state>' +
+          "</c-glitch></a> ты</p>",
+      );
+    });
+
+    it("marks only the state that holds a link", async () => {
+      expect(await render("на ==склад|[Tecraft](/projects/tecraft)== и")).toBe(
+        "<p>на <c-glitch>" +
+          "<c-state>склад</c-state>" +
+          '<c-state data-link=""><a href="/projects/tecraft">Tecraft</a></c-state>' +
+          "</c-glitch> и</p>",
+      );
     });
 
     it("leaves an empty state as literal text", async () => {
