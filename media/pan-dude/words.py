@@ -36,8 +36,8 @@ LINES = [
     (22.00, 23.90, "For the *17th,* I need an *audience.*"),
     (23.90, 25.50, "And you can't run away from *me.*"),
     (25.50, 27.20, "We are locked here *together* forever."),
-    (27.20, 29.95, "I will go *deep* inside of you, to see what you are made of."),
-    (29.95, 31.95, "I will make you stay *naked* in front of me."),
+    (27.20, 29.80, "I will go *deep* inside of you, to see what you are made of."),
+    (29.80, 31.95, "I will make you stay *naked* in front of m*e.*@0.6!^"),
     (31.95, 35.35, "And wait for my _@0.35 D#ick|*Pitch.*@2.2!^+="),  # немая пауза
     (35.35, 36.85, "And there are only *us* to see *it.*"),
     (36.92, 37.70, "Didn't get *it?*"),

@@ -8,6 +8,7 @@ Every event starts/ends on a 24fps frame boundary so nothing flickers.
 """
 
 import math
+import os
 import random
 import re
 from pathlib import Path
@@ -49,9 +50,32 @@ REFLIP_HOLD = 0.45  # s a ">" state holds before the next flip
 CENSOR_OFFSET = (-15, -82)
 CENSOR_SIZE = 34  # logo itself; logo-outlined.png (from logo.py) adds a border around it
 LOGO_BORDER = 226 / 192  # outlined image side / logo side
+# On the flip the logo spins pi turns and lands wherever pi leaves it (0.14 turn off)
+SPIN_TURNS = 3.14
+SPIN_DUR = 0.55  # s, ease-out
+
+# VARIANT=tracked: the "#" caption is stuck to the scene instead of the screen. The logo sits
+# on this point (measured on the frames: where the figure's torso meets the seat backs) and
+# the caption, at constant size, rides it down as the camera pushes in until it leaves the
+# frame at the cut. Output goes to glitch-tracked.ass / glitch-tracked.filter.
+TRACKED = os.environ.get("VARIANT") == "tracked"
+SUFFIX = "-tracked" if TRACKED else ""
+TRACK_X = 419
+TRACK_Y = [(33.54, 290), (33.75, 305), (34.0, 324), (34.5, 349), (35.0, 369),
+           (35.5, 394), (36.0, 422), (36.5, 455), (36.92, 485)]  # (s, y), linear in between
+TRACK_UNTIL = 36.92  # the cut to the hooded guy
 
 rng = random.Random(25)
 burst_params = {}  # frame -> (scale, dx, dy) of the main copy, for the logo to follow
+
+
+def track_point(fr):
+    """Tracked scene point at frame fr (held before the first key)."""
+    t = fr / FPS
+    for (t0, y0), (t1, y1) in zip(TRACK_Y, TRACK_Y[1:]):
+        if t <= t1:
+            return TRACK_X, y0 + (y1 - y0) * max(0.0, (t - t0) / (t1 - t0))
+    return TRACK_X, TRACK_Y[-1][1]
 
 
 def ts(frame):
@@ -88,18 +112,23 @@ def event(layer, f0, f1, tags, text):
     return f"Dialogue: {layer},{ts(f0)},{ts(f1)},Glitch,,0,0,0,,{{{tags}}}{censor(text)}"
 
 
-def rest(f0, f1, text, y, rows, base, accent):
-    """Calm caption with notched slices."""
+def notches(y, rows):
+    """Random resting slices relative to the anchor: [(top, bottom, dx)]."""
+    return [(a - y, b - y, rng.choice([-4, -3, 3, 4])) for a, b in bands(2 * rows, 4, y, rows)]
+
+
+def rest(f0, f1, text, y, rows, base, accent, x=X, cuts=None):
+    """Calm caption with notched slices (`cuts` keeps the same slices on a moving caption)."""
     painted = paint(text, base, accent)
-    strips = bands(2 * rows, 4, y, rows)
-    out = [event(2, f0, f1, rf"\an2\pos({X},{y})\1c{base}\iclip({clip_path(strips)})", painted)]
-    for a, b in strips:
-        dx = rng.choice([-4, -3, 3, 4])
-        out.append(event(3, f0, f1, rf"\an2\pos({X + dx},{y})\1c{base}\clip(0,{a},{W},{b})", painted))
+    cuts = cuts or notches(y, rows)
+    strips = [(y + a, y + b) for a, b, _ in cuts]
+    out = [event(2, f0, f1, rf"\an2\pos({x},{y})\1c{base}\iclip({clip_path(strips)})", painted)]
+    for (a, b), (_, _, dx) in zip(strips, cuts):
+        out.append(event(3, f0, f1, rf"\an2\pos({x + dx},{y})\1c{base}\clip(0,{a},{W},{b})", painted))
     return out
 
 
-def burst_frame(f, text, y, rows, base, accent):
+def burst_frame(f, text, y, rows, base, accent, x=X):
     """One frame of a glitch burst. Echoes are flat colour; the main copy keeps its accents."""
     plain = text.replace("*", "")
     scale = rng.randint(110, 128)
@@ -113,15 +142,15 @@ def burst_frame(f, text, y, rows, base, accent):
     size = rf"\fscx{scale}\fscy{scale}"
     strips = bands(3 * rows, 7, y, rows)
     out = [
-        event(0, f, f + 1, rf"\an2\pos({X + dx + echo},{y + dy + 2}){size}\1c{ECHO}\3c{ECHO}", plain),
-        event(1, f, f + 1, rf"\an2\pos({X + dx - echo // 2},{y + dy + 3}){size}\1c{OBSIDIAN}", plain),
+        event(0, f, f + 1, rf"\an2\pos({x + dx + echo},{y + dy + 2}){size}\1c{ECHO}\3c{ECHO}", plain),
+        event(1, f, f + 1, rf"\an2\pos({x + dx - echo // 2},{y + dy + 3}){size}\1c{OBSIDIAN}", plain),
         event(2, f, f + 1,
-              rf"\an2\pos({X + dx},{y + dy}){size}\1c{main_fill}\3c{main_bord}\iclip({clip_path(strips)})", painted),
+              rf"\an2\pos({x + dx},{y + dy}){size}\1c{main_fill}\3c{main_bord}\iclip({clip_path(strips)})", painted),
     ]
     for a, b in strips:
         sx = rng.choice([-1, 1]) * rng.randint(5, 12)
         out.append(event(3, f, f + 1,
-                         rf"\an2\pos({X + dx + sx},{y + dy}){size}\1c{main_fill}\3c{main_bord}\clip(0,{a},{W},{b})",
+                         rf"\an2\pos({x + dx + sx},{y + dy}){size}\1c{main_fill}\3c{main_bord}\clip(0,{a},{W},{b})",
                          painted))
     return out
 
@@ -132,6 +161,9 @@ for line in LINES:
     for c in captions(*line):
         c.f0, c.f1 = round(c.t0 * FPS), round(c.t1 * FPS)
         c.text, c.after = c.text.upper(), [a.upper() for a in c.after]
+        c.tracked = TRACKED and "#" in c.text
+        if c.tracked:
+            c.f1 = round(TRACK_UNTIL * FPS)  # ride the zoom until it has left the frame
         words.append(c)
 
 # Global burst schedule (frame -> True) independent of word boundaries
@@ -211,6 +243,17 @@ def fade_in_words(c, text):
     return "".join(w + sep for w, sep in zip(out, parts[1::2] + [""]))
 
 
+def faded_words_at(c, text, fr):
+    """fade_in_words frozen at frame fr, for captions drawn one event per frame."""
+    ms = (fr - c.f0) * 1000 / FPS
+    parts = re.split(r"( |\\N)", text)
+    out = []
+    for i, (word, a) in enumerate(zip(parts[::2], reveal_starts(c))):
+        p = 1.0 if i == 0 and c.instant_first else min(1.0, max(0.0, (ms - a) / REVEAL_FADE))
+        out.append(rf"{{\alpha&H{round(255 * (1 - p)):02X}&}}{word}")
+    return "".join(w + sep for w, sep in zip(out, parts[1::2] + [""]))
+
+
 def flips_done(c, fr):
     """How many flips a "^" caption has gone through at frame fr. Each flip flickers
     new, old, new, new... and then stays on the new state."""
@@ -234,40 +277,50 @@ def state(c, fr):
     return (text, GOLD_C, AMETHYST) if n % 2 else (text, AMETHYST, GOLD_C)
 
 
+def spin_angle(c, fr):
+    """Logo rotation (degrees, clockwise) at frame fr: from the first flip it spins
+    SPIN_TURNS turns, easing out over SPIN_DUR, and lands 0.14 of a turn off square."""
+    if not getattr(c, "flips", None) or fr < c.flips[0]:
+        return 0.0
+    p = min(1.0, (fr - c.flips[0]) / (SPIN_DUR * FPS))
+    return 360 * SPIN_TURNS * (1 - (1 - p) ** 3)
+
+
 def logo_filter(censored):
     """ffmpeg filtergraph: burn glitch.ass into [0:v], then put the logo ([1:v]) over each
-    hidden letter. It fades in with a "+" caption, follows burst jitter/scale, and turns
-    180 degrees whenever the caption is swapped (its purple/gold halves swap too)."""
-    # (first_frame, last_frame, x, y, size, rotated, fade_in_start_s)
+    hidden letter. It fades in with a "+" caption, follows burst jitter/scale, and spins
+    into place when the caption flips."""
+    base = round(CENSOR_SIZE * LOGO_BORDER)
+    # per frame (x, y, size, angle), merged into runs: (first, last, x, y, size, angle, fade_s)
     shots = []
-    for c, y in censored:
-        cx, cy = X + CENSOR_OFFSET[0], y + CENSOR_OFFSET[1]
-        run = c.f0
-        for fr in range(c.f0, c.f1 + 1):
-            if fr == c.f1 or fr in burst_params:
-                if fr > run:
-                    # the text's fade clock starts at the event, i.e. on frame f0
-                    fade = c.f0 / FPS if c.reveal and not c.glitch_in and run == c.f0 else None
-                    # a calm run never straddles a flip: flip frames are bursts
-                    shots.append((run, fr - 1, cx, cy, round(CENSOR_SIZE * LOGO_BORDER),
-                                  swapped(c, run), fade))
-                if fr < c.f1:
-                    s, dx, dy = burst_params[fr]
-                    bx, by = X + dx + (cx - X) * s, y + dy + (cy - y) * s
-                    shots.append((fr, fr, bx, by, round(CENSOR_SIZE * LOGO_BORDER * s),
-                                  swapped(c, fr), None))
-                run = fr + 1
+    for c in censored:
+        for fr in range(c.f0, c.f1):
+            x, y = c.anchor(fr)
+            cx, cy = x + CENSOR_OFFSET[0], y + CENSOR_OFFSET[1]
+            if fr in burst_params:
+                s, dx, dy = burst_params[fr]
+                look = (round(x + dx + (cx - x) * s), round(y + dy + (cy - y) * s),
+                        round(base * s), round(spin_angle(c, fr), 1))
+            else:
+                look = (cx, cy, base, round(spin_angle(c, fr), 1))
+            if shots and shots[-1][1] == fr - 1 and shots[-1][2:6] == look:
+                shots[-1] = (shots[-1][0], fr, *look, shots[-1][6])
+            else:
+                # the text's fade clock starts at the event, i.e. on frame f0
+                fade = fr / FPS if c.reveal and not c.glitch_in and fr == c.f0 else None
+                shots.append((fr, fr, *look, fade))
 
-    lines = [f"[0:v]ass=glitch.ass:fontsdir=.[v0]",
+    lines = [f"[0:v]ass=glitch{SUFFIX}.ass:fontsdir=.[v0]",
              f"[1:v]format=rgba,split={len(shots)}" + "".join(f"[l{i}]" for i in range(len(shots)))]
-    for i, (a, b, x, y, size, rot, fade) in enumerate(shots):
+    for i, (a, b, x, y, size, angle, fade) in enumerate(shots):
         chain = f"scale={size}:{size}"
-        if rot:
-            chain += ",hflip,vflip"
+        if angle:
+            chain += f",rotate=a={math.radians(angle):.5f}:ow=hypot(iw\\,ih):oh=ow:c=none"
         if fade is not None:
             chain += f",fade=t=in:st={fade:.3f}:d={REVEAL_FADE / 1000}:alpha=1"
         lines.append(f"[l{i}]{chain}[s{i}]")
-        lines.append(f"[v{i}][s{i}]overlay=x={round(x - size / 2)}:y={round(y - size / 2)}"
+        # centre on (x, y) whatever size the rotated canvas ended up
+        lines.append(f"[v{i}][s{i}]overlay=x={x}-overlay_w/2:y={y}-overlay_h/2"
                      f":shortest=1:enable='between(n,{a},{b})'[v{i + 1}]")
     lines[-1] = lines[-1].rsplit("[", 1)[0] + "[out]"
     return ";\n".join(lines) + "\n"
@@ -283,7 +336,28 @@ for c in words:
     if LOWER_FROM - 0.01 <= c.t0 < LOWER_UNTIL - 0.01:
         y += LOWER_BY
     if "#" in c.text:
-        censored.append((c, y))
+        censored.append(c)
+
+    if c.tracked:
+        # anchor so the censored letter sits on the tracked point
+        def anchor(fr):
+            tx, ty = track_point(fr)
+            return round(tx - CENSOR_OFFSET[0]), round(ty - CENSOR_OFFSET[1])
+        c.anchor = anchor
+        cuts = notches(y, rows)  # same resting slices all the way down
+        for fr in range(c.f0, c.f1):
+            ax, ay = anchor(fr)
+            text, base, accent = state(c, fr)
+            if fr in burst:
+                events += burst_frame(fr, hide_pending(c, text, fr), ay, rows, base, accent, x=ax)
+            else:
+                if c.reveal and not c.glitch_in:
+                    text = faded_words_at(c, text, fr)
+                events += rest(fr, fr + 1, hide_pending(c, text, fr), ay, rows, base, accent,
+                               x=ax, cuts=cuts)
+        continue
+
+    c.anchor = lambda fr, y=y: (X, y)
     # Split the caption's span into calm runs and burst frames
     run = c.f0
     for fr in range(c.f0, c.f1 + 1):
@@ -312,8 +386,8 @@ Style: Glitch,Retron2000,{SIZE},&H00F65C8B,&H00F65C8B,&H000F0A0A,&H00000000,0,0,
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
-out = Path(__file__).with_name("glitch.ass")
+out = Path(__file__).with_name(f"glitch{SUFFIX}.ass")
 out.write_text(header + "\n".join(events) + "\n")
-Path(__file__).with_name("glitch.filter").write_text(logo_filter(censored))
+Path(__file__).with_name(f"glitch{SUFFIX}.filter").write_text(logo_filter(censored))
 print(len(words), "words,", len(burst), "burst frames,", len(events), "events,",
       len(censored), "censored")
