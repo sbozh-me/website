@@ -66,6 +66,8 @@ interface EngineProps {
   windowOff?: boolean;
   /** `===a|b===`: keeps glitching whatever the window switch says. */
   unclosable?: boolean;
+  /** `==|text==`: only there while the window is ON; gone when it's OFF. */
+  windowOnly?: boolean;
   className?: string;
   rng?: Rng;
 }
@@ -91,6 +93,7 @@ function GlitchEngine({
   blink = false,
   windowOff = false,
   unclosable = false,
+  windowOnly = false,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -264,7 +267,7 @@ function GlitchEngine({
       onClick={() => play("flip")}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}
-      {on ? renderLayers() : renderState(mode === "toggle" ? state : 0)}
+      {on ? renderLayers() : windowOnly ? null : renderState(mode === "toggle" ? state : 0)}
     </span>
   );
 
@@ -367,12 +370,14 @@ export function Glitch({
   blink = false,
   windowOff = false,
   unclosable = false,
+  windowOnly = false,
   rng,
 }: {
   children?: ReactNode;
   blink?: boolean;
   windowOff?: boolean;
   unclosable?: boolean;
+  windowOnly?: boolean;
   rng?: Rng;
 }) {
   const states = Children.toArray(children);
@@ -388,6 +393,7 @@ export function Glitch({
       blink={blink}
       windowOff={windowOff}
       unclosable={unclosable}
+      windowOnly={windowOnly}
       rng={rng}
     />
   );

@@ -21,11 +21,13 @@ const components = {
     blink,
     windowOff,
     unclosable,
+    windowOnly,
     children,
   }: {
     blink?: boolean;
     windowOff?: boolean;
     unclosable?: boolean;
+    windowOnly?: boolean;
     children: ReactNode;
   }) =>
     createElement(
@@ -34,6 +36,7 @@ const components = {
         "data-blink": blink ? "" : undefined,
         "data-window-off": windowOff ? "" : undefined,
         "data-unclosable": unclosable ? "" : undefined,
+        "data-window-only": windowOnly ? "" : undefined,
       },
       children,
     ),
@@ -272,6 +275,31 @@ describe("remarkGlitch", () => {
     it("only in capitals", async () => {
       expect(await render("==window==")).toBe("<p><mark>window</mark></p>");
       expect(await render("==Window Off==")).toBe("<p><mark>Window Off</mark></p>");
+    });
+  });
+
+  describe("==|text== window-only", () => {
+    it("a leading | makes a one-state glitch that needs the window", async () => {
+      expect(await render("Для себя ==|(и для Дарио)==.")).toBe(
+        '<p>Для себя <c-glitch data-window-only=""><c-state>(и для Дарио)</c-state></c-glitch>.</p>',
+      );
+    });
+
+    it("keeps further states, colours and blink", async () => {
+      expect(await render("==|teal:a|b!==")).toBe(
+        '<p><c-glitch data-blink="" data-window-only=""><c-state data-color="teal">a</c-state><c-state>b</c-state></c-glitch></p>',
+      );
+    });
+
+    it("a leading || is still the plain base, not hidden", async () => {
+      expect(await render("==||yes|No==")).toBe(
+        '<p><c-glitch><c-state data-plain="">yes</c-state><c-state>No</c-state></c-glitch></p>',
+      );
+    });
+
+    it("needs some text", async () => {
+      expect(await render("==|==")).toBe("<p>==|==</p>");
+      expect(await render("==| |x==")).toBe("<p>==| |x==</p>");
     });
   });
 

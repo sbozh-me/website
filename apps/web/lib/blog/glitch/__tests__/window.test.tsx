@@ -229,6 +229,52 @@ describe("WindowToggle", () => {
     });
   });
 
+  describe("window-only text (==|text==)", () => {
+    function hiddenPage(windowOff = false) {
+      return render(
+        <p>
+          <WindowToggle off={windowOff} />
+          Для себя{" "}
+          <Glitch windowOnly windowOff={windowOff} rng={seeded(1)}>
+            <GlitchState>(и для Дарио)</GlitchState>
+          </Glitch>
+          .
+        </p>,
+      );
+    }
+
+    it("is there, glitching, while the window is ON", () => {
+      const { container } = hiddenPage();
+      expect(glitch(container).querySelector(".glitch-layers")).not.toBeNull();
+      expect(container.querySelector(".glitch-sizer")?.textContent).toBe("(и для Дарио)");
+      setVisible(true);
+      expect(glitch(container)).toHaveAttribute("data-bursting");
+    });
+
+    it("disappears with the window OFF and comes back ON", () => {
+      const { container } = hiddenPage();
+      fireEvent.click(button());
+      expect(glitch(container)).toHaveAttribute("data-off");
+      expect(glitch(container).textContent).toBe("");
+      expect(container.querySelector("p")?.textContent).not.toContain("Дарио");
+
+      fireEvent.click(button());
+      expect(container.querySelector("p")?.textContent).toContain("(и для Дарио)");
+    });
+
+    it("isn't in the server HTML of a ==WINDOW OFF== page", () => {
+      const html = renderToStaticMarkup(
+        <p>
+          <WindowToggle off />
+          <Glitch windowOnly windowOff>
+            <GlitchState>(и для Дарио)</GlitchState>
+          </Glitch>
+        </p>,
+      );
+      expect(html).not.toContain("Дарио");
+    });
+  });
+
   it("an unclosable glitch ignores the window", () => {
     const { container } = render(
       <p>

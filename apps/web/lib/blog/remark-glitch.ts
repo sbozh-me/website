@@ -15,6 +15,7 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
  *   ===a|b===           -> <Glitch unclosable>         keeps glitching with the window OFF
+ *   ==|text==           -> <Glitch windowOnly>         only there while the window is ON
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
  *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
@@ -207,9 +208,12 @@ function buildHighlight(
   states.forEach((state) => (state.nodes = trimState(state.nodes)));
   // A leading `||` makes the base itself plain: `==||yes|No==`
   if (states.length > 2 && states[0].nodes.length === 0 && states[1].plain) states.shift();
+  // A leading `|` hides the whole word while the window is closed: `==|(и для Дарио)==`
+  const windowOnly = states.length > 1 && states[0].nodes.length === 0 && !states[1].plain;
+  if (windowOnly) states.shift();
   if (states.some((state) => state.nodes.length === 0)) return null;
 
-  if (states.length === 1) {
+  if (states.length === 1 && !windowOnly) {
     const plainText = toPlainText(states[0].nodes).trim();
     if (BRAND.test(plainText)) return [jsx("DickPitch", [], unclosable ? [attribute("unclosable")] : [])];
     if (plainText === WINDOW) return [jsx("WindowToggle")];
@@ -245,7 +249,11 @@ function buildHighlight(
           ...(inLink || nodes.some(isLink) ? [attribute("link")] : []),
         ]),
       ),
-      [...(blink ? [attribute("blink")] : []), ...(unclosable ? [attribute("unclosable")] : [])],
+      [
+        ...(blink ? [attribute("blink")] : []),
+        ...(unclosable ? [attribute("unclosable")] : []),
+        ...(windowOnly ? [attribute("windowOnly")] : []),
+      ],
     ),
   ];
 }
