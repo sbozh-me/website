@@ -169,6 +169,66 @@ describe("WindowToggle", () => {
     expect(glitch(container).querySelector(".glitch-layers")).not.toBeNull();
   });
 
+  describe("W hotkey", () => {
+    const press = (init: KeyboardEventInit, target: EventTarget = document.body) =>
+      act(() => void target.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, ...init })));
+
+    it("toggles the window, on any keyboard layout", () => {
+      const { container } = page();
+      expect(button()).toHaveAttribute("aria-keyshortcuts", "W");
+      press({ code: "KeyW", key: "w" });
+      expect(button()).toHaveTextContent("Window OFF");
+      expect(glitch(container)).toHaveAttribute("data-off");
+      press({ code: "KeyW", key: "ц" });
+      expect(button()).toHaveTextContent("Window ON");
+      press({ code: "KeyW", key: "W", shiftKey: true });
+      expect(button()).toHaveTextContent("Window OFF");
+    });
+
+    it("starts from OFF on a ==WINDOW OFF== page", () => {
+      render(<WindowToggle off />);
+      press({ code: "KeyW", key: "w" });
+      expect(button()).toHaveTextContent("Window ON");
+    });
+
+    it("ignores other keys, shortcuts, held keys and typing", () => {
+      render(
+        <>
+          <WindowToggle />
+          <input aria-label="search" />
+        </>,
+      );
+      press({ code: "KeyQ", key: "q" });
+      press({ code: "KeyW", key: "w", ctrlKey: true });
+      press({ code: "KeyW", key: "w", metaKey: true });
+      press({ code: "KeyW", key: "w", altKey: true });
+      press({ code: "KeyW", key: "w", repeat: true });
+      press({ code: "KeyW", key: "w" }, screen.getByLabelText("search"));
+      expect(button()).toHaveTextContent("Window ON");
+    });
+
+    it("flips once with two toggles on the page, and stops when they're gone", () => {
+      const { unmount } = render(
+        <>
+          <WindowToggle />
+          <WindowToggle />
+        </>,
+      );
+      press({ code: "KeyW", key: "w" });
+      screen.getAllByRole("button").forEach((b) => expect(b).toHaveTextContent("Window OFF"));
+      unmount();
+
+      const { container } = render(
+        <Glitch>
+          <GlitchState>a</GlitchState>
+          <GlitchState>b</GlitchState>
+        </Glitch>,
+      );
+      press({ code: "KeyW", key: "w" });
+      expect(glitch(container)).not.toHaveAttribute("data-off");
+    });
+  });
+
   it("opens the window again when the page goes away", () => {
     const { unmount } = page();
     fireEvent.click(button());

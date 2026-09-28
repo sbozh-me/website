@@ -34,21 +34,53 @@ export function useGlitchesEnabled(windowOff = false) {
   return useSyncExternalStore(subscribe, snapshot, snapshot);
 }
 
+// W hotkey: one keydown listener per page, however many toggles it has, so a press
+// can't flip the window twice.
+let mountedToggles = 0;
+let pageStartsOff = false;
+
+function isTyping(target: EventTarget | null) {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+  );
+}
+
+function onKeyDown(event: KeyboardEvent) {
+  // event.code is the physical key: W on a Latin layout, Ц on a Cyrillic one
+  if (event.code !== "KeyW" || event.repeat || event.defaultPrevented) return;
+  if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) return;
+  setGlitchesEnabled(!(enabled ?? !pageStartsOff));
+}
+
 /**
- * `==WINDOW==` in a post: "Window ON" / "Window OFF". `==WINDOW OFF==` (`off`) starts
- * the page with the window closed, so the reader switches the glitches on.
+ * `==WINDOW==` in a post: "Window ON" / "Window OFF", also toggled with the W key.
+ * `==WINDOW OFF==` (`off`) starts the page with the window closed, so the reader
+ * switches the glitches on.
  */
 export function WindowToggle({ off = false }: { off?: boolean }) {
   const on = useGlitchesEnabled(off);
 
-  // Leaving the page goes back to the default for the next post
-  useEffect(() => () => setGlitchesEnabled(null), []);
+  useEffect(() => {
+    if (off) pageStartsOff = true;
+    if (mountedToggles++ === 0) window.addEventListener("keydown", onKeyDown);
+    return () => {
+      if (--mountedToggles === 0) {
+        window.removeEventListener("keydown", onKeyDown);
+        pageStartsOff = false;
+      }
+      // Leaving the page goes back to the default for the next post
+      setGlitchesEnabled(null);
+    };
+  }, [off]);
 
   return (
     <Button
       variant="outline"
       size="sm"
       aria-pressed={on}
+      aria-keyshortcuts="W"
+      title="Hotkey: W"
       className="window-toggle mx-1 align-middle font-mono"
       onClick={() => setGlitchesEnabled(!on)}
     >
