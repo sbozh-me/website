@@ -253,6 +253,16 @@ describe("Glitch", () => {
       expect(colour(container)).toBe("var(--glitch-red)");
     });
 
+    it("supports pink", () => {
+      const { container } = render(
+        <Glitch>
+          <GlitchState color="pink">летающую свинью</GlitchState>
+          <GlitchState>Flying pig</GlitchState>
+        </Glitch>,
+      );
+      expect(colour(container)).toBe("var(--glitch-pink)");
+    });
+
     it("links are teal with the underline marker; a picked colour still wins", () => {
       const { container } = render(
         <Glitch rng={seeded(1)}>
@@ -290,7 +300,7 @@ describe("Glitch", () => {
     it("ignores unknown colours", () => {
       const { container } = render(
         <Glitch>
-          <GlitchState color="pink">a</GlitchState>
+          <GlitchState color="blue">a</GlitchState>
           <GlitchState>b</GlitchState>
         </Glitch>,
       );

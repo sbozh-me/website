@@ -11,7 +11,7 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   ==base|alt!==       -> <Glitch blink>              blinks repeatedly
  *   ==LOL|No||yes==     -> <GlitchState plain>         `||` state looks like the article text
  *   ==||yes|No==        -> plain base: reads as normal text until it glitches
- *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red prefix picks a colour
+ *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red/pink picks a colour
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
@@ -30,7 +30,7 @@ const BRAND = /^d\(;\)ck\s+pitch$/i;
 const WINDOW = "WINDOW";
 const WINDOW_OFF = "WINDOW OFF";
 /** `teal:Window` picks a state's colour (see GLITCH_COLORS in glitch/glitch.tsx). */
-const COLOR_PREFIX = /^(gold|purple|teal|white|red):\s*/i;
+const COLOR_PREFIX = /^(gold|purple|teal|white|red|pink):\s*/i;
 
 // Escaped syntax characters are swapped for private-use placeholders while the
 // transform runs, then restored, so `\|` stays a literal pipe.

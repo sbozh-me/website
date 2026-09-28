@@ -40,6 +40,7 @@ export const GLITCH_COLORS: Record<string, string> = {
   teal: "var(--glitch-echo)",
   white: "var(--color-foreground)",
   red: "var(--glitch-red)",
+  pink: "var(--glitch-pink)",
 };
 
 interface StateStyle {
@@ -332,7 +333,7 @@ function textLength(node: ReactNode): number {
 
 interface GlitchStateProps {
   children?: ReactNode;
-  /** gold | purple | teal | white | red; defaults to purple for the base, gold for the rest. */
+  /** gold | purple | teal | white | red | pink; defaults to purple for the base, gold for the rest. */
   color?: string;
   /** Shown in the article's own font and colour (`||` in the syntax). */
   plain?: boolean;

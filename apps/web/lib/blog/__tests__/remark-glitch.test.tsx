@@ -173,8 +173,11 @@ describe("remarkGlitch", () => {
     });
 
     it("leaves other colons and unknown colours as text", async () => {
-      expect(await render("==квази-инженеру|Петух: ряженый|pink:x==")).toBe(
-        "<p><c-glitch><c-state>квази-инженеру</c-state><c-state>Петух: ряженый</c-state><c-state>pink:x</c-state></c-glitch></p>",
+      expect(await render("==себя|Pink:US==")).toBe(
+        '<p><c-glitch><c-state>себя</c-state><c-state data-color="pink">US</c-state></c-glitch></p>',
+      );
+      expect(await render("==квази-инженеру|Петух: ряженый|blue:x==")).toBe(
+        "<p><c-glitch><c-state>квази-инженеру</c-state><c-state>Петух: ряженый</c-state><c-state>blue:x</c-state></c-glitch></p>",
       );
     });
 
