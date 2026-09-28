@@ -251,6 +251,8 @@ function GlitchEngine({
       } as CSSProperties)),
   });
   const plain = (style?: StateStyle) => (style?.plain ? "" : undefined);
+  // red: states get their own face (--glitch-font-red)
+  const red = (style?: StateStyle) => (style?.color === GLITCH_COLORS.red ? "" : undefined);
   const link = shown?.link ? "" : undefined;
   const content = renderState(state);
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
@@ -275,7 +277,7 @@ function GlitchEngine({
     return (
       <>
         {/* Real text: keeps the layout, selection and screen readers on the base state */}
-        <span className="glitch-sizer" data-plain={plain(styles?.[0])}>
+        <span className="glitch-sizer" data-plain={plain(styles?.[0])} data-red={red(styles?.[0])}>
           {renderState(0)}
         </span>
         <span ref={layersRef} className="glitch-layers" aria-hidden="true">
@@ -284,6 +286,7 @@ function GlitchEngine({
               <span
                 className="glitch-copy glitch-echo"
                 data-plain={plain(shown)}
+                data-red={red(shown)}
                 data-link={link}
                 style={move(current.dx + current.echo, current.dy + 2)}
               >
@@ -292,6 +295,7 @@ function GlitchEngine({
               <span
                 className="glitch-copy glitch-echo glitch-echo-dark"
                 data-plain={plain(shown)}
+                data-red={red(shown)}
                 data-link={link}
                 style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
               >
@@ -305,6 +309,7 @@ function GlitchEngine({
             className="glitch-copy"
             data-tone={current.tone}
             data-plain={plain(shown)}
+            data-red={red(shown)}
             data-link={link}
             data-cover={cover}
             style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
@@ -317,6 +322,7 @@ function GlitchEngine({
               className="glitch-copy"
               data-tone={current.tone}
               data-plain={plain(shown)}
+              data-red={red(shown)}
               data-link={link}
               data-cover={cover}
               style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}

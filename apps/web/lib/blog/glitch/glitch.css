@@ -12,6 +12,11 @@
   --glitch-red: var(--color-destructive, #ef4444);
   --glitch-pink: #ec4899;
   --glitch-outline: 1px;
+  /* Trial: Archivo Black (one weight, 400; Latin only, Cyrillic falls back to Space Grotesk).
+     Revert to the article font by dropping it here. */
+  --glitch-font: var(--font-archivo-black), var(--font-space-grotesk), sans-serif;
+  /* Trial: red: states in Rubik Glitch (Cyrillic too) */
+  --glitch-font-red: var(--font-rubik-glitch), var(--glitch-font);
   --censor-logo: url("/android-chrome-192x192.png");
 }
 
@@ -53,10 +58,16 @@
   opacity: 0;
 }
 
-/* `||` states keep the article's weight; glitched ones are semibold */
+/* `||` states keep the article's font; glitched ones use the glitch face */
 .glitch-sizer:not([data-plain]),
 .glitch-copy:not([data-plain]) {
-  font-weight: 600;
+  font-family: var(--glitch-font);
+  font-weight: 400;
+}
+
+.glitch-sizer[data-red]:not([data-plain]),
+.glitch-copy[data-red]:not([data-plain]) {
+  font-family: var(--glitch-font-red);
 }
 
 .glitch-layers {
@@ -182,7 +193,8 @@
 
 .dick-pitch .glitch-sizer,
 .dick-pitch .glitch-copy {
-  font-weight: 700;
+  font-family: var(--glitch-font);
+  font-weight: 400;
 }
 
 .dick-pitch .glitch-copy [data-part="base"] {

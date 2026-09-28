@@ -142,7 +142,7 @@ word is the one that glitches**.
 4. Rest state: **back to base** after each burst (the alt only shows during the burst).
 5. GLITCH BEGIN: **deferred**. Build the glitch mechanisms first. `==GLITCH==` is not
    built yet.
-6. Font: **site fonts only** (Space Grotesk / JetBrains Mono). No Retron2000 on the web.
+6. Font: **Archivo Black** for glitched states (Latin only; Cyrillic falls back to Space Grotesk), **Rubik Glitch** for `red:` states (2026-09-28, `--glitch-font` / `--glitch-font-red` in glitch.css); `||` plain states keep the article font. No Retron2000 on the web.
 7. ✳ spin: **only inside the DICK PITCH flip**. Plain `(;)` censors stay still.
 8. Theme: **obsidian-forge**. A dedicated theme may come later, so keep glitch colours
    in CSS custom properties that a theme can override (no hard-coded hex in components).

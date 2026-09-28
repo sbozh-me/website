@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono, Inter, Caveat } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono, Inter, Caveat, Archivo_Black, Rubik_Glitch } from "next/font/google";
 
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 import { ThemeProvider } from "@sbozh/themes";
@@ -35,6 +35,22 @@ const caveat = Caveat({
   subsets: ["latin", "latin-ext"],
   weight: ["500"],
   variable: "--font-caveat",
+  display: "swap",
+});
+
+// Blog glitch words (trial). Latin only: Cyrillic glitch words fall back to Space Grotesk.
+const archivoBlack = Archivo_Black({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  variable: "--font-archivo-black",
+  display: "swap",
+});
+
+// red: glitch states (trial). Cyrillic too: the Kagurame posts are Russian and Ukrainian.
+const rubikGlitch = Rubik_Glitch({
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext"],
+  weight: "400",
+  variable: "--font-rubik-glitch",
   display: "swap",
 });
 
@@ -79,7 +95,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="obsidian-forge"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable} ${archivoBlack.variable} ${rubikGlitch.variable}`}
     >
       <body className="flex min-h-screen flex-col antialiased">
         <ThemeProvider theme="obsidian-forge">
