@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - 2026-09-28
+
+### Changes
+
+- build(media): add ffmpeg recipe for pan-dude blog loop ([dcd3326](https://github.com/sbozh-me/website/commit/dcd3326110f9ecb17c3614a0d293e362de3c5649))
+- feat(media): add glitch-caption ffmpeg pipeline for pan-dude loop ([39f7038](https://github.com/sbozh-me/website/commit/39f7038e0c538a1ead615544b658c140d5b170c7))
+- feat(media): add tracked caption mode and spinning censor to pan-dude loop ([a5f59b0](https://github.com/sbozh-me/website/commit/a5f59b048038391cd348d0a464ce72c0a3723063))
+- feat(blog): add remark plugin for glitch-caption markdown syntax ([6e511c5](https://github.com/sbozh-me/website/commit/6e511c5e23077e9cc50f164d6c4d5772a66223de))
+- feat(blog): render glitch-word, censor, dickpitch ([b722c0d](https://github.com/sbozh-me/website/commit/b722c0d58fab9eb9686ffc26d2d26fc3a62defbd))
+- feat(blog): add plain `||` states and colour prefixes to glitch words ([2497b15](https://github.com/sbozh-me/website/commit/2497b1503a7fd4d88441a972d0e2829f095ce9f0))
+- feat(blog): teal underline for linked glitch words ([40406aa](https://github.com/sbozh-me/website/commit/40406aa9a3b1e2646efe498ad31566d5c6acf092))
+- feat(blog): add Window ON/OFF toggle to disable glitch words ([df9ed43](https://github.com/sbozh-me/website/commit/df9ed43e2c5f93f94099d811f0e7d289affe4275))
+- feat(blog): let posts start with glitches off via ==WINDOW OFF== ([4d12db4](https://github.com/sbozh-me/website/commit/4d12db4abfed9123bd1ef566d0fbcf6391866691))
+- feat(blog): add W hotkey to toggle the window ([0d537f2](https://github.com/sbozh-me/website/commit/0d537f27f81ef58b4f0a4800f0dd1831fb05cc79))
+- feat(blog): add pink colour prefix for glitch words ([fa29532](https://github.com/sbozh-me/website/commit/fa295329861ce4136b7a4631922b432c18ac55d5))
+- feat(blog): add ===a|b=== glitch words that ignore the window ([34bdd41](https://github.com/sbozh-me/website/commit/34bdd41dc57049f204932eda2874d0f38b77e2f1))
+- fix(blog): build TOC from rendered headings, not raw markdown ([0f56bdd](https://github.com/sbozh-me/website/commit/0f56bdd59bc5c34f8f7a7d34f25cc1c12c4ceda6))
+- feat(blog): add ==|text== window-only glitches ([64b5222](https://github.com/sbozh-me/website/commit/64b52222f07f4fdbf746324c6f58ee563199029c))
+- feat(media): add corporate caption cut of the pan-dude loop ([3d15b93](https://github.com/sbozh-me/website/commit/3d15b93af6d59afabcf25454cb1ca2abe4c5e8a6))
+- feat(media): add YouTube Shorts cut of the pan-dude corporate loop ([9da3b71](https://github.com/sbozh-me/website/commit/9da3b71151fce8baecfae016ff71f1dc7c386d67))
+- feat(media): add corporate-dicked glitch cut with ✳ITCH DECK ([6995427](https://github.com/sbozh-me/website/commit/6995427917ddab1a536cab98854b360b69d40186))
+- feat(media): add logo-tracked pan-dude glitch variant ([28d6f93](https://github.com/sbozh-me/website/commit/28d6f9396bce7777fd58383c94142f6e77415715))
+- fix(media): keep the censored letter visible in the logo-tracked cut ([dcd4351](https://github.com/sbozh-me/website/commit/dcd4351707a87e32a8a9acca04e8e96202c11d50))
+- fix(blog): raise the hovered glitch word above the others ([c6777af](https://github.com/sbozh-me/website/commit/c6777af4de3923d07276280c3858c74da05c3de4))
+- feat(ui): add HoverCard component ([381e949](https://github.com/sbozh-me/website/commit/381e949ac0600737d2319c61ad984ff1acd1bf30))
+- feat(assets): serve downscaled thumbnails via ?w= ([7130316](https://github.com/sbozh-me/website/commit/71303166ef5c96e7837b32393f11526c1cc12377))
+- feat(blog): add previous/next post navigation ([839eca2](https://github.com/sbozh-me/website/commit/839eca2113344b9b304cd98c8584f991adc172b2))
+- Merge branch 'worktree-kagurame-animation' into worktree-next-post ([da74cee](https://github.com/sbozh-me/website/commit/da74ceece9e9c7c6699944195b44ed41d58be33d))
+- feat(media): flip onboarded into sbozhed in the corporate glitch cut ([0a9439a](https://github.com/sbozh-me/website/commit/0a9439a0b2f0d6fc40ca3150664f14e184fa7926))
+- build(directus): add posts.next_post field ([3cd9660](https://github.com/sbozh-me/website/commit/3cd96606e0a861a1234479152989e5e475de0caf))
+- feat(blog): let editors pick the next post ([13554c9](https://github.com/sbozh-me/website/commit/13554c9bba4f0e4337b5856342b328386f54a72d))
+- feat(blog): add WindowVideo synced to window state ([c9ef707](https://github.com/sbozh-me/website/commit/c9ef707b1702d9a03a60861ccb9809fc8f1c1da5))
+- Merge branch 'worktree-kagurame-animation' into worktree-next-post ([1d6d701](https://github.com/sbozh-me/website/commit/1d6d7015e1c96ac8336578f4d260fe3c66572851))
+- Merge branch 'worktree-next-post' ([b7b26c2](https://github.com/sbozh-me/website/commit/b7b26c24db5f506e0145e1298bc63e7e7a874581))
+- docs(roadmap): add 1.6.1 post navigation and glitch words to the 1.6.0 milestone ([fde2d3d](https://github.com/sbozh-me/website/commit/fde2d3dd42a744c1fc64d3687259e32d84705adf))
+
+
 ## [1.6.0] - 2026-09-28
 
 ### Changes
