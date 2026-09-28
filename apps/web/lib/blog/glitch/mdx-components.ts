@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import { Censor } from "./censor";
 import { DickPitch, Glitch, GlitchState } from "./glitch";
+import { Video } from "./video";
 import { WindowToggle } from "./window";
 import { WindowVideo } from "./window-video";
 
@@ -15,4 +16,6 @@ export const glitchMdxComponents: Record<string, ComponentType<any>> = {
   WindowToggle,
   // <WindowVideo on="…" off="…" />: the ON cut with the window open, the OFF cut closed
   WindowVideo,
+  // <Video src="…" poster="…" />: one silent looping video (landscape or Shorts)
+  Video,
 };
