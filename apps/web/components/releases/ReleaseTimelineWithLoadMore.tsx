@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useTransition, useCallback, type ReactNode } from "react";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
 import { ReleaseTimeline } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { loadMoreReleases } from "@/lib/releases/actions";
+import { compileSummary } from "@/lib/releases/compile-summary";
 
 interface ReleaseTimelineWithLoadMoreProps {
   initialReleases: ReleaseListItem[];
@@ -14,14 +13,6 @@ interface ReleaseTimelineWithLoadMoreProps {
   initialHasMore: boolean;
   currentVersion: string;
   projectSlug?: string;
-}
-
-// Compile MDX markdown to React element on the client
-async function compileSummary(markdown: string): Promise<ReactNode> {
-  const { default: Content } = await evaluate(markdown, {
-    ...runtime,
-  } as Parameters<typeof evaluate>[1]);
-  return <Content />;
 }
 
 export function ReleaseTimelineWithLoadMore({

@@ -1,6 +1,4 @@
 import type { ReactNode } from "react";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import type { PostListItem } from "@sbozh/blog/types";
@@ -11,17 +9,11 @@ import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
+import { compileSummary } from "@/lib/releases/compile-summary";
 
 type ReleasesResult =
   | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
-
-async function compileSummary(markdown: string): Promise<ReactNode> {
-  const { default: Content } = await evaluate(markdown, {
-    ...runtime,
-  } as any);
-  return <Content />;
-}
 
 const INITIAL_LIMIT = 3;
 

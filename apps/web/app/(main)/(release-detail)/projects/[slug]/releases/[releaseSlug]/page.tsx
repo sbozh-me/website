@@ -3,14 +3,13 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
 import { projects } from "@/lib/projects/data";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 import { ScrollToElement } from "@/components/ScrollToElement";
 import { ReleaseMediaCard, CopyUrlButton } from "@sbozh/release-notes/components";
 import { formatReleaseDate, calculateReadingTime, formatReadingTime } from "@sbozh/release-notes/utils";
 import type { Release } from "@sbozh/release-notes/types";
+import { compileSummary } from "@/lib/releases/compile-summary";
 
 export const dynamic = "force-dynamic";
 
@@ -35,13 +34,6 @@ const RELEASE_TYPE_CONFIG = {
   breaking: { icon: "⚠", label: "Breaking", color: "text-red-500" },
   maintenance: { icon: "◆", label: "Maintenance", color: "text-muted-foreground" },
 } as const;
-
-async function compileSummary(markdown: string): Promise<ReactNode> {
-  const { default: Content } = await evaluate(markdown, {
-    ...runtime,
-  } as any);
-  return <Content />;
-}
 
 async function getReleaseBySlug(slug: string): Promise<{ release: Release; content: ReactNode } | null> {
   try {

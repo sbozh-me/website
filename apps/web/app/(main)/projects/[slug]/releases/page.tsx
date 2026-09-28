@@ -2,8 +2,6 @@ import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { evaluate } from "@mdx-js/mdx";
-import * as runtime from "react/jsx-runtime";
 import { readFile } from "fs/promises";
 import { projects } from "@/lib/projects/data";
 import { ReleasesContent } from "@/components/releases/ReleasesContent";
@@ -12,6 +10,7 @@ import { parseRoadmapFromContent } from "@/lib/roadmap/parser";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import type { TimelineData } from "@sbozh/react-ui/components/ui/vertical-timeline";
+import { compileSummary } from "@/lib/releases/compile-summary";
 
 interface ReleasesPageProps {
   params: Promise<{ slug: string }>;
@@ -21,13 +20,6 @@ interface ReleasesPageProps {
 type ReleasesResult =
   | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
-
-async function compileSummary(markdown: string): Promise<ReactNode> {
-  const { default: Content } = await evaluate(markdown, {
-    ...runtime,
-  } as any);
-  return <Content />;
-}
 
 const INITIAL_LIMIT = 3;
 
