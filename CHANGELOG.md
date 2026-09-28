@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.1] - 2026-09-28
+
+### Changes
+
+- style(blog): set glitch fonts to Archivo Black and Rubik Glitch ([fcbdc29](https://github.com/sbozh-me/website/commit/fcbdc290bc65b483fe7720d07b8b31a19b92f3c1))
+
+
 ## [1.7.0] - 2026-09-28
 
 ### Changes
