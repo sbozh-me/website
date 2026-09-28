@@ -11,7 +11,8 @@ Directus and embed them with `<WindowVideo>` (see below).
 | `sbozhme_pan-dude-corporate-web.mp4` | Corporate script, plain one-word captions (Space Grotesk, 30% up) | OFF |
 | `sbozhme_pan-dude-corporate-shorts-web.mp4` | The same, vertical 9:16 720x1280 for the blog | OFF |
 | `sbozhme_pan-dude-corporate-shorts.mp4` | The same, 1080x1920 master for YouTube Shorts | - |
-| `sbozhme_pan-dude-poster.jpg`, `sbozhme_pan-dude-corporate-shorts-poster.jpg` | Poster frames | - |
+| `sbozhme_pan-dude-poster-clean.jpg` | Poster without captions (frame 0), fits every landscape cut | - |
+| `sbozhme_pan-dude-poster.jpg`, `sbozhme_pan-dude-corporate-shorts-poster.jpg` | Older posters with a caption word in them | - |
 
 ## Switching on the window
 
