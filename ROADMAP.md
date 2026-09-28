@@ -163,14 +163,17 @@ Author carousel with blog post filtering per author.
 - ~~Asset proxy streams HTTP range requests~~
 - ~~Directus schema migration tooling (`make schema-*`)~~
 - ~~Release notes drafting with livius (`/commit notes`)~~
+- ~~1.6.1 - Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
+- ~~1.6.1 - Glitch-word markdown syntax with a Window ON/OFF toggle (`W` hotkey) and window-synced video~~
+- ~~1.6.1 - Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
 
 ## 1.7.0 - Blog enhancement
 
 - Internal link click handle
 - Link hover handle from directus
 - Blog filters (category, tags, personal, date)
-- Previous post
-- Next post
+- ~~Previous post~~ (shipped in 1.6.1)
+- ~~Next post~~ (shipped in 1.6.1)
 - Connected posts
 
 ## 1.8.0 - Personas introduction
