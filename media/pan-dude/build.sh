@@ -38,3 +38,16 @@ python3 words.py
 "$FFMPEG" -v error -y -i "$OUT-words.mp4" -frames:v 1 -q:v 3 "$OUT-poster.jpg"
 
 echo "Built $OUT-words-web.mp4 and $OUT-poster.jpg"
+
+# 4. Corporate cut: softened script, one word at a time, 30% up, orange/purple accents
+python3 corporate.py
+"$FFMPEG" -v error -y -i "$OUT-25th-frame.mp4" \
+  -vf "ass=corporate.ass:fontsdir=$FONTS_DIR" \
+  -c:v libx264 -crf 18 -preset slow -pix_fmt yuv420p -movflags +faststart -an \
+  "$OUT-corporate.mp4"
+"$FFMPEG" -v error -y -i "$OUT-corporate.mp4" \
+  -c:v libx264 -crf 27 -preset veryslow -tune animation -pix_fmt yuv420p \
+  -profile:v high -movflags +faststart -an \
+  "$OUT-corporate-web.mp4"
+
+echo "Built $OUT-corporate-web.mp4"
