@@ -111,7 +111,11 @@ def clip_path(strips):
 
 def censor(text):
     """Make the letter after "#" invisible but keep its space, restoring whatever alpha
-    (including a running fade-in) was in effect before it."""
+    (including a running fade-in) was in effect before it. With the logo tracked away from
+    the caption (VARIANT=logo-tracked) nothing covers the letter, so it stays visible."""
+    if LOGO_TRACKED:
+        return text.replace("#", "")
+
     def hide(m):
         tags = re.findall(r"\\alpha&H[0-9A-F]{2}&(?:\\t\([^)]*\))?", text[:m.start()])
         restore = tags[-1] if tags else r"\alpha&H00&"
