@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2026-09-28
+
+### Changes
+
+- docs(roadmap): mark 1.6.0 CV refresh complete and shift later versions ([e1e4e28](https://github.com/sbozh-me/website/commit/e1e4e2885d9ec0b7e35ba018a1b13c31cc9ccb9c))
+
+
 ## [1.5.9] - 2026-09-27
 
 ### Changes
