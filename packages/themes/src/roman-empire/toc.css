@@ -57,6 +57,10 @@
   padding-left: 1rem;
 }
 
+[data-theme="roman-empire"] .toc-item-4 {
+  padding-left: 2rem;
+}
+
 [data-theme="roman-empire"] .toc-link {
   display: block;
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;

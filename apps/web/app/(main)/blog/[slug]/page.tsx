@@ -14,11 +14,12 @@ import {
   ScrollToTop,
   TableOfContents,
 } from "@sbozh/blog/components";
-import { extractHeadings } from "@sbozh/blog/utils";
+import type { TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
 import remarkGlitch from "@/lib/blog/remark-glitch";
+import remarkHeadingIds from "@/lib/blog/remark-heading-ids";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";
@@ -118,13 +119,16 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  // Extract TOC from raw markdown (skip if hidden)
-  const toc = post.isTocHidden ? [] : extractHeadings(post.content);
-
-  // Compile and run MDX
+  // Compile and run MDX. The TOC comes from the processed headings (h2-h4), so glitch
+  // syntax in a heading shows as its base text and the anchors match the heading ids.
+  let headings: TOCItem[] = [];
   const { default: MDXContent } = await evaluate(post.content, {
     ...runtime,
-    remarkPlugins: [remarkGfm, remarkGlitch],
+    remarkPlugins: [
+      remarkGfm,
+      remarkGlitch,
+      [remarkHeadingIds, { onHeadings: (items: TOCItem[]) => (headings = items) }],
+    ],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -136,6 +140,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       ],
     ],
   } as any);
+  const toc = post.isTocHidden ? [] : headings;
 
   // Compile tldr markdown if present
   let TldrContent: React.ComponentType | null = null;
