@@ -172,6 +172,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~1.6.1 - Window ON/OFF toggle (`==WINDOW==`, `W` hotkey) and window-synced video~~
 - ~~1.6.1 - Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
 - ~~1.6.1 - Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
+- ~~`<Video>` for single looping clips (landscape or Shorts)~~
 - ~~Glitch syntax in release notes~~
 
 ## 1.8.0 - Blog enhancement
