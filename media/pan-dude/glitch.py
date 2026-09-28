@@ -25,6 +25,23 @@ LINE_H = SIZE  # row pitch for multi-row captions
 # DO WE? comes back to the centre
 LOWER_FROM, LOWER_UNTIL, LOWER_BY = 35.35, 39.20, round(0.20 * H)
 
+# FORMAT=shorts: a YouTube Short. The loop is centre-cropped to 9:16 and scaled to
+# 1080x1920. Captions are laid out in the crop window's own scene coordinates (W x H below);
+# libass scales that PlayRes up to the video, so only the ffmpeg logo overlay needs
+# converting to output pixels (OUT_SCALE). A smaller font keeps the longest words (and
+# the 128% bursts) inside the narrow frame. Outputs get a "-shorts" suffix.
+SHORTS = os.environ.get("FORMAT") == "shorts"
+CROP_X0 = 0.0  # scene x of the frame's left edge
+OUT_SCALE = 1.0  # output pixels per scene pixel
+if SHORTS:
+    CROP_X0 = (W - H * 9 / 16) / 2
+    W = round(H * 9 / 16)
+    SIZE = 36
+    X = W // 2
+    Y = round(H / 2 + SIZE * 0.475)
+    LINE_H = SIZE
+    OUT_SCALE = 1920 / H
+
 AMETHYST = "&HF65C8B&"
 GOLD_C = "&H0B9EF5&"
 ECHO = "&HDBE86C&"  # #6CE8DB
@@ -71,6 +88,13 @@ if LOGO_TRACKED:
 if os.environ.get("SCRIPT") == "corporate":
     from corporate import GLITCH_CENSOR_OFFSET as CENSOR_OFFSET, GLITCH_LINES as LINES
     SUFFIX = "-corporate" + SUFFIX
+if SHORTS:
+    SUFFIX += "-shorts"
+    # the censored letter's offset and logo scale with the smaller font; a logo tracked
+    # onto the figure keeps its scene size
+    CENSOR_OFFSET = tuple(round(v * SIZE / 56) for v in CENSOR_OFFSET)
+    if not LOGO_TRACKED:
+        CENSOR_SIZE = round(CENSOR_SIZE * SIZE / 56)
 TRACK_X = 419
 TRACK_Y = [(33.54, 290), (33.75, 305), (34.0, 324), (34.5, 349), (35.0, 369),
            (35.5, 394), (36.0, 422), (36.5, 455), (36.92, 485)]  # (s, y), linear in between
@@ -81,12 +105,13 @@ burst_params = {}  # frame -> (scale, dx, dy) of the main copy, for the logo to 
 
 
 def track_point(fr):
-    """Tracked scene point at frame fr (held before the first key)."""
+    """Tracked scene point at frame fr (held before the first key), in frame coordinates
+    (shifted into the crop window for FORMAT=shorts)."""
     t = fr / FPS
     for (t0, y0), (t1, y1) in zip(TRACK_Y, TRACK_Y[1:]):
         if t <= t1:
-            return TRACK_X, y0 + (y1 - y0) * max(0.0, (t - t0) / (t1 - t0))
-    return TRACK_X, TRACK_Y[-1][1]
+            return TRACK_X - CROP_X0, y0 + (y1 - y0) * max(0.0, (t - t0) / (t1 - t0))
+    return TRACK_X - CROP_X0, TRACK_Y[-1][1]
 
 
 def ts(frame):
@@ -337,9 +362,12 @@ def logo_filter(censored):
                 fade = fr / FPS if c.reveal and not c.glitch_in and fr == c.f0 else None
                 shots.append((fr, fr, *look, fade))
 
-    lines = [f"[0:v]ass=glitch{SUFFIX}.ass:fontsdir=.[v0]",
+    frame = "crop=ih*9/16:ih,scale=1080:1920:flags=lanczos,setsar=1," if SHORTS else ""
+    lines = [f"[0:v]{frame}ass=glitch{SUFFIX}.ass:fontsdir=.[v0]",
              f"[1:v]format=rgba,split={len(shots)}" + "".join(f"[l{i}]" for i in range(len(shots)))]
     for i, (a, b, x, y, size, angle, fade) in enumerate(shots):
+        # captions are scaled by libass; the logo overlay is placed in output pixels
+        x, y, size = round(x * OUT_SCALE), round(y * OUT_SCALE), round(size * OUT_SCALE)
         chain = f"scale={size}:{size}"
         if angle:
             chain += f",rotate=a={math.radians(angle):.5f}:ow=hypot(iw\\,ih):oh=ow:c=none"
