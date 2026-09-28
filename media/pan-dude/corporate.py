@@ -41,7 +41,9 @@ LINES = [
 # original glitch look (Retron2000, bursts, flips, logo censor) line for line, with
 # "Pitch Deck" censored to ✳ITCH DECK. Render: SCRIPT=corporate VARIANT=tracked python3 glitch.py
 GLITCH_LINES = [
-    (0.05, 2.30, "I've built sbozh.*me* to get you *onboarded.*"),  # frame 0 stays clean
+    # ONBOARDED. flips into SBOZHED. midway; a flip swaps the colours, so "sbozh*ed.*" lands
+    # as the original's gold SBOZH + amethyst ED.
+    (0.05, 2.30, "I've built sbozh.*me* to get you *onboarded.*>sbozh*ed.*@0.8!^"),  # frame 0 stays clean
     (2.30, 4.50, "For this, I had to open my *window.*"),
     (4.50, 6.80, "And here's what I've *found.*"),
     (6.80, 9.20, "LOOK HOW BIG MY *CONTEXT* IS."),

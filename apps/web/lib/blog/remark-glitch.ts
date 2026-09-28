@@ -1,5 +1,5 @@
 import type { Nodes, Parent, PhrasingContent, Root, Text } from "mdast";
-import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
+import type { MdxJsxAttribute, MdxJsxFlowElement, MdxJsxTextElement } from "mdast-util-mdx-jsx";
 
 /**
  * Remark plugin for the blog's glitch syntax (see .claude/specs/blog-glitch-syntax.md):
@@ -74,8 +74,9 @@ function visitText(node: Nodes, fn: (text: Text) => void) {
   else if (hasChildren(node)) node.children.forEach((child) => visitText(child as Nodes, fn));
 }
 
-function visitJsx(node: Nodes, fn: (element: MdxJsxTextElement) => void) {
-  if (node.type === "mdxJsxTextElement") fn(node);
+function visitJsx(node: Nodes, fn: (element: MdxJsxTextElement | MdxJsxFlowElement) => void) {
+  // Inline (`==a|b==`) and block (`<WindowVideo />` on its own line) JSX
+  if (node.type === "mdxJsxTextElement" || node.type === "mdxJsxFlowElement") fn(node);
   if (hasChildren(node)) node.children.forEach((child) => visitJsx(child as Nodes, fn));
 }
 
@@ -90,7 +91,9 @@ function markWindowOff(tree: Root) {
   });
   if (!off) return;
   visitJsx(tree, (element) => {
-    if (element.name === "Glitch" || element.name === "DickPitch") element.attributes.push(attribute("windowOff"));
+    if (["Glitch", "DickPitch", "WindowVideo"].includes(element.name ?? "")) {
+      element.attributes.push(attribute("windowOff"));
+    }
   });
 }
 
