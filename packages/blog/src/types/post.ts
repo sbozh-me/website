@@ -40,4 +40,6 @@ export interface PostListItem {
   persona: Persona;
   tags: Tag[];
   image?: PostImage;
+  /** Editor-picked next post; overrides the chronological neighbour */
+  nextPostId?: string;
 }

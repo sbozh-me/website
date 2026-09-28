@@ -76,6 +76,7 @@ interface DirectusPost {
   og_generate: boolean;
   is_toc_hidden: boolean;
   theme: string | null;
+  next_post: string | null;
 }
 
 interface DirectusPersona {
@@ -172,6 +173,7 @@ export class DirectusRepository implements BlogRepository {
             "date_published",
             "date_updated",
             "reading_time",
+            "next_post",
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
             { image: ["id", "filename_download", "width", "height"] },
@@ -311,6 +313,7 @@ export class DirectusRepository implements BlogRepository {
       persona: this.mapToPersona(post.persona),
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),
       image: post.image ? this.mapToImage(post.image) : undefined,
+      nextPostId: post.next_post ?? undefined,
     };
   }
 
