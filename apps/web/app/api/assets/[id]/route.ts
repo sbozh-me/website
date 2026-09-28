@@ -13,6 +13,10 @@ const FORWARDED_RESPONSE_HEADERS = [
   "last-modified",
 ];
 
+// Thumbnail widths clients may request via ?w=; anything else is served
+// untransformed so arbitrary sizes can't make Directus render new variants
+const THUMBNAIL_WIDTHS = new Set(["320", "640", "960"]);
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -25,7 +29,11 @@ export async function GET(
     return new NextResponse("Directus not configured", { status: 500 });
   }
 
-  const assetUrl = `${directusUrl}/assets/${id}`;
+  const width = request.nextUrl.searchParams.get("w");
+  const transform = width && THUMBNAIL_WIDTHS.has(width)
+    ? `?width=${width}&quality=75&format=webp&withoutEnlargement=true`
+    : "";
+  const assetUrl = `${directusUrl}/assets/${id}${transform}`;
 
   const headers: Record<string, string> = {};
   if (directusToken) {

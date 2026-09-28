@@ -6,8 +6,8 @@ import { GET } from "./route";
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
-function callRoute(headers: Record<string, string> = {}) {
-  const request = new NextRequest("http://localhost:3000/api/assets/abc", {
+function callRoute(headers: Record<string, string> = {}, query = "") {
+  const request = new NextRequest(`http://localhost:3000/api/assets/abc${query}`, {
     headers,
   });
   return GET(request, { params: Promise.resolve({ id: "abc" }) });
@@ -43,6 +43,24 @@ describe("Assets Route", () => {
 
     expect(response.status).toBe(500);
     expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("requests a Directus thumbnail for an allowed width", async () => {
+    await callRoute({}, "?w=640");
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "https://directus.example.com/assets/abc?width=640&quality=75&format=webp&withoutEnlargement=true",
+      expect.anything()
+    );
+  });
+
+  it("ignores widths outside the thumbnail whitelist", async () => {
+    await callRoute({}, "?w=4000");
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "https://directus.example.com/assets/abc",
+      expect.anything()
+    );
   });
 
   it("proxies the asset with auth and caching headers", async () => {
