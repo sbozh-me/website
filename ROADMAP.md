@@ -152,7 +152,19 @@ Author carousel with blog post filtering per author.
 - ~~Add tecraft.cz to the projects showcase (about, motivation, live hero image)~~
 - ~~Generalize the sitemap update script for any number of projects~~
 
-## 1.6.0 - Blog enhancement
+## ~~1.6.0 - CV Refresh, Blog Media & Tooling~~ ✅
+
+- ~~Normal document theme for the CV (light + dark variants, self-hosted Inter and Caveat)~~
+- ~~PMDXJS page corner QR code with centred logo, handwritten caption and version line~~
+- ~~Secondary corner QR code linking to references via a `/link` redirect~~
+- ~~CV content rework (summary, key roles, skills, achievements)~~
+- ~~PDF export requests the normal theme~~
+- ~~Blog hero image attribution caption~~
+- ~~Asset proxy streams HTTP range requests~~
+- ~~Directus schema migration tooling (`make schema-*`)~~
+- ~~Release notes drafting with livius (`/commit notes`)~~
+
+## 1.7.0 - Blog enhancement
 
 - Internal link click handle
 - Link hover handle from directus
@@ -161,19 +173,19 @@ Author carousel with blog post filtering per author.
 - Next post
 - Connected posts
 
-## 1.7.0 - Personas introduction
+## 1.8.0 - Personas introduction
 
 - Layouts in project sbozh.me
 - Extended personas collection
 - Link personas in blog posts
 
-## 1.8.0 - Cookies rework
+## 1.9.0 - Cookies rework
 
 - Remove marketing option
 - Make more analytics tracking (blog post reading time)
 - Read/unread state tracking for blog, release notes and projects
 
-## 1.9.0 - Subscriptions (Q3 2026)
+## 1.10.0 - Subscriptions (Q4 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes
@@ -182,6 +194,6 @@ Author carousel with blog post filtering per author.
 - **Alternatives** - RSS feeds for feed reader users
 - **Backend** - Event tracking, processing, and reliable email delivery
 
-## llm.txt (Q3 2026)
+## llm.txt (Q4 2026)
 
 ---
