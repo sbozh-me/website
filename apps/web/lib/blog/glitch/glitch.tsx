@@ -64,6 +64,8 @@ interface EngineProps {
   blink?: boolean;
   /** The post starts with the window closed (`==WINDOW OFF==`). */
   windowOff?: boolean;
+  /** `===a|b===`: keeps glitching whatever the window switch says. */
+  unclosable?: boolean;
   className?: string;
   rng?: Rng;
 }
@@ -88,6 +90,7 @@ function GlitchEngine({
   mode,
   blink = false,
   windowOff = false,
+  unclosable = false,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -100,7 +103,7 @@ function GlitchEngine({
   const [restSlices, setRestSlices] = useState<Slice[]>([]);
   const [flips, setFlips] = useState(0);
   // The page's "window" switch: when it's off the word is plain text and never bursts
-  const on = useGlitchesEnabled(windowOff);
+  const on = useGlitchesEnabled(windowOff) || unclosable;
 
   // Latest props for the timer callbacks, which outlive renders
   const props = useRef({ count, lengths, mode, blink, rng });
@@ -363,11 +366,13 @@ export function Glitch({
   children,
   blink = false,
   windowOff = false,
+  unclosable = false,
   rng,
 }: {
   children?: ReactNode;
   blink?: boolean;
   windowOff?: boolean;
+  unclosable?: boolean;
   rng?: Rng;
 }) {
   const states = Children.toArray(children);
@@ -382,6 +387,7 @@ export function Glitch({
       mode="return"
       blink={blink}
       windowOff={windowOff}
+      unclosable={unclosable}
       rng={rng}
     />
   );
@@ -400,7 +406,15 @@ function Brand({ flipped }: { flipped: boolean }) {
 }
 
 /** D✳CK PITCH brand mark: each burst swaps its two colours and spins the ✳. */
-export function DickPitch({ windowOff = false, rng }: { windowOff?: boolean; rng?: Rng }) {
+export function DickPitch({
+  windowOff = false,
+  unclosable = false,
+  rng,
+}: {
+  windowOff?: boolean;
+  unclosable?: boolean;
+  rng?: Rng;
+}) {
   return (
     <GlitchEngine
       count={2}
@@ -408,6 +422,7 @@ export function DickPitch({ windowOff = false, rng }: { windowOff?: boolean; rng
       lengths={[10, 10]}
       mode="toggle"
       windowOff={windowOff}
+      unclosable={unclosable}
       className="dick-pitch"
       rng={rng}
     />

@@ -14,6 +14,7 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red/pink picks a colour
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
+ *   ===a|b===           -> <Glitch unclosable>         keeps glitching with the window OFF
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
  *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
@@ -23,7 +24,9 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  * `\=`, `\|`, `\!` and `\(` opt a character out of the syntax.
  */
 
-const MARK = /(?<!=)==(?!=)/;
+// `==` or `===` (the unclosable kind), never part of a longer run of `=`
+const MARK = /(?<!=)(===|==)(?!=)/;
+const UNCLOSABLE = "===";
 const CENSOR = "(;)";
 const BRAND = /^d\(;\)ck\s+pitch$/i;
 /** `==WINDOW==` / `==WINDOW OFF==` (exactly, in capitals): the switch that turns the glitches off. */
@@ -44,7 +47,7 @@ const ASCII_PUNCTUATION = /[!-/:-@[-`{-~]/;
 
 type Token =
   | { kind: "node"; node: PhrasingContent }
-  | { kind: "mark"; canOpen: boolean; canClose: boolean };
+  | { kind: "mark"; marker: string; canOpen: boolean; canClose: boolean };
 
 interface SourceFile {
   value?: unknown;
@@ -142,9 +145,10 @@ function tokenize(children: PhrasingContent[]): Token[] {
       tokens.push({ kind: "node", node: child });
       continue;
     }
+    // The capture group keeps the markers: text, marker, text, marker, …
     child.value.split(MARK).forEach((part, index) => {
-      if (index > 0) tokens.push({ kind: "mark", canOpen: false, canClose: false });
-      if (part) tokens.push({ kind: "node", node: text(part) });
+      if (index % 2 === 1) tokens.push({ kind: "mark", marker: part, canOpen: false, canClose: false });
+      else if (part) tokens.push({ kind: "node", node: text(part) });
     });
   }
 
@@ -161,26 +165,28 @@ function tokenize(children: PhrasingContent[]): Token[] {
 
 function pairMarks(tokens: Token[], inLink: boolean): PhrasingContent[] {
   const out: PhrasingContent[] = [];
-  let openAt = -1;
+  // Where the open marker sits in `out`, and whether it was `==` or `===`
+  let open: { at: number; marker: string } | null = null;
 
   for (const token of tokens) {
     if (token.kind === "node") {
       out.push(token.node);
-    } else if (openAt === -1) {
-      if (token.canOpen) openAt = out.length;
-      else out.push(text("=="));
-    } else if (token.canClose) {
-      const inner = out.splice(openAt);
-      out.push(...(buildHighlight(inner, inLink) ?? [text("=="), ...inner, text("==")]));
-      openAt = -1;
+    } else if (!open) {
+      if (token.canOpen) open = { at: out.length, marker: token.marker };
+      else out.push(text(token.marker));
+    } else if (token.canClose && token.marker === open.marker) {
+      const inner = out.splice(open.at);
+      const built = buildHighlight(inner, inLink, open.marker === UNCLOSABLE);
+      out.push(...(built ?? [text(open.marker), ...inner, text(open.marker)]));
+      open = null;
     } else if (token.canOpen) {
-      out.splice(openAt, 0, text("=="));
-      openAt = out.length;
+      out.splice(open.at, 0, text(open.marker));
+      open = { at: out.length, marker: token.marker };
     } else {
-      out.push(text("=="));
+      out.push(text(token.marker));
     }
   }
-  if (openAt !== -1) out.splice(openAt, 0, text("=="));
+  if (open) out.splice(open.at, 0, text(open.marker));
 
   return mergeText(out);
 }
@@ -192,7 +198,11 @@ interface State {
   color?: string;
 }
 
-function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingContent[] | null {
+function buildHighlight(
+  inner: PhrasingContent[],
+  inLink: boolean,
+  unclosable = false,
+): PhrasingContent[] | null {
   const states = splitStates(inner);
   states.forEach((state) => (state.nodes = trimState(state.nodes)));
   // A leading `||` makes the base itself plain: `==||yes|No==`
@@ -201,7 +211,7 @@ function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingCont
 
   if (states.length === 1) {
     const plainText = toPlainText(states[0].nodes).trim();
-    if (BRAND.test(plainText)) return [jsx("DickPitch")];
+    if (BRAND.test(plainText)) return [jsx("DickPitch", [], unclosable ? [attribute("unclosable")] : [])];
     if (plainText === WINDOW) return [jsx("WindowToggle")];
     if (plainText === WINDOW_OFF) return [jsx("WindowToggle", [], [attribute("off")])];
     return [jsx("mark", states[0].nodes)];
@@ -235,7 +245,7 @@ function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingCont
           ...(inLink || nodes.some(isLink) ? [attribute("link")] : []),
         ]),
       ),
-      blink ? [attribute("blink")] : [],
+      [...(blink ? [attribute("blink")] : []), ...(unclosable ? [attribute("unclosable")] : [])],
     ),
   ];
 }

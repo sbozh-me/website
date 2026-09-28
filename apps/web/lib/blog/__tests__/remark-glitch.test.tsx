@@ -11,13 +11,30 @@ import remarkGlitch from "../remark-glitch";
 // via createElement, since JSX only types known intrinsic elements).
 const components = {
   Censor: () => createElement("c-censor"),
-  DickPitch: ({ windowOff }: { windowOff?: boolean }) =>
-    createElement("c-brand", { "data-window-off": windowOff ? "" : undefined }),
+  DickPitch: ({ windowOff, unclosable }: { windowOff?: boolean; unclosable?: boolean }) =>
+    createElement("c-brand", {
+      "data-window-off": windowOff ? "" : undefined,
+      "data-unclosable": unclosable ? "" : undefined,
+    }),
   WindowToggle: ({ off }: { off?: boolean }) => createElement("c-window", { "data-off": off ? "" : undefined }),
-  Glitch: ({ blink, windowOff, children }: { blink?: boolean; windowOff?: boolean; children: ReactNode }) =>
+  Glitch: ({
+    blink,
+    windowOff,
+    unclosable,
+    children,
+  }: {
+    blink?: boolean;
+    windowOff?: boolean;
+    unclosable?: boolean;
+    children: ReactNode;
+  }) =>
     createElement(
       "c-glitch",
-      { "data-blink": blink ? "" : undefined, "data-window-off": windowOff ? "" : undefined },
+      {
+        "data-blink": blink ? "" : undefined,
+        "data-window-off": windowOff ? "" : undefined,
+        "data-unclosable": unclosable ? "" : undefined,
+      },
       children,
     ),
   GlitchState: ({
@@ -255,6 +272,34 @@ describe("remarkGlitch", () => {
     it("only in capitals", async () => {
       expect(await render("==window==")).toBe("<p><mark>window</mark></p>");
       expect(await render("==Window Off==")).toBe("<p><mark>Window Off</mark></p>");
+    });
+  });
+
+  describe("===a|b=== unclosable", () => {
+    it("marks the glitch unclosable, with every other feature intact", async () => {
+      expect(await render("Для ===себя|teal:US!=== и ==a|b==")).toBe(
+        '<p>Для <c-glitch data-blink="" data-unclosable=""><c-state>себя</c-state><c-state data-color="teal">US</c-state></c-glitch>' +
+          " и <c-glitch><c-state>a</c-state><c-state>b</c-state></c-glitch></p>",
+      );
+    });
+
+    it("works for the brand mark", async () => {
+      expect(await render("===D(;)ck pitch===")).toBe('<p><c-brand data-unclosable=""></c-brand></p>');
+    });
+
+    it("== and === don't pair with each other", async () => {
+      expect(await render("==a|b=== and ===c|d==")).toBe("<p>==a|b=== and ===c|d==</p>");
+    });
+
+    it("stays unclosable on a ==WINDOW OFF== page", async () => {
+      expect(await render("==WINDOW OFF== ===a|b===")).toBe(
+        '<p><c-window data-off=""></c-window> <c-glitch data-window-off="" data-unclosable="">' +
+          "<c-state>a</c-state><c-state>b</c-state></c-glitch></p>",
+      );
+    });
+
+    it("longer runs of = are text", async () => {
+      expect(await render("====a|b====")).toBe("<p>====a|b====</p>");
     });
   });
 

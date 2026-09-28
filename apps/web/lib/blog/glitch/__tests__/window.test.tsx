@@ -229,6 +229,31 @@ describe("WindowToggle", () => {
     });
   });
 
+  it("an unclosable glitch ignores the window", () => {
+    const { container } = render(
+      <p>
+        <WindowToggle off />
+        <Glitch windowOff unclosable rng={seeded(1)}>
+          <GlitchState>себя</GlitchState>
+          <GlitchState>US</GlitchState>
+        </Glitch>
+        <Glitch windowOff>
+          <GlitchState>a</GlitchState>
+          <GlitchState>b</GlitchState>
+        </Glitch>
+      </p>,
+    );
+    const [unclosable, normal] = Array.from(container.querySelectorAll(".glitch"));
+    expect(button()).toHaveTextContent("Window OFF");
+    expect(unclosable).not.toHaveAttribute("data-off");
+    expect(unclosable.querySelector(".glitch-layers")).not.toBeNull();
+    expect(normal).toHaveAttribute("data-off");
+
+    setVisible(true);
+    expect(unclosable).toHaveAttribute("data-bursting");
+    expect(normal).not.toHaveAttribute("data-bursting");
+  });
+
   it("opens the window again when the page goes away", () => {
     const { unmount } = page();
     fireEvent.click(button());
