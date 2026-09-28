@@ -163,32 +163,37 @@ Author carousel with blog post filtering per author.
 - ~~Asset proxy streams HTTP range requests~~
 - ~~Directus schema migration tooling (`make schema-*`)~~
 - ~~Release notes drafting with livius (`/commit notes`)~~
-- ~~1.6.1 - Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
-- ~~1.6.1 - Glitch-word markdown syntax with a Window ON/OFF toggle (`W` hotkey) and window-synced video~~
-- ~~1.6.1 - Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
 
-## 1.7.0 - Blog enhancement
+## ~~1.7.0 - Kagurame is out~~ ✅
+
+The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around it.
+
+- ~~1.6.1 - Glitch-word markdown syntax (`==a|b==`, colours, links, censor `(;)`, `==D(;)ck pitch==`)~~
+- ~~1.6.1 - Window ON/OFF toggle (`==WINDOW==`, `W` hotkey) and window-synced video~~
+- ~~1.6.1 - Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
+- ~~1.6.1 - Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
+- ~~Glitch syntax in release notes~~
+
+## 1.8.0 - Blog enhancement
 
 - Internal link click handle
 - Link hover handle from directus
 - Blog filters (category, tags, personal, date)
-- ~~Previous post~~ (shipped in 1.6.1)
-- ~~Next post~~ (shipped in 1.6.1)
 - Connected posts
 
-## 1.8.0 - Personas introduction
+## 1.9.0 - Personas introduction
 
 - Layouts in project sbozh.me
 - Extended personas collection
 - Link personas in blog posts
 
-## 1.9.0 - Cookies rework
+## 1.10.0 - Cookies rework
 
 - Remove marketing option
 - Make more analytics tracking (blog post reading time)
 - Read/unread state tracking for blog, release notes and projects
 
-## 1.10.0 - Subscriptions (Q4 2026)
+## 1.11.0 - Subscriptions (Q4 2026)
 
 - **Subscribe** - Email signup with one-click topic selection
 - **Personalize** - Choose content types: blog posts, project updates, CV changes
