@@ -6,7 +6,8 @@ One word at a time, Space Grotesk (the site font), 30% up from the bottom. White
 with two accents: *orange* (gold, #F59E0B) and `purple` (amethyst, #8B5CF6).
 The rest of the timeline syntax is words.py's (~ joins, @ pins, _ is an empty beat).
 
-Usage: python3 corporate.py  -> corporate.ass (burned in by build.sh)
+Usage: python3 corporate.py  -> corporate.ass (832x464) and corporate-shorts.ass (1080x1920),
+burned in by build.sh
 """
 
 from pathlib import Path
@@ -40,19 +41,26 @@ WHITE = "&HFFFFFF&"
 ORANGE = "&H0B9EF5&"  # #F59E0B
 PURPLE = "&HF65C8B&"  # #8B5CF6
 
-W, H = 832, 464
-MARGIN_V = round(0.30 * H)  # bottom of the words 30% up from the bottom edge
+# (name, width, height, font size, outline, shadow): the 832x464 loop, and a YouTube
+# Shorts version of the same loop centre-cropped to 9:16 and scaled to 1080x1920
+LAYOUTS = [
+    ("corporate.ass", 832, 464, 44, 3.2, 1.5),
+    ("corporate-shorts.ass", 1080, 1920, 96, 7, 3),
+]
 
-HEADER = rf"""[Script Info]
+
+def header(width, height, size, outline, shadow):
+    margin_v = round(0.30 * height)  # bottom of the words 30% up from the bottom edge
+    return rf"""[Script Info]
 ScriptType: v4.00+
-PlayResX: {W}
-PlayResY: {H}
+PlayResX: {width}
+PlayResY: {height}
 WrapStyle: 2
 ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Word,Space Grotesk,44,&H00FFFFFF,&H00FFFFFF,&H00000000,&H99000000,-1,0,0,0,100,100,1,0,1,3.2,1.5,2,20,20,{MARGIN_V},1
+Style: Word,Space Grotesk,{size},&H00FFFFFF,&H00FFFFFF,&H00000000,&H99000000,-1,0,0,0,100,100,1,0,1,{outline},{shadow},2,40,40,{margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -79,7 +87,8 @@ def main():
             pop = r"{\fscx118\fscy118\t(0,90,\fscx100\fscy100)}"
             events.append(f"Dialogue: 0,{ts(c.t0)},{ts(c.t1)},Word,,0,0,0,,{pop}{paint(c.text)}")
 
-    Path(__file__).with_name("corporate.ass").write_text(HEADER + "\n".join(events) + "\n")
+    for name, *layout in LAYOUTS:
+        Path(__file__).with_name(name).write_text(header(*layout) + "\n".join(events) + "\n")
     print(len(events), "words")
 
 

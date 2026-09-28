@@ -51,3 +51,17 @@ python3 corporate.py
   "$OUT-corporate-web.mp4"
 
 echo "Built $OUT-corporate-web.mp4"
+
+# 5. Corporate cut as a YouTube Short: centre-cropped to 9:16, 1080x1920, same words
+#    re-set for the vertical frame (corporate-shorts.ass, also written by corporate.py)
+"$FFMPEG" -v error -y -i "$OUT-25th-frame.mp4" \
+  -vf "crop=ih*9/16:ih,scale=1080:1920:flags=lanczos,setsar=1,ass=corporate-shorts.ass:fontsdir=$FONTS_DIR" \
+  -c:v libx264 -crf 18 -preset slow -pix_fmt yuv420p -r 24 -movflags +faststart -an \
+  "$OUT-corporate-shorts.mp4"
+"$FFMPEG" -v error -y -i "$OUT-corporate-shorts.mp4" -vf "scale=720:1280:flags=lanczos" \
+  -c:v libx264 -crf 28 -preset veryslow -tune animation -pix_fmt yuv420p \
+  -profile:v high -movflags +faststart -an \
+  "$OUT-corporate-shorts-web.mp4"
+"$FFMPEG" -v error -y -ss 0.5 -i "$OUT-corporate-shorts.mp4" -frames:v 1 -q:v 3 "$OUT-corporate-shorts-poster.jpg"
+
+echo "Built $OUT-corporate-shorts.mp4 (YouTube) and $OUT-corporate-shorts-web.mp4 (blog)"
