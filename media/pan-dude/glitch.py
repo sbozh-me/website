@@ -60,6 +60,11 @@ SPIN_DUR = 0.55  # s, ease-out
 # frame at the cut. Output goes to glitch-tracked.ass / glitch-tracked.filter.
 TRACKED = os.environ.get("VARIANT") == "tracked"
 SUFFIX = "-tracked" if TRACKED else ""
+# VARIANT=logo-tracked: the "#" caption stays centred with its letter left blank, and only
+# the logo rides the tracked point until the cut. Output: glitch[-corporate]-logo-tracked.*
+LOGO_TRACKED = os.environ.get("VARIANT") == "logo-tracked"
+if LOGO_TRACKED:
+    SUFFIX = "-logo-tracked"
 
 # SCRIPT=corporate: the corporate script (corporate.GLITCH_LINES) in this same glitch look,
 # written to glitch-corporate[-tracked].ass / .filter; the censored letter is the P of PITCH
@@ -170,6 +175,8 @@ for line in LINES:
         c.tracked = TRACKED and "#" in c.text
         if c.tracked:
             c.f1 = round(TRACK_UNTIL * FPS)  # ride the zoom until it has left the frame
+        if LOGO_TRACKED and "#" in c.text:
+            c.logo_f1 = round(TRACK_UNTIL * FPS)  # the logo stays on the figure until the cut
         words.append(c)
 
 # Global burst schedule (frame -> True) independent of word boundaries
@@ -300,7 +307,17 @@ def logo_filter(censored):
     # per frame (x, y, size, angle), merged into runs: (first, last, x, y, size, angle, fade_s)
     shots = []
     for c in censored:
-        for fr in range(c.f0, c.f1):
+        for fr in range(c.f0, getattr(c, "logo_f1", c.f1)):
+            if LOGO_TRACKED:
+                # the logo alone sits on the tracked scene point; the caption stays centred
+                tx, ty = track_point(fr)
+                look = (round(tx), round(ty), base, round(spin_angle(c, fr), 1))
+                if shots and shots[-1][1] == fr - 1 and shots[-1][2:6] == look:
+                    shots[-1] = (shots[-1][0], fr, *look, shots[-1][6])
+                else:
+                    fade = fr / FPS if c.reveal and not c.glitch_in and fr == c.f0 else None
+                    shots.append((fr, fr, *look, fade))
+                continue
             x, y = c.anchor(fr)
             cx, cy = x + CENSOR_OFFSET[0], y + CENSOR_OFFSET[1]
             if fr in burst_params:
