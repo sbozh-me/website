@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.2] - 2026-09-28
+
+### Changes
+
+- feat(blog): add mobile cuts to WindowVideo ([e8059c9](https://github.com/sbozh-me/website/commit/e8059c9707e09f27237ecad913d8a5b1c39e0096))
+
+
 ## [1.7.1] - 2026-09-28
 
 ### Changes
