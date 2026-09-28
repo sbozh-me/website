@@ -14,6 +14,7 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red prefix picks a colour
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
+ *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
  *   ==text==            -> <mark>                      plain Obsidian highlight
  *
  * Works on the mdast (not the raw string), so code, inline code and URLs are never touched.
@@ -24,6 +25,8 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
 const MARK = /(?<!=)==(?!=)/;
 const CENSOR = "(;)";
 const BRAND = /^d\(;\)ck\s+pitch$/i;
+/** `==WINDOW==` (exactly, in capitals) is the switch that turns the glitches off. */
+const WINDOW = "WINDOW";
 /** `teal:Window` picks a state's colour (see GLITCH_COLORS in glitch/glitch.tsx). */
 const COLOR_PREFIX = /^(gold|purple|teal|white|red):\s*/i;
 
@@ -174,7 +177,9 @@ function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingCont
   if (states.some((state) => state.nodes.length === 0)) return null;
 
   if (states.length === 1) {
-    if (BRAND.test(toPlainText(states[0].nodes).trim())) return [jsx("DickPitch")];
+    const plainText = toPlainText(states[0].nodes).trim();
+    if (BRAND.test(plainText)) return [jsx("DickPitch")];
+    if (plainText === WINDOW) return [jsx("WindowToggle")];
     return [jsx("mark", states[0].nodes)];
   }
 

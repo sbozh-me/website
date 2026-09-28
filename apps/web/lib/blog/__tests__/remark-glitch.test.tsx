@@ -12,6 +12,7 @@ import remarkGlitch from "../remark-glitch";
 const components = {
   Censor: () => createElement("c-censor"),
   DickPitch: () => createElement("c-brand"),
+  WindowToggle: () => createElement("c-window"),
   Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) =>
     createElement("c-glitch", { "data-blink": blink ? "" : undefined }, children),
   GlitchState: ({
@@ -214,6 +215,18 @@ describe("remarkGlitch", () => {
       expect(await render("==что нужно делать.|D(;)ck pitch==")).toBe(
         "<p><c-glitch><c-state>что нужно делать.</c-state><c-state>D<c-censor></c-censor>ck pitch</c-state></c-glitch></p>",
       );
+    });
+  });
+
+  describe("==WINDOW== switch", () => {
+    it("renders the window toggle", async () => {
+      expect(await render("выключить левый контекст: ==WINDOW==")).toBe(
+        "<p>выключить левый контекст: <c-window></c-window></p>",
+      );
+    });
+
+    it("only in capitals", async () => {
+      expect(await render("==window==")).toBe("<p><mark>window</mark></p>");
     });
   });
 

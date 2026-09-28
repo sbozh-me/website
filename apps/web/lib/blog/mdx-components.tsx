@@ -15,6 +15,7 @@ import {
 
 import { Censor } from "./glitch/censor";
 import { DickPitch, Glitch, GlitchState } from "./glitch/glitch";
+import { WindowToggle } from "./glitch/window";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
 
 // Link component that handles external links
@@ -55,11 +56,12 @@ export const blogMdxComponents: Record<string, ComponentType<any>> = {
   // Link handling
   a: Link,
 
-  // Glitch syntax, emitted by remark-glitch: (;) ==a|b== ==D(;)ck pitch==
+  // Glitch syntax, emitted by remark-glitch: (;) ==a|b== ==D(;)ck pitch== ==WINDOW==
   Censor,
   DickPitch,
   Glitch,
   GlitchState,
+  WindowToggle,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,

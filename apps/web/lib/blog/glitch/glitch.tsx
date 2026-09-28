@@ -25,6 +25,7 @@ import {
   randomKind,
   withoutSlices,
 } from "./plan";
+import { useGlitchesEnabled } from "./window";
 import "./glitch.css";
 
 /** On each DICK PITCH flip the ✳ spins pi turns and lands wherever pi leaves it. */
@@ -94,6 +95,8 @@ function GlitchEngine({
   const [look, setLook] = useState<Look | undefined>();
   const [restSlices, setRestSlices] = useState<Slice[]>([]);
   const [flips, setFlips] = useState(0);
+  // The page's "window" switch: when it's off the word is plain text and never bursts
+  const on = useGlitchesEnabled();
 
   // Latest props for the timer callbacks, which outlive renders
   const props = useRef({ count, lengths, mode, blink, rng });
@@ -105,6 +108,7 @@ function GlitchEngine({
     visible: false,
     seen: false,
     reduced: false,
+    off: false,
     stepTimer: undefined as ReturnType<typeof setTimeout> | undefined,
     nextTimer: undefined as ReturnType<typeof setTimeout> | undefined,
   });
@@ -112,7 +116,7 @@ function GlitchEngine({
   function schedule() {
     const e = engine.current;
     clearTimeout(e.nextTimer);
-    if (!e.visible || e.reduced) return;
+    if (!e.visible || e.reduced || e.off) return;
     const { rng: random, blink: blinking } = props.current;
     e.nextTimer = setTimeout(() => {
       if (document.hidden) schedule();
@@ -123,7 +127,7 @@ function GlitchEngine({
   function play(kind: Exclude<BurstKind, "toggle">) {
     const e = engine.current;
     // A burst already running reschedules when it ends
-    if (e.playing || e.reduced) return;
+    if (e.playing || e.reduced || e.off) return;
     e.playing = true;
 
     const { count: states, lengths: chars, mode: m, blink: blinking, rng: random } = props.current;
@@ -188,6 +192,21 @@ function GlitchEngine({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const e = engine.current;
+    e.off = !on;
+    if (on) {
+      if (!e.playing) schedule();
+      return;
+    }
+    clearTimeout(e.stepTimer);
+    clearTimeout(e.nextTimer);
+    e.playing = false;
+    setState(e.rest);
+    setLook(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [on]);
+
   // Keep a wider alt state inside the viewport
   useLayoutEffect(() => {
     const layers = layersRef.current;
@@ -232,63 +251,73 @@ function GlitchEngine({
       ref={rootRef}
       className={["glitch", className].filter(Boolean).join(" ")}
       data-bursting={look ? "" : undefined}
+      data-off={on ? undefined : ""}
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
       onPointerEnter={() => play("flip")}
       onClick={() => play("flip")}
     >
-      {/* Real text: keeps the layout, selection and screen readers on the base state */}
-      <span className="glitch-sizer" data-plain={plain(styles?.[0])}>
-        {renderState(0)}
-      </span>
-      <span ref={layersRef} className="glitch-layers" aria-hidden="true">
-        {current.echo !== null && (
-          <>
-            <span
-              className="glitch-copy glitch-echo"
-              data-plain={plain(shown)}
-              data-link={link}
-              style={move(current.dx + current.echo, current.dy + 2)}
-            >
-              {content}
-            </span>
-            <span
-              className="glitch-copy glitch-echo glitch-echo-dark"
-              data-plain={plain(shown)}
-              data-link={link}
-              style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
-            >
-              {content}
-            </span>
-          </>
-        )}
-        <span
-          ref={mainRef}
-          key="main"
-          className="glitch-copy"
-          data-tone={current.tone}
-          data-plain={plain(shown)}
-          data-link={link}
-          data-cover={cover}
-          style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
-        >
-          {content}
+      {/* The root stays mounted either way so its IntersectionObserver keeps working */}
+      {on ? renderLayers() : renderState(mode === "toggle" ? state : 0)}
+    </span>
+  );
+
+  function renderLayers() {
+    return (
+      <>
+        {/* Real text: keeps the layout, selection and screen readers on the base state */}
+        <span className="glitch-sizer" data-plain={plain(styles?.[0])}>
+          {renderState(0)}
         </span>
-        {current.slices.map((slice, index) => (
+        <span ref={layersRef} className="glitch-layers" aria-hidden="true">
+          {current.echo !== null && (
+            <>
+              <span
+                className="glitch-copy glitch-echo"
+                data-plain={plain(shown)}
+                data-link={link}
+                style={move(current.dx + current.echo, current.dy + 2)}
+              >
+                {content}
+              </span>
+              <span
+                className="glitch-copy glitch-echo glitch-echo-dark"
+                data-plain={plain(shown)}
+                data-link={link}
+                style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
+              >
+                {content}
+              </span>
+            </>
+          )}
           <span
-            key={index}
+            ref={mainRef}
+            key="main"
             className="glitch-copy"
             data-tone={current.tone}
             data-plain={plain(shown)}
             data-link={link}
             data-cover={cover}
-            style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
+            style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
           >
             {content}
           </span>
-        ))}
-      </span>
-    </span>
-  );
+          {current.slices.map((slice, index) => (
+            <span
+              key={index}
+              className="glitch-copy"
+              data-tone={current.tone}
+              data-plain={plain(shown)}
+              data-link={link}
+              data-cover={cover}
+              style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
+            >
+              {content}
+            </span>
+          ))}
+        </span>
+      </>
+    );
+  }
 }
 
 function textLength(node: ReactNode): number {

@@ -128,7 +128,28 @@
   mask: var(--censor-logo) center / contain no-repeat;
 }
 
+/* Window OFF: the word is plain article text */
+.glitch[data-off] {
+  position: static;
+  display: inline;
+  white-space: normal;
+  cursor: auto;
+}
+
 /* D✳CK PITCH ------------------------------------------------------------ */
+
+/* With the window off it stops flipping but keeps its brand colours */
+.dick-pitch[data-off] {
+  font-weight: 700;
+}
+
+.dick-pitch[data-off] [data-part="base"] {
+  color: var(--glitch-base);
+}
+
+.dick-pitch[data-off] [data-part="accent"] {
+  color: var(--glitch-accent);
+}
 
 .dick-pitch {
   letter-spacing: 0.02em;

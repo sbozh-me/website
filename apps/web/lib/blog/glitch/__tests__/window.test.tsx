@@ -1,0 +1,145 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { DickPitch, Glitch, GlitchState } from "../glitch";
+import { seeded } from "../plan";
+import { WindowToggle, setGlitchesEnabled } from "../window";
+
+let observers: Array<{ callback: IntersectionObserverCallback; target?: Element }> = [];
+
+class ControlledObserver {
+  entry: { callback: IntersectionObserverCallback; target?: Element };
+  constructor(callback: IntersectionObserverCallback) {
+    this.entry = { callback };
+    observers.push(this.entry);
+  }
+  observe(target: Element) {
+    this.entry.target = target;
+  }
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+}
+
+function setVisible(isIntersecting: boolean) {
+  act(() => {
+    for (const { callback, target } of observers) {
+      callback([{ isIntersecting, target } as IntersectionObserverEntry], {} as IntersectionObserver);
+    }
+  });
+}
+
+const originalObserver = window.IntersectionObserver;
+const advance = (ms: number) => act(() => void vi.advanceTimersByTime(ms));
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  observers = [];
+  window.IntersectionObserver = ControlledObserver as unknown as typeof IntersectionObserver;
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({ matches: false, media: query }));
+  act(() => setGlitchesEnabled(true));
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+  window.IntersectionObserver = originalObserver;
+});
+
+function page() {
+  return render(
+    <p>
+      выключить левый контекст: <WindowToggle />
+      Для{" "}
+      <Glitch rng={seeded(1)}>
+        <GlitchState>себя</GlitchState>
+        <GlitchState>US</GlitchState>
+      </Glitch>
+      . <DickPitch rng={seeded(2)} />
+    </p>,
+  );
+}
+
+const glitch = (container: HTMLElement) => container.querySelector(".glitch:not(.dick-pitch)") as HTMLElement;
+const button = () => screen.getByRole("button");
+
+describe("WindowToggle", () => {
+  it("starts ON with the glitches running", () => {
+    const { container } = page();
+    expect(button()).toHaveTextContent("Window ON");
+    expect(button()).toHaveAttribute("aria-pressed", "true");
+    expect(glitch(container).querySelector(".glitch-layers")).not.toBeNull();
+  });
+
+  it("OFF turns every glitch word into plain text", () => {
+    const { container } = page();
+    fireEvent.click(button());
+    expect(button()).toHaveTextContent("Window OFF");
+    expect(button()).toHaveAttribute("aria-pressed", "false");
+
+    const word = glitch(container);
+    expect(word).toHaveAttribute("data-off");
+    expect(word.querySelector(".glitch-layers, .glitch-sizer")).toBeNull();
+    expect(word.textContent).toBe("себя");
+    expect(container.querySelector("p")?.textContent).toContain("Для себя.");
+  });
+
+  it("OFF stops bursts, including one in progress", () => {
+    const { container } = page();
+    setVisible(true);
+    expect(container.querySelector("[data-bursting]")).not.toBeNull();
+
+    fireEvent.click(button());
+    expect(container.querySelector("[data-bursting]")).toBeNull();
+    expect(glitch(container).textContent).toBe("себя");
+
+    fireEvent.pointerEnter(glitch(container));
+    advance(60_000);
+    expect(container.querySelector("[data-bursting]")).toBeNull();
+    expect(glitch(container).textContent).toBe("себя");
+  });
+
+  it("ON again brings the glitches back, still observed", () => {
+    const { container } = page();
+    setVisible(true);
+    advance(3000);
+    fireEvent.click(button());
+    fireEvent.click(button());
+    expect(button()).toHaveTextContent("Window ON");
+    expect(glitch(container).querySelector(".glitch-layers")).not.toBeNull();
+
+    // random bursts resume while the word is on screen
+    let burst = false;
+    for (let t = 0; t < 10_500 && !burst; t += 20) {
+      advance(20);
+      burst = container.querySelector("[data-bursting]") !== null;
+    }
+    expect(burst).toBe(true);
+  });
+
+  it("keeps D✳CK PITCH as a static brand mark while OFF", () => {
+    const { container } = page();
+    fireEvent.click(button());
+    const brand = container.querySelector(".dick-pitch") as HTMLElement;
+    expect(brand).toHaveAttribute("data-off");
+    expect(brand.textContent).toBe("D✳CK PITCH");
+    expect(Array.from(brand.querySelectorAll("[data-part]")).map((el) => el.getAttribute("data-part"))).toEqual([
+      "base",
+      "accent",
+    ]);
+  });
+
+  it("opens the window again when the page goes away", () => {
+    const { unmount } = page();
+    fireEvent.click(button());
+    unmount();
+    const { container } = render(
+      <Glitch>
+        <GlitchState>a</GlitchState>
+        <GlitchState>b</GlitchState>
+      </Glitch>,
+    );
+    expect(glitch(container)).not.toHaveAttribute("data-off");
+  });
+});
