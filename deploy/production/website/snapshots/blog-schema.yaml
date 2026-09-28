@@ -1448,6 +1448,51 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: posts
+    field: next_post
+    type: uuid
+    meta:
+      collection: posts
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{title}}'
+      field: next_post
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: >-
+        Post the "next" arrow links to. Leave empty to use the next newer post
+        by date. The picked post links back to this one as its previous post.
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 20
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: next_post
+      table: posts
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: posts
+      foreign_key_column: id
   - collection: posts_tags
     field: id
     type: integer
@@ -2427,6 +2472,27 @@ relations:
       foreign_key_table: personas
       foreign_key_column: id
       constraint_name: posts_persona_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: posts
+    field: next_post
+    related_collection: posts
+    meta:
+      junction_field: null
+      many_collection: posts
+      many_field: next_post
+      one_allowed_collections: null
+      one_collection: posts
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: posts
+      column: next_post
+      foreign_key_table: posts
+      foreign_key_column: id
+      constraint_name: posts_next_post_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: posts_tags
