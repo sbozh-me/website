@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DickPitch, Glitch, GlitchState } from "../glitch";
@@ -39,7 +40,7 @@ beforeEach(() => {
   observers = [];
   window.IntersectionObserver = ControlledObserver as unknown as typeof IntersectionObserver;
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({ matches: false, media: query }));
-  act(() => setGlitchesEnabled(true));
+  act(() => setGlitchesEnabled(null));
 });
 
 afterEach(() => {
@@ -128,6 +129,44 @@ describe("WindowToggle", () => {
       "base",
       "accent",
     ]);
+  });
+
+  it("`windowOff` words are server-rendered plain, so nothing flashes before hydration", () => {
+    const html = renderToStaticMarkup(
+      <p>
+        <WindowToggle off />
+        <Glitch windowOff>
+          <GlitchState>себя</GlitchState>
+          <GlitchState>US</GlitchState>
+        </Glitch>
+        <DickPitch windowOff />
+      </p>,
+    );
+    expect(html).toContain("Window OFF");
+    expect(html).toContain('aria-pressed="false"');
+    expect(html).not.toContain("glitch-layers");
+    expect(html).toContain(">себя</span>");
+  });
+
+  it("`off` starts the page with the window closed", () => {
+    const { container } = render(
+      <p>
+        <WindowToggle off /> Для{" "}
+        <Glitch windowOff rng={seeded(1)}>
+          <GlitchState>себя</GlitchState>
+          <GlitchState>US</GlitchState>
+        </Glitch>
+      </p>,
+    );
+    expect(button()).toHaveTextContent("Window OFF");
+    expect(button()).toHaveAttribute("aria-pressed", "false");
+    expect(glitch(container)).toHaveAttribute("data-off");
+    setVisible(true);
+    expect(container.querySelector("[data-bursting]")).toBeNull();
+
+    fireEvent.click(button());
+    expect(button()).toHaveTextContent("Window ON");
+    expect(glitch(container).querySelector(".glitch-layers")).not.toBeNull();
   });
 
   it("opens the window again when the page goes away", () => {

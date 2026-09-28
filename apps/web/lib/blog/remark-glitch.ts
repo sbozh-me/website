@@ -15,6 +15,7 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
+ *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
  *
  * Works on the mdast (not the raw string), so code, inline code and URLs are never touched.
@@ -25,8 +26,9 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
 const MARK = /(?<!=)==(?!=)/;
 const CENSOR = "(;)";
 const BRAND = /^d\(;\)ck\s+pitch$/i;
-/** `==WINDOW==` (exactly, in capitals) is the switch that turns the glitches off. */
+/** `==WINDOW==` / `==WINDOW OFF==` (exactly, in capitals): the switch that turns the glitches off. */
 const WINDOW = "WINDOW";
+const WINDOW_OFF = "WINDOW OFF";
 /** `teal:Window` picks a state's colour (see GLITCH_COLORS in glitch/glitch.tsx). */
 const COLOR_PREFIX = /^(gold|purple|teal|white|red):\s*/i;
 
@@ -54,6 +56,7 @@ export default function remarkGlitch() {
     if (source) visitText(tree, (node) => encodeEscapes(node, source));
     transformHighlights(tree);
     transformCensors(tree);
+    markWindowOff(tree);
     visitText(tree, decodeEscapes);
   };
 }
@@ -65,6 +68,26 @@ function hasChildren(node: Nodes): node is Nodes & Parent {
 function visitText(node: Nodes, fn: (text: Text) => void) {
   if (node.type === "text") fn(node);
   else if (hasChildren(node)) node.children.forEach((child) => visitText(child as Nodes, fn));
+}
+
+function visitJsx(node: Nodes, fn: (element: MdxJsxTextElement) => void) {
+  if (node.type === "mdxJsxTextElement") fn(node);
+  if (hasChildren(node)) node.children.forEach((child) => visitJsx(child as Nodes, fn));
+}
+
+/**
+ * A post with `==WINDOW OFF==` starts with the glitches off. Every glitch word gets
+ * `windowOff` so the server already renders it plain (no flash before hydration).
+ */
+function markWindowOff(tree: Root) {
+  let off = false;
+  visitJsx(tree, (element) => {
+    if (element.name === "WindowToggle" && element.attributes.some((a) => "name" in a && a.name === "off")) off = true;
+  });
+  if (!off) return;
+  visitJsx(tree, (element) => {
+    if (element.name === "Glitch" || element.name === "DickPitch") element.attributes.push(attribute("windowOff"));
+  });
 }
 
 function encodeEscapes(node: Text, source: string) {
@@ -180,6 +203,7 @@ function buildHighlight(inner: PhrasingContent[], inLink: boolean): PhrasingCont
     const plainText = toPlainText(states[0].nodes).trim();
     if (BRAND.test(plainText)) return [jsx("DickPitch")];
     if (plainText === WINDOW) return [jsx("WindowToggle")];
+    if (plainText === WINDOW_OFF) return [jsx("WindowToggle", [], [attribute("off")])];
     return [jsx("mark", states[0].nodes)];
   }
 

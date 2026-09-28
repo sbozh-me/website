@@ -61,6 +61,8 @@ interface EngineProps {
   /** "return": bursts come back to state 0. "toggle": each burst moves to the next state. */
   mode: "return" | "toggle";
   blink?: boolean;
+  /** The post starts with the window closed (`==WINDOW OFF==`). */
+  windowOff?: boolean;
   className?: string;
   rng?: Rng;
 }
@@ -84,6 +86,7 @@ function GlitchEngine({
   lengths,
   mode,
   blink = false,
+  windowOff = false,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -96,7 +99,7 @@ function GlitchEngine({
   const [restSlices, setRestSlices] = useState<Slice[]>([]);
   const [flips, setFlips] = useState(0);
   // The page's "window" switch: when it's off the word is plain text and never bursts
-  const on = useGlitchesEnabled();
+  const on = useGlitchesEnabled(windowOff);
 
   // Latest props for the timer callbacks, which outlive renders
   const props = useRef({ count, lengths, mode, blink, rng });
@@ -358,10 +361,12 @@ function stateStyle(state: ReactNode, index: number): StateStyle {
 export function Glitch({
   children,
   blink = false,
+  windowOff = false,
   rng,
 }: {
   children?: ReactNode;
   blink?: boolean;
+  windowOff?: boolean;
   rng?: Rng;
 }) {
   const states = Children.toArray(children);
@@ -375,6 +380,7 @@ export function Glitch({
       lengths={states.map(textLength)}
       mode="return"
       blink={blink}
+      windowOff={windowOff}
       rng={rng}
     />
   );
@@ -393,13 +399,14 @@ function Brand({ flipped }: { flipped: boolean }) {
 }
 
 /** D✳CK PITCH brand mark: each burst swaps its two colours and spins the ✳. */
-export function DickPitch({ rng }: { rng?: Rng }) {
+export function DickPitch({ windowOff = false, rng }: { windowOff?: boolean; rng?: Rng }) {
   return (
     <GlitchEngine
       count={2}
       renderState={(state) => <Brand flipped={state === 1} />}
       lengths={[10, 10]}
       mode="toggle"
+      windowOff={windowOff}
       className="dick-pitch"
       rng={rng}
     />

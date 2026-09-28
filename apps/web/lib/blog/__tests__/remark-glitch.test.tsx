@@ -11,10 +11,15 @@ import remarkGlitch from "../remark-glitch";
 // via createElement, since JSX only types known intrinsic elements).
 const components = {
   Censor: () => createElement("c-censor"),
-  DickPitch: () => createElement("c-brand"),
-  WindowToggle: () => createElement("c-window"),
-  Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) =>
-    createElement("c-glitch", { "data-blink": blink ? "" : undefined }, children),
+  DickPitch: ({ windowOff }: { windowOff?: boolean }) =>
+    createElement("c-brand", { "data-window-off": windowOff ? "" : undefined }),
+  WindowToggle: ({ off }: { off?: boolean }) => createElement("c-window", { "data-off": off ? "" : undefined }),
+  Glitch: ({ blink, windowOff, children }: { blink?: boolean; windowOff?: boolean; children: ReactNode }) =>
+    createElement(
+      "c-glitch",
+      { "data-blink": blink ? "" : undefined, "data-window-off": windowOff ? "" : undefined },
+      children,
+    ),
   GlitchState: ({
     children,
     color,
@@ -225,8 +230,28 @@ describe("remarkGlitch", () => {
       );
     });
 
+    it("==WINDOW OFF== starts it closed", async () => {
+      expect(await render("контекст: ==WINDOW OFF==")).toBe('<p>контекст: <c-window data-off=""></c-window></p>');
+    });
+
+    it("==WINDOW OFF== marks every glitch in the post, before and after it", async () => {
+      expect(await render("Для ==себя|US==. ==WINDOW OFF==\n\n**==a|b==** ==D(;)ck pitch==")).toBe(
+        '<p>Для <c-glitch data-window-off=""><c-state>себя</c-state><c-state>US</c-state></c-glitch>. ' +
+          '<c-window data-off=""></c-window></p>\n' +
+          '<p><strong><c-glitch data-window-off=""><c-state>a</c-state><c-state>b</c-state></c-glitch></strong> ' +
+          '<c-brand data-window-off=""></c-brand></p>',
+      );
+    });
+
+    it("plain ==WINDOW== leaves the glitches on", async () => {
+      expect(await render("==WINDOW== ==a|b==")).toBe(
+        "<p><c-window></c-window> <c-glitch><c-state>a</c-state><c-state>b</c-state></c-glitch></p>",
+      );
+    });
+
     it("only in capitals", async () => {
       expect(await render("==window==")).toBe("<p><mark>window</mark></p>");
+      expect(await render("==Window Off==")).toBe("<p><mark>Window Off</mark></p>");
     });
   });
 
