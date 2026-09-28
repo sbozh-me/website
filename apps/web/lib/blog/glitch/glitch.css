@@ -41,6 +41,13 @@
   cursor: default;
 }
 
+/* The word under the pointer (or holding focus) is drawn above every other glitch word,
+   its echoes and held alts included */
+.glitch:hover,
+.glitch:focus-within {
+  z-index: 10;
+}
+
 /* Real text in the flow; the visible word is drawn by the layers on top */
 .glitch-sizer {
   opacity: 0;
