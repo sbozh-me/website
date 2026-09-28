@@ -17,6 +17,8 @@ const components = {
       "data-unclosable": unclosable ? "" : undefined,
     }),
   WindowToggle: ({ off }: { off?: boolean }) => createElement("c-window", { "data-off": off ? "" : undefined }),
+  WindowVideo: ({ on, off, windowOff }: { on: string; off: string; windowOff?: boolean }) =>
+    createElement("c-video", { "data-window-off": windowOff ? "" : undefined, "data-on": on, "data-off": off }),
   Glitch: ({
     blink,
     windowOff,
@@ -264,6 +266,12 @@ describe("remarkGlitch", () => {
           '<p><strong><c-glitch data-window-off=""><c-state>a</c-state><c-state>b</c-state></c-glitch></strong> ' +
           '<c-brand data-window-off=""></c-brand></p>',
       );
+    });
+
+    it("==WINDOW OFF== also starts a <WindowVideo> block on its OFF cut", async () => {
+      expect(
+        await render('==WINDOW OFF==\n\n<WindowVideo on="/on.mp4" off="/off.mp4" />'),
+      ).toBe('<p><c-window data-off=""></c-window></p>\n<c-video data-window-off="" data-on="/on.mp4" data-off="/off.mp4"></c-video>');
     });
 
     it("plain ==WINDOW== leaves the glitches on", async () => {

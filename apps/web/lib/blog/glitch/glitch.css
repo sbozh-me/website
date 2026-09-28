@@ -144,6 +144,23 @@
   cursor: auto;
 }
 
+/* Window video ---------------------------------------------------------- */
+
+/* Fits landscape and vertical (Shorts) cuts: full column width, at most 80% of the screen tall */
+.window-video video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
+  margin: 2rem auto;
+  border-radius: 0.5rem;
+}
+
+.window-video video[hidden] {
+  display: none;
+}
+
 /* D✳CK PITCH ------------------------------------------------------------ */
 
 /* With the window off it stops flipping but keeps its brand colours */

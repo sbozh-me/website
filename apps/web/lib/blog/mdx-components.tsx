@@ -16,6 +16,7 @@ import {
 import { Censor } from "./glitch/censor";
 import { DickPitch, Glitch, GlitchState } from "./glitch/glitch";
 import { WindowToggle } from "./glitch/window";
+import { WindowVideo } from "./glitch/window-video";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
 
 // Link component that handles external links
@@ -62,6 +63,8 @@ export const blogMdxComponents: Record<string, ComponentType<any>> = {
   Glitch,
   GlitchState,
   WindowToggle,
+  // <WindowVideo on="…" off="…" />: the ON cut with the window open, the OFF cut closed
+  WindowVideo,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,

@@ -1,0 +1,4 @@
+# Rendered videos and posters are too large for git; copies of media/pan-dude renders
+*.mp4
+*.jpg
+*.png
