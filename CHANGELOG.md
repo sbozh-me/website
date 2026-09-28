@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0] - 2026-09-28
+
+### Changes
+
+- docs(media): list the caption-free poster in media/production ([fe5683e](https://github.com/sbozh-me/website/commit/fe5683ecb374ef07cd5dced8c8b9d7865fd03e75))
+- feat(media): render glitch captions as YouTube Shorts (uncensored cut) ([a1b6286](https://github.com/sbozh-me/website/commit/a1b6286b6b569e6db0cea3faf77ed329640fceb4))
+- feat(blog): add a Video component for single looping clips ([4b503fe](https://github.com/sbozh-me/website/commit/4b503fe8fd8d0ccc5e627aae8297ce63e3881f93))
+- feat(releases): render glitch syntax in release note summaries ([6ede387](https://github.com/sbozh-me/website/commit/6ede387793dae03da9a489349525250dda66cc80))
+- docs(roadmap): add 1.7.0 Kagurame is out and shift later versions ([4691291](https://github.com/sbozh-me/website/commit/4691291542ce1d7c4c29364d7d66073b7c09abaf))
+- docs(blog): add glitch syntax spec ([4ed62bc](https://github.com/sbozh-me/website/commit/4ed62bc38ab1995187ec412a9180915ecf3206ab))
+- Merge branch 'worktree-kagurame-animation' ([e5491c9](https://github.com/sbozh-me/website/commit/e5491c90828ac3525ce4d5f129fd94331f5d3360))
+- docs(roadmap): list the Video component under 1.7.0 ([b53b84c](https://github.com/sbozh-me/website/commit/b53b84c2cf37912702a970fa8fd776bb104ec1bd))
+
+
 ## [1.6.1] - 2026-09-28
 
 ### Changes
