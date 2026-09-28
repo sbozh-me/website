@@ -1,0 +1,14 @@
+# Source clips and rendered videos are too large for git; rebuild with build.sh
+*.mp4
+*.png
+*.jpg
+words.ass
+corporate.ass
+corporate-shorts.ass
+*.ttf
+glitch.ass
+glitch.filter
+glitch-tracked.ass
+glitch-tracked.filter
+glitch-corporate*.ass
+glitch-corporate*.filter

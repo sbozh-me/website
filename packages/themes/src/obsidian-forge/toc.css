@@ -49,6 +49,10 @@
   padding-left: var(--toc-item-indent);
 }
 
+.toc-item-4 {
+  padding-left: calc(2 * var(--toc-item-indent));
+}
+
 .toc-link {
   display: block;
   font-size: var(--toc-link-size);

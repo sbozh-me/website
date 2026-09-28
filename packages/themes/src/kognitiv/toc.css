@@ -56,6 +56,10 @@
   padding-left: 1rem;
 }
 
+[data-theme="kognitiv"] .toc-item-4 {
+  padding-left: 2rem;
+}
+
 [data-theme="kognitiv"] .toc-link {
   display: block;
   font-size: 0.875rem;
