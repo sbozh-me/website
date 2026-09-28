@@ -212,6 +212,95 @@ describe("Glitch", () => {
     expect(seen[seen.length - 1]).toBe("заметили");
   });
 
+  describe("colours and plain states", () => {
+    const main = (container: HTMLElement) =>
+      container.querySelector<HTMLElement>(".glitch-copy:not(.glitch-echo)")!;
+    const colour = (container: HTMLElement) => main(container).style.getPropertyValue("--glitch-color");
+    const flash = (container: HTMLElement) => main(container).style.getPropertyValue("--glitch-flash");
+
+    it("base is amethyst and glitched states gold by default", () => {
+      const { container } = render(word());
+      expect(colour(container)).toBe("var(--glitch-base)");
+      expect(flash(container)).toBe("var(--glitch-accent)");
+      setVisible(true);
+      advance(4 * (1000 / 24) + 1);
+      expect(visibleText(container)).toBe("US");
+      expect(colour(container)).toBe("var(--glitch-accent)");
+      // a gold state flashes amethyst instead
+      expect(flash(container)).toBe("var(--glitch-base)");
+    });
+
+    it("uses the colour a state picked", () => {
+      const { container } = render(
+        <Glitch rng={seeded(1)}>
+          <GlitchState color="teal">себя</GlitchState>
+          <GlitchState color="white">US</GlitchState>
+        </Glitch>,
+      );
+      expect(colour(container)).toBe("var(--glitch-echo)");
+      setVisible(true);
+      advance(4 * (1000 / 24) + 1);
+      expect(colour(container)).toBe("var(--color-foreground)");
+    });
+
+    it("supports red", () => {
+      const { container } = render(
+        <Glitch>
+          <GlitchState color="red">камминг-ауте</GlitchState>
+          <GlitchState>censored</GlitchState>
+        </Glitch>,
+      );
+      expect(colour(container)).toBe("var(--glitch-red)");
+    });
+
+    it("ignores unknown colours", () => {
+      const { container } = render(
+        <Glitch>
+          <GlitchState color="pink">a</GlitchState>
+          <GlitchState>b</GlitchState>
+        </Glitch>,
+      );
+      expect(colour(container)).toBe("var(--glitch-base)");
+    });
+
+    it("a plain base reads as article text: no glitch weight, colour or notch", () => {
+      const { container } = render(
+        <Glitch rng={seeded(1)}>
+          <GlitchState plain>yes</GlitchState>
+          <GlitchState>No</GlitchState>
+        </Glitch>,
+      );
+      expect(container.querySelector(".glitch-sizer")?.hasAttribute("data-plain")).toBe(true);
+      expect(main(container).hasAttribute("data-plain")).toBe(true);
+      expect(colour(container)).toBe("var(--glitch-plain)");
+      expect(container.querySelectorAll(".glitch-copy:not(.glitch-echo)")).toHaveLength(1);
+      expect(main(container).style.clipPath).toBe("");
+
+      // …but the frames into the glitched state still glitch
+      setVisible(true);
+      expect(container.querySelector("[data-bursting]")).not.toBeNull();
+      expect(visibleText(container)).toBe("No");
+      expect(main(container).hasAttribute("data-plain")).toBe(false);
+    });
+
+    it("a plain alt still glitches in and is held plain", () => {
+      const { container } = render(
+        <Glitch rng={seeded(1)}>
+          <GlitchState>LOL</GlitchState>
+          <GlitchState plain>yes</GlitchState>
+        </Glitch>,
+      );
+      setVisible(true);
+      expect(container.querySelector("[data-bursting]")).not.toBeNull();
+      expect(visibleText(container)).toBe("yes");
+      advance(4 * (1000 / 24) + 1);
+      expect(container.querySelector("[data-bursting]")).toBeNull();
+      expect(visibleText(container)).toBe("yes");
+      expect(main(container).hasAttribute("data-plain")).toBe(true);
+      expect(container.querySelectorAll(".glitch-copy:not(.glitch-echo)")).toHaveLength(1);
+    });
+  });
+
   it("stops its timers on unmount", () => {
     const { unmount } = render(word(true));
     setVisible(true);

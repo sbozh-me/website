@@ -14,7 +14,8 @@ const components = {
   DickPitch: () => createElement("c-brand"),
   Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) =>
     createElement("c-glitch", { "data-blink": blink ? "" : undefined }, children),
-  GlitchState: ({ children }: { children: ReactNode }) => createElement("c-state", null, children),
+  GlitchState: ({ children, color, plain }: { children: ReactNode; color?: string; plain?: boolean }) =>
+    createElement("c-state", { "data-color": color, "data-plain": plain ? "" : undefined }, children),
 };
 
 async function render(source: string) {
@@ -117,8 +118,53 @@ describe("remarkGlitch", () => {
       );
     });
 
+    it("marks a state after || as plain", async () => {
+      expect(await render("==LOL|No||yes==")).toBe(
+        '<p><c-glitch><c-state>LOL</c-state><c-state>No</c-state><c-state data-plain="">yes</c-state></c-glitch></p>',
+      );
+    });
+
+    it("a leading || makes the base plain", async () => {
+      expect(await render("==||yes|No==")).toBe(
+        '<p><c-glitch><c-state data-plain="">yes</c-state><c-state>No</c-state></c-glitch></p>',
+      );
+    });
+
+    it("a lone plain state isn't a glitch", async () => {
+      expect(await render("==||yes==")).toBe("<p>==||yes==</p>");
+    });
+
+    it("plain states can blink", async () => {
+      expect(await render("==a||b!==")).toBe(
+        '<p><c-glitch data-blink=""><c-state>a</c-state><c-state data-plain="">b</c-state></c-glitch></p>',
+      );
+    });
+
+    it("picks a colour with a gold/purple/teal/white/red prefix", async () => {
+      expect(await render("==purple:себя|GOLD:US||teal:yes|White:x|red: censored==")).toBe(
+        "<p><c-glitch>" +
+          '<c-state data-color="purple">себя</c-state>' +
+          '<c-state data-color="gold">US</c-state>' +
+          '<c-state data-color="teal" data-plain="">yes</c-state>' +
+          '<c-state data-color="white">x</c-state>' +
+          '<c-state data-color="red">censored</c-state>' +
+          "</c-glitch></p>",
+      );
+    });
+
+    it("leaves other colons and unknown colours as text", async () => {
+      expect(await render("==квази-инженеру|Петух: ряженый|pink:x==")).toBe(
+        "<p><c-glitch><c-state>квази-инженеру</c-state><c-state>Петух: ряженый</c-state><c-state>pink:x</c-state></c-glitch></p>",
+      );
+    });
+
+    it("a colour prefix alone is an empty state", async () => {
+      expect(await render("==a|teal:==")).toBe("<p>==a|teal:==</p>");
+    });
+
     it("leaves an empty state as literal text", async () => {
-      expect(await render("==a||b==")).toBe("<p>==a||b==</p>");
+      expect(await render("==a|||b==")).toBe("<p>==a|||b==</p>");
+      expect(await render("==a| |b==")).toBe("<p>==a| |b==</p>");
       expect(await render("==a|!==")).toBe("<p>==a|!==</p>");
     });
   });

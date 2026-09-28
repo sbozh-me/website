@@ -9,6 +9,9 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
  *   ==base|alt==        -> <Glitch><GlitchState>…      word glitches into a second meaning
  *   ==a|b|c==           -> <Glitch> with three states
  *   ==base|alt!==       -> <Glitch blink>              blinks repeatedly
+ *   ==LOL|No||yes==     -> <GlitchState plain>         `||` state looks like the article text
+ *   ==||yes|No==        -> plain base: reads as normal text until it glitches
+ *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red prefix picks a colour
  *   ==text==            -> <mark>                      plain Obsidian highlight
  *
  * Works on the mdast (not the raw string), so code, inline code and URLs are never touched.
@@ -19,6 +22,8 @@ import type { MdxJsxAttribute, MdxJsxTextElement } from "mdast-util-mdx-jsx";
 const MARK = /(?<!=)==(?!=)/;
 const CENSOR = "(;)";
 const BRAND = /^d\(;\)ck\s+pitch$/i;
+/** `teal:Window` picks a state's colour (see GLITCH_COLORS in glitch/glitch.tsx). */
+const COLOR_PREFIX = /^(gold|purple|teal|white|red):\s*/i;
 
 // Escaped syntax characters are swapped for private-use placeholders while the
 // transform runs, then restored, so `\|` stays a literal pipe.
@@ -150,43 +155,68 @@ function pairMarks(tokens: Token[]): PhrasingContent[] {
   return mergeText(out);
 }
 
+interface State {
+  nodes: PhrasingContent[];
+  /** Came after `||`: shown in the article's own font and colour. */
+  plain: boolean;
+  color?: string;
+}
+
 function buildHighlight(inner: PhrasingContent[]): PhrasingContent[] | null {
-  const states = splitStates(inner).map(trimState);
-  if (states.some((state) => state.length === 0)) return null;
+  const states = splitStates(inner);
+  states.forEach((state) => (state.nodes = trimState(state.nodes)));
+  // A leading `||` makes the base itself plain: `==||yes|No==`
+  if (states.length > 2 && states[0].nodes.length === 0 && states[1].plain) states.shift();
+  if (states.some((state) => state.nodes.length === 0)) return null;
 
   if (states.length === 1) {
-    if (BRAND.test(toPlainText(states[0]).trim())) return [jsx("DickPitch")];
-    return [jsx("mark", states[0])];
+    if (BRAND.test(toPlainText(states[0].nodes).trim())) return [jsx("DickPitch")];
+    return [jsx("mark", states[0].nodes)];
   }
 
   const last = states[states.length - 1];
-  const tail = last[last.length - 1];
+  const tail = last.nodes[last.nodes.length - 1];
   const blink = tail.type === "text" && tail.value.endsWith("!");
   if (blink) {
     tail.value = tail.value.slice(0, -1);
-    states[states.length - 1] = trimState(last);
-    if (states[states.length - 1].length === 0) return null;
+    last.nodes = trimState(last.nodes);
   }
+
+  for (const state of states) {
+    const head = state.nodes[0];
+    if (head?.type !== "text") continue;
+    const match = COLOR_PREFIX.exec(head.value);
+    if (!match) continue;
+    state.color = match[1].toLowerCase();
+    state.nodes = trimState([text(head.value.slice(match[0].length)), ...state.nodes.slice(1)]);
+  }
+  if (states.some((state) => state.nodes.length === 0)) return null;
 
   return [
     jsx(
       "Glitch",
-      states.map((state) => jsx("GlitchState", state)),
-      blink ? [{ type: "mdxJsxAttribute", name: "blink", value: null }] : [],
+      states.map(({ nodes, plain, color }) =>
+        jsx("GlitchState", nodes, [
+          ...(color ? [attribute("color", color)] : []),
+          ...(plain ? [attribute("plain")] : []),
+        ]),
+      ),
+      blink ? [attribute("blink")] : [],
     ),
   ];
 }
 
-function splitStates(inner: PhrasingContent[]): PhrasingContent[][] {
-  const states: PhrasingContent[][] = [[]];
+function splitStates(inner: PhrasingContent[]): State[] {
+  const states: State[] = [{ nodes: [], plain: false }];
   for (const node of inner) {
     if (node.type !== "text") {
-      states[states.length - 1].push(node);
+      states[states.length - 1].nodes.push(node);
       continue;
     }
-    node.value.split("|").forEach((part, index) => {
-      if (index > 0) states.push([]);
-      if (part) states[states.length - 1].push(text(part));
+    // `||` starts a plain state, `|` a glitched one
+    node.value.split(/(\|\|?)/).forEach((part, index) => {
+      if (index % 2 === 1) states.push({ nodes: [], plain: part === "||" });
+      else if (part) states[states.length - 1].nodes.push(text(part));
     });
   }
   return states;
@@ -236,6 +266,11 @@ function jsx(
   attributes: MdxJsxAttribute[] = [],
 ): MdxJsxTextElement {
   return { type: "mdxJsxTextElement", name, attributes, children };
+}
+
+/** JSX attribute; without a value it's a boolean `name` (true). */
+function attribute(name: string, value: string | null = null): MdxJsxAttribute {
+  return { type: "mdxJsxAttribute", name, value };
 }
 
 function startsWithSpace(node: PhrasingContent) {

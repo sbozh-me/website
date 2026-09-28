@@ -32,9 +32,27 @@ export const SPIN_TURNS = 3.14;
 
 const VIEWPORT_MARGIN = 8;
 
+/** Colour names a state can pick with a `teal:` prefix. */
+export const GLITCH_COLORS: Record<string, string> = {
+  purple: "var(--glitch-base)",
+  gold: "var(--glitch-accent)",
+  teal: "var(--glitch-echo)",
+  white: "var(--color-foreground)",
+  red: "var(--glitch-red)",
+};
+
+interface StateStyle {
+  /** CSS colour of the state's text. */
+  color: string;
+  /** Article font and colour instead of the glitch weight; no resting notch. */
+  plain: boolean;
+}
+
 interface EngineProps {
   count: number;
   renderState: (state: number) => ReactNode;
+  /** Per-state colour and plainness; without it the CSS decides (DICK PITCH). */
+  styles?: StateStyle[];
   /** Characters per state, for how long a flipped state is held. */
   lengths: number[];
   /** "return": bursts come back to state 0. "toggle": each burst moves to the next state. */
@@ -59,6 +77,7 @@ function prefersReducedMotion() {
 function GlitchEngine({
   count,
   renderState,
+  styles,
   lengths,
   mode,
   blink = false,
@@ -182,10 +201,25 @@ function GlitchEngine({
     if (shift) layers.style.setProperty("--glitch-shift", `${Math.round(shift)}px`);
   }, [state, look]);
 
-  const current = look ?? { tone: "rest", scale: 1, dx: 0, dy: 0, echo: null, slices: restSlices };
+  const shown = styles?.[state];
+  const current = look ?? {
+    tone: "rest",
+    scale: 1,
+    dx: 0,
+    dy: 0,
+    echo: null,
+    // A plain state reads as article text, so it rests without the notch
+    slices: shown?.plain ? [] : restSlices,
+  };
   const move = (x: number, y: number): CSSProperties => ({
     transform: `translate(calc(-50% + var(--glitch-shift, 0px) + ${x}px), ${y}px) scale(${current.scale})`,
+    ...(shown &&
+      ({
+        "--glitch-color": shown.color,
+        "--glitch-flash": shown.color === GLITCH_COLORS.gold ? GLITCH_COLORS.purple : GLITCH_COLORS.gold,
+      } as CSSProperties)),
   });
+  const plain = (style?: StateStyle) => (style?.plain ? "" : undefined);
   const content = renderState(state);
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
   const cover = mode === "return" && state !== 0 && !look ? "" : undefined;
@@ -200,15 +234,22 @@ function GlitchEngine({
       onClick={() => play("flip")}
     >
       {/* Real text: keeps the layout, selection and screen readers on the base state */}
-      <span className="glitch-sizer">{renderState(0)}</span>
+      <span className="glitch-sizer" data-plain={plain(styles?.[0])}>
+        {renderState(0)}
+      </span>
       <span ref={layersRef} className="glitch-layers" aria-hidden="true">
         {current.echo !== null && (
           <>
-            <span className="glitch-copy glitch-echo" style={move(current.dx + current.echo, current.dy + 2)}>
+            <span
+              className="glitch-copy glitch-echo"
+              data-plain={plain(shown)}
+              style={move(current.dx + current.echo, current.dy + 2)}
+            >
               {content}
             </span>
             <span
               className="glitch-copy glitch-echo glitch-echo-dark"
+              data-plain={plain(shown)}
               style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
             >
               {content}
@@ -220,6 +261,7 @@ function GlitchEngine({
           key="main"
           className="glitch-copy"
           data-tone={current.tone}
+          data-plain={plain(shown)}
           data-cover={cover}
           style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
         >
@@ -230,6 +272,7 @@ function GlitchEngine({
             key={index}
             className="glitch-copy"
             data-tone={current.tone}
+            data-plain={plain(shown)}
             data-cover={cover}
             style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
           >
@@ -248,9 +291,23 @@ function textLength(node: ReactNode): number {
   return 0;
 }
 
+interface GlitchStateProps {
+  children?: ReactNode;
+  /** gold | purple | teal | white | red; defaults to purple for the base, gold for the rest. */
+  color?: string;
+  /** Shown in the article's own font and colour (`||` in the syntax). */
+  plain?: boolean;
+}
+
 /** One meaning of a glitch word; `==base|alt==` makes two. */
-export function GlitchState({ children }: { children?: ReactNode }) {
+export function GlitchState({ children }: GlitchStateProps) {
   return <>{children}</>;
+}
+
+function stateStyle(state: ReactNode, index: number): StateStyle {
+  const { color, plain = false } = isValidElement<GlitchStateProps>(state) ? state.props : {};
+  const fallback = plain ? "var(--glitch-plain)" : index === 0 ? GLITCH_COLORS.purple : GLITCH_COLORS.gold;
+  return { color: (color && GLITCH_COLORS[color]) || fallback, plain };
 }
 
 /** A word that glitches into its other meanings and back: `==себя|US==`, `==a|b|c==`. */
@@ -270,6 +327,7 @@ export function Glitch({
     <GlitchEngine
       count={states.length}
       renderState={(index) => states[index]}
+      styles={states.map(stateStyle)}
       lengths={states.map(textLength)}
       mode="return"
       blink={blink}
