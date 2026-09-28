@@ -6,3 +6,6 @@ export { formatReadingTime } from "./reading-time";
 
 export type { TOCItem } from "./toc";
 export { extractHeadings } from "./toc";
+
+export type { AdjacentPosts } from "./adjacent-posts";
+export { getAdjacentPosts, thumbnailSrc } from "./adjacent-posts";

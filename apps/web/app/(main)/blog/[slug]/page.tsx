@@ -11,10 +11,11 @@ import {
   ErrorState,
   PostHeader,
   PostLayout,
+  PostNavigation,
   ScrollToTop,
   TableOfContents,
 } from "@sbozh/blog/components";
-import { extractHeadings } from "@sbozh/blog/utils";
+import { extractHeadings, getAdjacentPosts } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
@@ -90,6 +91,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
   const repository = createBlogRepository();
 
+  // Neighbour list is a nice-to-have: a failure only hides post navigation
+  const postsPromise = repository.getPosts().catch(() => []);
+
   let post;
   let error: DirectusError | null = null;
 
@@ -116,6 +120,8 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!post) {
     notFound();
   }
+
+  const adjacent = getAdjacentPosts(await postsPromise, post.slug);
 
   // Extract TOC from raw markdown (skip if hidden)
   const toc = post.isTocHidden ? [] : extractHeadings(post.content);
@@ -182,7 +188,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-6xl mx-auto">
           <PostLayout toc={toc}>
             <div>
-              <PostHeader post={post} />
+              <PostHeader post={post} adjacent={adjacent} />
               {TldrContent && (
                 <div className="text-muted-foreground mb-6 [&_p]:inline">
                   <span className="font-medium">TL;DR: </span>
@@ -224,6 +230,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   </div>
                 </div>
               )}
+              <PostNavigation {...adjacent} />
             </div>
           </PostLayout>
         </div>

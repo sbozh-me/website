@@ -23,6 +23,7 @@ vi.mock("next/image", () => ({
 
 // Variable to control mock behavior
 let mockShouldThrow = false;
+let mockPostsShouldThrow = false;
 let mockPostOverride: unknown = undefined;
 
 // Mock the repository
@@ -41,7 +42,7 @@ vi.mock("@/lib/blog/repository", () => ({
       return repo.getPost(slug);
     }),
     getPosts: vi.fn(async () => {
-      if (mockShouldThrow) {
+      if (mockShouldThrow || mockPostsShouldThrow) {
         throw new Error("Connection failed");
       }
       const { MockBlogRepository } = await import("@sbozh/blog/data");
@@ -61,6 +62,7 @@ describe("BlogPostPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockShouldThrow = false;
+    mockPostsShouldThrow = false;
     mockPostOverride = undefined;
   });
 
@@ -118,9 +120,32 @@ describe("BlogPostPage", () => {
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
-    // This post has no image, so no img element for the hero
+    // This post has no image, so no hero figure (next-post thumbnails live in the nav)
     const images = screen.queryAllByRole("img");
-    expect(images.length).toBe(0);
+    expect(images.every((img) => img.closest("nav"))).toBe(true);
+    expect(document.querySelector("figure")).toBeNull();
+  });
+
+  it("links to the neighbouring posts in the header and after the content", async () => {
+    const params = Promise.resolve({ slug: "on-patience-and-shipping" });
+    render(await BlogPostPage({ params }));
+
+    expect(
+      screen.getByRole("link", { name: "Previous post: Prague in winter" })
+    ).toHaveAttribute("href", "/blog/prague-in-winter");
+    expect(
+      screen.getByRole("link", { name: "Next post: Why I started sbozh.me" })
+    ).toHaveAttribute("href", "/blog/why-i-started-sbozh");
+    expect(screen.getByRole("navigation", { name: "More posts" })).toBeInTheDocument();
+  });
+
+  it("still renders the post when the post list fails to load", async () => {
+    mockPostsShouldThrow = true;
+    const params = Promise.resolve({ slug: "on-patience-and-shipping" });
+    render(await BlogPostPage({ params }));
+
+    expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
+    expect(screen.queryByRole("navigation", { name: "More posts" })).not.toBeInTheDocument();
   });
 
   it("renders ScrollToTop component (hidden by default)", async () => {
