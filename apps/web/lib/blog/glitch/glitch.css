@@ -1,0 +1,210 @@
+/*
+ * Blog glitch words, ✳ censor and D✳CK PITCH (see .claude/specs/blog-glitch-syntax.md).
+ * Colours are custom properties so a post theme can override them.
+ */
+
+:root {
+  --glitch-base: var(--color-primary);
+  --glitch-accent: var(--color-secondary);
+  --glitch-obsidian: var(--color-background);
+  --glitch-echo: #6ce8db;
+  --glitch-plain: var(--color-foreground);
+  --glitch-red: var(--color-destructive, #ef4444);
+  --glitch-pink: #ec4899;
+  --glitch-outline: 1px;
+  --censor-logo: url("/android-chrome-192x192.png");
+}
+
+/* ✳ censor ------------------------------------------------------------- */
+
+.censor {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin: 0 0.02em;
+  vertical-align: -0.06em;
+  overflow: hidden;
+  color: transparent;
+  line-height: 0.8em;
+  background: var(--censor-logo) center / contain no-repeat;
+}
+
+/* Glitch word ---------------------------------------------------------- */
+
+.glitch {
+  /* Per state (set inline): its colour, and the colour a burst flashes to */
+  --glitch-color: var(--glitch-base);
+  --glitch-flash: var(--glitch-accent);
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  cursor: default;
+}
+
+/* The word under the pointer (or holding focus) is drawn above every other glitch word,
+   its echoes and held alts included */
+.glitch:hover,
+.glitch:focus-within {
+  z-index: 10;
+}
+
+/* Real text in the flow; the visible word is drawn by the layers on top */
+.glitch-sizer {
+  opacity: 0;
+}
+
+/* `||` states keep the article's weight; glitched ones are semibold */
+.glitch-sizer:not([data-plain]),
+.glitch-copy:not([data-plain]) {
+  font-weight: 600;
+}
+
+.glitch-layers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.glitch-copy {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  white-space: nowrap;
+  paint-order: stroke fill;
+}
+
+.glitch-copy[data-tone="rest"] {
+  color: var(--glitch-color);
+}
+
+/* "gold" is the video's accent flash: gold, or amethyst on a gold state */
+.glitch-copy[data-tone="gold"] {
+  color: var(--glitch-flash);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-obsidian);
+}
+
+.glitch-copy[data-tone="hollow"] {
+  color: var(--glitch-obsidian);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-color);
+}
+
+.glitch-copy[data-tone="base"] {
+  color: var(--glitch-color);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-obsidian);
+}
+
+/* Links: a thick underline overhanging the word; it glitches with the copies */
+.glitch-copy[data-link]::after {
+  content: "";
+  position: absolute;
+  left: -0.3em;
+  right: -0.3em;
+  bottom: 0.32em;
+  height: 0.14em;
+  background: currentColor;
+}
+
+/* A link inside a state keeps the state's colour and can be clicked while shown */
+.glitch-copy a,
+.glitch-copy a:hover {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.glitch-copy[data-cover] {
+  padding: 0 0.2em;
+  background: var(--glitch-obsidian);
+}
+
+/* Echoes are flat colour, logo included */
+.glitch-echo {
+  color: var(--glitch-echo);
+}
+
+.glitch-echo-dark {
+  color: var(--glitch-obsidian);
+}
+
+.glitch-echo * {
+  color: inherit !important;
+}
+
+.glitch-echo .censor {
+  background: currentColor;
+  mask: var(--censor-logo) center / contain no-repeat;
+}
+
+/* Window OFF: the word is plain article text */
+.glitch[data-off] {
+  position: static;
+  display: inline;
+  white-space: normal;
+  cursor: auto;
+}
+
+/* Window video ---------------------------------------------------------- */
+
+/* Fits landscape and vertical (Shorts) cuts: full column width, at most 80% of the screen tall */
+.window-video video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
+  margin: 2rem auto;
+  border-radius: 0.5rem;
+}
+
+.window-video video[hidden] {
+  display: none;
+}
+
+/* D✳CK PITCH ------------------------------------------------------------ */
+
+/* With the window off it stops flipping but keeps its brand colours */
+.dick-pitch[data-off] {
+  font-weight: 700;
+}
+
+.dick-pitch[data-off] [data-part="base"] {
+  color: var(--glitch-base);
+}
+
+.dick-pitch[data-off] [data-part="accent"] {
+  color: var(--glitch-accent);
+}
+
+.dick-pitch {
+  letter-spacing: 0.02em;
+}
+
+.dick-pitch .glitch-sizer,
+.dick-pitch .glitch-copy {
+  font-weight: 700;
+}
+
+.dick-pitch .glitch-copy [data-part="base"] {
+  color: var(--glitch-base);
+}
+
+.dick-pitch .glitch-copy [data-part="accent"] {
+  color: var(--glitch-accent);
+}
+
+/* Colours stay per part in every tone except the hollow one */
+.dick-pitch .glitch-copy[data-tone="hollow"] [data-part] {
+  color: var(--glitch-obsidian);
+}
+
+.dick-pitch .glitch-copy .censor {
+  transform: rotate(calc(var(--censor-turns, 0) * 1turn));
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dick-pitch .glitch-copy .censor {
+    transition: none;
+  }
+}

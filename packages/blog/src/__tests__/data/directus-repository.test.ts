@@ -260,6 +260,14 @@ describe("DirectusRepository", () => {
       expect(posts[0].image).toBeUndefined();
     });
 
+    it("maps the editor-picked next post id", async () => {
+      mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, next_post: "post-2" }]);
+
+      const posts = await repository.getPosts();
+
+      expect(posts[0].nextPostId).toBe("post-2");
+    });
+
     it("handles posts with empty tags", async () => {
       mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, tags: [] }]);
 

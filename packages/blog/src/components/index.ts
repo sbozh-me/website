@@ -39,6 +39,9 @@ export {
 export {
   PostHeader,
   PostLayout,
+  PostNavArrows,
+  PostNavigation,
+  PostThumbnail,
   Prose,
   ScrollToTop,
   TableOfContents,
