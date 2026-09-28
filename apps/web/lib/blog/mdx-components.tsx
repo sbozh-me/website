@@ -13,6 +13,8 @@ import {
   Divider,
 } from "@sbozh/pmdxjs/components/cv";
 
+import { Censor } from "./glitch/censor";
+import { DickPitch, Glitch, GlitchState } from "./glitch/glitch";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
 
 // Link component that handles external links
@@ -52,6 +54,12 @@ function PMDX({ source, theme }: { source: string; theme?: string }) {
 export const blogMdxComponents: Record<string, ComponentType<any>> = {
   // Link handling
   a: Link,
+
+  // Glitch syntax, emitted by remark-glitch: (;) ==a|b== ==D(;)ck pitch==
+  Censor,
+  DickPitch,
+  Glitch,
+  GlitchState,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,

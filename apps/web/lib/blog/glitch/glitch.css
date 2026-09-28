@@ -1,0 +1,130 @@
+/*
+ * Blog glitch words, ✳ censor and D✳CK PITCH (see .claude/specs/blog-glitch-syntax.md).
+ * Colours are custom properties so a post theme can override them.
+ */
+
+:root {
+  --glitch-base: var(--color-primary);
+  --glitch-accent: var(--color-secondary);
+  --glitch-obsidian: var(--color-background);
+  --glitch-echo: #6ce8db;
+  --glitch-outline: 1px;
+  --censor-logo: url("/android-chrome-192x192.png");
+}
+
+/* ✳ censor ------------------------------------------------------------- */
+
+.censor {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin: 0 0.02em;
+  vertical-align: -0.06em;
+  overflow: hidden;
+  color: transparent;
+  line-height: 0.8em;
+  background: var(--censor-logo) center / contain no-repeat;
+}
+
+/* Glitch word ---------------------------------------------------------- */
+
+.glitch {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* Real text in the flow; the visible word is drawn by the layers on top */
+.glitch-sizer {
+  opacity: 0;
+}
+
+.glitch-layers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.glitch-copy {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  white-space: nowrap;
+  paint-order: stroke fill;
+}
+
+.glitch-copy[data-tone="rest"] {
+  color: var(--glitch-base);
+}
+
+.glitch-copy[data-tone="gold"] {
+  color: var(--glitch-accent);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-obsidian);
+}
+
+.glitch-copy[data-tone="hollow"] {
+  color: var(--glitch-obsidian);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-base);
+}
+
+.glitch-copy[data-tone="base"] {
+  color: var(--glitch-base);
+  -webkit-text-stroke: var(--glitch-outline) var(--glitch-obsidian);
+}
+
+.glitch-copy[data-cover] {
+  padding: 0 0.2em;
+  background: var(--glitch-obsidian);
+}
+
+/* Echoes are flat colour, logo included */
+.glitch-echo {
+  color: var(--glitch-echo);
+}
+
+.glitch-echo-dark {
+  color: var(--glitch-obsidian);
+}
+
+.glitch-echo * {
+  color: inherit !important;
+}
+
+.glitch-echo .censor {
+  background: currentColor;
+  mask: var(--censor-logo) center / contain no-repeat;
+}
+
+/* D✳CK PITCH ------------------------------------------------------------ */
+
+.dick-pitch {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.dick-pitch .glitch-copy [data-part="base"] {
+  color: var(--glitch-base);
+}
+
+.dick-pitch .glitch-copy [data-part="accent"] {
+  color: var(--glitch-accent);
+}
+
+/* Colours stay per part in every tone except the hollow one */
+.dick-pitch .glitch-copy[data-tone="hollow"] [data-part] {
+  color: var(--glitch-obsidian);
+}
+
+.dick-pitch .glitch-copy .censor {
+  transform: rotate(calc(var(--censor-turns, 0) * 1turn));
+  transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dick-pitch .glitch-copy .censor {
+    transition: none;
+  }
+}

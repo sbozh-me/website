@@ -18,6 +18,7 @@ import { extractHeadings } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
+import remarkGlitch from "@/lib/blog/remark-glitch";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";
@@ -123,7 +124,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   // Compile and run MDX
   const { default: MDXContent } = await evaluate(post.content, {
     ...runtime,
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, remarkGlitch],
     rehypePlugins: [
       rehypeSlug,
       [

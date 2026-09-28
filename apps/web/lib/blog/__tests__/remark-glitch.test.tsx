@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { createElement, type ReactNode } from "react";
 import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -7,14 +7,14 @@ import { describe, expect, it } from "vitest";
 
 import remarkGlitch from "../remark-glitch";
 
-// Stubs that render the plugin's output as compact, assertable markup.
+// Stubs that render the plugin's output as compact, assertable markup (custom tags
+// via createElement, since JSX only types known intrinsic elements).
 const components = {
-  Censor: () => <c-censor />,
-  DickPitch: () => <c-brand />,
-  Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) => (
-    <c-glitch data-blink={blink ? "" : undefined}>{children}</c-glitch>
-  ),
-  GlitchState: ({ children }: { children: ReactNode }) => <c-state>{children}</c-state>,
+  Censor: () => createElement("c-censor"),
+  DickPitch: () => createElement("c-brand"),
+  Glitch: ({ blink, children }: { blink?: boolean; children: ReactNode }) =>
+    createElement("c-glitch", { "data-blink": blink ? "" : undefined }, children),
+  GlitchState: ({ children }: { children: ReactNode }) => createElement("c-state", null, children),
 };
 
 async function render(source: string) {

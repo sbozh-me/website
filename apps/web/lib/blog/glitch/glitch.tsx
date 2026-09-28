@@ -1,0 +1,305 @@
+"use client";
+
+import {
+  Children,
+  isValidElement,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+
+import { Censor } from "./censor";
+import {
+  type BurstKind,
+  type Look,
+  type Rng,
+  type Slice,
+  holdMs,
+  nextDelay,
+  notches,
+  onlySlice,
+  planBurst,
+  randomKind,
+  withoutSlices,
+} from "./plan";
+import "./glitch.css";
+
+/** On each DICK PITCH flip the ✳ spins pi turns and lands wherever pi leaves it. */
+export const SPIN_TURNS = 3.14;
+
+const VIEWPORT_MARGIN = 8;
+
+interface EngineProps {
+  count: number;
+  renderState: (state: number) => ReactNode;
+  /** Characters per state, for how long a flipped state is held. */
+  lengths: number[];
+  /** "return": bursts come back to state 0. "toggle": each burst moves to the next state. */
+  mode: "return" | "toggle";
+  blink?: boolean;
+  className?: string;
+  rng?: Rng;
+}
+
+function prefersReducedMotion() {
+  return (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+/**
+ * Draws one state as layered copies (echoes, a main copy with strips cut out, and the
+ * strips shifted sideways) and plays bursts: on scroll-in, at random while visible,
+ * and on hover/tap. With reduced motion it stays on the resting state.
+ */
+function GlitchEngine({
+  count,
+  renderState,
+  lengths,
+  mode,
+  blink = false,
+  className,
+  rng = Math.random,
+}: EngineProps) {
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const layersRef = useRef<HTMLSpanElement>(null);
+  const mainRef = useRef<HTMLSpanElement>(null);
+
+  const [state, setState] = useState(0);
+  const [look, setLook] = useState<Look | undefined>();
+  const [restSlices, setRestSlices] = useState<Slice[]>([]);
+  const [flips, setFlips] = useState(0);
+
+  // Latest props for the timer callbacks, which outlive renders
+  const props = useRef({ count, lengths, mode, blink, rng });
+  props.current = { count, lengths, mode, blink, rng };
+
+  const engine = useRef({
+    rest: 0,
+    playing: false,
+    visible: false,
+    seen: false,
+    reduced: false,
+    stepTimer: undefined as ReturnType<typeof setTimeout> | undefined,
+    nextTimer: undefined as ReturnType<typeof setTimeout> | undefined,
+  });
+
+  function schedule() {
+    const e = engine.current;
+    clearTimeout(e.nextTimer);
+    if (!e.visible || e.reduced) return;
+    const { rng: random, blink: blinking } = props.current;
+    e.nextTimer = setTimeout(() => {
+      if (document.hidden) schedule();
+      else play(randomKind(random, blinking));
+    }, nextDelay(random, blinking));
+  }
+
+  function play(kind: Exclude<BurstKind, "toggle">) {
+    const e = engine.current;
+    // A burst already running reschedules when it ends
+    if (e.playing || e.reduced) return;
+    e.playing = true;
+
+    const { count: states, lengths: chars, mode: m, blink: blinking, rng: random } = props.current;
+    const burstKind: BurstKind = m === "toggle" && kind === "flip" ? "toggle" : kind;
+    const burst = planBurst({
+      kind: burstKind,
+      from: e.rest,
+      count: states,
+      rng: random,
+      hold: (s) => holdMs(chars[s] ?? 0, blinking),
+    });
+    if (burstKind === "toggle") setFlips((f) => f + 1);
+
+    let index = 0;
+    const step = () => {
+      if (index === burst.steps.length) {
+        e.rest = burst.rest;
+        e.playing = false;
+        setState(burst.rest);
+        setLook(undefined);
+        schedule();
+        return;
+      }
+      const current = burst.steps[index++];
+      setState(current.state);
+      setLook(current.look);
+      e.stepTimer = setTimeout(step, current.ms);
+    };
+    step();
+  }
+
+  useEffect(() => {
+    const e = engine.current;
+    const el = rootRef.current;
+    e.reduced = prefersReducedMotion();
+    setRestSlices(notches(props.current.rng));
+    if (e.reduced || !el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        e.visible = entry.isIntersecting;
+        if (!entry.isIntersecting) {
+          clearTimeout(e.nextTimer);
+        } else if (!e.seen) {
+          e.seen = true;
+          play("flip");
+        } else if (!e.playing) {
+          schedule();
+        }
+      },
+      { threshold: 0.6 },
+    );
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(e.stepTimer);
+      clearTimeout(e.nextTimer);
+      e.playing = false;
+    };
+    // play/schedule only read refs; the engine starts once per mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep a wider alt state inside the viewport
+  useLayoutEffect(() => {
+    const layers = layersRef.current;
+    const main = mainRef.current;
+    if (!layers || !main) return;
+    layers.style.setProperty("--glitch-shift", "0px");
+    const { left, right } = main.getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    if (!width || right - left > width - 2 * VIEWPORT_MARGIN) return;
+    let shift = 0;
+    if (left < VIEWPORT_MARGIN) shift = VIEWPORT_MARGIN - left;
+    else if (right > width - VIEWPORT_MARGIN) shift = width - VIEWPORT_MARGIN - right;
+    if (shift) layers.style.setProperty("--glitch-shift", `${Math.round(shift)}px`);
+  }, [state, look]);
+
+  const current = look ?? { tone: "rest", scale: 1, dx: 0, dy: 0, echo: null, slices: restSlices };
+  const move = (x: number, y: number): CSSProperties => ({
+    transform: `translate(calc(-50% + var(--glitch-shift, 0px) + ${x}px), ${y}px) scale(${current.scale})`,
+  });
+  const content = renderState(state);
+  // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
+  const cover = mode === "return" && state !== 0 && !look ? "" : undefined;
+
+  return (
+    <span
+      ref={rootRef}
+      className={["glitch", className].filter(Boolean).join(" ")}
+      data-bursting={look ? "" : undefined}
+      style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
+      onPointerEnter={() => play("flip")}
+      onClick={() => play("flip")}
+    >
+      {/* Real text: keeps the layout, selection and screen readers on the base state */}
+      <span className="glitch-sizer">{renderState(0)}</span>
+      <span ref={layersRef} className="glitch-layers" aria-hidden="true">
+        {current.echo !== null && (
+          <>
+            <span className="glitch-copy glitch-echo" style={move(current.dx + current.echo, current.dy + 2)}>
+              {content}
+            </span>
+            <span
+              className="glitch-copy glitch-echo glitch-echo-dark"
+              style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
+            >
+              {content}
+            </span>
+          </>
+        )}
+        <span
+          ref={mainRef}
+          key="main"
+          className="glitch-copy"
+          data-tone={current.tone}
+          data-cover={cover}
+          style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
+        >
+          {content}
+        </span>
+        {current.slices.map((slice, index) => (
+          <span
+            key={index}
+            className="glitch-copy"
+            data-tone={current.tone}
+            data-cover={cover}
+            style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
+          >
+            {content}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+function textLength(node: ReactNode): number {
+  if (typeof node === "string" || typeof node === "number") return String(node).length;
+  if (Array.isArray(node)) return node.reduce((sum: number, child) => sum + textLength(child), 0);
+  if (isValidElement<{ children?: ReactNode }>(node)) return textLength(node.props.children) || 1;
+  return 0;
+}
+
+/** One meaning of a glitch word; `==base|alt==` makes two. */
+export function GlitchState({ children }: { children?: ReactNode }) {
+  return <>{children}</>;
+}
+
+/** A word that glitches into its other meanings and back: `==себя|US==`, `==a|b|c==`. */
+export function Glitch({
+  children,
+  blink = false,
+  rng,
+}: {
+  children?: ReactNode;
+  blink?: boolean;
+  rng?: Rng;
+}) {
+  const states = Children.toArray(children);
+  if (states.length === 0) return null;
+
+  return (
+    <GlitchEngine
+      count={states.length}
+      renderState={(index) => states[index]}
+      lengths={states.map(textLength)}
+      mode="return"
+      blink={blink}
+      rng={rng}
+    />
+  );
+}
+
+function Brand({ flipped }: { flipped: boolean }) {
+  return (
+    <>
+      <span data-part={flipped ? "accent" : "base"}>
+        D<Censor />
+        CK
+      </span>{" "}
+      <span data-part={flipped ? "base" : "accent"}>PITCH</span>
+    </>
+  );
+}
+
+/** D✳CK PITCH brand mark: each burst swaps its two colours and spins the ✳. */
+export function DickPitch({ rng }: { rng?: Rng }) {
+  return (
+    <GlitchEngine
+      count={2}
+      renderState={(state) => <Brand flipped={state === 1} />}
+      lengths={[10, 10]}
+      mode="toggle"
+      className="dick-pitch"
+      rng={rng}
+    />
+  );
+}
