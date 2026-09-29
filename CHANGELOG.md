@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.3] - 2026-09-29
+
+### Changes
+
+- feat(blog): style the window toggle and add a window icon ([f86be8a](https://github.com/sbozh-me/website/commit/f86be8ac30d7abfc5abe66e4abff06f2545114a9))
+- feat(blog): add an open-window rest state marker (>) to glitch words ([3228d84](https://github.com/sbozh-me/website/commit/3228d84566a4fdbbd1a42602c11bdb39ca29dc5d))
+
+
 ## [1.7.2] - 2026-09-28
 
 ### Changes
