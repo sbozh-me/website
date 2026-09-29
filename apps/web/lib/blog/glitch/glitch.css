@@ -155,6 +155,25 @@
   cursor: auto;
 }
 
+/* Window toggle ------------------------------------------------------- */
+
+/* Closed (OFF): amethyst. Open (ON): orange. */
+.window-toggle {
+  --window-color: var(--glitch-base);
+  border-color: var(--window-color);
+  color: var(--window-color);
+  background: color-mix(in oklab, var(--window-color) 8%, transparent);
+}
+
+.window-toggle[aria-pressed="true"] {
+  --window-color: var(--glitch-accent);
+}
+
+.window-toggle:hover {
+  color: var(--window-color);
+  background: color-mix(in oklab, var(--window-color) 18%, transparent);
+}
+
 /* Window video ---------------------------------------------------------- */
 
 /* Fits landscape and vertical (Shorts) cuts: full column width, at most 80% of the screen tall */

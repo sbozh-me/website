@@ -3,6 +3,8 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
+import "./glitch.css";
+
 /*
  * The "window" (форточка): one page-wide switch for the glitch effects. With the window
  * OFF, glitch words render as plain article text and nothing bursts. It lives only as long
@@ -54,6 +56,29 @@ function onKeyDown(event: KeyboardEvent) {
 }
 
 /**
+ * A four-pane window in lucide's line style. Open: the top-left pane (the форточка)
+ * swings out on its left hinge.
+ */
+function WindowIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      data-open={open ? "" : undefined}
+    >
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <path d="M12 3v18M3 12h18" />
+      {open && <path d="M3 3l6-2v9l-6 2z" fill="currentColor" fillOpacity={0.25} />}
+    </svg>
+  );
+}
+
+/**
  * `==WINDOW==` in a post: "Window ON" / "Window OFF", also toggled with the W key.
  * `==WINDOW OFF==` (`off`) starts the page with the window closed, so the reader
  * switches the glitches on.
@@ -84,6 +109,7 @@ export function WindowToggle({ off = false }: { off?: boolean }) {
       className="window-toggle mx-1 align-middle font-mono"
       onClick={() => setGlitchesEnabled(!on)}
     >
+      <WindowIcon open={on} />
       {on ? "Window ON" : "Window OFF"}
     </Button>
   );
