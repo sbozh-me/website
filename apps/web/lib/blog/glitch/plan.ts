@@ -128,9 +128,11 @@ export interface PlanOptions {
   rng: Rng;
   /** Clean hold after each flip into state i. */
   hold?: (state: number) => number;
+  /** A state a flip never visits (the closed-window text of a `>` word). */
+  skip?: number;
 }
 
-export function planBurst({ kind, from, count, rng, hold = () => 0 }: PlanOptions): Burst {
+export function planBurst({ kind, from, count, rng, hold = () => 0, skip }: PlanOptions): Burst {
   if (kind === "twitch" || count < 2) {
     return { steps: frames(rng, Array(randInt(rng, 2, 5)).fill(from)), rest: from };
   }
@@ -144,7 +146,7 @@ export function planBurst({ kind, from, count, rng, hold = () => 0 }: PlanOption
   const steps: Step[] = [];
   let previous = from;
   for (let state = 0; state < count; state++) {
-    if (state === from) continue;
+    if (state === from || state === skip) continue;
     steps.push(...frames(rng, [state, previous, state, state]));
     const ms = hold(state);
     if (ms > 0) steps.push({ state, ms });

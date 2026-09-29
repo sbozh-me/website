@@ -208,6 +208,10 @@ word is the one that glitches**.
   Further states, colours and `!` work: `==|teal:a|b!==`. `{` can't be used for this
   because MDX treats it as JavaScript. The space before it stays, so an OFF sentence reads
   "Для себя ." unless the text is attached to the previous word.
+- **Open-window rest** (`==shut|>open|…==`, a `>` before a state, before its colour):
+  with the window OFF the word reads as the base; with it ON it rests on the `>` state,
+  is sized by it, and its flips never show the base. Only the first `>` counts, and not on
+  the base. Example: `==||не хватает. Кто форточку закрыл?|>надуло.|gold:ДАЙ ДЕНЕГ==`.
 - **Unclosable** (`===a|b===`): a glitch word the window can't close. It keeps bursting
   with the window OFF, including on a `==WINDOW OFF==` page. Everything else works inside
   it (`||`, colours, `!`, links), and `===D(;)ck pitch===` keeps the brand flipping.

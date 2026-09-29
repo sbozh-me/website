@@ -16,6 +16,7 @@ import type { MdxJsxAttribute, MdxJsxFlowElement, MdxJsxTextElement } from "mdas
  *   ==a|[b](url)==      -> only the state holding the link is a link
  *   ===a|b===           -> <Glitch unclosable>         keeps glitching with the window OFF
  *   ==|text==           -> <Glitch windowOnly>         only there while the window is ON
+ *   ==shut|>open|x==    -> <Glitch openState="1">      closed: "shut"; open: rests on "open" instead
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
  *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
@@ -35,6 +36,8 @@ const WINDOW = "WINDOW";
 const WINDOW_OFF = "WINDOW OFF";
 /** `teal:Window` picks a state's colour (see GLITCH_COLORS in glitch/glitch.tsx). */
 const COLOR_PREFIX = /^(gold|purple|teal|white|red|pink):\s*/i;
+/** `>` before a state (and its colour): the state the word rests on while the window is open. */
+const OPEN_PREFIX = /^>\s*/;
 
 // Escaped syntax characters are swapped for private-use placeholders while the
 // transform runs, then restored, so `\|` stays a literal pipe.
@@ -232,6 +235,17 @@ function buildHighlight(
     last.nodes = trimState(last.nodes);
   }
 
+  // `==shut|>open==`: the first `>` state (never the base) is where the open window rests
+  let openState: number | undefined;
+  states.forEach((state, index) => {
+    const head = state.nodes[0];
+    if (index === 0 || head?.type !== "text") return;
+    const match = OPEN_PREFIX.exec(head.value);
+    if (!match) return;
+    openState ??= index;
+    state.nodes = trimState([text(head.value.slice(match[0].length)), ...state.nodes.slice(1)]);
+  });
+
   for (const state of states) {
     const head = state.nodes[0];
     if (head?.type !== "text") continue;
@@ -256,6 +270,7 @@ function buildHighlight(
         ...(blink ? [attribute("blink")] : []),
         ...(unclosable ? [attribute("unclosable")] : []),
         ...(windowOnly ? [attribute("windowOnly")] : []),
+        ...(openState !== undefined ? [attribute("openState", String(openState))] : []),
       ],
     ),
   ];

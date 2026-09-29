@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Censor } from "../censor";
 import { DickPitch, Glitch, GlitchState, SPIN_TURNS } from "../glitch";
 import { seeded } from "../plan";
+import { setGlitchesEnabled } from "../window";
 
 // IntersectionObserver whose callback the test drives
 let observers: Array<{ callback: IntersectionObserverCallback; target?: Element }> = [];
@@ -383,5 +384,60 @@ describe("DickPitch", () => {
     advance(500);
     expect(parts(container)).toEqual(["base", "accent"]);
     expect(turns(container)).toBe(String(2 * SPIN_TURNS));
+  });
+});
+
+describe("Glitch with an open-window state (==shut|>open==)", () => {
+  afterEach(() => {
+    act(() => setGlitchesEnabled(null));
+  });
+
+  const vent = (windowOff = false) => (
+    <Glitch openState="1" windowOff={windowOff} rng={seeded(2)}>
+      <GlitchState plain>не хватает. Кто форточку закрыл?</GlitchState>
+      <GlitchState>надуло.</GlitchState>
+      <GlitchState color="teal">ДАЙ ДЕНЕГ</GlitchState>
+    </Glitch>
+  );
+
+  it("shows the closed text on a page that starts with the window closed", () => {
+    const { container } = render(vent(true));
+    expect(container.textContent).toBe("не хватает. Кто форточку закрыл?");
+  });
+
+  it("rests on the > state with the window open, sized by it", () => {
+    const { container } = render(vent());
+    expect(visibleText(container)).toBe("надуло.");
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("надуло.");
+  });
+
+  it("swaps with the window switch", () => {
+    const { container } = render(vent(true));
+    act(() => setGlitchesEnabled(true));
+    expect(visibleText(container)).toBe("надуло.");
+    act(() => setGlitchesEnabled(false));
+    expect(container.textContent).toBe("не хватает. Кто форточку закрыл?");
+  });
+
+  it("never flashes the closed text while open", () => {
+    const { container } = render(vent());
+    const seen = new Set<string>();
+    setVisible(true);
+    for (let i = 0; i < 200; i++) {
+      seen.add(visibleText(container) ?? "");
+      advance(50);
+    }
+    expect(seen.has("ДАЙ ДЕНЕГ")).toBe(true);
+    expect(seen.has("не хватает. Кто форточку закрыл?")).toBe(false);
+  });
+
+  it("ignores an out-of-range openState", () => {
+    const { container } = render(
+      <Glitch openState="7" rng={seeded(2)}>
+        <GlitchState>a</GlitchState>
+        <GlitchState>b</GlitchState>
+      </Glitch>,
+    );
+    expect(visibleText(container)).toBe("a");
   });
 });

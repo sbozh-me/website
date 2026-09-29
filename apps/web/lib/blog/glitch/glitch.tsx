@@ -68,6 +68,8 @@ interface EngineProps {
   unclosable?: boolean;
   /** `==|text==`: only there while the window is ON; gone when it's OFF. */
   windowOnly?: boolean;
+  /** `==shut|>open==`: the state to rest on while the window is ON; state 0 is only for OFF. */
+  openState?: number;
   className?: string;
   rng?: Rng;
 }
@@ -94,6 +96,7 @@ function GlitchEngine({
   windowOff = false,
   unclosable = false,
   windowOnly = false,
+  openState,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -101,19 +104,22 @@ function GlitchEngine({
   const layersRef = useRef<HTMLSpanElement>(null);
   const mainRef = useRef<HTMLSpanElement>(null);
 
-  const [state, setState] = useState(0);
+  // The page's "window" switch: when it's off the word is plain text and never bursts
+  const on = useGlitchesEnabled(windowOff) || unclosable;
+  // Where the word rests: state 0, or the `>` state while the window is open
+  const restState = on && openState !== undefined ? openState : 0;
+
+  const [state, setState] = useState(restState);
   const [look, setLook] = useState<Look | undefined>();
   const [restSlices, setRestSlices] = useState<Slice[]>([]);
   const [flips, setFlips] = useState(0);
-  // The page's "window" switch: when it's off the word is plain text and never bursts
-  const on = useGlitchesEnabled(windowOff) || unclosable;
 
   // Latest props for the timer callbacks, which outlive renders
-  const props = useRef({ count, lengths, mode, blink, rng });
-  props.current = { count, lengths, mode, blink, rng };
+  const props = useRef({ count, lengths, mode, blink, rng, openState });
+  props.current = { count, lengths, mode, blink, rng, openState };
 
   const engine = useRef({
-    rest: 0,
+    rest: restState,
     playing: false,
     visible: false,
     seen: false,
@@ -140,7 +146,7 @@ function GlitchEngine({
     if (e.playing || e.reduced || e.off) return;
     e.playing = true;
 
-    const { count: states, lengths: chars, mode: m, blink: blinking, rng: random } = props.current;
+    const { count: states, lengths: chars, mode: m, blink: blinking, rng: random, openState: open } = props.current;
     const burstKind: BurstKind = m === "toggle" && kind === "flip" ? "toggle" : kind;
     const burst = planBurst({
       kind: burstKind,
@@ -148,6 +154,8 @@ function GlitchEngine({
       count: states,
       rng: random,
       hold: (s) => holdMs(chars[s] ?? 0, blinking),
+      // A `>` word keeps its closed-window text out of the open window
+      skip: open !== undefined ? 0 : undefined,
     });
     if (burstKind === "toggle") setFlips((f) => f + 1);
 
@@ -205,7 +213,10 @@ function GlitchEngine({
   useEffect(() => {
     const e = engine.current;
     e.off = !on;
+    // A `>` word swaps its resting state with the window
+    if (openState !== undefined) e.rest = restState;
     if (on) {
+      if (openState !== undefined && !e.playing) setState(restState);
       if (!e.playing) schedule();
       return;
     }
@@ -256,7 +267,7 @@ function GlitchEngine({
   const link = shown?.link ? "" : undefined;
   const content = renderState(state);
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
-  const cover = mode === "return" && state !== 0 && !look ? "" : undefined;
+  const cover = mode === "return" && state !== restState && !look ? "" : undefined;
 
   return (
     <span
@@ -277,8 +288,8 @@ function GlitchEngine({
     return (
       <>
         {/* Real text: keeps the layout, selection and screen readers on the base state */}
-        <span className="glitch-sizer" data-plain={plain(styles?.[0])} data-red={red(styles?.[0])}>
-          {renderState(0)}
+        <span className="glitch-sizer" data-plain={plain(styles?.[restState])} data-red={red(styles?.[restState])}>
+          {renderState(restState)}
         </span>
         <span ref={layersRef} className="glitch-layers" aria-hidden="true">
           {current.echo !== null && (
@@ -377,6 +388,7 @@ export function Glitch({
   windowOff = false,
   unclosable = false,
   windowOnly = false,
+  openState,
   rng,
 }: {
   children?: ReactNode;
@@ -384,10 +396,14 @@ export function Glitch({
   windowOff?: boolean;
   unclosable?: boolean;
   windowOnly?: boolean;
+  /** From remark-glitch as a string: `==shut|>open==` gives "1". */
+  openState?: number | string;
   rng?: Rng;
 }) {
   const states = Children.toArray(children);
   if (states.length === 0) return null;
+  const open = openState === undefined ? undefined : Number(openState);
+  const validOpen = open !== undefined && Number.isInteger(open) && open > 0 && open < states.length ? open : undefined;
 
   return (
     <GlitchEngine
@@ -400,6 +416,7 @@ export function Glitch({
       windowOff={windowOff}
       unclosable={unclosable}
       windowOnly={windowOnly}
+      openState={validOpen}
       rng={rng}
     />
   );

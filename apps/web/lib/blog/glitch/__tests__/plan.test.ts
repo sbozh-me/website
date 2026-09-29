@@ -32,6 +32,12 @@ describe("glitch plan", () => {
   });
 
   describe("planBurst", () => {
+    it("never flips into a skipped state", () => {
+      const burst = planBurst({ kind: "flip", from: 1, count: 4, rng: seeded(5), skip: 0 });
+      expect(burst.steps.some((step) => step.state === 0)).toBe(false);
+      expect(burst.rest).toBe(1);
+    });
+
     it("twitch glitches 2-5 frames without changing the word", () => {
       for (let seed = 0; seed < 50; seed++) {
         const burst = planBurst({ kind: "twitch", from: 0, count: 2, rng: seeded(seed) });

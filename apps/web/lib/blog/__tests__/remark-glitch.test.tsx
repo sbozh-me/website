@@ -24,12 +24,14 @@ const components = {
     windowOff,
     unclosable,
     windowOnly,
+    openState,
     children,
   }: {
     blink?: boolean;
     windowOff?: boolean;
     unclosable?: boolean;
     windowOnly?: boolean;
+    openState?: string;
     children: ReactNode;
   }) =>
     createElement(
@@ -39,6 +41,7 @@ const components = {
         "data-window-off": windowOff ? "" : undefined,
         "data-unclosable": unclosable ? "" : undefined,
         "data-window-only": windowOnly ? "" : undefined,
+        "data-open-state": openState,
       },
       children,
     ),
@@ -96,6 +99,26 @@ describe("remarkGlitch", () => {
 
     it("can be escaped", async () => {
       expect(await render("smile \\(;)")).toBe("<p>smile (;)</p>");
+    });
+  });
+
+  describe("==shut|>open== open-window rest state", () => {
+    it("marks the > state and strips the marker", async () => {
+      expect(await render("==||не хватает|>надуло|teal:ДАЙ ДЕНЕГ==")).toBe(
+        '<p><c-glitch data-open-state="1"><c-state data-plain="">не хватает</c-state><c-state>надуло</c-state><c-state data-color="teal">ДАЙ ДЕНЕГ</c-state></c-glitch></p>',
+      );
+    });
+
+    it("takes a colour after the >", async () => {
+      expect(await render("==a|b|>red:c==")).toBe(
+        '<p><c-glitch data-open-state="2"><c-state>a</c-state><c-state>b</c-state><c-state data-color="red">c</c-state></c-glitch></p>',
+      );
+    });
+
+    it("keeps only the first > and leaves the base alone", async () => {
+      expect(await render("==>a|>b|>c==")).toBe(
+        '<p><c-glitch data-open-state="1"><c-state>&gt;a</c-state><c-state>b</c-state><c-state>c</c-state></c-glitch></p>',
+      );
     });
   });
 
