@@ -6,6 +6,7 @@ import type { MdxJsxAttribute, MdxJsxFlowElement, MdxJsxTextElement } from "mdas
  *
  *   (;)                 -> <Censor />                  the ✳ logo replaces a letter
  *   ==D(;)ck pitch==    -> <DickPitch />               two-tone brand mark
+ *   ==sbozhed==         -> <Sbozhed text="sbozhed" />  two-tone brand mark, any case
  *   ==base|alt==        -> <Glitch><GlitchState>…      word glitches into a second meaning
  *   ==a|b|c==           -> <Glitch> with three states
  *   ==base|alt!==       -> <Glitch blink>              blinks repeatedly
@@ -17,6 +18,8 @@ import type { MdxJsxAttribute, MdxJsxFlowElement, MdxJsxTextElement } from "mdas
  *   ===a|b===           -> <Glitch unclosable>         keeps glitching with the window OFF
  *   ==|text==           -> <Glitch windowOnly>         only there while the window is ON
  *   ==shut|>open|x==    -> <Glitch openState="1">      closed: "shut"; open: rests on "open" instead
+ *   ==a|WINDOW==        -> <GlitchState window>        a state that flashes the (clickable) window button
+ *   ==WINDOW OFF|>b==   -> button base                 the button while closed; "b" in its place once open
  *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
  *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
@@ -31,6 +34,7 @@ const MARK = /(?<!=)(===|==)(?!=)/;
 const UNCLOSABLE = "===";
 const CENSOR = "(;)";
 const BRAND = /^d\(;\)ck\s+pitch$/i;
+const SBOZHED = /^sbozhed$/i;
 /** `==WINDOW==` / `==WINDOW OFF==` (exactly, in capitals): the switch that turns the glitches off. */
 const WINDOW = "WINDOW";
 const WINDOW_OFF = "WINDOW OFF";
@@ -90,11 +94,12 @@ function visitJsx(node: Nodes, fn: (element: MdxJsxTextElement | MdxJsxFlowEleme
 function markWindowOff(tree: Root) {
   let off = false;
   visitJsx(tree, (element) => {
-    if (element.name === "WindowToggle" && element.attributes.some((a) => "name" in a && a.name === "off")) off = true;
+    const isButton = element.name === "WindowToggle" || element.name === "WindowButton";
+    if (isButton && element.attributes.some((a) => "name" in a && a.name === "off")) off = true;
   });
   if (!off) return;
   visitJsx(tree, (element) => {
-    if (["Glitch", "DickPitch", "WindowVideo"].includes(element.name ?? "")) {
+    if (["Glitch", "DickPitch", "Sbozhed", "WindowVideo", "Voice"].includes(element.name ?? "")) {
       element.attributes.push(attribute("windowOff"));
     }
   });
@@ -222,6 +227,9 @@ function buildHighlight(
   if (states.length === 1 && !windowOnly) {
     const plainText = toPlainText(states[0].nodes).trim();
     if (BRAND.test(plainText)) return [jsx("DickPitch", [], unclosable ? [attribute("unclosable")] : [])];
+    if (SBOZHED.test(plainText)) {
+      return [jsx("Sbozhed", [], [attribute("text", plainText), ...(unclosable ? [attribute("unclosable")] : [])])];
+    }
     if (plainText === WINDOW) return [jsx("WindowToggle")];
     if (plainText === WINDOW_OFF) return [jsx("WindowToggle", [], [attribute("off")])];
     return [jsx("mark", states[0].nodes)];
@@ -256,14 +264,33 @@ function buildHighlight(
   }
   if (states.some((state) => state.nodes.length === 0)) return null;
 
+  // `==a|WINDOW==` / `==a|WINDOW OFF==`: the state is the window button. As the base it
+  // needs a `>` state (`==WINDOW OFF|>you opened it==`): the button stands in the text
+  // while the window is closed and gives way to the `>` words once it's open.
+  const windowStates = states.map((state, index) => {
+    const base = index === 0;
+    if (base && openState === undefined) return false;
+    const label = toPlainText(state.nodes).trim();
+    if (label !== WINDOW && label !== WINDOW_OFF) return false;
+    state.nodes = [
+      jsx("WindowButton", [], [
+        // The base shows as a real button while closed; the others only flash in the layers
+        ...(base ? [] : [attribute("inGlitch")]),
+        ...(label === WINDOW_OFF ? [attribute("off")] : []),
+      ]),
+    ];
+    return true;
+  });
+
   return [
     jsx(
       "Glitch",
-      states.map(({ nodes, plain, color }) =>
+      states.map(({ nodes, plain, color }, index) =>
         jsx("GlitchState", nodes, [
           ...(color ? [attribute("color", color)] : []),
           ...(plain ? [attribute("plain")] : []),
           ...(inLink || nodes.some(isLink) ? [attribute("link")] : []),
+          ...(windowStates[index] ? [attribute("window")] : []),
         ]),
       ),
       [

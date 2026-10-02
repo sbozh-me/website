@@ -128,7 +128,7 @@ export interface PlanOptions {
   rng: Rng;
   /** Clean hold after each flip into state i. */
   hold?: (state: number) => number;
-  /** A state a flip never visits (the closed-window text of a `>` word). */
+  /** A state a flip never visits (a `>` word's text for the other window). */
   skip?: number;
 }
 

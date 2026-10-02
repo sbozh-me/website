@@ -79,13 +79,37 @@ function WindowIcon({ open }: { open: boolean }) {
 }
 
 /**
+ * The "Window ON/OFF" button alone: shows and flips the page's window, nothing else.
+ * `==a|WINDOW==` flashes one inside a glitch word; it mounts and unmounts with every
+ * burst, so it must not own the hotkey or reset the window like WindowToggle does.
+ * `inGlitch`: kept out of the tab order (the glitch layers are aria-hidden; W and the
+ * page's own toggle stay the keyboard way in).
+ */
+export function WindowButton({ off = false, inGlitch = false }: { off?: boolean; inGlitch?: boolean }) {
+  const on = useGlitchesEnabled(off);
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      aria-pressed={on}
+      aria-keyshortcuts="W"
+      title="Hotkey: W"
+      tabIndex={inGlitch ? -1 : undefined}
+      className="window-toggle mx-1 align-middle font-mono"
+      onClick={() => setGlitchesEnabled(!on)}
+    >
+      <WindowIcon open={on} />
+      {on ? "Window ON" : "Window OFF"}
+    </Button>
+  );
+}
+
+/**
  * `==WINDOW==` in a post: "Window ON" / "Window OFF", also toggled with the W key.
  * `==WINDOW OFF==` (`off`) starts the page with the window closed, so the reader
  * switches the glitches on.
  */
 export function WindowToggle({ off = false }: { off?: boolean }) {
-  const on = useGlitchesEnabled(off);
-
   useEffect(() => {
     if (off) pageStartsOff = true;
     if (mountedToggles++ === 0) window.addEventListener("keydown", onKeyDown);
@@ -99,18 +123,5 @@ export function WindowToggle({ off = false }: { off?: boolean }) {
     };
   }, [off]);
 
-  return (
-    <Button
-      variant="outline"
-      size="sm"
-      aria-pressed={on}
-      aria-keyshortcuts="W"
-      title="Hotkey: W"
-      className="window-toggle mx-1 align-middle font-mono"
-      onClick={() => setGlitchesEnabled(!on)}
-    >
-      <WindowIcon open={on} />
-      {on ? "Window ON" : "Window OFF"}
-    </Button>
-  );
+  return <WindowButton off={off} />;
 }

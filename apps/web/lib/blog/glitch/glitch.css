@@ -174,6 +174,12 @@
   background: color-mix(in oklab, var(--window-color) 18%, transparent);
 }
 
+/* A window button flashed by a glitch word (==a|WINDOW==) is clickable while it shows;
+   the echoes behind it are not */
+.glitch-copy:not(.glitch-echo) .window-toggle {
+  pointer-events: auto;
+}
+
 /* Window video ---------------------------------------------------------- */
 
 /* Fits landscape and vertical (Shorts) cuts: full column width, at most 80% of the screen tall */
@@ -191,44 +197,47 @@
   display: none;
 }
 
-/* D✳CK PITCH ------------------------------------------------------------ */
+/* Brand marks: D✳CK PITCH, sbozhed ------------------------------------ */
+
+/* Two parts, base (purple) and accent (orange); each burst swaps them */
 
 /* With the window off it stops flipping but keeps its brand colours */
-.dick-pitch[data-off] {
+.brand-mark[data-off] {
   font-weight: 700;
 }
 
-.dick-pitch[data-off] [data-part="base"] {
+.brand-mark[data-off] [data-part="base"] {
   color: var(--glitch-base);
 }
 
-.dick-pitch[data-off] [data-part="accent"] {
+.brand-mark[data-off] [data-part="accent"] {
   color: var(--glitch-accent);
 }
 
-.dick-pitch {
+.brand-mark {
   letter-spacing: 0.02em;
 }
 
-.dick-pitch .glitch-sizer,
-.dick-pitch .glitch-copy {
+.brand-mark .glitch-sizer,
+.brand-mark .glitch-copy {
   font-family: var(--glitch-font);
   font-weight: 400;
 }
 
-.dick-pitch .glitch-copy [data-part="base"] {
+.brand-mark .glitch-copy [data-part="base"] {
   color: var(--glitch-base);
 }
 
-.dick-pitch .glitch-copy [data-part="accent"] {
+.brand-mark .glitch-copy [data-part="accent"] {
   color: var(--glitch-accent);
 }
 
 /* Colours stay per part in every tone except the hollow one */
-.dick-pitch .glitch-copy[data-tone="hollow"] [data-part] {
+.brand-mark .glitch-copy[data-tone="hollow"] [data-part] {
   color: var(--glitch-obsidian);
 }
 
+/* D✳CK PITCH: the ✳ spins with every flip */
 .dick-pitch .glitch-copy .censor {
   transform: rotate(calc(var(--censor-turns, 0) * 1turn));
   transition: transform 550ms cubic-bezier(0.22, 1, 0.36, 1);

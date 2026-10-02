@@ -168,6 +168,10 @@ word is the one that glitches**.
     It is centred on the base word and kept 8px inside the viewport.
   - **DICK PITCH toggles**: each burst swaps its colours and keeps them, and the ✳ gains
     3.14 turns per flip.
+  - **`==sbozhed==`** (any case: sbozhed, Sbozhed, SBOZHED): the same kind of brand mark.
+    "sbozh" purple, the rest ("ed") orange, in the case it was typed; each burst swaps the
+    colours and keeps them. Shares the `.brand-mark` styles with D✳CK PITCH (no ✳ spin).
+    `===sbozhed===` keeps it flipping with the window OFF. Inside `==a|b==` it is plain text.
 - **Plain states and colours** (added after the first draft was converted):
   - `==LOL|No||yes==`: a state after `||` is plain. It uses the article's own weight and
     colour and has no resting notch, but the frames into and out of it still glitch.
@@ -212,6 +216,16 @@ word is the one that glitches**.
   with the window OFF the word reads as the base; with it ON it rests on the `>` state,
   is sized by it, and its flips never show the base. Only the first `>` counts, and not on
   the base. Example: `==||не хватает. Кто форточку закрыл?|>надуло.|gold:ДАЙ ДЕНЕГ==`.
+- **Window-button state** (`==a|WINDOW==` or `==a|WINDOW OFF==`, any state but the base,
+  colour prefix allowed): the state is the Window button itself, held ~2s so it can be
+  clicked; only the main copy is clickable, not the echoes, and it's out of the tab order.
+  `WINDOW OFF` there also starts the page closed. It shares the page's switch but owns no
+  hotkey and never resets the window (that's `WindowToggle`'s job).
+  As the **base of a `>` word** (`==WINDOW OFF|>you opened the window==`) it's a real,
+  tabbable button while the window is closed and is replaced by the `>` words once it's
+  open, so that button disappears with the window ON. Without a `>` state a WINDOW base is
+  left alone. It doesn't own the `W` hotkey, so a post still wants a `==WINDOW==` somewhere
+  for keyboard readers.
 - **Unclosable** (`===a|b===`): a glitch word the window can't close. It keeps bursting
   with the window OFF, including on a `==WINDOW OFF==` page. Everything else works inside
   it (`||`, colours, `!`, links), and `===D(;)ck pitch===` keeps the brand flipping.

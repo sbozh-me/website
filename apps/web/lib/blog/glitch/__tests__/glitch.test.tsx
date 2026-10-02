@@ -1,11 +1,12 @@
-import { act, fireEvent, render } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Censor } from "../censor";
-import { DickPitch, Glitch, GlitchState, SPIN_TURNS } from "../glitch";
+import { DickPitch, GLITCH_COLORS, Glitch, GlitchState, SPIN_TURNS, Sbozhed } from "../glitch";
+import { Voice } from "../voice";
 import { seeded } from "../plan";
-import { setGlitchesEnabled } from "../window";
+import { WindowButton, setGlitchesEnabled, useGlitchesEnabled } from "../window";
 
 // IntersectionObserver whose callback the test drives
 let observers: Array<{ callback: IntersectionObserverCallback; target?: Element }> = [];
@@ -387,6 +388,37 @@ describe("DickPitch", () => {
   });
 });
 
+describe("Sbozhed", () => {
+  const parts = (container: HTMLElement) =>
+    Array.from(container.querySelectorAll(".glitch-copy:not(.glitch-echo)")[0].querySelectorAll("[data-part]")).map(
+      (el) => [el.getAttribute("data-part"), el.textContent],
+    );
+
+  it("renders sbozh in the base colour and ed in the accent, as typed", () => {
+    const { container } = render(<Sbozhed text="SBOZHED" rng={seeded(3)} />);
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("SBOZHED");
+    expect(container.querySelector(".brand-mark.sbozhed")).not.toBeNull();
+    expect(parts(container)).toEqual([
+      ["base", "SBOZH"],
+      ["accent", "ED"],
+    ]);
+  });
+
+  it("each burst swaps the colours and keeps them", () => {
+    const { container } = render(<Sbozhed rng={seeded(3)} />);
+    setVisible(true);
+    advance(500);
+    expect(container.querySelector("[data-bursting]")).toBeNull();
+    expect(parts(container)).toEqual([
+      ["accent", "sbozh"],
+      ["base", "ed"],
+    ]);
+    fireEvent.click(container.querySelector(".glitch")!);
+    advance(500);
+    expect(parts(container)[0][0]).toBe("base");
+  });
+});
+
 describe("Glitch with an open-window state (==shut|>open==)", () => {
   afterEach(() => {
     act(() => setGlitchesEnabled(null));
@@ -441,3 +473,200 @@ describe("Glitch with an open-window state (==shut|>open==)", () => {
     expect(visibleText(container)).toBe("a");
   });
 });
+
+describe("Unclosable glitch with an open-window state (===Duck|context|>D✳ck===)", () => {
+  afterEach(() => {
+    act(() => setGlitchesEnabled(null));
+  });
+
+  const duck = () => (
+    <Glitch unclosable openState="3" windowOff rng={seeded(4)}>
+      <GlitchState>Duck pitch</GlitchState>
+      <GlitchState color="gold">Animal farm reference</GlitchState>
+      <GlitchState color="teal">NPC</GlitchState>
+      <GlitchState>Dick pitch</GlitchState>
+    </Glitch>
+  );
+
+  function watch(container: HTMLElement) {
+    const seen = new Set<string>();
+    setVisible(true);
+    for (let i = 0; i < 400; i++) {
+      seen.add(visibleText(container) ?? "");
+      advance(50);
+    }
+    return seen;
+  }
+
+  it("rests on the base with the window closed, even though it keeps glitching", () => {
+    const { container } = render(duck());
+    expect(visibleText(container)).toBe("Duck pitch");
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("Duck pitch");
+  });
+
+  it("glitches through the context but never the > state while closed", () => {
+    const { container } = render(duck());
+    const seen = watch(container);
+    expect(seen.has("NPC")).toBe(true);
+    expect(seen.has("Dick pitch")).toBe(false);
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("Duck pitch");
+  });
+
+  it("rests on the > state once the window opens and never shows the base", () => {
+    const { container } = render(duck());
+    act(() => setGlitchesEnabled(true));
+    expect(visibleText(container)).toBe("Dick pitch");
+    const seen = watch(container);
+    expect(seen.has("NPC")).toBe(true);
+    expect(seen.has("Duck pitch")).toBe(false);
+    act(() => setGlitchesEnabled(false));
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("Duck pitch");
+  });
+});
+
+describe("Glitch with a window-button state (==a|WINDOW==)", () => {
+  afterEach(() => {
+    act(() => setGlitchesEnabled(null));
+  });
+
+  function Probe() {
+    return <output>{useGlitchesEnabled() ? "open" : "closed"}</output>;
+  }
+
+  it("flashes a clickable, untabbable window button that flips the page window", () => {
+    const { container } = render(
+      <>
+        <Glitch unclosable rng={seeded(3)}>
+          <GlitchState>Duck pitch</GlitchState>
+          <GlitchState window>
+            <WindowButton inGlitch />
+          </GlitchState>
+        </Glitch>
+        <Probe />
+      </>,
+    );
+    setVisible(true);
+    let button: HTMLButtonElement | null = null;
+    for (let i = 0; i < 400 && !button; i++) {
+      advance(20);
+      button = container.querySelector(".glitch-copy:not(.glitch-echo) .window-toggle");
+    }
+    expect(button).not.toBeNull();
+    expect(button).toHaveAttribute("tabindex", "-1");
+    expect(container.querySelector("output")?.textContent).toBe("open");
+    fireEvent.click(button!);
+    expect(container.querySelector("output")?.textContent).toBe("closed");
+  });
+
+  it("holds the window button about two seconds", () => {
+    const { container } = render(
+      <Glitch rng={seeded(3)}>
+        <GlitchState>a</GlitchState>
+        <GlitchState window>
+          <WindowButton inGlitch />
+        </GlitchState>
+      </Glitch>,
+    );
+    setVisible(true);
+    let shownFor = 0;
+    for (let i = 0; i < 400; i++) {
+      advance(20);
+      if (container.querySelector(".glitch-copy:not(.glitch-echo) .window-toggle")) shownFor += 20;
+    }
+    expect(shownFor).toBeGreaterThanOrEqual(1800);
+  });
+});
+
+describe("Clicking a running glitch", () => {
+  const bursting = (container: HTMLElement) => container.querySelector(".glitch")?.hasAttribute("data-bursting");
+
+  it("stops the burst at once and shows the resting state", () => {
+    const { container } = render(word());
+    setVisible(true);
+    advance(400);
+    // Mid-burst: the alt is held
+    expect(visibleText(container)).toBe("US");
+    fireEvent.click(container.querySelector(".glitch")!);
+    expect(bursting(container)).toBe(false);
+    expect(visibleText(container)).toBe("себя");
+    // …and stays there: the rest of the burst was cancelled
+    advance(1500);
+    expect(visibleText(container)).toBe("себя");
+  });
+
+  it("keeps a burst the same tap just started (pointerenter, then click)", () => {
+    const { container } = render(word());
+    const root = container.querySelector(".glitch")!;
+    fireEvent.pointerEnter(root);
+    fireEvent.click(root);
+    expect(bursting(container)).toBe(true);
+  });
+
+  it("starts a burst when clicked at rest", () => {
+    const { container } = render(word());
+    expect(bursting(container)).toBe(false);
+    fireEvent.click(container.querySelector(".glitch")!);
+    expect(bursting(container)).toBe(true);
+  });
+});
+
+describe("Window button as the base of a > word (==WINDOW OFF|>you opened it==)", () => {
+  afterEach(() => {
+    act(() => setGlitchesEnabled(null));
+  });
+
+  it("is a real button while closed and disappears once the window opens", () => {
+    const { container } = render(
+      <p>
+        Some context exists only when{" "}
+        <Glitch openState="1" windowOff rng={seeded(5)}>
+          <GlitchState window>
+            <WindowButton off />
+          </GlitchState>
+          <GlitchState>you opened the window</GlitchState>
+        </Glitch>
+      </p>,
+    );
+    const button = screen.getByRole("button", { name: /Window OFF/ });
+    expect(button).not.toHaveAttribute("tabindex");
+    fireEvent.click(button);
+    expect(container.querySelector(".window-toggle")).toBeNull();
+    expect(container.querySelector(".glitch-sizer")?.textContent).toBe("you opened the window");
+    // It never flashes back while open
+    setVisible(true);
+    for (let i = 0; i < 300; i++) {
+      advance(20);
+      expect(container.querySelector(".window-toggle")).toBeNull();
+    }
+  });
+});
+
+describe("Voice", () => {
+  afterEach(() => {
+    act(() => setGlitchesEnabled(null));
+  });
+
+  it("is plain text while the window is closed and takes its colour once open", () => {
+    const { container } = render(
+      <Voice color="teal" windowOff>
+        <p>— We will Ship your message.</p>
+      </Voice>,
+    );
+    const voice = container.querySelector(".voice") as HTMLElement;
+    expect(voice.style.color).toBe("");
+    act(() => setGlitchesEnabled(true));
+    expect(voice.style.color).toBe(GLITCH_COLORS.teal);
+    expect(voice.style.getPropertyValue("--glitch-plain")).toBe(GLITCH_COLORS.teal);
+    expect(voice).toHaveTextContent("— We will Ship your message.");
+  });
+
+  it("ignores an unknown colour", () => {
+    const { container } = render(
+      <Voice color="orange">
+        <p>text</p>
+      </Voice>,
+    );
+    expect((container.querySelector(".voice") as HTMLElement).style.color).toBe("");
+  });
+});
+

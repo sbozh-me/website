@@ -33,6 +33,9 @@ export const SPIN_TURNS = 3.14;
 
 const VIEWPORT_MARGIN = 8;
 
+/** A click stops a burst only after this long; a tap's pointerenter has just started it. */
+const STOP_AFTER_MS = 300;
+
 /** Colour names a state can pick with a `teal:` prefix. */
 export const GLITCH_COLORS: Record<string, string> = {
   purple: "var(--glitch-base)",
@@ -105,9 +108,11 @@ function GlitchEngine({
   const mainRef = useRef<HTMLSpanElement>(null);
 
   // The page's "window" switch: when it's off the word is plain text and never bursts
-  const on = useGlitchesEnabled(windowOff) || unclosable;
-  // Where the word rests: state 0, or the `>` state while the window is open
-  const restState = on && openState !== undefined ? openState : 0;
+  const windowOpen = useGlitchesEnabled(windowOff);
+  const on = windowOpen || unclosable;
+  // Where the word rests: state 0, or the `>` state while the window is open. An unclosable
+  // `>` word keeps glitching with the window closed, but still rests on its base there.
+  const restState = windowOpen && openState !== undefined ? openState : 0;
 
   const [state, setState] = useState(restState);
   const [look, setLook] = useState<Look | undefined>();
@@ -115,12 +120,14 @@ function GlitchEngine({
   const [flips, setFlips] = useState(0);
 
   // Latest props for the timer callbacks, which outlive renders
-  const props = useRef({ count, lengths, mode, blink, rng, openState });
-  props.current = { count, lengths, mode, blink, rng, openState };
+  const props = useRef({ count, lengths, mode, blink, rng, openState, windowOpen });
+  props.current = { count, lengths, mode, blink, rng, openState, windowOpen };
 
   const engine = useRef({
     rest: restState,
     playing: false,
+    /** When the running burst started: a tap's own pointerenter mustn't count as a stop click. */
+    startedAt: 0,
     visible: false,
     seen: false,
     reduced: false,
@@ -145,8 +152,17 @@ function GlitchEngine({
     // A burst already running reschedules when it ends
     if (e.playing || e.reduced || e.off) return;
     e.playing = true;
+    e.startedAt = Date.now();
 
-    const { count: states, lengths: chars, mode: m, blink: blinking, rng: random, openState: open } = props.current;
+    const {
+      count: states,
+      lengths: chars,
+      mode: m,
+      blink: blinking,
+      rng: random,
+      openState: open,
+      windowOpen: opened,
+    } = props.current;
     const burstKind: BurstKind = m === "toggle" && kind === "flip" ? "toggle" : kind;
     const burst = planBurst({
       kind: burstKind,
@@ -154,17 +170,19 @@ function GlitchEngine({
       count: states,
       rng: random,
       hold: (s) => holdMs(chars[s] ?? 0, blinking),
-      // A `>` word keeps its closed-window text out of the open window
-      skip: open !== undefined ? 0 : undefined,
+      // A `>` word keeps its closed-window text out of the open window, and (unclosable)
+      // its open-window state out of the closed one
+      skip: open === undefined ? undefined : opened ? 0 : open,
     });
     if (burstKind === "toggle") setFlips((f) => f + 1);
 
     let index = 0;
     const step = () => {
       if (index === burst.steps.length) {
-        e.rest = burst.rest;
+        // A `>` word may have had its rest moved by the window mid-burst
+        if (props.current.openState === undefined) e.rest = burst.rest;
         e.playing = false;
-        setState(burst.rest);
+        setState(e.rest);
         setLook(undefined);
         schedule();
         return;
@@ -175,6 +193,23 @@ function GlitchEngine({
       e.stepTimer = setTimeout(step, current.ms);
     };
     step();
+  }
+
+  /** A click on a running burst: snap back to the resting state now. */
+  function stop() {
+    const e = engine.current;
+    clearTimeout(e.stepTimer);
+    e.playing = false;
+    setState(e.rest);
+    setLook(undefined);
+    schedule();
+  }
+
+  function onClick() {
+    const e = engine.current;
+    // Toggle bursts (D✳CK PITCH) change the word, so they always run to the end
+    if (e.playing && props.current.mode === "return" && Date.now() - e.startedAt > STOP_AFTER_MS) stop();
+    else play("flip");
   }
 
   useEffect(() => {
@@ -226,7 +261,7 @@ function GlitchEngine({
     setState(e.rest);
     setLook(undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [on]);
+  }, [on, restState]);
 
   // Keep a wider alt state inside the viewport
   useLayoutEffect(() => {
@@ -277,7 +312,7 @@ function GlitchEngine({
       data-off={on ? undefined : ""}
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
       onPointerEnter={() => play("flip")}
-      onClick={() => play("flip")}
+      onClick={onClick}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}
       {on ? renderLayers() : windowOnly ? null : renderState(mode === "toggle" ? state : 0)}
@@ -347,6 +382,14 @@ function GlitchEngine({
   }
 }
 
+/** A window-button state is held like a 30-character word (~2s), so it can be clicked. */
+const WINDOW_STATE_LENGTH = 30;
+
+function stateLength(state: ReactNode): number {
+  if (isValidElement<GlitchStateProps>(state) && state.props.window) return WINDOW_STATE_LENGTH;
+  return textLength(state);
+}
+
 function textLength(node: ReactNode): number {
   if (typeof node === "string" || typeof node === "number") return String(node).length;
   if (Array.isArray(node)) return node.reduce((sum: number, child) => sum + textLength(child), 0);
@@ -362,6 +405,8 @@ interface GlitchStateProps {
   plain?: boolean;
   /** Is a link or holds one. */
   link?: boolean;
+  /** Holds the window button (`==a|WINDOW==`): held long enough to click. */
+  window?: boolean;
 }
 
 /** One meaning of a glitch word; `==base|alt==` makes two. */
@@ -410,7 +455,7 @@ export function Glitch({
       count={states.length}
       renderState={(index) => states[index]}
       styles={states.map(stateStyle)}
-      lengths={states.map(textLength)}
+      lengths={states.map(stateLength)}
       mode="return"
       blink={blink}
       windowOff={windowOff}
@@ -452,7 +497,44 @@ export function DickPitch({
       mode="toggle"
       windowOff={windowOff}
       unclosable={unclosable}
-      className="dick-pitch"
+      className="brand-mark dick-pitch"
+      rng={rng}
+    />
+  );
+}
+
+/** "sbozh" then the rest ("ed"), in the case it was typed: sbozhed, Sbozhed, SBOZHED. */
+function SbozhedMark({ text, flipped }: { text: string; flipped: boolean }) {
+  return (
+    <>
+      <span data-part={flipped ? "accent" : "base"}>{text.slice(0, 5)}</span>
+      <span data-part={flipped ? "base" : "accent"}>{text.slice(5)}</span>
+    </>
+  );
+}
+
+/** `==sbozhed==` brand mark: "sbozh" purple, "ed" orange; each burst swaps the two colours. */
+export function Sbozhed({
+  text = "sbozhed",
+  windowOff = false,
+  unclosable = false,
+  rng,
+}: {
+  /** As typed in the post; remark-glitch passes it through. */
+  text?: string;
+  windowOff?: boolean;
+  unclosable?: boolean;
+  rng?: Rng;
+}) {
+  return (
+    <GlitchEngine
+      count={2}
+      renderState={(state) => <SbozhedMark text={text} flipped={state === 1} />}
+      lengths={[text.length, text.length]}
+      mode="toggle"
+      windowOff={windowOff}
+      unclosable={unclosable}
+      className="brand-mark sbozhed"
       rng={rng}
     />
   );

@@ -16,7 +16,13 @@ const components = {
       "data-window-off": windowOff ? "" : undefined,
       "data-unclosable": unclosable ? "" : undefined,
     }),
+  Voice: ({ color, windowOff, children }: { color: string; windowOff?: boolean; children: ReactNode }) =>
+    createElement("c-voice", { "data-color": color, "data-window-off": windowOff ? "" : undefined }, children),
+  Sbozhed: ({ text, unclosable }: { text: string; unclosable?: boolean }) =>
+    createElement("c-sbozhed", { "data-text": text, "data-unclosable": unclosable ? "" : undefined }),
   WindowToggle: ({ off }: { off?: boolean }) => createElement("c-window", { "data-off": off ? "" : undefined }),
+  WindowButton: ({ off, inGlitch }: { off?: boolean; inGlitch?: boolean }) =>
+    createElement("c-button", { "data-off": off ? "" : undefined, "data-in-glitch": inGlitch ? "" : undefined }),
   WindowVideo: ({ on, off, windowOff }: { on: string; off: string; windowOff?: boolean }) =>
     createElement("c-video", { "data-window-off": windowOff ? "" : undefined, "data-on": on, "data-off": off }),
   Glitch: ({
@@ -50,15 +56,22 @@ const components = {
     color,
     plain,
     link,
+    window,
   }: {
     children: ReactNode;
     color?: string;
     plain?: boolean;
     link?: boolean;
+    window?: boolean;
   }) =>
     createElement(
       "c-state",
-      { "data-color": color, "data-plain": plain ? "" : undefined, "data-link": link ? "" : undefined },
+      {
+        "data-color": color,
+        "data-plain": plain ? "" : undefined,
+        "data-link": link ? "" : undefined,
+        "data-window": window ? "" : undefined,
+      },
       children,
     ),
 };
@@ -119,6 +132,30 @@ describe("remarkGlitch", () => {
       expect(await render("==>a|>b|>c==")).toBe(
         '<p><c-glitch data-open-state="1"><c-state>&gt;a</c-state><c-state>b</c-state><c-state>c</c-state></c-glitch></p>',
       );
+    });
+  });
+
+  describe("==a|WINDOW== window-button state", () => {
+    it("turns a WINDOW state into the in-glitch button", async () => {
+      expect(await render("==Duck|teal:WINDOW==")).toBe(
+        '<p><c-glitch><c-state>Duck</c-state><c-state data-color="teal" data-window=""><c-button data-in-glitch=""></c-button></c-state></c-glitch></p>',
+      );
+    });
+
+    it("WINDOW OFF in a state starts the page closed", async () => {
+      expect(await render("===Duck|NPC|WINDOW OFF|>Dick===")).toBe(
+        '<p><c-glitch data-window-off="" data-unclosable="" data-open-state="3"><c-state>Duck</c-state><c-state>NPC</c-state><c-state data-window=""><c-button data-off="" data-in-glitch=""></c-button></c-state><c-state>Dick</c-state></c-glitch></p>',
+      );
+    });
+
+    it("a WINDOW base with a > state is a real button that gives way when open", async () => {
+      expect(await render("Some context exists only when ==WINDOW OFF|>you opened the window==.")).toBe(
+        '<p>Some context exists only when <c-glitch data-window-off="" data-open-state="1"><c-state data-window=""><c-button data-off=""></c-button></c-state><c-state>you opened the window</c-state></c-glitch>.</p>',
+      );
+    });
+
+    it("leaves a WINDOW base without a > state alone", async () => {
+      expect(await render("==WINDOW|b==")).toBe("<p><c-glitch><c-state>WINDOW</c-state><c-state>b</c-state></c-glitch></p>");
     });
   });
 
@@ -252,6 +289,32 @@ describe("remarkGlitch", () => {
       expect(await render("==a|||b==")).toBe("<p>==a|||b==</p>");
       expect(await render("==a| |b==")).toBe("<p>==a| |b==</p>");
       expect(await render("==a|!==")).toBe("<p>==a|!==</p>");
+    });
+  });
+
+  describe("<Voice>", () => {
+    it("keeps the glitch syntax inside and follows ==WINDOW OFF==", async () => {
+      expect(await render('==WINDOW OFF==\n\n<Voice color="purple">\n\n— You can ==D(;)CK PITCH== ==him|her==\n\n</Voice>')).toBe(
+          '<p><c-window data-off=""></c-window></p>\n<c-voice data-color="purple" data-window-off=""><p>— You can <c-brand data-window-off=""></c-brand> <c-glitch data-window-off=""><c-state>him</c-state><c-state>her</c-state></c-glitch></p></c-voice>',
+      );
+    });
+  });
+
+  describe("==sbozhed== brand", () => {
+    it("renders the mark and keeps the case it was typed in", async () => {
+      expect(await render("You got ==sbozhed==. ==SBOZHED==!")).toBe(
+        '<p>You got <c-sbozhed data-text="sbozhed"></c-sbozhed>. <c-sbozhed data-text="SBOZHED"></c-sbozhed>!</p>',
+      );
+    });
+
+    it("can be unclosable", async () => {
+      expect(await render("===Sbozhed===")).toBe('<p><c-sbozhed data-text="Sbozhed" data-unclosable=""></c-sbozhed></p>');
+    });
+
+    it("is an ordinary glitch state inside a glitch word", async () => {
+      expect(await render("==onboarded|sbozhed==")).toBe(
+        "<p><c-glitch><c-state>onboarded</c-state><c-state>sbozhed</c-state></c-glitch></p>",
+      );
     });
   });
 
