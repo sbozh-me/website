@@ -3,6 +3,7 @@
 @import "@sbozh/themes/kognitiv";
 @import "@sbozh/themes/roman-empire";
 @import "@sbozh/themes/normal";
+@import "@sbozh/themes/roman-white";
 @plugin "tailwindcss-animate";
 
 @source "../../../packages/react-ui/src";
@@ -76,6 +77,12 @@ code, pre {
 *:focus-visible {
     outline-color: var(--color-primary) !important;
     outline: 1px solid var(--color-primary);
+}
+
+/* Blog code carries github-dark and github-light-high-contrast colours (rehype-pretty-code);
+   the dark one shows unless a theme picks --shiki-light (roman-white). */
+code[data-theme*=" "] span {
+  color: var(--shiki-dark);
 }
 
 /* Respect reduced motion preference */

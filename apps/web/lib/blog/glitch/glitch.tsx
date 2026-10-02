@@ -11,6 +11,8 @@ import {
   type ReactNode,
 } from "react";
 
+import { useStillTheme } from "@sbozh/themes";
+
 import { Censor } from "./censor";
 import {
   type BurstKind,
@@ -32,6 +34,12 @@ import "./glitch.css";
 export const SPIN_TURNS = 3.14;
 
 const VIEWPORT_MARGIN = 8;
+
+/**
+ * Which meaning a glitch word shows in Roman White, where nothing moves: its final state
+ * (the last one that isn't a Window button), or its first (the base).
+ */
+export const STILL_STATE: "final" | "first" = "final";
 
 /** A click stops a burst only after this long; a tap's pointerenter has just started it. */
 const STOP_AFTER_MS = 300;
@@ -73,6 +81,8 @@ interface EngineProps {
   windowOnly?: boolean;
   /** `==shut|>open==`: the state to rest on while the window is ON; state 0 is only for OFF. */
   openState?: number;
+  /** Shown as plain text in Roman White; defaults to the resting state. */
+  stillState?: number;
   className?: string;
   rng?: Rng;
 }
@@ -100,6 +110,7 @@ function GlitchEngine({
   unclosable = false,
   windowOnly = false,
   openState,
+  stillState,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -109,7 +120,9 @@ function GlitchEngine({
 
   // The page's "window" switch: when it's off the word is plain text and never bursts
   const windowOpen = useGlitchesEnabled(windowOff);
-  const on = windowOpen || unclosable;
+  // Roman White holds every word still, unclosable ones too, through the window-OFF path
+  const still = useStillTheme();
+  const on = !still && (windowOpen || unclosable);
   // Where the word rests: state 0, or the `>` state while the window is open. An unclosable
   // `>` word keeps glitching with the window closed, but still rests on its base there.
   const restState = windowOpen && openState !== undefined ? openState : 0;
@@ -315,7 +328,13 @@ function GlitchEngine({
       onClick={onClick}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}
-      {on ? renderLayers() : windowOnly ? null : renderState(mode === "toggle" ? state : 0)}
+      {on
+        ? renderLayers()
+        : still
+          ? renderState(stillState ?? (mode === "toggle" ? state : 0))
+          : windowOnly
+            ? null
+            : renderState(mode === "toggle" ? state : 0)}
     </span>
   );
 
@@ -414,6 +433,16 @@ export function GlitchState({ children }: GlitchStateProps) {
   return <>{children}</>;
 }
 
+/** The state Roman White shows (STILL_STATE): never a Window button, which has nothing to open there. */
+export function stillIndex(states: ReactNode[]): number {
+  if (STILL_STATE === "first") return 0;
+  for (let index = states.length - 1; index > 0; index--) {
+    const state = states[index];
+    if (!(isValidElement<GlitchStateProps>(state) && state.props.window)) return index;
+  }
+  return 0;
+}
+
 function stateStyle(state: ReactNode, index: number): StateStyle {
   const { color, plain = false, link = false } = isValidElement<GlitchStateProps>(state) ? state.props : {};
   const fallback = link
@@ -454,6 +483,7 @@ export function Glitch({
     <GlitchEngine
       count={states.length}
       renderState={(index) => states[index]}
+      stillState={stillIndex(states)}
       styles={states.map(stateStyle)}
       lengths={states.map(stateLength)}
       mode="return"

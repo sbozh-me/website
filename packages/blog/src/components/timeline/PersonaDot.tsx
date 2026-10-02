@@ -13,7 +13,7 @@ export function PersonaDot({ color, name, showName = false }: PersonaDotProps) {
         aria-hidden="true"
       />
       {showName && (
-        <span className="text-sm font-medium" style={{ color }}>
+        <span className="persona-name text-sm font-medium" style={{ color }}>
           {name}
         </span>
       )}

@@ -1,0 +1,297 @@
+/**
+ * ROMAN WHITE Theme — the same words, held still
+ *
+ * A light reading theme picked by the reader (header switch or ?theme=roman-white).
+ * The dark site performs; this one reads like a stone inscription: one meaning,
+ * readable from across the room, nothing moving unless the reader asks.
+ *
+ * Palette (from roman-empire-paper; contrast on travertine):
+ *   Background:        #F4EFE6  travertine
+ *   Body text:         #1C1A17  basalt          15.2:1
+ *   Muted text:        #5C5346  weathered stone  6.6:1
+ *   Links, accents:    #6E4A1F  oxidized bronze  6.9:1
+ *   Highlights:        #4A1C2A  Tyrian purple   12.3:1
+ *   Hairlines:         #C9BFA8  lime mortar      1.6:1 — decoration only; a border the
+ *                      reader must see (inputs, toggles, focus) is bronze or basalt
+ *
+ * Typography:
+ *   h1–h2:  Cinzel capitals (Latin only: a heading with Cyrillic in it switches whole
+ *           to Forum, a Roman-capitals face with Cyrillic, so no heading mixes faces)
+ *   h3+:    body face, sentence case
+ *   Body:   Inter (Latin + Cyrillic)
+ *
+ * Sizes: html is 125% (20px at the browser default, and her own text-size setting still
+ * applies), article text 22px, nothing under 16px.
+ *
+ * Fonts come from next/font in apps/web/app/layout.tsx (--font-cinzel, --font-forum,
+ * --font-inter); a remote @import here would be dropped by the Tailwind build.
+ */
+
+@import "./prose.css";
+@import "./code.css";
+@import "./toc.css";
+
+html[data-theme="roman-white"] {
+  font-size: 125%;
+}
+
+[data-theme="roman-white"] {
+  /* Structural */
+  --color-background: #F4EFE6;
+  --color-muted: #EDE7DB;
+  --color-border: #C9BFA8;
+  --color-card: #FAF6EE;
+  --color-card-foreground: #1C1A17;
+  --color-popover: #FAF6EE;
+  --color-popover-foreground: #1C1A17;
+  --color-input: #6E4A1F;
+
+  /* Text */
+  --color-foreground: #1C1A17;
+  --color-muted-foreground: #5C5346;
+
+  /* Signals */
+  --color-primary: #6E4A1F;
+  --color-primary-foreground: #F4EFE6;
+  --color-secondary: #4A1C2A;
+  --color-secondary-foreground: #F4EFE6;
+  --color-accent: #4A3418;
+  --color-accent-foreground: #F4EFE6;
+  --color-destructive: #8B2E2E;
+  --color-destructive-foreground: #F4EFE6;
+  --color-ring: #6E4A1F;
+
+  /* Roman tokens */
+  --roman-travertine: #F4EFE6;
+  --roman-basalt: #1C1A17;
+  --roman-stone: #5C5346;
+  --roman-bronze: #6E4A1F;
+  --roman-bronze-deep: #4A3418;
+  --roman-purple: #4A1C2A;
+  --roman-mortar: #C9BFA8;
+  --roman-vellum: #EDE7DB;
+
+  /* Toasts: paper, with a coloured edge */
+  --toast-bg: #FAF6EE;
+  --toast-bg-success: #FAF6EE;
+  --toast-bg-error: #FAF6EE;
+  --toast-bg-warning: #FAF6EE;
+  --toast-bg-info: #FAF6EE;
+  --toast-border: #6E4A1F;
+  --toast-border-success: #3F5A2E;
+  --toast-border-error: #8B2E2E;
+  --toast-border-warning: #6E4A1F;
+  --toast-border-info: #4A1C2A;
+  --toast-icon-success: #3F5A2E;
+  --toast-icon-error: #8B2E2E;
+  --toast-icon-warning: #6E4A1F;
+  --toast-icon-info: #4A1C2A;
+
+  /* Glitch words never move here, but their colours still come from the theme */
+  --glitch-base: #4A1C2A;
+  --glitch-accent: #6E4A1F;
+  --glitch-obsidian: #F4EFE6;
+  --glitch-echo: #5C5346;
+  --glitch-plain: #1C1A17;
+  --glitch-red: #8B2E2E;
+  --glitch-pink: #4A1C2A;
+
+  /* No curves */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+
+  /* Typography */
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --roman-caps: var(--font-cinzel), "Cinzel", Georgia, serif;
+  --roman-caps-cyrillic: var(--font-forum), "Forum", Georgia, serif;
+
+  /* 16px floor: Tailwind's text-xs / text-sm read these (rem = 20px here) */
+  --text-xs: 0.8rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.6;
+
+  /* Prose */
+  --prose-font-size: 1.1rem;
+  --prose-line-height: 1.75;
+  --prose-max-width: 36rem;
+  --prose-letter-spacing: normal;
+  --prose-paragraph-margin: 1.2em;
+  --prose-h2-size: 1.6rem;
+  --prose-h2-weight: 600;
+  --prose-h2-line-height: 1.3;
+  --prose-h3-size: 1.25rem;
+  --prose-h3-weight: 600;
+  --prose-h3-line-height: 1.4;
+  --prose-h4-size: 1.1rem;
+  --prose-h4-weight: 600;
+  --prose-image-radius: 0;
+  --prose-hr-max-width: 160px;
+
+  /* Code */
+  --code-bg: #FAF6EE;
+  --code-block-radius: 0;
+  --code-inline-radius: 0;
+
+  /* TOC */
+  --toc-border-radius: 0;
+  --toc-scrollbar-radius: 0;
+}
+
+[data-theme="roman-white"] body {
+  font-family: var(--font-sans);
+  line-height: 1.75;
+}
+
+/* ── Headings: Cinzel capitals for h1–h2, sentence case below ─────────── */
+
+[data-theme="roman-white"] h1,
+[data-theme="roman-white"] h2 {
+  font-family: var(--roman-caps);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--roman-basalt);
+}
+
+[data-theme="roman-white"] h1[data-script="cyrillic"],
+[data-theme="roman-white"] h2[data-script="cyrillic"] {
+  font-family: var(--roman-caps-cyrillic);
+  font-weight: 400;
+}
+
+[data-theme="roman-white"] h3,
+[data-theme="roman-white"] h4,
+[data-theme="roman-white"] h5,
+[data-theme="roman-white"] h6 {
+  font-family: var(--font-sans);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--roman-basalt);
+}
+
+/* ── Links: bronze and underlined everywhere in the reading path ──────── */
+
+/* Card links that wrap whole blocks (post cards, project tiles) stay un-underlined */
+[data-theme="roman-white"] main a:not([data-slot="button"]):not(.no-underline):not(:has(div, p, h1, h2, h3, h4, img)) {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+/* Outline buttons (header switch, CV actions): paper with a bronze edge, not the dark
+   theme's filled outline (dark:bg-input/80 would fill them with bronze) */
+[data-theme="roman-white"] .reader-theme-toggle,
+[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"] {
+  background: var(--roman-travertine);
+  border-color: var(--roman-bronze);
+  color: var(--roman-basalt);
+}
+
+[data-theme="roman-white"] .reader-theme-toggle:hover,
+[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"]:hover {
+  background: var(--roman-vellum);
+}
+
+/* Ghost buttons turn their text white on hover in the dark theme */
+[data-theme="roman-white"] [data-slot="button"][class*="hover:text-white"]:hover {
+  color: var(--roman-basalt);
+}
+
+/* ── Focus: a visible bronze outline (globals.css draws it at 1px) ─────── */
+
+[data-theme="roman-white"] *:focus-visible {
+  outline: 3px solid var(--roman-bronze) !important;
+  outline-offset: 2px;
+}
+
+[data-theme="roman-white"] ::selection {
+  background-color: rgb(110 74 31 / 0.25);
+  color: var(--roman-basalt);
+}
+
+/* ── Stillness: no animations, transitions or loaders ─────────────────── */
+
+[data-theme="roman-white"] *,
+[data-theme="roman-white"] *::before,
+[data-theme="roman-white"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
+
+[data-theme="roman-white"] .theme-loader-overlay {
+  display: none;
+}
+
+/* Hover lifts and glows from the dark theme */
+[data-theme="roman-white"] .release-card,
+[data-theme="roman-white"] .group:hover .release-card {
+  transform: none;
+}
+
+[data-theme="roman-white"] .group:hover .timeline-dot {
+  box-shadow: none;
+}
+
+/* Before hydration a glitch word shows its base as plain text; then the still
+   (final) state replaces it (see apps/web/lib/blog/glitch). */
+[data-theme="roman-white"] .glitch:not([data-off]) .glitch-layers {
+  display: none;
+}
+
+[data-theme="roman-white"] .glitch:not([data-off]) .glitch-sizer {
+  opacity: 1;
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Hard-coded small text in the dark theme, lifted to the 16px floor */
+[data-theme="roman-white"] figcaption,
+[data-theme="roman-white"] [class*="text-[11px]"],
+[data-theme="roman-white"] [class*="text-[0.625rem]"] {
+  font-size: 0.8rem !important;
+}
+
+/* Persona colours come from Directus with no contrast promise: the dot keeps it, the name is ink */
+[data-theme="roman-white"] .persona-name {
+  color: var(--roman-basalt) !important;
+}
+
+[data-theme="roman-white"] [class*="text-muted-foreground/"] {
+  color: var(--color-muted-foreground) !important;
+}
+
+/* ── Tap targets: 44px for buttons and nav links ──────────────────────── */
+
+[data-theme="roman-white"] button,
+[data-theme="roman-white"] [data-slot="button"],
+[data-theme="roman-white"] header nav a,
+[data-theme="roman-white"] footer a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+[data-theme="roman-white"] header nav a,
+[data-theme="roman-white"] footer a {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── The flying pig: one small, still footer mark, only here ──────────── */
+
+.flying-pig {
+  display: none;
+}
+
+[data-theme="roman-white"] .flying-pig {
+  display: inline-block;
+  width: 2.2rem;
+  height: auto;
+  color: var(--roman-stone);
+}

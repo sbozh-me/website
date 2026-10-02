@@ -1,0 +1,116 @@
+/**
+ * ROMAN WHITE prose — article reading, scoped to [data-theme="roman-white"]
+ *
+ * 22px body, 1.75 line height, about 65 characters a line. h1–h2 in Cinzel capitals with
+ * a bronze rule (index.css), h3 and below in the body face. Links bronze and underlined.
+ */
+
+[data-theme="roman-white"] .prose {
+  font-family: var(--font-sans);
+  font-size: var(--prose-font-size);
+  line-height: var(--prose-line-height);
+  color: var(--roman-basalt);
+  max-width: var(--prose-max-width);
+}
+
+[data-theme="roman-white"] .prose h2 {
+  border-bottom: 1px solid var(--roman-bronze);
+  padding-bottom: 0.3rem;
+}
+
+[data-theme="roman-white"] .prose h3 {
+  font-size: var(--prose-h3-size);
+  font-weight: 600;
+}
+
+[data-theme="roman-white"] .prose p {
+  margin-bottom: var(--prose-paragraph-margin);
+}
+
+/* Links */
+[data-theme="roman-white"] .prose a {
+  color: var(--roman-bronze);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+[data-theme="roman-white"] .prose a:hover {
+  color: var(--roman-bronze-deep);
+  text-decoration-thickness: 2px;
+}
+
+/* Lists */
+[data-theme="roman-white"] .prose ul,
+[data-theme="roman-white"] .prose ol {
+  margin-bottom: var(--prose-paragraph-margin);
+  padding-left: 1.5rem;
+}
+
+[data-theme="roman-white"] .prose li {
+  margin-bottom: 0.5rem;
+}
+
+[data-theme="roman-white"] .prose li::marker {
+  color: var(--roman-bronze);
+}
+
+/* Blockquotes: bronze rule on vellum, upright text (italics read slower) */
+[data-theme="roman-white"] .prose blockquote {
+  border-left: 3px solid var(--roman-bronze);
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--roman-vellum);
+  color: var(--roman-basalt);
+  font-style: normal;
+}
+
+[data-theme="roman-white"] .prose blockquote p {
+  margin-bottom: 0;
+}
+
+/* Obsidian highlight (==text==) */
+[data-theme="roman-white"] .prose mark {
+  background: rgb(110 74 31 / 0.18);
+  color: var(--roman-basalt);
+  padding: 0 0.15em;
+}
+
+/* Images */
+[data-theme="roman-white"] .prose img {
+  border-radius: 0;
+  border: 1px solid var(--roman-mortar);
+}
+
+/* Horizontal rule: one short bronze line */
+[data-theme="roman-white"] .prose hr {
+  border: none;
+  height: 1px;
+  background: var(--roman-bronze);
+  margin: 3rem auto;
+  max-width: var(--prose-hr-max-width);
+}
+
+/* Tables */
+[data-theme="roman-white"] .prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+[data-theme="roman-white"] .prose th,
+[data-theme="roman-white"] .prose td {
+  border-bottom: 1px solid var(--roman-mortar);
+  padding: 0.75rem;
+  text-align: left;
+}
+
+[data-theme="roman-white"] .prose th {
+  font-weight: 600;
+  border-bottom: 1px solid var(--roman-bronze);
+}
+
+[data-theme="roman-white"] .prose strong {
+  color: var(--roman-basalt);
+  font-weight: 700;
+}

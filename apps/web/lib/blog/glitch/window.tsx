@@ -2,6 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
+import { useStillTheme } from "@sbozh/themes";
 
 import "./glitch.css";
 
@@ -30,10 +31,15 @@ export function setGlitchesEnabled(value: boolean | null) {
   listeners.forEach((listener) => listener());
 }
 
-/** `windowOff`: the page starts with the window closed (`==WINDOW OFF==`). */
+/**
+ * `windowOff`: the page starts with the window closed (`==WINDOW OFF==`).
+ * Roman White keeps the window shut: every word plain and still, whatever was clicked.
+ */
 export function useGlitchesEnabled(windowOff = false) {
   const snapshot = () => enabled ?? !windowOff;
-  return useSyncExternalStore(subscribe, snapshot, snapshot);
+  const open = useSyncExternalStore(subscribe, snapshot, snapshot);
+  const still = useStillTheme();
+  return open && !still;
 }
 
 // W hotkey: one keydown listener per page, however many toggles it has, so a press
@@ -87,6 +93,9 @@ function WindowIcon({ open }: { open: boolean }) {
  */
 export function WindowButton({ off = false, inGlitch = false }: { off?: boolean; inGlitch?: boolean }) {
   const on = useGlitchesEnabled(off);
+  const still = useStillTheme();
+  // Nothing to open in Roman White
+  if (still) return null;
   return (
     <Button
       variant="outline"

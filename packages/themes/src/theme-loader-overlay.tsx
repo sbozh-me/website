@@ -24,7 +24,7 @@ export function ThemeLoaderOverlay({ spinner }: ThemeLoaderOverlayProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#0d1117] transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}
+      className={`theme-loader-overlay fixed inset-0 z-[9999] flex items-center justify-center bg-[#0d1117] transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}
       aria-hidden="true"
     >
       <div className="animate-spin" style={{ animationDuration: "2s" }}>

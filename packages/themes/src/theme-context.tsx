@@ -8,6 +8,7 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
+import { currentReaderTheme, useReaderTheme } from "./reader-theme";
 import { DEFAULT_THEME, THEMES, type Theme } from "./types";
 
 interface ThemeContextValue {
@@ -71,22 +72,26 @@ const useIsomorphicLayoutEffect =
 
 /**
  * Client component that overrides the page theme.
- * Sets data-theme on mount, resets to default on unmount.
+ * Sets data-theme on mount, resets on unmount to the reader's choice or the default.
+ * A reader's saved choice (header switch, ?theme= link) always wins over the page's.
  * Use in pages that need a different theme than the layout default.
  */
 export function PageTheme({ theme }: PageThemeProps) {
+  // Re-applies when the reader switches, e.g. back to dark on a KOGNITIV post
+  const readerTheme = useReaderTheme();
+
   // Use layout effect to set theme before paint, avoiding flash
   useIsomorphicLayoutEffect(() => {
     const resolvedTheme = THEMES.some((t) => t.id === theme)
       ? theme
       : DEFAULT_THEME;
 
-    document.documentElement.setAttribute("data-theme", resolvedTheme);
+    if (!currentReaderTheme()) document.documentElement.setAttribute("data-theme", resolvedTheme);
 
     return () => {
-      document.documentElement.setAttribute("data-theme", DEFAULT_THEME);
+      document.documentElement.setAttribute("data-theme", currentReaderTheme() ?? DEFAULT_THEME);
     };
-  }, [theme]);
+  }, [theme, readerTheme]);
 
   return null;
 }

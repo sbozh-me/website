@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
+import { useStillTheme } from "@sbozh/themes";
+
 import { useGlitchesEnabled } from "./window";
 import "./glitch.css";
 
@@ -67,6 +69,8 @@ export function WindowVideo({
 }: WindowVideoProps) {
   const open = useGlitchesEnabled(windowOff);
   const mobile = useIsMobile();
+  // Roman White: the closed-window cut, paused until the reader presses play
+  const still = useStillTheme();
   const onRef = useRef<HTMLVideoElement>(null);
   const offRef = useRef<HTMLVideoElement>(null);
   const first = useRef(true);
@@ -75,13 +79,17 @@ export function WindowVideo({
     const [shown, hidden] = open ? [onRef.current, offRef.current] : [offRef.current, onRef.current];
     if (!shown || !hidden) return;
     hidden.pause();
+    if (still) {
+      shown.pause();
+      return;
+    }
     // Skip the sync on mount: autoPlay already started the right one from the beginning
     if (!first.current && Number.isFinite(hidden.currentTime)) shown.currentTime = hidden.currentTime;
     first.current = false;
     shown.play()?.catch(() => {
       // Autoplay can be refused (e.g. data saver); the poster and controls-free frame stay
     });
-  }, [open]);
+  }, [open, still]);
 
   const video = (
     src: string,
@@ -96,7 +104,8 @@ export function WindowVideo({
       src={mobileSrc ? undefined : src}
       poster={(mobile && mobilePoster) || poster}
       hidden={!active}
-      autoPlay={active}
+      autoPlay={active && !still}
+      controls={still}
       preload={active ? "auto" : "metadata"}
       loop
       muted

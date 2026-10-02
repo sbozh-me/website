@@ -140,7 +140,8 @@ export default async function BlogPostPage({ params }: PageProps) {
       [
         rehypePrettyCode,
         {
-          theme: "github-dark",
+          // Both palettes ship; the theme's CSS picks one (roman-white reads the light one)
+          theme: { dark: "github-dark", light: "github-light-high-contrast" },
           keepBackground: false,
         },
       ],

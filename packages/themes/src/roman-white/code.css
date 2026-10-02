@@ -1,0 +1,46 @@
+/**
+ * ROMAN WHITE code styling — scoped to [data-theme="roman-white"]
+ *
+ * Blog code is highlighted twice by rehype-pretty-code (github-dark and
+ * github-light-high-contrast, as --shiki-dark / --shiki-light on each token; the dark pick
+ * lives in apps/web/app/globals.css). Here the light one shows. Every token colour is
+ * 4.5:1 or better on the #FAF6EE code paper.
+ */
+
+[data-theme="roman-white"] code[data-theme*=" "] span {
+  color: var(--shiki-light);
+}
+
+/* Inline code */
+[data-theme="roman-white"] .prose code {
+  background: var(--roman-vellum);
+  color: var(--roman-basalt);
+  padding: 0.1rem 0.35rem;
+  border-radius: 0;
+  font-size: 0.9em;
+  font-family: var(--font-mono);
+}
+
+/* Code blocks */
+[data-theme="roman-white"] .prose pre {
+  background: var(--code-bg);
+  border: 1px solid var(--roman-mortar);
+  border-left: 3px solid var(--roman-bronze);
+  border-radius: 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+[data-theme="roman-white"] .prose pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--roman-basalt);
+}
+
+[data-theme="roman-white"] .prose pre code [data-highlighted-line] {
+  background: rgb(110 74 31 / 0.1);
+  border-left: 2px solid var(--roman-bronze);
+}

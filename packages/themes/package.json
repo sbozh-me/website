@@ -11,7 +11,8 @@
     "./obsidian-forge": "./src/obsidian-forge/index.css",
     "./kognitiv": "./src/kognitiv/index.css",
     "./roman-empire": "./src/roman-empire/index.css",
-    "./normal": "./src/normal/index.css"
+    "./normal": "./src/normal/index.css",
+    "./roman-white": "./src/roman-white/index.css"
   },
   "peerDependencies": {
     "react": ">=18.0.0"

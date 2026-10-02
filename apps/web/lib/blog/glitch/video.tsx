@@ -1,3 +1,7 @@
+"use client";
+
+import { useStillTheme } from "@sbozh/themes";
+
 import "./glitch.css";
 
 interface VideoProps {
@@ -15,9 +19,22 @@ interface VideoProps {
  * For two cuts switched by the window, use <WindowVideo> instead.
  */
 export function Video({ src, poster, title }: VideoProps) {
+  // Roman White: nothing moves until the reader presses play
+  const still = useStillTheme();
   return (
     <div className="window-video">
-      <video src={src} poster={poster} autoPlay loop muted playsInline preload="metadata" aria-label={title} />
+      <video
+        key={still ? "still" : "loop"}
+        src={src}
+        poster={poster}
+        autoPlay={!still}
+        controls={still}
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        aria-label={title}
+      />
     </div>
   );
 }

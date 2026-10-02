@@ -25,6 +25,11 @@ export const THEMES: Theme[] = [
     name: "Roman Empire",
     description: "Imperial decree & senatorial letter aesthetic - ancient parchment, Roman inscriptions",
   },
+  {
+    id: "roman-white",
+    name: "Roman White",
+    description: "Light reading theme - travertine, basalt ink, larger text, no motion",
+  },
 ];
 
 export const DEFAULT_THEME = "obsidian-forge";

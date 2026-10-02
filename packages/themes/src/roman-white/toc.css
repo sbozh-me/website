@@ -1,0 +1,48 @@
+/**
+ * ROMAN WHITE TOC — scoped to [data-theme="roman-white"]
+ * Always fully visible (the dark themes fade it until hover), body face, 16px floor.
+ */
+
+[data-theme="roman-white"] .toc {
+  opacity: 1;
+}
+
+@media (max-width: 1023px) {
+  [data-theme="roman-white"] .toc {
+    border: 1px solid var(--roman-mortar);
+    border-radius: 0;
+    padding: 1rem;
+  }
+}
+
+[data-theme="roman-white"] .toc-title {
+  font-family: var(--roman-caps);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--roman-stone);
+  margin-bottom: 0.75rem;
+}
+
+[data-theme="roman-white"] .toc-link {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--roman-stone);
+  text-decoration: none;
+}
+
+[data-theme="roman-white"] .toc-link:hover {
+  color: var(--roman-bronze);
+  text-decoration: underline;
+}
+
+[data-theme="roman-white"] .toc-item-active .toc-link {
+  color: var(--roman-basalt);
+  font-weight: 600;
+}
+
+[data-theme="roman-white"] .toc::-webkit-scrollbar-thumb {
+  background: var(--roman-stone);
+}
