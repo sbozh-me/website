@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.4] - 2026-10-02
+
+### Changes
+
+- feat(blog): add Voice, sbozhed and window button ([b7253d3](https://github.com/sbozh-me/website/commit/b7253d36f15f736c8f2a4837ed0772a2551e6100))
+- feat(themes): add roman-white reading theme with a reader switch ([a0fc91a](https://github.com/sbozh-me/website/commit/a0fc91a3f2b5e4b7261d65efac2de991e96386be))
+- test(pmdxjs): expect the CV header div, not <header> ([b73a354](https://github.com/sbozh-me/website/commit/b73a3541e0fa7bdda052d545c8baabf6bcbb5e22))
+- test(release-notes): add tests for version, date and reading-time utils ([54437d5](https://github.com/sbozh-me/website/commit/54437d55d7f39b7ce26aa0c564ba1d18495d46e5))
+
+
 ## [1.7.3] - 2026-09-29
 
 ### Changes
