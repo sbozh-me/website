@@ -33,8 +33,10 @@ describe("Header", () => {
 
   it("has correct semantic structure", () => {
     render(<Header name="John Doe" subtitle="Engineer" />);
-    expect(document.querySelector("header")).toBeInTheDocument();
-    expect(document.querySelector("h1")).toHaveTextContent("John Doe");
+    // A <div>, not <header>: the site's print styles hide every <header> (2adcb34)
+    expect(document.querySelector("header")).toBeNull();
+    expect(document.querySelector(".pmdxjs-header")).toBeInTheDocument();
+    expect(document.querySelector(".pmdxjs-header h1")).toHaveTextContent("John Doe");
   });
 
   it("applies custom className", () => {
