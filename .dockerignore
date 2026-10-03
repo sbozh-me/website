@@ -46,3 +46,11 @@ Thumbs.db
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# Local-only data, never part of the build (each is hundreds of MB to GBs)
+.claude
+backups
+media
+deploy
+**/.terraform
+**/tsconfig.tsbuildinfo
