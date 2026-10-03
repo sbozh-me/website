@@ -7,7 +7,7 @@
  * 4.5:1 or better on the #FAF6EE code paper.
  */
 
-[data-theme="roman-white"] code[data-theme*=" "] span {
+[data-theme="roman-white"] code[data-language] span {
   color: var(--shiki-light);
 }
 
