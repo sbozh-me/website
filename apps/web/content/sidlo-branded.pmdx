@@ -1,0 +1,107 @@
+:::config
+format: A4
+margins: 22 20 20 20
+theme: declaration-branded
+logo: /android-chrome-512x512.png
+qr: https://sbozh.me/blog/declaration-of-the-digital-principate#deklarace-digit%C3%A1ln%C3%ADho-princip%C3%A1tu
+qr-label: Deklarace česky
+version: sbozh.me · IČO 22290575
+:::
+
+:::page
+
+# Prohlášení
+subtitle: o souhlasu s umístěním místa podnikání / sídla / organizační složky
+
+## Vlastník nemovitosti
+
+---columns 62 38
+
+:::field jméno a příjmení
+
+---
+
+:::field datum narození
+
+---columns-end
+
+:::field bydliště
+
+prohlašuje, že souhlasí s umístěním místa podnikání v nemovitosti na adrese
+
+:::field název obce, část obce, ulice, č. popisné/orientační, PSČ
+
+## Pro fyzickou osobu
+
+---columns 62 38
+
+:::field jméno a příjmení | Semen Bozhyk
+
+---
+
+:::field IČO | 22290575
+
+---columns-end
+
+---columns 62 38
+
+:::field bydliště
+
+---
+
+:::field datum narození
+
+---columns-end
+
+---columns 50 50
+
+:::field místo a datum | V Praze dne
+
+---
+
+:::sign vlastník nemovitosti
+
+---columns-end
+
+:::page-end
+
+:::page
+
+# Deklarace Digitálního principátu
+subtitle: Proč na tomto místě záleží · výňatek z českého znění
+
+Místo podnikání zapsané pod **IČO 22290575** je zároveň fyzickým sídlem Digitálního principátu, komunity a publikační platformy na [sbozh.me](https://sbozh.me). Vlastník nemovitosti tak tímto prohlášením dává Principátu jeho fyzickou adresu.
+
+## Slovo k České republice
+
+Digitální principát vznikl v Praze a podniká jako česká živnost pod IČO 22290575. Řídí se českým právem, zde platí daně a nenárokuje si žádnou svrchovanost. Jeho cílem je, aby lidé, kteří sem přišli, našli hlas, práci a společnost, a aby z toho měla užitek i země, která jim dala domov.
+
+## Co je Principát
+
+Digitální principát je komunita a publikační platforma na sbozh.me. Není státem. Jeho účelem je, aby člověk, který má co říci, to mohl říci jednou, jasně, a byl vyslyšen tím, komu je to určeno.
+
+- **Území:** doména sbozh.me jako digitální adresa a adresa zapsaná pod IČO 22290575 jako fyzické sídlo.
+- **Sídlo:** adresa zapsaná pod IČO 22290575 v Praze, na území a pod jurisdikcí České republiky.
+- **Vztahy s ostatními:** smlouvy podepsané pod výše uvedeným IČO.
+
+## Vztah k České republice
+
+- Principát nemá žádnou vlastní politickou moc.
+- V každé otázce politiky a mezinárodního práva se Principát řídí postojem a výkladem České republiky.
+- Principát usiluje o důvěru a podporu České republiky pro to, za čím stojí, a chce si je zasloužit svým jednáním.
+
+## Právní rámec
+
+- **Obchod:** živnostenský zákon (č. 455/1991 Sb.) a zákon o ochraně spotřebitele (č. 634/1992 Sb.).
+- **Údaje občanů:** GDPR (nařízení (EU) 2016/679).
+- **Autorství:** autorský zákon (č. 121/2000 Sb.). Každý občan vlastní svůj příběh.
+
+*Kde se tato Deklarace a zákon rozcházejí, platí zákon.*
+
+## Nabytí účinnosti
+
+Deklarace nabývá účinnosti dnem, kdy je živnostenské oprávnění Semena Bozhyka, IČO 22290575, aktivní v živnostenském rejstříku. Založeno 01.10.2026. Zveřejněno 05.10.2026.
+
+Plné znění: [sbozh.me/blog/declaration-of-the-digital-principate](https://sbozh.me/blog/declaration-of-the-digital-principate). Text je překladem; originálem je anglické znění.
+
+:::page-end

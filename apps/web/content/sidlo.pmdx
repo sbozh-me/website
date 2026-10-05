@@ -1,0 +1,62 @@
+:::config
+format: A4
+margins: 24 22 22 22
+theme: declaration
+:::
+
+:::page
+
+# Prohlášení
+subtitle: o souhlasu s umístěním místa podnikání / sídla / organizační složky
+
+## Vlastník nemovitosti
+
+---columns 62 38
+
+:::field jméno a příjmení
+
+---
+
+:::field datum narození
+
+---columns-end
+
+:::field bydliště
+
+prohlašuje, že souhlasí s umístěním místa podnikání v nemovitosti na adrese
+
+:::field název obce, část obce, ulice, č. popisné/orientační, PSČ
+
+## Pro fyzickou osobu
+
+---columns 62 38
+
+:::field jméno a příjmení | Semen Bozhyk
+
+---
+
+:::field IČO | 22290575
+
+---columns-end
+
+---columns 62 38
+
+:::field bydliště
+
+---
+
+:::field datum narození
+
+---columns-end
+
+---columns 50 50
+
+:::field místo a datum | V Praze dne
+
+---
+
+:::sign vlastník nemovitosti
+
+---columns-end
+
+:::page-end

@@ -56,3 +56,7 @@ apps/web/content/faktura.*.pmdx
 
 # Local git worktrees created by Claude Code
 .claude/worktrees/
+
+# Source form for the sídlo declaration (rebuilt as content/sidlo*.pmdx)
+apps/web/content/sidlo.docx
+apps/web/content/sidlo*.pdf
