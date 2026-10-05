@@ -12,6 +12,7 @@ import {
   createQrNode,
   createSectionNode,
   createSignNode,
+  createFieldNode,
   createTableNode,
   createTagsNode,
   createTotalNode,
@@ -357,7 +358,24 @@ function processToken(
       break;
     }
 
+    case "field_line": {
+      flushTags(state);
+      addToCurrentContext(state, createFieldNode(token));
+      break;
+    }
+
     case "columns_start": {
+      // A heading directly followed by columns keeps its title as an empty
+      // section, otherwise flushSection would drop it
+      if (
+        state.currentSectionTitle &&
+        state.currentSection.length === 0 &&
+        !state.columnsContext.active
+      ) {
+        state.currentPage.push(
+          createSectionNode(state.currentSectionTitle, []),
+        );
+      }
       // Flush current section and start columns
       flushSection(state);
       state.columnsContext = {

@@ -16,6 +16,7 @@ export type TokenType =
   | "qr_end"
   | "total_line"
   | "sign_line"
+  | "field_line"
   | "columns_start"
   | "columns_end"
   | "table_row"
@@ -74,6 +75,8 @@ const PATTERNS = {
   totalLine: /^:::total\s+(.+)$/,
   // :::sign Mgr. Radka Suchá  (name optional)
   signLine: /^:::sign\s*(.*)$/,
+  // :::field Caption | value  (value optional — blank line to fill by hand)
+  fieldLine: /^:::field\s+(.+)$/,
   // ---columns 60 40
   columnsStart: /^---columns\s+(\d+)\s+(\d+)\s*$/,
   // ---columns-end
@@ -267,6 +270,17 @@ export function tokenizeLine(
     return {
       type: "sign_line",
       value: signMatch[1].trim(),
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Fill-in field (single-line directive)
+  const fieldMatch = trimmed.match(PATTERNS.fieldLine);
+  if (fieldMatch) {
+    return {
+      type: "field_line",
+      value: fieldMatch[1].trim(),
       line: lineNumber,
       column: 1,
     };

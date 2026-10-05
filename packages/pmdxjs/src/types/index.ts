@@ -8,6 +8,7 @@ export type {
   DocumentNode,
   EmphasisNode,
   EntryNode,
+  FieldNode,
   HeaderNode,
   InlineNode,
   InvoiceNode,

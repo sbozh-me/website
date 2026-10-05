@@ -119,6 +119,16 @@ export interface TotalNode extends BaseNode {
 }
 
 /**
+ * Field node - a ruled fill-in line with a caption beneath (:::field)
+ */
+export interface FieldNode extends BaseNode {
+  type: "field";
+  caption: string;
+  /** Pre-filled value written on the line; blank when omitted. */
+  value?: string;
+}
+
+/**
  * Signature node - signing line (:::sign)
  */
 export interface SignNode extends BaseNode {
@@ -273,6 +283,7 @@ export type BlockNode =
   | PartyNode
   | TotalNode
   | SignNode
+  | FieldNode
   | QrNode;
 
 /**

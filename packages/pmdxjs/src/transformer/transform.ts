@@ -9,6 +9,7 @@ import {
   Tags as CVTags,
 } from "../components/cv";
 import {
+  Field,
   InvoiceHeader,
   Party,
   PaymentQR,
@@ -24,6 +25,7 @@ import type {
   DocumentNode,
   EmphasisNode,
   EntryNode,
+  FieldNode,
   HeaderNode,
   InlineNode,
   InvoiceNode,
@@ -96,6 +98,7 @@ interface KnownComponents {
   }>;
   Total?: React.ComponentType<{ label?: string; amount: string }>;
   Sign?: React.ComponentType<{ name?: string; image?: string }>;
+  Field?: React.ComponentType<{ caption: string; value?: string }>;
   PaymentQR?: React.ComponentType<{
     account: string;
     amount?: string;
@@ -628,6 +631,22 @@ function transformSign(
 }
 
 /**
+ * Transform a fill-in field node to React element
+ */
+function transformField(
+  node: FieldNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.Field ?? Field;
+  return createElement(Component, {
+    key,
+    caption: node.caption,
+    value: node.value,
+  });
+}
+
+/**
  * Transform a QR payment node to React element
  */
 function transformQr(
@@ -666,6 +685,8 @@ function transformContentNode(
       return transformTotal(node, options, key);
     case "sign":
       return transformSign(node, options, key);
+    case "field":
+      return transformField(node, options, key);
     case "qr":
       return transformQr(node, options, key);
     case "section":

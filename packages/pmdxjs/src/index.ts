@@ -20,6 +20,7 @@ export type {
 } from "./components/cv";
 
 export type {
+  FieldProps,
   InvoiceHeaderProps,
   PartyProps,
   PaymentQRProps,
@@ -57,6 +58,7 @@ export type {
   DocumentNode,
   EmphasisNode,
   EntryNode,
+  FieldNode,
   HeaderNode,
   InlineNode,
   InvoiceNode,
@@ -96,6 +98,7 @@ export {
 
 // Invoice component exports
 export {
+  Field,
   InvoiceHeader,
   Party,
   PaymentQR,

@@ -11,6 +11,7 @@ import type {
   DividerNode,
   DocumentNode,
   EntryNode,
+  FieldNode,
   HeaderNode,
   InvoiceNode,
   ListItemNode,
@@ -337,6 +338,22 @@ export function createSignNode(token: Token): SignNode {
     type: "sign",
     name: name || undefined,
     image: image || undefined,
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
+    },
+  };
+}
+
+/**
+ * Create a field node from a :::field line ("caption" or "caption | value").
+ */
+export function createFieldNode(token: Token): FieldNode {
+  const [caption, value] = token.value.split("|").map((p) => p.trim());
+  return {
+    type: "field",
+    caption: caption || "",
+    value: value || undefined,
     position: {
       start: { line: token.line, column: token.column },
       end: { line: token.line, column: token.column },
