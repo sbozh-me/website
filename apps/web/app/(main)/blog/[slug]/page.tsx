@@ -18,9 +18,11 @@ import {
 import { getAdjacentPosts, type TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
+import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
 import remarkGlitch from "@/lib/blog/remark-glitch";
 import remarkHeadingIds from "@/lib/blog/remark-heading-ids";
+import { renderTitle } from "@/lib/blog/title-heading";
 
 // Disable caching - always fetch fresh data from Directus
 export const dynamic = "force-dynamic";
@@ -149,16 +151,20 @@ export default async function BlogPostPage({ params }: PageProps) {
   } as any);
   const toc = post.isTocHidden ? [] : headings;
 
-  // Compile tldr markdown if present
+  // The heading renders the title's glitch syntax; post.title itself is plain text
+  const title = post.titleMarkup ? await renderTitle(post.titleMarkup) : undefined;
+
+  // Compile tldr markdown if present (glitch syntax works here too)
   let TldrContent: React.ComponentType | null = null;
   if (post.tldr) {
     const { default: Content } = await evaluate(post.tldr, {
       ...runtime,
-      remarkPlugins: [remarkGfm],
+      remarkPlugins: [remarkGfm, remarkGlitch],
     } as any);
     TldrContent = () => (
       <Content
         components={{
+          ...glitchMdxComponents,
           a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
             // Check if it's an external link
             const isExternal = props.href &&
@@ -195,7 +201,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-6xl mx-auto">
           <PostLayout toc={toc}>
             <div>
-              <PostHeader post={post} adjacent={adjacent} />
+              <PostHeader post={post} adjacent={adjacent} title={title} />
               {TldrContent && (
                 <div className="text-muted-foreground mb-6 [&_p]:inline">
                   <span className="font-medium">TL;DR: </span>

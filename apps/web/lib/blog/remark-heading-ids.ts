@@ -52,7 +52,8 @@ function visitHeadings(
   }
 }
 
-function plainText(node: Nodes): string {
+/** A node's text as it reads with the glitch effects at rest (also used for post titles). */
+export function plainText(node: Nodes): string {
   if (node.type === "text" || node.type === "inlineCode") return node.value;
   if (node.type === "mdxJsxTextElement") {
     switch (node.name) {
@@ -63,6 +64,10 @@ function plainText(node: Nodes): string {
         return "✳";
       case "DickPitch":
         return "D✳CK PITCH";
+      case "Sbozhed": {
+        const text = node.attributes.find((a) => a.type === "mdxJsxAttribute" && a.name === "text");
+        return typeof text?.value === "string" ? text.value : "";
+      }
       case "WindowToggle":
         return "";
     }
