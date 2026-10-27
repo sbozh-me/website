@@ -63,6 +63,8 @@ interface KnownComponents {
   Page?: React.ComponentType<{
     children: ReactNode;
     columns?: [number, number];
+    number?: number;
+    total?: number;
   }>;
   Columns?: React.ComponentType<{
     ratio: [number, number];
@@ -724,6 +726,7 @@ function transformPage(
   node: PageNode,
   options: TransformOptions,
   key: number,
+  total: number,
 ): ReactElement {
   const PageComponent = options.components?.Page ?? Page;
   const children = node.children.map((child, i) =>
@@ -735,7 +738,13 @@ function transformPage(
     if (child.type === "columns") columns = child.ratio;
   }
 
-  return createElement(PageComponent, { key, columns, children });
+  return createElement(PageComponent, {
+    key,
+    columns,
+    number: key + 1,
+    total,
+    children,
+  });
 }
 
 /**
@@ -747,7 +756,7 @@ export function transform(
 ): ReactElement {
   const DocumentComponent = options.components?.Document ?? Document;
   const children = ast.children.map((page, i) =>
-    transformPage(page, options, i),
+    transformPage(page, options, i, ast.children.length),
   );
 
   return createElement(DocumentComponent, { config: ast.config, children });

@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.6] - 2026-10-27
+
+### Changes
+
+- fix(themes): use code[data-language] selector to avoid minifier crash ([c73d569](https://github.com/sbozh-me/website/commit/c73d5695dc7941ccfe209cf025dd418460b08c06))
+- build(docker): exclude local data dirs from build context ([56956e7](https://github.com/sbozh-me/website/commit/56956e709fd406cfefa36abd758fdce61e24c609))
+- fix(deploy): probe web healthcheck on IPv4 loopback ([1368942](https://github.com/sbozh-me/website/commit/13689424484436da067d7f6c8605e59f1f6a975d))
+- feat(pmdxjs): add :::field fill-in line directive ([2c2c94d](https://github.com/sbozh-me/website/commit/2c2c94d531cf66c6c186b3a1d79760eb87a73948))
+- feat(web): add sidlo declaration page with PDF export ([6547720](https://github.com/sbozh-me/website/commit/65477204b32f4f2cc3d9056c789d808452112ad2))
+
+
+## [1.7.5] - 2026-10-27
+
+### Changes
+
+- fix(themes): use code[data-language] selector to avoid minifier crash ([c73d569](https://github.com/sbozh-me/website/commit/c73d5695dc7941ccfe209cf025dd418460b08c06))
+- build(docker): exclude local data dirs from build context ([56956e7](https://github.com/sbozh-me/website/commit/56956e709fd406cfefa36abd758fdce61e24c609))
+- fix(deploy): probe web healthcheck on IPv4 loopback ([1368942](https://github.com/sbozh-me/website/commit/13689424484436da067d7f6c8605e59f1f6a975d))
+- feat(pmdxjs): add :::field fill-in line directive ([2c2c94d](https://github.com/sbozh-me/website/commit/2c2c94d531cf66c6c186b3a1d79760eb87a73948))
+- feat(web): add sidlo declaration page with PDF export ([6547720](https://github.com/sbozh-me/website/commit/65477204b32f4f2cc3d9056c789d808452112ad2))
+
+
 ## [1.7.4] - 2026-10-02
 
 ### Changes

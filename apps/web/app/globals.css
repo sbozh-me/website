@@ -757,52 +757,9 @@ code[data-language] span {
   color: var(--cv-muted-foreground);
 }
 
-/* Branded: sbozh.me parchment, Cinzel capitals, amethyst → gold rule */
-.pmdxjs-document[data-theme="declaration-branded"] {
-  --cv-paper: #f6f1e7;
-  --cv-foreground: #1c1a17;
-  --cv-muted: #ede7db;
-  --cv-muted-foreground: #5c5346;
-  --cv-border: #c9bfa8;
-  --cv-primary: #6d4fd8;
-  --cv-secondary: #b7791f;
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-page {
-  border-top: 3mm solid transparent;
-  border-image: linear-gradient(90deg, #8b5cf6, #f59e0b) 1;
-  border-bottom: none;
-  border-left: none;
-  border-right: none;
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-header h1 {
-  font-family: var(--font-cinzel), serif;
-  letter-spacing: 0.24em;
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-header-subtitle {
-  font-family: var(--font-forum), serif;
-  font-size: 12pt;
-  color: var(--cv-muted-foreground);
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-section h2 {
-  font-family: var(--font-cinzel), serif;
-  color: var(--cv-primary);
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-field-value {
-  color: var(--cv-primary);
-}
-
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-field-line,
-.pmdxjs-document[data-theme="declaration-branded"] .pmdxjs-sign-line {
-  border-color: var(--cv-muted-foreground);
-}
-
+/* Branded: the official form as-is; only links (and the QR) carry the brand */
 .pmdxjs-document[data-theme="declaration-branded"] a {
-  color: var(--cv-primary);
+  color: #6d4fd8;
   text-decoration: underline;
   text-underline-offset: 2px;
 }

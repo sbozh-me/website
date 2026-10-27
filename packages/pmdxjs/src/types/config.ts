@@ -38,6 +38,9 @@ export interface DocumentConfig {
   qrSecondaryPath?: string;
   /** Optional document version, printed under the corner QR / logo */
   version?: string;
+  /** Optional label for page numbers ("Strana" → "Strana 1/2"), printed in
+   *  the bottom-left corner of every page. Omitted → no page numbers. */
+  pageNumbers?: string;
 }
 
 /**

@@ -11,6 +11,10 @@ export interface PageProps {
   className?: string;
   /** Ratio of the page's last column layout; a secondary corner QR lines up with its last column */
   columns?: [number, number];
+  /** 1-based page number, shown with `total` when the config sets `page-numbers` */
+  number?: number;
+  /** Page count of the whole document */
+  total?: number;
 }
 
 /**
@@ -189,7 +193,13 @@ function lastColumnStart(
  * of the page's last column; its optional `qr-secondary-label` caption sits
  * out to its left, toward the page centre, with an arrow into its side.
  */
-export function Page({ children, className, columns }: PageProps) {
+export function Page({
+  children,
+  className,
+  columns,
+  number,
+  total,
+}: PageProps) {
   const config = useDocumentConfig();
   const size = PAGE_SIZES[config.format];
   const [marginTop, marginRight, marginBottom, marginLeft] = config.margins;
@@ -236,6 +246,23 @@ export function Page({ children, className, columns }: PageProps) {
       }}
     >
       {children}
+      {config.pageNumbers && number && total && (
+        <span
+          className="pmdxjs-page-number"
+          style={{
+            position: "absolute",
+            left: `${marginLeft}mm`,
+            bottom: `${marginBottom}mm`,
+            fontSize: "0.6rem",
+            lineHeight: 1.2,
+            letterSpacing: "0.04em",
+            color: "var(--cv-muted-foreground, #6b7280)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {config.pageNumbers} {number}/{total}
+        </span>
+      )}
       {(config.qr || config.logo || config.version || secondaryQr) && (
         <div
           className="pmdxjs-page-corner"

@@ -88,6 +88,9 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
         case "version":
           if (value) config.version = value;
           break;
+        case "page-numbers":
+          if (value) config.pageNumbers = value;
+          break;
       }
     }
   }
