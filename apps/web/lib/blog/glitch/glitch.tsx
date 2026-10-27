@@ -83,6 +83,8 @@ interface EngineProps {
   openState?: number;
   /** Shown as plain text in Roman White; defaults to the resting state. */
   stillState?: number;
+  /** Each state as plain text: the ones not at rest go to `data-alt` for machines reading the HTML. */
+  texts?: string[];
   className?: string;
   rng?: Rng;
 }
@@ -111,9 +113,15 @@ function GlitchEngine({
   windowOnly = false,
   openState,
   stillState,
+  texts,
   className,
   rng = Math.random,
 }: EngineProps) {
+  // The server (and the hydrating render) sends the word once, as plain text: crawlers and
+  // AI readers get clean HTML. The decorative copies are drawn only in the browser.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const rootRef = useRef<HTMLSpanElement>(null);
   const layersRef = useRef<HTMLSpanElement>(null);
   const mainRef = useRef<HTMLSpanElement>(null);
@@ -289,7 +297,7 @@ function GlitchEngine({
     if (left < VIEWPORT_MARGIN) shift = VIEWPORT_MARGIN - left;
     else if (right > width - VIEWPORT_MARGIN) shift = width - VIEWPORT_MARGIN - right;
     if (shift) layers.style.setProperty("--glitch-shift", `${Math.round(shift)}px`);
-  }, [state, look]);
+  }, [state, look, mounted]);
 
   const shown = styles?.[state];
   const current = look ?? {
@@ -316,6 +324,7 @@ function GlitchEngine({
   const content = renderState(state);
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
   const cover = mode === "return" && state !== restState && !look ? "" : undefined;
+  const alt = texts?.filter((text, index) => index !== restState && text).join(" | ");
 
   return (
     <span
@@ -323,13 +332,16 @@ function GlitchEngine({
       className={["glitch", className].filter(Boolean).join(" ")}
       data-bursting={look ? "" : undefined}
       data-off={on ? undefined : ""}
+      data-alt={alt || undefined}
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
       onPointerEnter={() => play("flip")}
       onClick={onClick}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}
       {on
-        ? renderLayers()
+        ? mounted
+          ? renderLayers()
+          : renderCalm()
         : still
           ? renderState(stillState ?? (mode === "toggle" ? state : 0))
           : windowOnly
@@ -338,6 +350,22 @@ function GlitchEngine({
     </span>
   );
 
+  /** Before hydration: the resting word, once, in its colour; no copies in the HTML. */
+  function renderCalm() {
+    const rest = styles?.[restState];
+    return (
+      <span
+        className="glitch-sizer"
+        data-calm=""
+        data-plain={plain(rest)}
+        data-red={red(rest)}
+        style={rest && { color: rest.color }}
+      >
+        {renderState(restState)}
+      </span>
+    );
+  }
+
   function renderLayers() {
     return (
       <>
@@ -345,7 +373,8 @@ function GlitchEngine({
         <span className="glitch-sizer" data-plain={plain(styles?.[restState])} data-red={red(styles?.[restState])}>
           {renderState(restState)}
         </span>
-        <span ref={layersRef} className="glitch-layers" aria-hidden="true">
+        {/* Decoration only: hidden from screen readers and kept out of search snippets */}
+        <span ref={layersRef} className="glitch-layers" aria-hidden="true" data-nosnippet="">
           {current.echo !== null && (
             <>
               <span
@@ -407,6 +436,17 @@ const WINDOW_STATE_LENGTH = 30;
 function stateLength(state: ReactNode): number {
   if (isValidElement<GlitchStateProps>(state) && state.props.window) return WINDOW_STATE_LENGTH;
   return textLength(state);
+}
+
+/** A state as plain text: the ✳ for a censor, nothing for a Window button. */
+export function plainState(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(plainState).join("");
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    if (node.type === Censor) return "✳";
+    return plainState(node.props.children);
+  }
+  return "";
 }
 
 function textLength(node: ReactNode): number {
@@ -486,6 +526,7 @@ export function Glitch({
       stillState={stillIndex(states)}
       styles={states.map(stateStyle)}
       lengths={states.map(stateLength)}
+      texts={states.map((state) => plainState(state).replace(/\s+/g, " ").trim())}
       mode="return"
       blink={blink}
       windowOff={windowOff}
