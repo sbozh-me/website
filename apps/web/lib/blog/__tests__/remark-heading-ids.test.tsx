@@ -16,6 +16,7 @@ const components = {
   WindowToggle: () => createElement("button", null, "Window ON"),
   Glitch: ({ children }: { children: ReactNode }) => createElement("span", null, children),
   GlitchState: ({ children }: { children: ReactNode }) => createElement("span", null, children),
+  Accordion: ({ children }: { children: ReactNode }) => createElement("div", null, children),
 };
 
 async function compile(source: string, withIds = true) {
@@ -74,5 +75,18 @@ describe("remarkHeadingIds", () => {
     const before = await compile(source, false);
     const after = await compile(source);
     expect(after.ids).toEqual(before.ids);
+  });
+
+  it("gives headings inside an Accordion ids but keeps them out of the TOC", async () => {
+    const source = [
+      "## Now",
+      '<Accordion title="Old version">',
+      "## Then\n\n### Then, deeper",
+      "</Accordion>",
+      "## After",
+    ].join("\n\n");
+    const { toc, ids } = await compile(source);
+    expect(toc.map((item) => item.text)).toEqual(["Now", "After"]);
+    expect(ids).toEqual(["now", "then", "then-deeper", "after"]);
   });
 });

@@ -1,0 +1,36 @@
+/* <Accordion> in blog posts: a bordered block that keeps the post's prose styles inside */
+
+.post-accordion {
+  margin: 2rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0 1.25rem;
+}
+
+/* Radix wraps the trigger in an <h3>: keep the article's heading styles off it */
+.prose .post-accordion h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.post-accordion [data-slot="accordion-trigger"] {
+  font-size: 1rem;
+  color: var(--color-muted-foreground);
+  cursor: pointer;
+}
+
+.post-accordion [data-slot="accordion-trigger"]:hover,
+.post-accordion [data-slot="accordion-trigger"][data-state="open"] {
+  color: var(--color-foreground);
+}
+
+/* The shadcn content is text-sm; old text should read like the rest of the post */
+.post-accordion [data-slot="accordion-content"] {
+  font-size: inherit;
+}
+
+.post-accordion [data-slot="accordion-content"] > div > :first-child {
+  margin-top: 0;
+}
