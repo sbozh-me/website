@@ -11,6 +11,11 @@ import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 import { compileSummary } from "@/lib/releases/compile-summary";
 
+// Release notes and posts come from Directus at request time. Without this, a build that
+// can't see DIRECTUS_* (e.g. from a worktree) prerenders the page with no releases and
+// mock posts, and serves that static copy for a year.
+export const dynamic = "force-dynamic";
+
 type ReleasesResult =
   | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };

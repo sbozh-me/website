@@ -68,7 +68,7 @@ vi.mock("@/actions/blog-posts", () => ({
   getPostsByAuthors: vi.fn(async () => ({ success: true, posts: [] })),
 }));
 
-import Home from "./page";
+import Home, { dynamic } from "./page";
 
 const mockReadFile = vi.mocked(readFile);
 const mockCreateRepository = vi.mocked(createReleaseRepository);
@@ -76,6 +76,11 @@ const mockCreateRepository = vi.mocked(createReleaseRepository);
 describe("Home", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("renders per request, never from a build-time prerender", () => {
+    // A build without DIRECTUS_* would otherwise bake in no releases and mock posts
+    expect(dynamic).toBe("force-dynamic");
   });
 
   describe("basic rendering", () => {
