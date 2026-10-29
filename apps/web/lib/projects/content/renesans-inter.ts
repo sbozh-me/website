@@ -34,6 +34,16 @@ Someone searching for addiction treatment is rarely calm and never has time to r
 
 I wanted to see how much of that friction disappears when the same content is laid out for the phone in someone's hand: the call button always visible, prices stated plainly, confidentiality said first.
 
+## Why this centre
+
+I have seen how the centre works, and I believe in what it does. Good work deserves to be found. Right now the website undersells it - and for someone in crisis, a page that looks outdated is a reason to close the tab and keep searching.
+
+So the job is simple to state: make the centre more reachable, more professional and up to date. Not a new logo, but a site that earns trust in the first ten seconds and puts a person on the phone in the next ten.
+
+## What comes after
+
+A website is the ground floor. Once it is fast, clear and measurable, there is a clear path to the next step: advertising. Search and social campaigns need a landing page that converts and a way to count the calls it brings. This project builds that foundation first, so every euro spent on ads later lands somewhere that works.
+
 ## Why build it in public
 
 It is a quick demo, not a finished redesign - and that is the point of sbozh.me. Show the first version, learn from the people who use it, ship the next one.
