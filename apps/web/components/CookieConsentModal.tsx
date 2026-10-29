@@ -14,9 +14,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@sbozh/react-ui/components/ui/dialog';
+import { usePathname } from 'next/navigation';
 import { consentManager, ConsentType } from '@/lib/privacy/consent';
 
 export function CookieConsentModal() {
+  // Client demos keep a call bar at the bottom on phones; sit above it
+  const aboveDemoBar = usePathname()?.startsWith('/demo/');
   const [open, setOpen] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
   const [consent, setConsent] = useState({
@@ -92,7 +95,7 @@ export function CookieConsentModal() {
       {!open && (
         <DialogTrigger asChild>
           <Button
-            className="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse print:hidden"
+            className={`fixed ${aboveDemoBar ? 'bottom-24 md:bottom-4' : 'bottom-4'} left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 shadow-lg transition-transform hover:scale-105 animate-pulse print:hidden`}
             aria-label="Cookie settings"
           >
             <Cookie className="h-5 w-5" />

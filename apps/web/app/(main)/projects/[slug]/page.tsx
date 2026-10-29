@@ -4,6 +4,7 @@ import * as runtime from "react/jsx-runtime";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
 import { getTecraftTabContent } from "@/lib/projects/content/tecraft";
+import { getRenesansInterTabContent } from "@/lib/projects/content/renesans-inter";
 import { Spark } from "@/components/Spark";
 
 const mdxComponents = {
@@ -27,6 +28,9 @@ function getTabContent(slug: string, tabId: string): string | null {
   }
   if (slug === "tecraft") {
     return getTecraftTabContent(tabId);
+  }
+  if (slug === "renesans-inter") {
+    return getRenesansInterTabContent(tabId);
   }
   return null;
 }

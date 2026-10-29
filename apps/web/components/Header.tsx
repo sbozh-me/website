@@ -24,6 +24,11 @@ export function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Client demos under /demo carry their own branding
+  if (pathname?.startsWith("/demo/")) {
+    return null;
+  }
+
   return (
     <header className="relative z-10 border-b border-border bg-background">
       <div className="mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 py-6">
