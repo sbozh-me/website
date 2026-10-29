@@ -19,6 +19,7 @@ import { getAdjacentPosts, type TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
+import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
 import remarkGlitch from "@/lib/blog/remark-glitch";
 import remarkHeadingIds from "@/lib/blog/remark-heading-ids";
 
@@ -149,16 +150,17 @@ export default async function BlogPostPage({ params }: PageProps) {
   } as any);
   const toc = post.isTocHidden ? [] : headings;
 
-  // Compile tldr markdown if present
+  // Compile tldr markdown if present. It speaks the glitch syntax too: ==a|b==, (;)
   let TldrContent: React.ComponentType | null = null;
   if (post.tldr) {
     const { default: Content } = await evaluate(post.tldr, {
       ...runtime,
-      remarkPlugins: [remarkGfm],
+      remarkPlugins: [remarkGfm, remarkGlitch],
     } as any);
     TldrContent = () => (
       <Content
         components={{
+          ...glitchMdxComponents,
           a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
             // Check if it's an external link
             const isExternal = props.href &&
