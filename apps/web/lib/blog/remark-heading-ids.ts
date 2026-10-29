@@ -11,6 +11,9 @@ import type { TOCItem } from "@sbozh/blog/utils";
  * Ids use the same slugger as rehype-slug over the same heading order, so headings
  * without glitch syntax keep the ids they had before (rehype-slug skips headings that
  * already have one).
+ *
+ * Headings inside an <Accordion> (e.g. the older version of a rewritten post) get ids but
+ * stay out of the TOC: they're hidden until the reader opens it.
  */
 
 export const TOC_DEPTHS = [2, 3, 4];
@@ -24,23 +27,33 @@ export default function remarkHeadingIds({ onHeadings }: RemarkHeadingIdsOptions
     const slugger = new GithubSlugger();
     const items: TOCItem[] = [];
 
-    visitHeadings(tree, (heading) => {
+    visitHeadings(tree, false, (heading, collapsed) => {
       const text = plainText(heading).replace(/\s+/g, " ").trim();
       const id = slugger.slug(text);
       heading.data = { ...heading.data, hProperties: { ...heading.data?.hProperties, id } };
-      if (TOC_DEPTHS.includes(heading.depth)) items.push({ id, text, level: heading.depth });
+      if (!collapsed && TOC_DEPTHS.includes(heading.depth)) {
+        items.push({ id, text, level: heading.depth });
+      }
     });
 
     onHeadings?.(items);
   };
 }
 
-function visitHeadings(node: Nodes, fn: (heading: Heading) => void) {
-  if (node.type === "heading") fn(node);
-  else if ("children" in node) node.children.forEach((child) => visitHeadings(child as Nodes, fn));
+function visitHeadings(
+  node: Nodes,
+  collapsed: boolean,
+  fn: (heading: Heading, collapsed: boolean) => void,
+) {
+  if (node.type === "heading") fn(node, collapsed);
+  else if ("children" in node) {
+    const inside = collapsed || (node.type === "mdxJsxFlowElement" && node.name === "Accordion");
+    node.children.forEach((child) => visitHeadings(child as Nodes, inside, fn));
+  }
 }
 
-function plainText(node: Nodes): string {
+/** A node's text as it reads with the glitch effects at rest (also used for post titles). */
+export function plainText(node: Nodes): string {
   if (node.type === "text" || node.type === "inlineCode") return node.value;
   if (node.type === "mdxJsxTextElement") {
     switch (node.name) {
@@ -51,6 +64,10 @@ function plainText(node: Nodes): string {
         return "✳";
       case "DickPitch":
         return "D✳CK PITCH";
+      case "Sbozhed": {
+        const text = node.attributes.find((a) => a.type === "mdxJsxAttribute" && a.name === "text");
+        return typeof text?.value === "string" ? text.value : "";
+      }
       case "WindowToggle":
         return "";
     }
