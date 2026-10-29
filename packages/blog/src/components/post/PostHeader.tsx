@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Post } from "../../types";
 import type { AdjacentPosts } from "../../utils";
 import { formatReadingTime, formatShortDate } from "../../utils";
@@ -7,13 +8,15 @@ import { PostNavArrows } from "./PostNavArrows";
 interface PostHeaderProps {
   post: Post;
   adjacent?: AdjacentPosts;
+  /** Rendered title (e.g. with inline effects); defaults to post.title */
+  title?: ReactNode;
 }
 
 /**
  * Displays post metadata including persona, title, date, reading time, and tags.
  * With adjacent posts, previous/next arrows sit beside the metadata.
  */
-export function PostHeader({ post, adjacent }: PostHeaderProps) {
+export function PostHeader({ post, adjacent, title }: PostHeaderProps) {
   return (
     <header className="mb-8">
       <div className="flex items-start justify-between gap-4 mb-4">
@@ -32,7 +35,7 @@ export function PostHeader({ post, adjacent }: PostHeaderProps) {
         {adjacent && <PostNavArrows {...adjacent} />}
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">{post.title}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">{title ?? post.title}</h1>
 
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">

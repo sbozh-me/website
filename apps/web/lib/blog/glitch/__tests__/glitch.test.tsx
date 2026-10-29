@@ -77,15 +77,40 @@ describe("Censor", () => {
 });
 
 describe("Glitch", () => {
-  it("server-renders the base state calmly with the real text in the flow", () => {
-    const html = renderToStaticMarkup(word());
+  it("server-renders the word once, with its other meanings in data-alt", () => {
     const div = document.createElement("div");
-    div.innerHTML = html;
-    expect(div.querySelector(".glitch-sizer")?.textContent).toBe("себя");
-    expect(div.querySelector(".glitch-layers")?.getAttribute("aria-hidden")).toBe("true");
-    expect(div.querySelector(".glitch-echo")).toBeNull();
-    expect(visibleText(div)).toBe("себя");
-    expect(div.querySelector("[data-tone]")?.getAttribute("data-tone")).toBe("rest");
+    div.innerHTML = renderToStaticMarkup(word());
+    // Clean for crawlers: the base word once, no decorative copies
+    expect(div.textContent).toBe("себя");
+    expect(div.querySelector(".glitch-sizer[data-calm]")?.textContent).toBe("себя");
+    expect(div.querySelector(".glitch-layers")).toBeNull();
+    expect(div.querySelector(".glitch")?.getAttribute("data-alt")).toBe("US");
+  });
+
+  it("lists every other meaning in data-alt, censors as ✳ and Window buttons left out", () => {
+    const div = document.createElement("div");
+    div.innerHTML = renderToStaticMarkup(
+      <Glitch rng={seeded(1)}>
+        <GlitchState>a</GlitchState>
+        <GlitchState>
+          х<Censor />й
+        </GlitchState>
+        <GlitchState window>
+          <span />
+        </GlitchState>
+        <GlitchState>c</GlitchState>
+      </Glitch>,
+    );
+    expect(div.querySelector(".glitch")?.getAttribute("data-alt")).toBe("х✳й | c");
+  });
+
+  it("draws the decorative copies after mount, hidden from readers and snippets", () => {
+    const { container } = render(word());
+    expect(container.querySelector(".glitch-sizer[data-calm]")).toBeNull();
+    const layers = container.querySelector(".glitch-layers");
+    expect(layers).toHaveAttribute("aria-hidden", "true");
+    expect(layers).toHaveAttribute("data-nosnippet");
+    expect(visibleText(container)).toBe("себя");
   });
 
   it("adds resting notches after mount", () => {

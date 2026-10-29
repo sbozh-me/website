@@ -19,8 +19,10 @@ describe("compileSummary", () => {
   it("renders glitch words from the blog syntax", async () => {
     const out = await html("Kagurame is ==out|teal:loose==");
     expect(out).toContain('class="glitch');
-    // The server renders the base state; the other states arrive with the bursts
-    expect(out).toContain('<span class="glitch-sizer">out</span>');
+    // The server renders the base state once; the other states are only named in data-alt
+    expect(out).toContain('data-alt="loose"');
+    expect(out).toMatch(/<span class="glitch-sizer" data-calm=""[^>]*>out<\/span>/);
+    expect(out).not.toContain("glitch-layers");
   });
 
   it("renders the censor and the window toggle", async () => {

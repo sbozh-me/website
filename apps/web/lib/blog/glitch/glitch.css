@@ -58,6 +58,11 @@
   opacity: 0;
 }
 
+/* Before hydration the sizer is the word itself: one copy in the server HTML */
+.glitch-sizer[data-calm] {
+  opacity: 1;
+}
+
 /* `||` states keep the article's font; glitched ones use the glitch face */
 .glitch-sizer:not([data-plain]),
 .glitch-copy:not([data-plain]) {
@@ -224,11 +229,13 @@
   font-weight: 400;
 }
 
-.brand-mark .glitch-copy [data-part="base"] {
+.brand-mark .glitch-copy [data-part="base"],
+.brand-mark .glitch-sizer[data-calm] [data-part="base"] {
   color: var(--glitch-base);
 }
 
-.brand-mark .glitch-copy [data-part="accent"] {
+.brand-mark .glitch-copy [data-part="accent"],
+.brand-mark .glitch-sizer[data-calm] [data-part="accent"] {
   color: var(--glitch-accent);
 }
 

@@ -13,6 +13,7 @@ import {
   Divider,
 } from "@sbozh/pmdxjs/components/cv";
 
+import { Accordion } from "./accordion";
 import { glitchMdxComponents } from "./glitch/mdx-components";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
 
@@ -56,6 +57,9 @@ export const blogMdxComponents: Record<string, ComponentType<any>> = {
 
   // Glitch syntax: (;) ==a|b== ==D(;)ck pitch== ==WINDOW==
   ...glitchMdxComponents,
+
+  // <Accordion title="…">…</Accordion>: collapsed text, e.g. the old version of a rewritten post
+  Accordion,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,
