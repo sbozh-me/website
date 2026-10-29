@@ -37,6 +37,14 @@ vi.mock("@/lib/projects/data", () => ({
         status: "beta",
       };
     }
+    if (slug === "renesans-inter") {
+      return {
+        slug: "renesans-inter",
+        title: "Renesans Inter",
+        tagline: "Treatment centre website",
+        status: "coming-soon",
+      };
+    }
     return null;
   }),
   getProjects: vi.fn(() => [
@@ -59,6 +67,15 @@ vi.mock("@/lib/projects/content/tecraft", () => ({
   getTecraftTabContent: vi.fn((tabId) => {
     if (tabId === "about") {
       return "## About tecraft.cz\n\nThis is the about content for tecraft.cz.";
+    }
+    return null;
+  }),
+}));
+
+vi.mock("@/lib/projects/content/renesans-inter", () => ({
+  getRenesansInterTabContent: vi.fn((tabId) => {
+    if (tabId === "about") {
+      return "## About Renesans Inter\n\nThis is the about content for Renesans Inter.";
     }
     return null;
   }),
@@ -94,6 +111,14 @@ describe("ProjectPage", () => {
 
       const prose = screen.getByText(/Mocked MDX Content/);
       expect(prose).toBeInTheDocument();
+    });
+
+    it("renders Renesans Inter project content", async () => {
+      const params = Promise.resolve({ slug: "renesans-inter" });
+      const Page = await ProjectPage({ params });
+      render(Page);
+
+      expect(screen.getByText(/About Renesans Inter/)).toBeInTheDocument();
     });
 
     it("calls notFound for non-existent project", async () => {
