@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2026-10-30
+
+### Changes
+
+- feat(forum): replace CV with Forum and Directus avatars ([731d2aa](https://github.com/sbozh-me/website/commit/731d2aa12ba09677fb1872f63830f95ef2d168ca))
+
+
 ## [1.8.0] - 2026-10-29
 
 ### Changes
