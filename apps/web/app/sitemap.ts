@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { getSeriesWithPosts } from "@sbozh/blog";
 import { createBlogRepository } from "@/lib/blog/repository";
 import { createReleaseRepository } from "@/lib/releases/repository";
 import { getProjects } from "@/lib/projects/data";
@@ -43,6 +44,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     }));
+
+    const seriesRoutes = getSeriesWithPosts(posts, await repository.getSeries()).map(
+      ({ series, posts: seriesPosts }) => ({
+        url: `${baseUrl}/blog/series/${series.slug}`,
+        lastModified: new Date(seriesPosts.at(-1)!.date),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })
+    );
+    blogRoutes.push(...seriesRoutes);
   } catch (error) {
     console.error("[Sitemap] Failed to fetch blog posts:", error);
   }

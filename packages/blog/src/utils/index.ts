@@ -9,3 +9,5 @@ export { extractHeadings } from "./toc";
 
 export type { AdjacentPosts } from "./adjacent-posts";
 export { getAdjacentPosts, thumbnailSrc } from "./adjacent-posts";
+export type { SeriesPart, SeriesWithPosts } from "./series";
+export { getSeriesParts, getSeriesWithPosts } from "./series";

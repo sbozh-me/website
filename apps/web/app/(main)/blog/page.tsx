@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import {
+  BlogViewTabs,
   EmptyState,
   ErrorState,
-  SeriesFilter,
+  getSeriesWithPosts,
+  SeriesCard,
   Timeline,
   type PostListItem,
   type Series,
@@ -31,13 +33,13 @@ export const metadata: Metadata = {
 };
 
 interface BlogPageProps {
-  searchParams: Promise<{ series?: string | string[] }>;
+  searchParams: Promise<{ view?: string | string[] }>;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   noStore();
   const repository = createBlogRepository();
-  const { series: seriesParam } = await searchParams;
+  const { view } = await searchParams;
 
   let posts: PostListItem[] | undefined;
   let series: Series[] = [];
@@ -49,14 +51,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     error = DirectusError.fromError(e);
   }
 
-  // A series with nothing published yet would filter down to an empty page
-  const filledSeries = series.filter((item) =>
-    posts?.some((post) => post.seriesId === item.id)
-  );
-  const selected = filledSeries.find((item) => item.slug === seriesParam);
-  const visiblePosts = selected
-    ? posts?.filter((post) => post.seriesId === selected.id)
-    : posts;
+  // Tabs only appear once a series has published posts; until then there's one view
+  const seriesWithPosts = posts ? getSeriesWithPosts(posts, series) : [];
+  const hasSeries = seriesWithPosts.length > 0;
+  const activeView = hasSeries && view === "series" ? "series" : "posts";
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
@@ -66,9 +64,11 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           Thoughts, stories, and ideas from different perspectives.
         </p>
 
-        <div className="mt-6">
-          <SeriesFilter series={filledSeries} value={selected?.slug} basePath="/blog" />
-        </div>
+        {hasSeries && (
+          <div className="mt-6">
+            <BlogViewTabs value={activeView} />
+          </div>
+        )}
 
         <div className="mt-12">
           {error ? (
@@ -77,10 +77,16 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               message={error.message}
               status={error.status}
             />
-          ) : visiblePosts && visiblePosts.length === 0 ? (
+          ) : activeView === "series" ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {seriesWithPosts.map((item) => (
+                <SeriesCard key={item.series.id} {...item} />
+              ))}
+            </div>
+          ) : posts && posts.length === 0 ? (
             <EmptyState />
-          ) : visiblePosts ? (
-            <Timeline posts={visiblePosts} />
+          ) : posts ? (
+            <Timeline posts={posts} series={series} />
           ) : null}
         </div>
       </div>

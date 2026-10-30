@@ -99,6 +99,9 @@ interface DirectusSeries {
   id: string;
   title: string;
   slug: string;
+  description: string | null;
+  image: DirectusFile | null;
+  next_series: string | null;
 }
 
 interface DirectusFile {
@@ -267,10 +270,20 @@ export class DirectusRepository implements BlogRepository {
     this.log("getSeries", "Fetching all series");
     try {
       const series = await this.client.request(
-        readItems("series", { fields: ["id", "title", "slug"], sort: ["title"] })
+        readItems("series", {
+          fields: [
+            "id",
+            "title",
+            "slug",
+            "description",
+            "next_series",
+            { image: ["id", "filename_download", "width", "height"] },
+          ] as unknown as (keyof DirectusSeries)[],
+          sort: ["title"],
+        })
       );
       this.log("getSeries", `Fetched ${series.length} series`);
-      return series as Series[];
+      return (series as DirectusSeries[]).map(this.mapToSeries.bind(this));
     } catch (error) {
       this.log("getSeries", "Error:", error);
       throw DirectusError.fromError(error);
@@ -357,6 +370,17 @@ export class DirectusRepository implements BlogRepository {
       id: tag.id,
       name: tag.name,
       slug: tag.slug,
+    };
+  }
+
+  private mapToSeries(series: DirectusSeries): Series {
+    return {
+      id: series.id,
+      title: series.title,
+      slug: series.slug,
+      description: series.description ?? undefined,
+      image: series.image ? this.mapToImage(series.image) : undefined,
+      nextSeriesId: series.next_series ?? undefined,
     };
   }
 

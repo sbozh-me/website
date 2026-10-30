@@ -1,8 +1,9 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-// Variable to control mock behavior
+// Variables to control mock behavior
 let mockShouldThrow = false;
+let mockSeries: { id: string; title: string; slug: string }[] = [];
 
 // Mock the repository
 vi.mock("@/lib/blog/repository", () => ({
@@ -14,15 +15,11 @@ vi.mock("@/lib/blog/repository", () => ({
       const { MockBlogRepository } = await import("@sbozh/blog/data");
       const repo = new MockBlogRepository();
       const posts = await repo.getPosts();
-      // One post in a series, the other series stays empty
       return posts.map((post) =>
         post.slug === "on-patience-and-shipping" ? { ...post, seriesId: "s1" } : post
       );
     }),
-    getSeries: vi.fn(async () => [
-      { id: "s1", title: "Stand-up", slug: "stand-up" },
-      { id: "s2", title: "Empty", slug: "empty" },
-    ]),
+    getSeries: vi.fn(async () => mockSeries),
   }),
   DirectusError: {
     fromError: (e: Error) => ({ message: e.message, status: 500 }),
@@ -31,12 +28,16 @@ vi.mock("@/lib/blog/repository", () => ({
 
 import BlogPage from "./page";
 
-const renderPage = async (series?: string | string[]) =>
-  render(await BlogPage({ searchParams: Promise.resolve({ series }) }));
+const renderPage = async (view?: string | string[]) =>
+  render(await BlogPage({ searchParams: Promise.resolve({ view }) }));
+
+const standUp = { id: "s1", title: "Stand-up", slug: "stand-up" };
+const empty = { id: "s2", title: "Empty", slug: "empty" };
 
 describe("BlogPage", () => {
   beforeEach(() => {
     mockShouldThrow = false;
+    mockSeries = [];
   });
 
   it("renders blog heading", async () => {
@@ -65,51 +66,47 @@ describe("BlogPage", () => {
     expect(screen.getByText("Connection failed")).toBeInTheDocument();
   });
 
-  describe("series filter", () => {
-    const filter = () => within(screen.getByRole("navigation", { name: "Filter by series" }));
+  describe("views", () => {
+    const tabs = () => within(screen.getByRole("navigation", { name: "Blog view" }));
 
-    it("links to series that have posts, and to all posts", async () => {
+    it("hides the tabs until a series has published posts", async () => {
+      mockSeries = [empty];
+      await renderPage("series");
+
+      expect(screen.queryByRole("navigation", { name: "Blog view" })).not.toBeInTheDocument();
+      expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
+    });
+
+    it("opens on posts and labels series posts", async () => {
+      mockSeries = [standUp];
       await renderPage();
 
-      expect(filter().getByRole("link", { name: "All posts" })).toHaveAttribute("href", "/blog");
-      expect(filter().getByRole("link", { name: "Stand-up" })).toHaveAttribute(
+      expect(tabs().getByRole("link", { name: "Posts" })).toHaveAttribute("aria-current", "page");
+      expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Stand-up · Post 1" })).toHaveAttribute(
         "href",
-        "/blog?series=stand-up"
-      );
-      expect(filter().queryByRole("link", { name: "Empty" })).not.toBeInTheDocument();
-    });
-
-    it("shows all posts with no series selected", async () => {
-      await renderPage();
-
-      expect(filter().getByRole("link", { name: "All posts" })).toHaveAttribute(
-        "aria-current",
-        "page"
+        "/blog/series/stand-up"
       );
     });
 
-    it("shows only the selected series", async () => {
-      await renderPage("stand-up");
+    it("shows series cards in the series view", async () => {
+      mockSeries = [standUp, empty];
+      await renderPage("series");
 
-      expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
+      expect(tabs().getByRole("link", { name: "Series" })).toHaveAttribute("aria-current", "page");
+      expect(screen.getByRole("heading", { name: "Stand-up" }).closest("a")).toHaveAttribute(
+        "href",
+        "/blog/series/stand-up"
+      );
+      expect(screen.queryByText("Empty")).not.toBeInTheDocument();
       expect(screen.queryByText("Why I started sbozh.me")).not.toBeInTheDocument();
-      expect(filter().getByRole("link", { name: "Stand-up" })).toHaveAttribute(
-        "aria-current",
-        "page"
-      );
     });
 
-    it.each([["unknown"], ["empty"], [["stand-up", "empty"]]])(
-      "falls back to all posts for %j",
-      async (series) => {
-        await renderPage(series);
+    it.each([["unknown"], [["series", "posts"]]])("falls back to posts for %j", async (view) => {
+      mockSeries = [standUp];
+      await renderPage(view);
 
-        expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
-        expect(filter().getByRole("link", { name: "All posts" })).toHaveAttribute(
-          "aria-current",
-          "page"
-        );
-      }
-    );
+      expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
+    });
   });
 });

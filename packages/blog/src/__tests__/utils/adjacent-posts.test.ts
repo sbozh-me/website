@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { getAdjacentPosts, thumbnailSrc } from "../../utils/adjacent-posts";
-import type { PostListItem } from "../../types";
+import type { PostListItem, Series } from "../../types";
 
 function makePost(slug: string): PostListItem {
   return {
@@ -138,6 +138,64 @@ describe("getAdjacentPosts", () => {
 
       expect(getAdjacentPosts(list, "standup-1").next?.slug).toBe("standup-2");
       expect(getAdjacentPosts(list, "article").previous).toBeNull();
+    });
+  });
+
+  describe("with a linked series", () => {
+    const inPart = (slug: string, seriesId: string): PostListItem => ({ ...makePost(slug), seriesId });
+    const part1: Series = { id: "part-1", title: "Part 1", slug: "part-1", nextSeriesId: "part-2" };
+    const part2: Series = { id: "part-2", title: "Part 2", slug: "part-2" };
+    const list = [
+      inPart("two-b", "part-2"),
+      makePost("article"),
+      inPart("two-a", "part-2"),
+      inPart("one-b", "part-1"),
+      inPart("one-a", "part-1"),
+    ];
+
+    it("leads from the last post to the first post of the next series", () => {
+      const { next, nextIsSeries } = getAdjacentPosts(list, "one-b", [part1, part2]);
+
+      expect(next?.slug).toBe("two-a");
+      expect(nextIsSeries).toBe(true);
+    });
+
+    it("leads back from the first post to the last post of the earlier series", () => {
+      const { previous, previousIsSeries } = getAdjacentPosts(list, "two-a", [part1, part2]);
+
+      expect(previous?.slug).toBe("one-b");
+      expect(previousIsSeries).toBe(true);
+    });
+
+    it("stays inside the series away from its ends", () => {
+      const result = getAdjacentPosts(list, "one-a", [part1, part2]);
+
+      expect(result.next?.slug).toBe("one-b");
+      expect(result.nextIsSeries).toBeUndefined();
+      expect(result.previous).toBeNull();
+    });
+
+    it("has no next post at the end of the last series", () => {
+      expect(getAdjacentPosts(list, "two-b", [part1, part2]).next).toBeNull();
+    });
+
+    it("ignores a linked series without published posts", () => {
+      const unpublished = { ...part1, nextSeriesId: "draft-series" };
+
+      expect(getAdjacentPosts(list, "one-b", [unpublished, part2]).next).toBeNull();
+    });
+
+    it("ignores a series linked to itself", () => {
+      const self = { ...part1, nextSeriesId: "part-1" };
+      const { previous, next } = getAdjacentPosts(list, "one-b", [self]);
+
+      expect(next).toBeNull();
+      expect(previous?.slug).toBe("one-a");
+      expect(getAdjacentPosts(list, "one-a", [self]).previous).toBeNull();
+    });
+
+    it("leaves regular posts alone", () => {
+      expect(getAdjacentPosts(list, "article", [part1, part2])).toEqual({ previous: null, next: null });
     });
   });
 });

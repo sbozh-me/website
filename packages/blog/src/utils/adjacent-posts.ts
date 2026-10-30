@@ -1,10 +1,15 @@
 import type { PostListItem } from "../types/post";
+import type { Series } from "../types/series";
 
 export interface AdjacentPosts {
   /** The post published just before the current one (older) */
   previous: PostListItem | null;
   /** The post published just after the current one (newer) */
   next: PostListItem | null;
+  /** `previous` is the last post of the series this one continues */
+  previousIsSeries?: boolean;
+  /** `next` is the first post of the series continuing this one */
+  nextIsSeries?: boolean;
 }
 
 /**
@@ -12,7 +17,8 @@ export interface AdjacentPosts {
  * Expects posts sorted newest first, as the repository returns them.
  *
  * A series is a closed list: its posts only neighbour each other, and posts
- * outside any series skip over them.
+ * outside any series skip over them. The one way out is a linked series: the
+ * last post of a series leads to the first post of its `nextSeriesId`, and back.
  *
  * An editor-picked `nextPostId` overrides the chronological next post, and the
  * picked post links back to the one that chose it as its previous post.
@@ -21,7 +27,8 @@ export interface AdjacentPosts {
  */
 export function getAdjacentPosts(
   posts: PostListItem[],
-  slug: string
+  slug: string,
+  series: Series[] = []
 ): AdjacentPosts {
   const current = posts.find((post) => post.slug === slug);
   if (!current) {
@@ -37,9 +44,26 @@ export function getAdjacentPosts(
     (post) => post.nextPostId === current.id && post.id !== current.id
   );
 
+  const previous = pickedPrevious ?? list[index + 1] ?? null;
+  const next = pickedNext ?? list[index - 1] ?? null;
+  const inSeries = (id?: string) => posts.filter((post) => id && post.seriesId === id);
+
+  const currentSeries = series.find((item) => item.id === current.seriesId);
+  const earlierSeries = currentSeries && series.find((item) => item.nextSeriesId === currentSeries.id);
+  const lastOfEarlier =
+    !previous && earlierSeries && earlierSeries.id !== currentSeries?.id
+      ? inSeries(earlierSeries.id)[0]
+      : undefined;
+  const firstOfLater =
+    !next && currentSeries?.nextSeriesId !== currentSeries?.id
+      ? inSeries(currentSeries?.nextSeriesId).at(-1)
+      : undefined;
+
   return {
-    previous: pickedPrevious ?? list[index + 1] ?? null,
-    next: pickedNext ?? list[index - 1] ?? null,
+    previous: previous ?? lastOfEarlier ?? null,
+    next: next ?? firstOfLater ?? null,
+    ...(lastOfEarlier && { previousIsSeries: true }),
+    ...(firstOfLater && { nextIsSeries: true }),
   };
 }
 

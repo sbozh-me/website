@@ -97,6 +97,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   // Neighbour list is a nice-to-have: a failure only hides post navigation
   const postsPromise = repository.getPosts().catch(() => []);
+  const seriesPromise = repository.getSeries().catch(() => []);
 
   let post;
   let error: DirectusError | null = null;
@@ -125,7 +126,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
-  const adjacent = getAdjacentPosts(await postsPromise, post.slug);
+  const adjacent = getAdjacentPosts(await postsPromise, post.slug, await seriesPromise);
 
   // Compile and run MDX. The TOC comes from the processed headings (h2-h4), so glitch
   // syntax in a heading shows as its base text and the anchors match the heading ids.

@@ -4,9 +4,10 @@ export type {
   PersonaFilterProps,
   SelectOption,
   SelectProps,
-  SeriesFilterProps,
   TagFilterProps,
 } from "./filters";
+
+export type { BlogView, BlogViewTabsProps, SeriesCardProps } from "./series";
 
 export type {
   EmptyStateProps,
@@ -24,9 +25,10 @@ export {
   PersonaFilter,
   SearchPlaceholder,
   Select,
-  SeriesFilter,
   TagFilter,
 } from "./filters";
+
+export { BlogViewTabs, SeriesCard } from "./series";
 
 export {
   EmptyState,
