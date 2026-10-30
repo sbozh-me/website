@@ -1,9 +1,10 @@
-import { mockPersonas, mockPosts, mockTags } from "./mock-data";
+import { mockPersonas, mockPosts, mockSeries, mockTags } from "./mock-data";
 
 import type { BlogRepository } from "./repository";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
+import type { Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export class MockBlogRepository implements BlogRepository {
@@ -39,5 +40,9 @@ export class MockBlogRepository implements BlogRepository {
 
   async getTags(): Promise<Tag[]> {
     return [...mockTags];
+  }
+
+  async getSeries(): Promise<Series[]> {
+    return [...mockSeries];
   }
 }

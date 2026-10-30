@@ -4,6 +4,7 @@ export type {
   PersonaFilterProps,
   SelectOption,
   SelectProps,
+  SeriesFilterProps,
   TagFilterProps,
 } from "./filters";
 
@@ -23,6 +24,7 @@ export {
   PersonaFilter,
   SearchPlaceholder,
   Select,
+  SeriesFilter,
   TagFilter,
 } from "./filters";
 

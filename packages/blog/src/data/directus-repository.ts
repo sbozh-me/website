@@ -9,6 +9,7 @@ import type { BlogRepository } from "./repository";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
+import type { Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export class DirectusError extends Error {
@@ -94,6 +95,12 @@ interface DirectusTag {
   slug: string;
 }
 
+interface DirectusSeries {
+  id: string;
+  title: string;
+  slug: string;
+}
+
 interface DirectusFile {
   id: string;
   filename_download: string;
@@ -105,6 +112,7 @@ interface DirectusSchema {
   posts: DirectusPost[];
   personas: DirectusPersona[];
   tags: DirectusTag[];
+  series: DirectusSeries[];
   posts_tags: { id: number; posts_id: string; tags_id: string }[];
 }
 
@@ -251,6 +259,20 @@ export class DirectusRepository implements BlogRepository {
       return (tags as DirectusTag[]).map(this.mapToTag);
     } catch (error) {
       this.log("getTags", "Error:", error);
+      throw DirectusError.fromError(error);
+    }
+  }
+
+  async getSeries(): Promise<Series[]> {
+    this.log("getSeries", "Fetching all series");
+    try {
+      const series = await this.client.request(
+        readItems("series", { fields: ["id", "title", "slug"], sort: ["title"] })
+      );
+      this.log("getSeries", `Fetched ${series.length} series`);
+      return series as Series[];
+    } catch (error) {
+      this.log("getSeries", "Error:", error);
       throw DirectusError.fromError(error);
     }
   }

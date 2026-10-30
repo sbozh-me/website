@@ -62,6 +62,7 @@ describe("withPlainTitles", () => {
     getPost: async (slug) => (slug === "yeter" ? post : null),
     getPersonas: async () => [],
     getTags: async () => [],
+    getSeries: async () => [],
   } as BlogRepository);
 
   it("gives lists the plain title", async () => {

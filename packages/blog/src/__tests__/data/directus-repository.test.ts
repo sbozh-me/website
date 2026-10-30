@@ -276,6 +276,13 @@ describe("DirectusRepository", () => {
       expect(posts[0].seriesId).toBe("series-1");
     });
 
+    it("fetches the series list", async () => {
+      const series = [{ id: "series-1", title: "Stand-up", slug: "stand-up" }];
+      mockRequest.mockResolvedValueOnce(series);
+
+      expect(await repository.getSeries()).toEqual(series);
+    });
+
     it("handles posts with empty tags", async () => {
       mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, tags: [] }]);
 

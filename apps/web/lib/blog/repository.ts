@@ -42,6 +42,7 @@ export function withPlainTitles(repository: BlogRepository): BlogRepository {
   return {
     getPersonas: () => repository.getPersonas(),
     getTags: () => repository.getTags(),
+    getSeries: () => repository.getSeries(),
     async getPosts(filters) {
       const posts = await repository.getPosts(filters);
       return Promise.all(

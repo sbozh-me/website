@@ -9,6 +9,7 @@ export type {
   PostCardProps,
   SelectOption,
   SelectProps,
+  SeriesFilterProps,
   TagFilterProps,
   TimelineProps,
   YearMarkerProps,
@@ -23,6 +24,7 @@ export type { PostFilters } from "./types/filters";
 
 export type { Persona } from "./types/persona";
 export type { Post, PostListItem } from "./types/post";
+export type { Series } from "./types/series";
 export type { Tag } from "./types/tag";
 export type { GroupedPosts, MonthGroup } from "./utils";
 // Components
@@ -37,6 +39,7 @@ export {
   PostCard,
   SearchPlaceholder,
   Select,
+  SeriesFilter,
   TagFilter,
   Timeline,
   YearMarker,

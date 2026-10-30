@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
-import { EmptyState, ErrorState, Timeline } from "@sbozh/blog";
+import {
+  EmptyState,
+  ErrorState,
+  SeriesFilter,
+  Timeline,
+  type PostListItem,
+  type Series,
+} from "@sbozh/blog";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
 // Disable caching - always fetch fresh data from Directus
@@ -23,18 +30,33 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogPage() {
+interface BlogPageProps {
+  searchParams: Promise<{ series?: string | string[] }>;
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
   noStore();
   const repository = createBlogRepository();
+  const { series: seriesParam } = await searchParams;
 
-  let posts;
+  let posts: PostListItem[] | undefined;
+  let series: Series[] = [];
   let error: DirectusError | null = null;
 
   try {
-    posts = await repository.getPosts();
+    [posts, series] = await Promise.all([repository.getPosts(), repository.getSeries()]);
   } catch (e) {
     error = DirectusError.fromError(e);
   }
+
+  // A series with nothing published yet would filter down to an empty page
+  const filledSeries = series.filter((item) =>
+    posts?.some((post) => post.seriesId === item.id)
+  );
+  const selected = filledSeries.find((item) => item.slug === seriesParam);
+  const visiblePosts = selected
+    ? posts?.filter((post) => post.seriesId === selected.id)
+    : posts;
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
@@ -44,6 +66,10 @@ export default async function BlogPage() {
           Thoughts, stories, and ideas from different perspectives.
         </p>
 
+        <div className="mt-6">
+          <SeriesFilter series={filledSeries} value={selected?.slug} basePath="/blog" />
+        </div>
+
         <div className="mt-12">
           {error ? (
             <ErrorState
@@ -51,10 +77,10 @@ export default async function BlogPage() {
               message={error.message}
               status={error.status}
             />
-          ) : posts && posts.length === 0 ? (
+          ) : visiblePosts && visiblePosts.length === 0 ? (
             <EmptyState />
-          ) : posts ? (
-            <Timeline posts={posts} />
+          ) : visiblePosts ? (
+            <Timeline posts={visiblePosts} />
           ) : null}
         </div>
       </div>
