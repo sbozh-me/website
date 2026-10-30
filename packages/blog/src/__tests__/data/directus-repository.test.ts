@@ -268,6 +268,14 @@ describe("DirectusRepository", () => {
       expect(posts[0].nextPostId).toBe("post-2");
     });
 
+    it("maps the series id", async () => {
+      mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, series: "series-1" }]);
+
+      const posts = await repository.getPosts();
+
+      expect(posts[0].seriesId).toBe("series-1");
+    });
+
     it("handles posts with empty tags", async () => {
       mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, tags: [] }]);
 
