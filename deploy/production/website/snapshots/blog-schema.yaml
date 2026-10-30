@@ -146,6 +146,30 @@ collections:
       versioning: false
     schema:
       name: release_notes
+  - collection: series
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: series
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: folder
+      item_duplication_fields: null
+      note: A folder of posts. Previous/next on a post in a series stays inside it.
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: series
   - collection: tags
     meta:
       accountability: all
@@ -704,6 +728,51 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: posts
+    field: series
+    type: uuid
+    meta:
+      collection: posts
+      conditions: null
+      display: related-values
+      display_options:
+        template: '{{title}}'
+      field: series
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: >-
+        Folder this post belongs to. Previous/next then move only between posts
+        of the same series, oldest to newest.
+      options:
+        template: '{{title}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 21
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: series
+      table: posts
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: series
+      foreign_key_column: id
   - collection: posts
     field: status
     type: string
@@ -2284,6 +2353,113 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: series
+    field: id
+    type: uuid
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: series
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: series
+    field: posts
+    type: alias
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: posts
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableCreate: false
+        template: '{{title}}'
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: series
+    field: title
+    type: string
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: series
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: tags
     field: id
     type: uuid
@@ -2493,6 +2669,27 @@ relations:
       foreign_key_table: posts
       foreign_key_column: id
       constraint_name: posts_next_post_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: posts
+    field: series
+    related_collection: series
+    meta:
+      junction_field: null
+      many_collection: posts
+      many_field: series
+      one_allowed_collections: null
+      one_collection: series
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: posts
+      sort_field: null
+    schema:
+      table: posts
+      column: series
+      foreign_key_table: series
+      foreign_key_column: id
+      constraint_name: posts_series_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: posts_tags
