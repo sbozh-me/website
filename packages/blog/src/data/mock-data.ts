@@ -1,3 +1,4 @@
+import type { Avatar } from "../types/avatar";
 import type { Persona } from "../types/persona";
 import type { Post } from "../types/post";
 import type { Tag } from "../types/tag";
@@ -30,6 +31,28 @@ export const mockPersonas: Persona[] = [
     slug: "dude",
     color: "#06b6d4",
     description: "Personal stories and experiences",
+  },
+];
+
+export const mockAvatars: Avatar[] = [
+  {
+    id: "1",
+    name: "Sem Bozhyk",
+    slug: "sem-bozhyk",
+    title: "Software Developer",
+    description: "Building software solutions and leading technical teams.",
+    status: { text: "Open to work", color: "green" },
+    cvUrl: "/forum/sem-bozhyk/cv",
+    personas: [mockPersonas[0]],
+  },
+  {
+    id: "2",
+    name: "Semen Bozhyk",
+    slug: "semen-bozhyk",
+    title: "Builder and Creator",
+    description: "I turn ideas into reality, even weird ones.",
+    status: { text: "In active fundraising mode", color: "yellow" },
+    personas: [mockPersonas[2], mockPersonas[3]],
   },
 ];
 

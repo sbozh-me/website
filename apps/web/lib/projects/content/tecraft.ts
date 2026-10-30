@@ -19,7 +19,7 @@ The shop is bilingual - Czech at the root, English at \`/en\` - and the whole st
 
 ## How it is built
 
-Next.js 15, React 19, Tailwind CSS v4 and three.js via React Three Fiber - the same stack as sbozh.me, pushed a lot harder. Around the storefront sit small services: an order and pickup-point service, a preview service that runs the photo models (background mask, depth) on the server, a GPU worker that bakes the HD laser point cloud, and an invoice renderer that takes a PMDX document and returns a PDF - the same PMDXJS parser that renders the [CV](/cv) on this site.
+Next.js 15, React 19, Tailwind CSS v4 and three.js via React Three Fiber - the same stack as sbozh.me, pushed a lot harder. Around the storefront sit small services: an order and pickup-point service, a preview service that runs the photo models (background mask, depth) on the server, a GPU worker that bakes the HD laser point cloud, and an invoice renderer that takes a PMDX document and returns a PDF - the same PMDXJS parser that renders the [CV](/forum/sem-bozhyk/cv) on this site.
 
 Manufacturing is in Prague, in small batches.
 `,

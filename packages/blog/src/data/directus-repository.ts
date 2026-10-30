@@ -6,6 +6,7 @@ import {
   type RestClient,
 } from "@directus/sdk";
 import type { BlogRepository } from "./repository";
+import type { Avatar, AvatarStatusColor } from "../types/avatar";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
@@ -87,6 +88,19 @@ interface DirectusPersona {
   description: string | null;
 }
 
+interface DirectusAvatar {
+  id: string;
+  name: string;
+  slug: string;
+  title: string | null;
+  description: string | null;
+  image: string | null;
+  status: string | null;
+  status_color: AvatarStatusColor | null;
+  cv_url: string | null;
+  personas: DirectusPersona[];
+}
+
 interface DirectusTag {
   id: string;
   name: string;
@@ -103,6 +117,7 @@ interface DirectusFile {
 interface DirectusSchema {
   posts: DirectusPost[];
   personas: DirectusPersona[];
+  avatars: DirectusAvatar[];
   tags: DirectusTag[];
   posts_tags: { id: number; posts_id: string; tags_id: string }[];
 }
@@ -239,6 +254,24 @@ export class DirectusRepository implements BlogRepository {
     }
   }
 
+  async getAvatars(): Promise<Avatar[]> {
+    this.log("getAvatars", "Fetching all avatars");
+    try {
+      const avatars = await this.client.request(
+        readItems("avatars", {
+          // Directus SDK types don't infer o2m alias fields (personas)
+          fields: ["*", { personas: ["*"] }] as unknown as (keyof DirectusAvatar)[],
+          sort: ["sort"] as unknown as (keyof DirectusAvatar)[],
+        })
+      );
+      this.log("getAvatars", `Fetched ${avatars.length} avatars`);
+      return (avatars as DirectusAvatar[]).map((avatar) => this.mapToAvatar(avatar));
+    } catch (error) {
+      this.log("getAvatars", "Error:", error);
+      throw DirectusError.fromError(error);
+    }
+  }
+
   async getTags(): Promise<Tag[]> {
     this.log("getTags", "Fetching all tags");
     try {
@@ -324,6 +357,22 @@ export class DirectusRepository implements BlogRepository {
       slug: persona.slug,
       color: persona.color,
       description: persona.description ?? undefined,
+    };
+  }
+
+  private mapToAvatar(avatar: DirectusAvatar): Avatar {
+    return {
+      id: avatar.id,
+      name: avatar.name,
+      slug: avatar.slug,
+      title: avatar.title ?? undefined,
+      description: avatar.description ?? undefined,
+      image: avatar.image ? `${this.assetBaseUrl}/${avatar.image}` : undefined,
+      status: avatar.status
+        ? { text: avatar.status, color: avatar.status_color ?? "green" }
+        : undefined,
+      cvUrl: avatar.cv_url ?? undefined,
+      personas: avatar.personas.map(this.mapToPersona),
     };
   }
 

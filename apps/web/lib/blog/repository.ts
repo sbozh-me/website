@@ -41,6 +41,7 @@ export function createBlogRepository(
 export function withPlainTitles(repository: BlogRepository): BlogRepository {
   return {
     getPersonas: () => repository.getPersonas(),
+    getAvatars: () => repository.getAvatars(),
     getTags: () => repository.getTags(),
     async getPosts(filters) {
       const posts = await repository.getPosts(filters);

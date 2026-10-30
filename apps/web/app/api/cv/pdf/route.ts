@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: `${baseUrl}/cv`,
+        url: `${baseUrl}/forum/sem-bozhyk/cv`,
         filename: "CV_Sem_Bozhyk_Software_Developer.pdf",
         // The service applies this theme to the document before printing;
         // name it explicitly so the PDF never depends on the service default.

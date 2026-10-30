@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { mockPersonas, mockPosts, mockTags } from "../../data/mock-data";
+import { mockAvatars, mockPersonas, mockPosts, mockTags } from "../../data/mock-data";
 import { MockBlogRepository } from "../../data/mock-repository";
 
 describe("MockBlogRepository", () => {
@@ -114,6 +114,16 @@ describe("MockBlogRepository", () => {
 
       expect(personas1).not.toBe(personas2);
       expect(personas1).toEqual(personas2);
+    });
+  });
+
+  describe("getAvatars", () => {
+    it("returns avatars with their personas", async () => {
+      const avatars = await repository.getAvatars();
+
+      expect(avatars.length).toBe(mockAvatars.length);
+      expect(avatars[0].name).toBe("Sem Bozhyk");
+      expect(avatars[0].personas[0].name).toBe("The Founder");
     });
   });
 

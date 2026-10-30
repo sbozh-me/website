@@ -37,14 +37,16 @@ describe("sitemap.ts", () => {
 
     expect(urls).toContain("https://sbozh.me");
     expect(urls).toContain("https://sbozh.me/blog");
+    expect(urls).toContain("https://sbozh.me/forum");
     expect(urls).toContain("https://sbozh.me/projects");
   });
 
-  it("excludes /cv route", async () => {
+  it("excludes CV routes", async () => {
     const result = await sitemap();
     const urls = result.map((entry) => entry.url);
 
     expect(urls).not.toContain("https://sbozh.me/cv");
+    expect(urls).not.toContain("https://sbozh.me/forum/sem-bozhyk/cv");
   });
 
   it("includes blog post routes", async () => {

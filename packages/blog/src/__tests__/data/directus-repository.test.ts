@@ -433,6 +433,76 @@ describe("DirectusRepository", () => {
     });
   });
 
+  describe("getAvatars", () => {
+    const mockDirectusAvatar = {
+      id: "avatar-1",
+      name: "Sem Bozhyk",
+      slug: "sem-bozhyk",
+      title: "Software Developer",
+      description: null,
+      image: "file-1",
+      status: "Open to work",
+      status_color: "green",
+      cv_url: "/forum/sem-bozhyk/cv",
+      personas: [mockDirectusPersona],
+    };
+
+    it("returns avatars with their personas", async () => {
+      mockRequest.mockResolvedValueOnce([mockDirectusAvatar]);
+
+      const avatars = await repository.getAvatars();
+
+      expect(avatars).toEqual([
+        {
+          id: "avatar-1",
+          name: "Sem Bozhyk",
+          slug: "sem-bozhyk",
+          title: "Software Developer",
+          description: undefined,
+          image: "http://localhost:8055/assets/file-1",
+          status: { text: "Open to work", color: "green" },
+          cvUrl: "/forum/sem-bozhyk/cv",
+          personas: [
+            {
+              id: "persona-1",
+              name: "The Founder",
+              slug: "founder",
+              color: "#8b5cf6",
+              description: "Founder description",
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("leaves image, status and CV empty when not set", async () => {
+      mockRequest.mockResolvedValueOnce([
+        { ...mockDirectusAvatar, image: null, status: null, cv_url: null, personas: [] },
+      ]);
+
+      const [avatar] = await repository.getAvatars();
+
+      expect(avatar.image).toBeUndefined();
+      expect(avatar.status).toBeUndefined();
+      expect(avatar.cvUrl).toBeUndefined();
+      expect(avatar.personas).toEqual([]);
+    });
+
+    it("defaults the status color to green", async () => {
+      mockRequest.mockResolvedValueOnce([{ ...mockDirectusAvatar, status_color: null }]);
+
+      const [avatar] = await repository.getAvatars();
+
+      expect(avatar.status).toEqual({ text: "Open to work", color: "green" });
+    });
+
+    it("throws DirectusError on API error", async () => {
+      mockRequest.mockRejectedValueOnce(new Error("Connection refused"));
+
+      await expect(repository.getAvatars()).rejects.toThrow(DirectusError);
+    });
+  });
+
   describe("getTags", () => {
     it("returns all tags", async () => {
       mockRequest.mockResolvedValueOnce([mockDirectusTag]);

@@ -17,10 +17,11 @@ interface HomeContentProps {
 export function HomeContent({ authors, initialPosts }: HomeContentProps) {
   const [posts, setPosts] = useState(initialPosts)
   const [isPending, startTransition] = useTransition()
-  const [currentAuthor, setCurrentAuthor] = useState(authors[0])
+  // No authors when Directus is unreachable: the grid then shows the latest posts
+  const [currentAuthor, setCurrentAuthor] = useState<Author | undefined>(authors[0])
   const debounceRef = useRef<NodeJS.Timeout | null>(null)
   const postsCache = useRef<Map<string, PostListItem[]>>(
-    new Map([[authors[0].id, initialPosts]])
+    new Map(authors[0] ? [[authors[0].id, initialPosts]] : [])
   )
 
   // Cleanup debounce timer on unmount
@@ -69,7 +70,7 @@ export function HomeContent({ authors, initialPosts }: HomeContentProps) {
       <BlogPostGrid
         posts={posts}
         isLoading={isPending}
-        authorName={currentAuthor.name}
+        authorName={currentAuthor?.name}
       />
     </>
   )

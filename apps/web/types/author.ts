@@ -16,7 +16,7 @@ export interface Author {
   name: string
   title: string
   description: string
-  avatar: string
+  avatar?: string
   status?: AuthorStatus
   ctaButtons: CTAButton[]
   blogAuthorSlugs: string[]
