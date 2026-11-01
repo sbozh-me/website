@@ -15,7 +15,7 @@ export function SeriesCard({ series, posts }: SeriesCardProps) {
     >
       <PostThumbnail post={thumbnail} width={640} className="aspect-video w-full" />
       <div className="p-4">
-        <h2 className="mb-1 font-semibold leading-snug text-foreground">{series.title}</h2>
+        <h2 className="mb-1 text-lg! font-semibold leading-snug text-foreground">{series.title}</h2>
         {series.description && (
           <p className="mb-2 text-sm text-muted-foreground line-clamp-2">{series.description}</p>
         )}

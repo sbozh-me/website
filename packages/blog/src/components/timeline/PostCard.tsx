@@ -27,8 +27,12 @@ export function PostCard({ post, seriesPart }: PostCardProps) {
           />
           <div className="flex items-center gap-2 text-muted-foreground">
             <span>{formatShortDate(post.date)}</span>
-            <span>•</span>
-            <span>{formatReadingTime(post.readingTime)}</span>
+            {post.readingTime > 0 && (
+              <>
+                <span>•</span>
+                <span>{formatReadingTime(post.readingTime)}</span>
+              </>
+            )}
           </div>
         </div>
 
