@@ -81,6 +81,47 @@ describe("getAdjacentPosts", () => {
       expect(next?.slug).toBe("newest");
       expect(previous).toBeNull();
     });
+
+    describe("pointing at an older post", () => {
+      // "newer" picking "older" would make older -> middle -> newer -> older
+      const backward = [
+        makePost("newest"),
+        { ...makePost("newer"), nextPostId: "older" },
+        makePost("middle"),
+        makePost("older"),
+      ];
+
+      it("keeps moving forward instead of following the pick", () => {
+        expect(getAdjacentPosts(backward, "newer").next?.slug).toBe("newest");
+      });
+
+      it("does not link the older post back to the post that picked it", () => {
+        expect(getAdjacentPosts(backward, "older").previous).toBeNull();
+      });
+
+      it("reaches the newest post from anywhere", () => {
+        const visited: string[] = [];
+        let slug: string | undefined = "older";
+        while (slug && !visited.includes(slug)) {
+          visited.push(slug);
+          slug = getAdjacentPosts(backward, slug).next?.slug;
+        }
+
+        expect(slug).toBeUndefined();
+        expect(visited).toEqual(["older", "middle", "newer", "newest"]);
+      });
+    });
+
+    it("links back to the closest post when several pick the same one", () => {
+      const list = [
+        makePost("target"),
+        { ...makePost("closer"), nextPostId: "target" },
+        { ...makePost("farther"), nextPostId: "target" },
+      ];
+
+      expect(getAdjacentPosts(list, "target").previous?.slug).toBe("closer");
+      expect(getAdjacentPosts(list, "farther").next?.slug).toBe("target");
+    });
   });
 
   describe("with a series", () => {

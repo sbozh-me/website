@@ -23,7 +23,9 @@ export interface AdjacentPosts {
  * An editor-picked `nextPostId` overrides the chronological next post, and the
  * picked post links back to the one that chose it as its previous post.
  * Picks pointing at the post itself, at an unpublished post or across a series
- * boundary are ignored.
+ * boundary are ignored. So are picks pointing at an older post: every other step
+ * moves forward in time, so a backward pick would send readers round in a circle
+ * and cut them off from everything newer.
  */
 export function getAdjacentPosts(
   posts: PostListItem[],
@@ -37,12 +39,12 @@ export function getAdjacentPosts(
 
   const list = posts.filter((post) => post.seriesId === current.seriesId);
   const index = list.indexOf(current);
+  // Newest first: picks may only come from older posts and lead to newer ones.
+  // When several posts pick this one, the closest of them is its previous post.
   const pickedNext = current.nextPostId
-    ? list.find((post) => post.id === current.nextPostId && post.id !== current.id)
+    ? list.slice(0, index).find((post) => post.id === current.nextPostId)
     : undefined;
-  const pickedPrevious = list.find(
-    (post) => post.nextPostId === current.id && post.id !== current.id
-  );
+  const pickedPrevious = list.slice(index + 1).find((post) => post.nextPostId === current.id);
 
   const previous = pickedPrevious ?? list[index + 1] ?? null;
   const next = pickedNext ?? list[index - 1] ?? null;
