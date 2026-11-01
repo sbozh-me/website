@@ -52,6 +52,28 @@ describe("Page", () => {
     });
   });
 
+  it("renders the config photo in the top-right corner", () => {
+    render(
+      <Document config={{ format: "A4", margins: [15, 20, 25, 30], photo: "/me.png" }}>
+        <Page>Content</Page>
+      </Document>,
+    );
+
+    const photo = document.querySelector(".pmdxjs-page-photo");
+    expect(photo).toHaveAttribute("src", "/me.png");
+    expect(photo).toHaveStyle({ top: "15mm", right: "20mm" });
+  });
+
+  it("renders no photo without the config key", () => {
+    render(
+      <Document config={{ format: "A4", margins: [15, 20, 25, 30] }}>
+        <Page>Content</Page>
+      </Document>,
+    );
+
+    expect(document.querySelector(".pmdxjs-page-photo")).not.toBeInTheDocument();
+  });
+
   it("renders the config logo in the bottom-right corner", () => {
     render(
       <Document config={{ format: "A4", margins: [15, 20, 25, 30], logo: "/logo.png" }}>

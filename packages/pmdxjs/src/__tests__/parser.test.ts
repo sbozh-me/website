@@ -73,6 +73,18 @@ version: v20.26.09
       expect(ast.config.qrPath).toMatch(/^M\d+ \d+h1v1h-1z/);
     });
 
+    it("should parse the photo config", () => {
+      const ast = parse(`:::config
+photo: /me.png
+:::
+
+:::page
+# Test
+:::page-end`);
+
+      expect(ast.config.photo).toBe("/me.png");
+    });
+
     it("should encode a secondary qr url and keep its label", () => {
       const source = `:::config
 qr: https://sbozh.me/cv

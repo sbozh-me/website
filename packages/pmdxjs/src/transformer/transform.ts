@@ -7,6 +7,7 @@ import {
   Header as CVHeader,
   Section as CVSection,
   Tags as CVTags,
+  LinkQr,
 } from "../components/cv";
 import {
   Field,
@@ -30,6 +31,7 @@ import type {
   InlineNode,
   InvoiceNode,
   LinkNode,
+  LinkQrNode,
   ListItemNode,
   ListNode,
   PageNode,
@@ -106,6 +108,12 @@ interface KnownComponents {
     amount?: string;
     currency?: string;
     variableSymbol?: string;
+    qrPath: string;
+    qrSize: number;
+  }>;
+  LinkQr?: React.ComponentType<{
+    href: string;
+    caption?: string;
     qrPath: string;
     qrSize: number;
   }>;
@@ -669,6 +677,24 @@ function transformQr(
 }
 
 /**
+ * Transform a link QR node to React element
+ */
+function transformLinkQr(
+  node: LinkQrNode,
+  options: TransformOptions,
+  key: number,
+): ReactElement {
+  const Component = options.components?.LinkQr ?? LinkQr;
+  return createElement(Component, {
+    key,
+    href: node.href,
+    caption: node.caption,
+    qrPath: node.qrPath,
+    qrSize: node.qrSize,
+  });
+}
+
+/**
  * Transform a content node to React element
  */
 function transformContentNode(
@@ -691,6 +717,8 @@ function transformContentNode(
       return transformField(node, options, key);
     case "qr":
       return transformQr(node, options, key);
+    case "link-qr":
+      return transformLinkQr(node, options, key);
     case "section":
       return transformSection(node, options, key);
     case "columns":

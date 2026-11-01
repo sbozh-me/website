@@ -17,6 +17,7 @@ import type {
   ListItemNode,
   ListNode,
   PageNode,
+  LinkQrNode,
   ParagraphNode,
   PartyNode,
   QrNode,
@@ -69,6 +70,9 @@ export function parseConfig(tokens: Token[]): DocumentConfig {
           break;
         case "logo":
           if (value) config.logo = value;
+          break;
+        case "photo":
+          if (value) config.photo = value;
           break;
         case "qr":
           if (value) config.qr = value;
@@ -311,6 +315,25 @@ export function createPartyNode(
     position: {
       start: { line: startToken.line, column: startToken.column },
       end: { line: startToken.line, column: startToken.column },
+    },
+  };
+}
+
+/**
+ * Create a link QR node from a :::link-qr line ("url" or "url | caption").
+ */
+export function createLinkQrNode(token: Token): LinkQrNode {
+  const [href, caption] = token.value.split("|").map((p) => p.trim());
+  const { size, path } = encodeQrPath(href || " ");
+  return {
+    type: "link-qr",
+    href: href || "",
+    caption: caption || undefined,
+    qrPath: path,
+    qrSize: size,
+    position: {
+      start: { line: token.line, column: token.column },
+      end: { line: token.line, column: token.column },
     },
   };
 }

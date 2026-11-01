@@ -15,6 +15,7 @@ export type TokenType =
   | "qr_start"
   | "qr_end"
   | "total_line"
+  | "link_qr_line"
   | "sign_line"
   | "field_line"
   | "columns_start"
@@ -73,6 +74,8 @@ const PATTERNS = {
   qrStart: /^:::qr\s*$/,
   // :::total 1 700 Kč  (optionally "amount | label")
   totalLine: /^:::total\s+(.+)$/,
+  // :::link-qr https://example.com | Caption  (caption optional)
+  linkQrLine: /^:::link-qr\s+(.+)$/,
   // :::sign Mgr. Radka Suchá  (name optional)
   signLine: /^:::sign\s*(.*)$/,
   // :::field Caption | value  (value optional — blank line to fill by hand)
@@ -259,6 +262,17 @@ export function tokenizeLine(
     return {
       type: "total_line",
       value: totalMatch[1].trim(),
+      line: lineNumber,
+      column: 1,
+    };
+  }
+
+  // Link QR line (single-line directive)
+  const linkQrMatch = trimmed.match(PATTERNS.linkQrLine);
+  if (linkQrMatch) {
+    return {
+      type: "link_qr_line",
+      value: linkQrMatch[1].trim(),
       line: lineNumber,
       column: 1,
     };

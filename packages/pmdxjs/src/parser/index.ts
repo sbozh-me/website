@@ -4,6 +4,7 @@ import {
   createDocumentNode,
   createEntryNode,
   createHeaderNode,
+  createLinkQrNode,
   createInvoiceNode,
   createListNode,
   createPageNode,
@@ -349,6 +350,12 @@ function processToken(
     case "total_line": {
       flushTags(state);
       addToCurrentContext(state, createTotalNode(token));
+      break;
+    }
+
+    case "link_qr_line": {
+      flushTags(state);
+      addToCurrentContext(state, createLinkQrNode(token));
       break;
     }
 
