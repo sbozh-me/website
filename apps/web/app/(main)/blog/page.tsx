@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import {
+  BlogBrowser,
   BlogViewTabs,
   EmptyState,
   ErrorState,
   getSeriesWithPosts,
+  parsePostFilters,
   SeriesCard,
-  Timeline,
   type PostListItem,
   type Series,
 } from "@sbozh/blog";
@@ -33,13 +34,13 @@ export const metadata: Metadata = {
 };
 
 interface BlogPageProps {
-  searchParams: Promise<{ view?: string | string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
   noStore();
   const repository = createBlogRepository();
-  const { view } = await searchParams;
+  const params = await searchParams;
 
   let posts: PostListItem[] | undefined;
   let series: Series[] = [];
@@ -51,44 +52,53 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     error = DirectusError.fromError(e);
   }
 
-  // Tabs only appear once a series has published posts; until then there's one view
   const seriesWithPosts = posts ? getSeriesWithPosts(posts, series) : [];
-  const hasSeries = seriesWithPosts.length > 0;
-  const activeView = hasSeries && view === "series" ? "series" : "posts";
+  const activeView =
+    params.view === "timeline"
+      ? "timeline"
+      : params.view === "series" && seriesWithPosts.length > 0
+        ? "series"
+        : "cards";
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
-      <div className="max-w-3xl mx-auto">
+      <div className={`mx-auto ${activeView === "cards" ? "max-w-6xl" : "max-w-3xl"}`}>
         <h1 className="text-3xl md:text-4xl tracking-tight">Blog</h1>
         <p className="mt-2 text-muted-foreground">
           Thoughts, stories, and ideas from different perspectives.
         </p>
 
-        {hasSeries && (
-          <div className="mt-6">
-            <BlogViewTabs value={activeView} />
-          </div>
-        )}
-
-        <div className="mt-12">
-          {error ? (
+        {error ? (
+          <div className="mt-12">
             <ErrorState
               title="Unable to load posts"
               message={error.message}
               status={error.status}
             />
-          ) : activeView === "series" ? (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          </div>
+        ) : posts && posts.length === 0 ? (
+          <div className="mt-12">
+            <EmptyState />
+          </div>
+        ) : activeView === "series" ? (
+          <>
+            <div className="mt-6">
+              <BlogViewTabs value="series" showSeries />
+            </div>
+            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {seriesWithPosts.map((item) => (
                 <SeriesCard key={item.series.id} {...item} />
               ))}
             </div>
-          ) : posts && posts.length === 0 ? (
-            <EmptyState />
-          ) : posts ? (
-            <Timeline posts={posts} series={series} />
-          ) : null}
-        </div>
+          </>
+        ) : posts ? (
+          <BlogBrowser
+            posts={posts}
+            series={series}
+            view={activeView}
+            initialFilters={parsePostFilters(params)}
+          />
+        ) : null}
       </div>
     </div>
   );

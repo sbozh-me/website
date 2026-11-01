@@ -14,7 +14,13 @@ export interface SelectOption {
   color?: string;
 }
 
+/** Radix can't select an empty value, so "nothing chosen" needs a value of its own */
+const NONE = "__none__";
+
 export interface SelectProps {
+  /** Accessible name */
+  label: string;
+  /** Shown when nothing is chosen, and offered as the option that clears the choice */
   placeholder: string;
   value?: string;
   options: SelectOption[];
@@ -23,21 +29,23 @@ export interface SelectProps {
 }
 
 export function Select({
+  label,
   placeholder,
   value,
   options,
   onChange,
-  className,
+  className = "w-full sm:w-44",
 }: SelectProps) {
   return (
     <ShadcnSelect
-      value={value ?? ""}
-      onValueChange={(val) => onChange(val || undefined)}
+      value={value ?? NONE}
+      onValueChange={(val) => onChange(val === NONE ? undefined : val)}
     >
-      <SelectTrigger className={className}>
+      <SelectTrigger aria-label={label} className={className}>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value={NONE}>{placeholder}</SelectItem>
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
             {option.label}

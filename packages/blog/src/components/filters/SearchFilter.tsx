@@ -1,8 +1,13 @@
 import { Input } from "@sbozh/react-ui/components/ui/input";
 
-export function SearchPlaceholder() {
+export interface SearchFilterProps {
+  value?: string;
+  onChange: (query?: string) => void;
+}
+
+export function SearchFilter({ value, onChange }: SearchFilterProps) {
   return (
-    <div className="relative">
+    <div className="relative col-span-2 sm:col-auto">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -21,9 +26,11 @@ export function SearchPlaceholder() {
       </svg>
       <Input
         type="search"
+        aria-label="Search posts"
         placeholder="Search"
-        disabled
-        className="pl-9 w-[140px] cursor-not-allowed"
+        value={value ?? ""}
+        onChange={(event) => onChange(event.target.value || undefined)}
+        className="pl-9 w-full sm:w-44"
       />
     </div>
   );

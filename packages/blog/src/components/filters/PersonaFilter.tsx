@@ -21,6 +21,7 @@ export function PersonaFilter({
 
   return (
     <Select
+      label="Filter by persona"
       placeholder="All personas"
       value={value}
       options={options}

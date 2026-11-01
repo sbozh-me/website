@@ -1,13 +1,16 @@
 export type {
-  DateFilterProps,
   FilterBarProps,
+  MonthFilterProps,
   PersonaFilterProps,
+  SearchFilterProps,
   SelectOption,
   SelectProps,
   TagFilterProps,
 } from "./filters";
 
-export type { BlogView, BlogViewTabsProps, SeriesCardProps } from "./series";
+export type { BlogBrowserProps, PostGridProps, PostTileProps } from "./browse";
+
+export type { BlogViewTabsProps, SeriesCardProps } from "./series";
 
 export type {
   EmptyStateProps,
@@ -20,13 +23,15 @@ export type {
 } from "./timeline";
 
 export {
-  DateFilter,
   FilterBar,
+  MonthFilter,
   PersonaFilter,
-  SearchPlaceholder,
+  SearchFilter,
   Select,
   TagFilter,
 } from "./filters";
+
+export { BlogBrowser, PostGrid, PostTile } from "./browse";
 
 export { BlogViewTabs, SeriesCard } from "./series";
 

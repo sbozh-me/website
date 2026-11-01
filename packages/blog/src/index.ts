@@ -1,14 +1,17 @@
 export type {
-  BlogView,
+  BlogBrowserProps,
   BlogViewTabsProps,
-  DateFilterProps,
   EmptyStateProps,
   ErrorStateProps,
   FilterBarProps,
+  MonthFilterProps,
   MonthMarkerProps,
   PersonaDotProps,
   PersonaFilterProps,
   PostCardProps,
+  PostGridProps,
+  PostTileProps,
+  SearchFilterProps,
   SelectOption,
   SelectProps,
   SeriesCardProps,
@@ -22,25 +25,28 @@ export type { BlogRepository } from "./data/repository";
 
 export type { UsePostFiltersReturn } from "./hooks";
 
-export type { PostFilters } from "./types/filters";
+export type { PostFilters, PostSort } from "./types/filters";
 
 export type { Persona } from "./types/persona";
 export type { Post, PostListItem } from "./types/post";
 export type { Series } from "./types/series";
 export type { Tag } from "./types/tag";
-export type { GroupedPosts, MonthGroup, SeriesPart, SeriesWithPosts } from "./utils";
+export type { BlogView, FilterOptions, GroupedPosts, MonthGroup, SeriesPart, SeriesWithPosts } from "./utils";
 // Components
 export {
+  BlogBrowser,
   BlogViewTabs,
-  DateFilter,
   EmptyState,
   ErrorState,
   FilterBar,
+  MonthFilter,
   MonthMarker,
   PersonaDot,
   PersonaFilter,
   PostCard,
-  SearchPlaceholder,
+  PostGrid,
+  PostTile,
+  SearchFilter,
   Select,
   SeriesCard,
   TagFilter,
@@ -53,9 +59,13 @@ export { MockBlogRepository } from "./data/mock-repository";
 export { usePostFilters } from "./hooks";
 // Utils
 export {
+  blogHref,
+  filterPosts,
   formatReadingTime,
   formatShortDate,
+  getFilterOptions,
   getSeriesParts,
   getSeriesWithPosts,
   groupPostsByDate,
+  parsePostFilters,
 } from "./utils";

@@ -35,10 +35,7 @@ export function usePostFilters(
     setFiltersState({});
   }, []);
 
-  const hasActiveFilters =
-    filters.persona !== undefined ||
-    filters.tag !== undefined ||
-    filters.year !== undefined;
+  const hasActiveFilters = Object.values(filters).some(Boolean);
 
   return {
     filters,

@@ -28,8 +28,8 @@ vi.mock("@/lib/blog/repository", () => ({
 
 import BlogPage from "./page";
 
-const renderPage = async (view?: string | string[]) =>
-  render(await BlogPage({ searchParams: Promise.resolve({ view }) }));
+const renderPage = async (view?: string | string[], params: Record<string, string> = {}) =>
+  render(await BlogPage({ searchParams: Promise.resolve({ view, ...params }) }));
 
 const standUp = { id: "s1", title: "Stand-up", slug: "stand-up" };
 const empty = { id: "s2", title: "Empty", slug: "empty" };
@@ -45,8 +45,16 @@ describe("BlogPage", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Blog");
   });
 
-  it("renders timeline with posts", async () => {
+  it("opens on the card view", async () => {
     await renderPage();
+
+    const tabs = within(screen.getByRole("navigation", { name: "Blog view" }));
+    expect(tabs.getByRole("link", { name: "Cards" })).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByText("2025")).not.toBeInTheDocument();
+  });
+
+  it("renders timeline with posts when asked for", async () => {
+    await renderPage("timeline");
     // Should show year markers from mock data
     expect(screen.getByText("2025")).toBeInTheDocument();
     expect(screen.getByText("2024")).toBeInTheDocument();
@@ -69,19 +77,18 @@ describe("BlogPage", () => {
   describe("views", () => {
     const tabs = () => within(screen.getByRole("navigation", { name: "Blog view" }));
 
-    it("hides the tabs until a series has published posts", async () => {
+    it("hides the series view until a series has published posts", async () => {
       mockSeries = [empty];
       await renderPage("series");
 
-      expect(screen.queryByRole("navigation", { name: "Blog view" })).not.toBeInTheDocument();
+      expect(tabs().queryByRole("link", { name: "Series" })).not.toBeInTheDocument();
       expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
     });
 
-    it("opens on posts and labels series posts", async () => {
+    it("labels series posts", async () => {
       mockSeries = [standUp];
       await renderPage();
 
-      expect(tabs().getByRole("link", { name: "Posts" })).toHaveAttribute("aria-current", "page");
       expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
       expect(screen.getByRole("link", { name: "Stand-up · Post 1" })).toHaveAttribute(
         "href",
@@ -102,11 +109,29 @@ describe("BlogPage", () => {
       expect(screen.queryByText("Why I started sbozh.me")).not.toBeInTheDocument();
     });
 
-    it.each([["unknown"], [["series", "posts"]]])("falls back to posts for %j", async (view) => {
+    it.each([["unknown"], [["series", "posts"]]])("falls back to cards for %j", async (view) => {
       mockSeries = [standUp];
       await renderPage(view);
 
+      expect(tabs().getByRole("link", { name: "Cards" })).toHaveAttribute("aria-current", "page");
       expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
+    });
+
+    it("applies filters from the URL", async () => {
+      await renderPage(undefined, { q: "patience" });
+
+      expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
+      expect(screen.queryByText("Why I started sbozh.me")).not.toBeInTheDocument();
+      expect(screen.getByRole("searchbox", { name: "Search posts" })).toHaveValue("patience");
+    });
+
+    it("keeps filters when switching view", async () => {
+      await renderPage(undefined, { q: "patience" });
+
+      expect(tabs().getByRole("link", { name: "Timeline" })).toHaveAttribute(
+        "href",
+        "/blog?view=timeline&q=patience"
+      );
     });
   });
 });
