@@ -15,7 +15,8 @@ const SHORT_MONTH_NAMES = [
 
 export function formatShortDate(dateString: string): string {
   const date = new Date(dateString);
-  const month = SHORT_MONTH_NAMES[date.getMonth()];
-  const day = date.getDate();
+  // Publish dates have no time: read them in UTC so server and browser agree
+  const month = SHORT_MONTH_NAMES[date.getUTCMonth()];
+  const day = date.getUTCDate();
   return `${month} ${day}`;
 }

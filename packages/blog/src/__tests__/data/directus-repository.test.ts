@@ -268,6 +268,39 @@ describe("DirectusRepository", () => {
       expect(posts[0].nextPostId).toBe("post-2");
     });
 
+    it("maps the series id", async () => {
+      mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, series: "series-1" }]);
+
+      const posts = await repository.getPosts();
+
+      expect(posts[0].seriesId).toBe("series-1");
+    });
+
+    it("maps the series list", async () => {
+      mockRequest.mockResolvedValueOnce([
+        {
+          id: "series-1",
+          title: "Stand-up",
+          slug: "stand-up",
+          description: "Jokes",
+          image: { id: "file-1", filename_download: "hero.png", width: 1600, height: 900 },
+          next_series: "series-2",
+        },
+        { id: "series-2", title: "Part 2", slug: "part-2", description: null, image: null, next_series: null },
+      ]);
+
+      const [first, second] = await repository.getSeries();
+
+      expect(first).toMatchObject({
+        description: "Jokes",
+        nextSeriesId: "series-2",
+        image: { src: expect.stringContaining("/file-1"), alt: "hero.png", width: 1600, height: 900 },
+      });
+      expect(second.description).toBeUndefined();
+      expect(second.image).toBeUndefined();
+      expect(second.nextSeriesId).toBeUndefined();
+    });
+
     it("handles posts with empty tags", async () => {
       mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, tags: [] }]);
 

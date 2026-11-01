@@ -45,4 +45,6 @@ export interface PostListItem {
   image?: PostImage;
   /** Editor-picked next post; overrides the chronological neighbour */
   nextPostId?: string;
+  /** Series this post belongs to; previous/next stay inside it */
+  seriesId?: string;
 }

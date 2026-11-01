@@ -5,7 +5,11 @@ vi.mock("@/lib/blog/repository", () => ({
   createBlogRepository: () => ({
     getPosts: vi.fn(async () => [
       { slug: "test-post-1", date: "2024-01-15" },
-      { slug: "test-post-2", date: "2024-02-20" },
+      { slug: "test-post-2", date: "2024-02-20", seriesId: "s1" },
+    ]),
+    getSeries: vi.fn(async () => [
+      { id: "s1", title: "Stand-up", slug: "stand-up" },
+      { id: "s2", title: "Empty", slug: "empty" },
     ]),
   }),
 }));

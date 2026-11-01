@@ -9,7 +9,7 @@ import { PostThumbnail } from "./PostThumbnail";
  * Mobile: stacked compact rows (thumbnail beside text).
  * Desktop: two columns with full-width thumbnails; "next" stays in the right column.
  */
-export function PostNavigation({ previous, next }: AdjacentPosts) {
+export function PostNavigation({ previous, next, previousIsSeries, nextIsSeries }: AdjacentPosts) {
   if (!previous && !next) {
     return null;
   }
@@ -19,13 +19,21 @@ export function PostNavigation({ previous, next }: AdjacentPosts) {
       aria-label="More posts"
       className="mt-16 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2"
     >
-      {previous && <NavCard post={previous} direction="previous" />}
-      {next && <NavCard post={next} direction="next" />}
+      {previous && <NavCard post={previous} direction="previous" isSeries={previousIsSeries} />}
+      {next && <NavCard post={next} direction="next" isSeries={nextIsSeries} />}
     </nav>
   );
 }
 
-function NavCard({ post, direction }: { post: PostListItem; direction: "previous" | "next" }) {
+function NavCard({
+  post,
+  direction,
+  isSeries,
+}: {
+  post: PostListItem;
+  direction: "previous" | "next";
+  isSeries?: boolean;
+}) {
   const isNext = direction === "next";
 
   return (
@@ -53,7 +61,9 @@ function NavCard({ post, direction }: { post: PostListItem; direction: "previous
               className="size-3.5 transition-transform duration-200 group-hover:-translate-x-0.5"
             />
           )}
-          <span>{isNext ? "Next post" : "Previous post"}</span>
+          <span>
+            {isNext ? "Next" : "Previous"} {isSeries ? "series" : "post"}
+          </span>
           {isNext && (
             <ArrowIcon
               direction="next"

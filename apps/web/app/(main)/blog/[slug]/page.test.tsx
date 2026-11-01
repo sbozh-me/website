@@ -49,6 +49,7 @@ vi.mock("@/lib/blog/repository", () => ({
       const repo = new MockBlogRepository();
       return repo.getPosts();
     }),
+    getSeries: vi.fn(async () => []),
   }),
   DirectusError: {
     fromError: (e: Error) => ({ message: e.message, status: 500 }),

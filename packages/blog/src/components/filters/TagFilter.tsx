@@ -16,6 +16,7 @@ export function TagFilter({ tags, value, onChange }: TagFilterProps) {
 
   return (
     <Select
+      label="Filter by tag"
       placeholder="All tags"
       value={value}
       options={options}

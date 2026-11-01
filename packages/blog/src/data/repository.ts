@@ -1,6 +1,7 @@
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
+import type { Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export interface BlogRepository {
@@ -8,4 +9,5 @@ export interface BlogRepository {
   getPost(slug: string): Promise<Post | null>;
   getPersonas(): Promise<Persona[]>;
   getTags(): Promise<Tag[]>;
+  getSeries(): Promise<Series[]>;
 }

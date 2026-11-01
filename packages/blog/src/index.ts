@@ -1,14 +1,20 @@
 export type {
-  DateFilterProps,
+  BlogBrowserProps,
+  BlogViewTabsProps,
   EmptyStateProps,
   ErrorStateProps,
   FilterBarProps,
+  MonthFilterProps,
   MonthMarkerProps,
   PersonaDotProps,
   PersonaFilterProps,
   PostCardProps,
+  PostGridProps,
+  PostTileProps,
+  SearchFilterProps,
   SelectOption,
   SelectProps,
+  SeriesCardProps,
   TagFilterProps,
   TimelineProps,
   YearMarkerProps,
@@ -19,24 +25,30 @@ export type { BlogRepository } from "./data/repository";
 
 export type { UsePostFiltersReturn } from "./hooks";
 
-export type { PostFilters } from "./types/filters";
+export type { PostFilters, PostSort } from "./types/filters";
 
 export type { Persona } from "./types/persona";
 export type { Post, PostListItem } from "./types/post";
+export type { Series } from "./types/series";
 export type { Tag } from "./types/tag";
-export type { GroupedPosts, MonthGroup } from "./utils";
+export type { BlogView, FilterOptions, GroupedPosts, MonthGroup, SeriesPart, SeriesWithPosts } from "./utils";
 // Components
 export {
-  DateFilter,
+  BlogBrowser,
+  BlogViewTabs,
   EmptyState,
   ErrorState,
   FilterBar,
+  MonthFilter,
   MonthMarker,
   PersonaDot,
   PersonaFilter,
   PostCard,
-  SearchPlaceholder,
+  PostGrid,
+  PostTile,
+  SearchFilter,
   Select,
+  SeriesCard,
   TagFilter,
   Timeline,
   YearMarker,
@@ -46,4 +58,14 @@ export { MockBlogRepository } from "./data/mock-repository";
 // Hooks
 export { usePostFilters } from "./hooks";
 // Utils
-export { formatReadingTime, formatShortDate, groupPostsByDate } from "./utils";
+export {
+  blogHref,
+  filterPosts,
+  formatReadingTime,
+  formatShortDate,
+  getFilterOptions,
+  getSeriesParts,
+  getSeriesWithPosts,
+  groupPostsByDate,
+  parsePostFilters,
+} from "./utils";

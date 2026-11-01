@@ -9,6 +9,7 @@ import type { BlogRepository } from "./repository";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
+import type { Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export class DirectusError extends Error {
@@ -77,6 +78,7 @@ interface DirectusPost {
   is_toc_hidden: boolean;
   theme: string | null;
   next_post: string | null;
+  series: string | null;
 }
 
 interface DirectusPersona {
@@ -93,6 +95,15 @@ interface DirectusTag {
   slug: string;
 }
 
+interface DirectusSeries {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  image: DirectusFile | null;
+  next_series: string | null;
+}
+
 interface DirectusFile {
   id: string;
   filename_download: string;
@@ -104,6 +115,7 @@ interface DirectusSchema {
   posts: DirectusPost[];
   personas: DirectusPersona[];
   tags: DirectusTag[];
+  series: DirectusSeries[];
   posts_tags: { id: number; posts_id: string; tags_id: string }[];
 }
 
@@ -174,6 +186,7 @@ export class DirectusRepository implements BlogRepository {
             "date_updated",
             "reading_time",
             "next_post",
+            "series",
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
             { image: ["id", "filename_download", "width", "height"] },
@@ -253,6 +266,30 @@ export class DirectusRepository implements BlogRepository {
     }
   }
 
+  async getSeries(): Promise<Series[]> {
+    this.log("getSeries", "Fetching all series");
+    try {
+      const series = await this.client.request(
+        readItems("series", {
+          fields: [
+            "id",
+            "title",
+            "slug",
+            "description",
+            "next_series",
+            { image: ["id", "filename_download", "width", "height"] },
+          ] as unknown as (keyof DirectusSeries)[],
+          sort: ["title"],
+        })
+      );
+      this.log("getSeries", `Fetched ${series.length} series`);
+      return (series as DirectusSeries[]).map(this.mapToSeries.bind(this));
+    } catch (error) {
+      this.log("getSeries", "Error:", error);
+      throw DirectusError.fromError(error);
+    }
+  }
+
   private buildFilter(filters?: PostFilters): Record<string, unknown> {
     const directusFilter: Record<string, unknown> = {};
 
@@ -314,6 +351,7 @@ export class DirectusRepository implements BlogRepository {
       tags: post.tags.map((t) => this.mapToTag(t.tags_id)),
       image: post.image ? this.mapToImage(post.image) : undefined,
       nextPostId: post.next_post ?? undefined,
+      seriesId: post.series ?? undefined,
     };
   }
 
@@ -332,6 +370,17 @@ export class DirectusRepository implements BlogRepository {
       id: tag.id,
       name: tag.name,
       slug: tag.slug,
+    };
+  }
+
+  private mapToSeries(series: DirectusSeries): Series {
+    return {
+      id: series.id,
+      title: series.title,
+      slug: series.slug,
+      description: series.description ?? undefined,
+      image: series.image ? this.mapToImage(series.image) : undefined,
+      nextSeriesId: series.next_series ?? undefined,
     };
   }
 

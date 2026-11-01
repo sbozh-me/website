@@ -1,5 +1,6 @@
 import type { Persona } from "../types/persona";
 import type { Post } from "../types/post";
+import type { Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export const mockPersonas: Persona[] = [
@@ -40,6 +41,8 @@ export const mockTags: Tag[] = [
   { id: "4", name: "Personal", slug: "personal" },
   { id: "5", name: "Creative", slug: "creative" },
 ];
+
+export const mockSeries: Series[] = [{ id: "1", title: "Stand-up", slug: "stand-up" }];
 
 export const mockPosts: Post[] = [
   {
