@@ -74,6 +74,7 @@ export type {
   StrongNode,
   TagsNode,
   TextNode,
+  LinkQrNode,
   TotalNode,
 } from "./types";
 

@@ -110,6 +110,19 @@ export interface PartyNode extends BaseNode {
 }
 
 /**
+ * Link QR node - a scannable link inside the content flow (:::link-qr)
+ */
+export interface LinkQrNode extends BaseNode {
+  type: "link-qr";
+  href: string;
+  caption?: string;
+  /** Precomputed SVG path of the QR's dark modules */
+  qrPath: string;
+  /** Module count per side */
+  qrSize: number;
+}
+
+/**
  * Total node - prominent amount-due bar (:::total)
  */
 export interface TotalNode extends BaseNode {
@@ -284,7 +297,8 @@ export type BlockNode =
   | TotalNode
   | SignNode
   | FieldNode
-  | QrNode;
+  | QrNode
+  | LinkQrNode;
 
 /**
  * All content nodes (can appear inside pages, sections, columns)

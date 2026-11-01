@@ -72,6 +72,27 @@ describe("PDF Route", () => {
     );
   });
 
+  it("renders the Semen CV for the semen variant", async () => {
+    const request = new NextRequest("http://localhost:3000/api/cv/pdf?v=semen", {
+      headers: {
+        host: "localhost:3000",
+        "x-forwarded-proto": "https",
+      },
+    });
+
+    const response = await GET(request);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        body: expect.stringContaining("https://localhost:3000/cv/semen"),
+      })
+    );
+    expect(response.headers.get("Content-Disposition")).toBe(
+      'attachment; filename="CV_Semen_Bozhyk_Builder_and_Creator.pdf"'
+    );
+  });
+
   it("returns 500 error when PDF service fails", async () => {
     mockFetch.mockResolvedValue({
       ok: false,

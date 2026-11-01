@@ -111,7 +111,7 @@ interface QrTileProps {
 /**
  * Linked QR code on a white tile, with the logo over its centre
  */
-function QrTile({ href, size, path, logo, className, style }: QrTileProps) {
+export function QrTile({ href, size, path, logo, className, style }: QrTileProps) {
   return (
     <a
       className={cn("pmdxjs-page-qr", className)}
@@ -246,6 +246,24 @@ export function Page({
       }}
     >
       {children}
+      {config.photo && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          className="pmdxjs-page-photo"
+          src={config.photo}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: `${marginTop}mm`,
+            right: `${marginRight}mm`,
+            width: "17mm",
+            height: "17mm",
+            borderRadius: "50%",
+            objectFit: "cover",
+          }}
+        />
+      )}
       {config.pageNumbers && number && total && (
         <span
           className="pmdxjs-page-number"

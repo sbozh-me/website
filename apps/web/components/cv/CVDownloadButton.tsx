@@ -5,13 +5,21 @@ import { toast } from "sonner";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
-export function CVDownloadButton() {
+interface CVDownloadButtonProps {
+  url?: string;
+  filename?: string;
+}
+
+export function CVDownloadButton({
+  url: pdfUrl = "/api/cv/pdf",
+  filename = "CV_Sem_Bozhyk_Software_Developer.pdf",
+}: CVDownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDownload = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("/api/cv/pdf");
+      const response = await fetch(pdfUrl);
       if (!response.ok) {
         throw new Error("Failed to generate PDF");
       }
@@ -20,7 +28,7 @@ export function CVDownloadButton() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "CV_Sem_Bozhyk_Software_Developer.pdf";
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);

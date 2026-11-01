@@ -18,6 +18,8 @@ export interface DocumentConfig {
   /** Optional logo image URL, drawn in the bottom-right corner of every page
    *  (inside the QR code when `qr` is set). */
   logo?: string;
+  /** Optional portrait image URL, drawn as a circle in the top-right corner of every page */
+  photo?: string;
   /** Optional URL rendered as a QR code in the bottom-right corner of every page */
   qr?: string;
   /** Optional caption shown left of the QR code, followed by an arrow */
