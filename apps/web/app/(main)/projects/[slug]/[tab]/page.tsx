@@ -6,6 +6,7 @@ import { join } from "path";
 import { getProject, getProjects } from "@/lib/projects/data";
 import { getSbozhMeTabContent } from "@/lib/projects/content/sbozh-me";
 import { getTecraftTabContent } from "@/lib/projects/content/tecraft";
+import { getRenesansInterTabContent } from "@/lib/projects/content/renesans-inter";
 import { parseChangelogFromContent } from "@/lib/changelog/parser";
 import { parseRoadmapFromContent, parseBacklogFromContent } from "@/lib/roadmap/parser";
 import { VerticalTimeline } from "@sbozh/react-ui/components/ui/vertical-timeline";
@@ -45,6 +46,9 @@ function getTabContent(slug: string, tabId: string): string | null {
   }
   if (slug === "tecraft") {
     return getTecraftTabContent(tabId);
+  }
+  if (slug === "renesans-inter") {
+    return getRenesansInterTabContent(tabId);
   }
   return null;
 }

@@ -10,6 +10,11 @@ export function Footer() {
   const pathname = usePathname();
   const sbozhMe = getProject("sbozh-me");
 
+  // Client demos under /demo carry their own branding
+  if (pathname?.startsWith("/demo/")) {
+    return null;
+  }
+
   const linkClass = (href: string) =>
     `text-sm transition-colors ${
       pathname === href

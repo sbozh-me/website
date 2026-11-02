@@ -63,12 +63,34 @@ vi.mock("@/components/home", () => ({
   ),
 }));
 
+// Mock avatars from Directus
+vi.mock("@/lib/avatars", () => ({
+  getAvatars: vi.fn(async () => [
+    {
+      id: "a1",
+      name: "Sem Bozhyk",
+      slug: "sem-bozhyk",
+      personas: [
+        { id: "p1", name: "The Founder", slug: "founder", color: "#8b5cf6" },
+        { id: "p2", name: "The Architect", slug: "architect", color: "#22c55e" },
+      ],
+    },
+  ]),
+  toAuthor: (avatar: { slug: string; name: string; personas: { slug: string }[] }) => ({
+    id: avatar.slug,
+    name: avatar.name,
+    blogAuthorSlugs: avatar.personas.map((p) => p.slug),
+  }),
+}));
+
 // Mock blog posts action
 vi.mock("@/actions/blog-posts", () => ({
   getPostsByAuthors: vi.fn(async () => ({ success: true, posts: [] })),
 }));
 
-import Home from "./page";
+import Home, { dynamic } from "./page";
+import { getAvatars } from "@/lib/avatars";
+import { getPostsByAuthors } from "@/actions/blog-posts";
 
 const mockReadFile = vi.mocked(readFile);
 const mockCreateRepository = vi.mocked(createReleaseRepository);
@@ -76,6 +98,11 @@ const mockCreateRepository = vi.mocked(createReleaseRepository);
 describe("Home", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it("renders per request, never from a build-time prerender", () => {
+    // A build without DIRECTUS_* would otherwise bake in no releases and mock posts
+    expect(dynamic).toBe("force-dynamic");
   });
 
   describe("basic rendering", () => {
@@ -91,6 +118,18 @@ describe("Home", () => {
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
         "Sem Bozhyk",
       );
+    });
+
+    it("loads the first avatar's posts through its personas", async () => {
+      await Home();
+      expect(getPostsByAuthors).toHaveBeenCalledWith(["founder", "architect"], 3);
+    });
+
+    it("falls back to the latest posts when there are no avatars", async () => {
+      vi.mocked(getAvatars).mockResolvedValueOnce([]);
+      render(await Home());
+      expect(getPostsByAuthors).toHaveBeenCalledWith([], 3);
+      expect(screen.getByTestId("home-content")).toBeInTheDocument();
     });
 
     it("renders author title", async () => {

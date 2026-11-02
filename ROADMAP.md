@@ -177,6 +177,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 
 ## 1.8.0 - Blog enhancement
 
+- Renesans Inter project with a mobile-first demo (/demo/renesans-inter)
 - Internal link click handle
 - Link hover handle from directus
 - Blog filters (category, tags, personal, date)

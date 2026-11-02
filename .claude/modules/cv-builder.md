@@ -3,7 +3,7 @@
 > **Role**: Custom markdown parser and CV rendering system
 > **Package**: `@sbozh/pmdxjs`
 > **Status**: Production
-> **Critical Path**: Yes - Powers /cv route and PDF export
+> **Critical Path**: Yes - Powers /forum/sem-bozhyk/cv route and PDF export
 
 ## Overview
 
@@ -128,7 +128,7 @@ React Components
 1. User clicks "Download PDF"
 2. Browser → /api/cv/pdf
 3. API calls PDF service
-4. Puppeteer renders /cv route
+4. Puppeteer renders /forum/sem-bozhyk/cv route
 5. Returns PDF buffer
 6. Browser downloads file
 ```

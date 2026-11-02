@@ -54,7 +54,7 @@ describe("PDF Route", () => {
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: expect.stringContaining("https://localhost:3000/cv"),
+        body: expect.stringContaining("https://localhost:3000/forum/sem-bozhyk/cv"),
       })
     );
   });
@@ -85,7 +85,7 @@ describe("PDF Route", () => {
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining("https://localhost:3000/cv/semen"),
+        body: expect.stringContaining("https://localhost:3000/forum/semen-bozhyk/cv"),
       })
     );
     expect(response.headers.get("Content-Disposition")).toBe(
@@ -124,7 +124,7 @@ describe("PDF Route", () => {
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining("localhost:3000/cv"),
+        body: expect.stringContaining("localhost:3000/forum/sem-bozhyk/cv"),
       })
     );
   });

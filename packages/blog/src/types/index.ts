@@ -1,3 +1,4 @@
+export type { Avatar, AvatarStatusColor } from "./avatar";
 export type { PostFilters, PostSort } from "./filters";
 export type { Persona } from "./persona";
 export type { Post, PostImage, PostListItem } from "./post";

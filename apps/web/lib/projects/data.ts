@@ -47,6 +47,30 @@ export const projects: Project[] = [
       { type: "website", label: "tecraft.cz", href: "https://tecraft.cz", variant: "primary" },
     ],
   },
+  {
+    slug: "renesans-inter",
+    title: "Renesans Inter",
+    tagline: "A mobile-first face for an addiction treatment centre on the Black Sea.\nOne tap from searching to talking to a person.",
+    status: "coming-soon",
+    version: "0.1.0",
+    heroImage: {
+      src: "/images/projects/renesans-inter-hero.png",
+      headerSrc: "/images/projects/renesans-inter-header.png",
+      alt: "Renesans Inter wordmark over a Black Sea dawn",
+      position: "center",
+    },
+    meta: [
+      { label: "Type", value: "Website" },
+    ],
+    tabs: [
+      { id: "about", label: "About", enabled: true },
+      { id: "motivation", label: "Motivation", enabled: true },
+    ],
+    links: [
+      { type: "website", label: "Live demo", href: "/demo/renesans-inter", variant: "primary" },
+      { type: "website", label: "ren.bg", href: "https://ren.bg" },
+    ],
+  },
 ];
 
 export function getProjects(): Project[] {

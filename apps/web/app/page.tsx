@@ -3,13 +3,18 @@ import { readFile } from "fs/promises";
 import { join } from "path";
 import type { PostListItem } from "@sbozh/blog/types";
 import { HomeContent } from "@/components/home";
-import { authors } from "@/data/authors";
+import { getAvatars, toAuthor } from "@/lib/avatars";
 import { getPostsByAuthors } from "@/actions/blog-posts";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 import { compileSummary } from "@/lib/releases/compile-summary";
+
+// Release notes and posts come from Directus at request time. Without this, a build that
+// can't see DIRECTUS_* (e.g. from a worktree) prerenders the page with no releases and
+// mock posts, and serves that static copy for a year.
+export const dynamic = "force-dynamic";
 
 type ReleasesResult =
   | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
@@ -64,11 +69,13 @@ async function getReleases(): Promise<ReleasesResult> {
 }
 
 export default async function Home() {
-  // Fetch releases and blog posts in parallel
-  const defaultAuthor = authors[0];
-  const [releasesResult, postsResult] = await Promise.all([
+  // Releases in parallel with avatars, whose first one picks the initial posts
+  const [releasesResult, [authors, postsResult]] = await Promise.all([
     getReleases(),
-    getPostsByAuthors(defaultAuthor.blogAuthorSlugs, 3),
+    getAvatars().then(async (avatars) => {
+      const authors = avatars.map(toAuthor);
+      return [authors, await getPostsByAuthors(authors[0]?.blogAuthorSlugs ?? [], 3)] as const;
+    }),
   ]);
 
   const initialPosts: PostListItem[] = postsResult.success ? postsResult.posts : [];

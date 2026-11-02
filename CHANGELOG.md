@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - 2026-10-30
+
+### Changes
+
+- feat(forum): replace CV with Forum and Directus avatars ([731d2aa](https://github.com/sbozh-me/website/commit/731d2aa12ba09677fb1872f63830f95ef2d168ca))
+
+
+## [1.8.0] - 2026-10-29
+
+### Changes
+
+- fix(blog): render glitch syntax in post tldr ([fa3bc50](https://github.com/sbozh-me/website/commit/fa3bc500f2037e338a6aebf2841f938359984205))
+- feat(projects): add Renesans Inter project and demo ([0393103](https://github.com/sbozh-me/website/commit/0393103b9365800925f2bccb0214201e13ddcea7))
+- Merge branch 'main' into worktree-ren ([f20179f](https://github.com/sbozh-me/website/commit/f20179f77405263fc6a40b1eb790d1753c5a4faf))
+- test(web): cover sidlo, invoice and renesans-inter pages ([05beb76](https://github.com/sbozh-me/website/commit/05beb761394373b2c3371bbd1076b184ca552996))
+- docs(projects): expand Renesans Inter motivation ([7a100fe](https://github.com/sbozh-me/website/commit/7a100fe21333d9cd373d12b3fc1a687ee4873478))
+- fix(home): render the home page per request ([76fc150](https://github.com/sbozh-me/website/commit/76fc150d46d50b2a89c4a9bad93a318f6cbe96b9))
+
+
 ## [1.7.7] - 2026-10-29
 
 ### Changes

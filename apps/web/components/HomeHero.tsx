@@ -12,7 +12,7 @@ import {
 
 const navItems = [
   { name: "Blog", href: "/blog" },
-  { name: "CV", href: "/cv" },
+  { name: "Forum", href: "/forum" },
   { name: "Projects", href: "/projects" },
 ];
 

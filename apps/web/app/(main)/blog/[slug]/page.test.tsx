@@ -191,6 +191,29 @@ describe("BlogPostPage", () => {
     expect(screen.getByText(/This is the short summary/)).toBeInTheDocument();
   });
 
+  it("renders glitch syntax in the tldr, but not inside inline code", async () => {
+    mockPostOverride = {
+      id: "test",
+      title: "Test Post",
+      slug: "test-post",
+      excerpt: "Test excerpt",
+      tldr: "Words ==move|teal:glitch==. Write `==word|meaning==`.",
+      content: "## Test Content\n\nSome content here.",
+      date: "2025-01-01",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+    };
+
+    const params = Promise.resolve({ slug: "test-post" });
+    const { container } = render(await BlogPostPage({ params }));
+
+    const tldr = screen.getByText("TL;DR:").parentElement!;
+    expect(tldr.querySelector(".glitch")).not.toBeNull();
+    expect(tldr.textContent).not.toContain("==move");
+    expect(container.querySelector("code")).toHaveTextContent("==word|meaning==");
+  });
+
   it("renders attribution when post has attribution", async () => {
     mockPostOverride = {
       id: "test",

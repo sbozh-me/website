@@ -12,4 +12,12 @@ describe("redirects", () => {
     // scanned CV to the old target if the post ever moves
     expect(link?.permanent).toBe(false);
   });
+
+  it("sends the old /cv link to Sem Bozhyk's CV on the Forum, temporarily", async () => {
+    const redirects = (await nextConfig.redirects?.()) ?? [];
+    const cv = redirects.find((r) => r.source === "/cv");
+
+    expect(cv?.destination).toBe("/forum/sem-bozhyk/cv");
+    expect(cv?.permanent).toBe(false);
+  });
 });

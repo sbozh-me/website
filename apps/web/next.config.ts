@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // The CV moved under its avatar on the Forum. Older printed CVs carry
+        // a QR code to /cv; temporary, so it can follow the next move too
+        source: "/cv",
+        destination: "/forum/sem-bozhyk/cv",
+        permanent: false,
+      },
+      {
         // Printed as a QR code on the CV; temporary, so the target can be
         // swapped without reprinting if the LinkedIn post ever moves
         source: "/link/unfiltered-references",

@@ -1,6 +1,7 @@
-import { mockPersonas, mockPosts, mockSeries, mockTags } from "./mock-data";
+import { mockAvatars, mockPersonas, mockPosts, mockSeries, mockTags } from "./mock-data";
 
 import type { BlogRepository } from "./repository";
+import type { Avatar } from "../types/avatar";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
@@ -36,6 +37,10 @@ export class MockBlogRepository implements BlogRepository {
 
   async getPersonas(): Promise<Persona[]> {
     return [...mockPersonas];
+  }
+
+  async getAvatars(): Promise<Avatar[]> {
+    return [...mockAvatars];
   }
 
   async getTags(): Promise<Tag[]> {

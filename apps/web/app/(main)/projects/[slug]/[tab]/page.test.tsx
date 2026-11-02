@@ -53,6 +53,17 @@ vi.mock("@/lib/projects/data", () => ({
         ],
       };
     }
+    if (slug === "renesans-inter") {
+      return {
+        slug: "renesans-inter",
+        title: "Renesans Inter",
+        version: "0.1.0",
+        tabs: [
+          { id: "about", label: "About", enabled: true },
+          { id: "motivation", label: "Motivation", enabled: true },
+        ],
+      };
+    }
     return null;
   }),
   getProjects: vi.fn(() => [
@@ -86,6 +97,15 @@ vi.mock("@/lib/projects/content/tecraft", () => ({
   getTecraftTabContent: vi.fn((tabId) => {
     if (tabId === "motivation") {
       return "## Motivation\n\nMotivation content for tecraft.cz.";
+    }
+    return null;
+  }),
+}));
+
+vi.mock("@/lib/projects/content/renesans-inter", () => ({
+  getRenesansInterTabContent: vi.fn((tabId) => {
+    if (tabId === "motivation") {
+      return "## Motivation\n\nMotivation content for Renesans Inter.";
     }
     return null;
   }),
@@ -190,6 +210,14 @@ describe("TabPage", () => {
 
       expect(screen.getByText("Mocked MDX Content")).toBeInTheDocument();
       expect(screen.getByText(/Motivation content for tecraft/)).toBeInTheDocument();
+    });
+
+    it("renders Renesans Inter motivation content", async () => {
+      const params = Promise.resolve({ slug: "renesans-inter", tab: "motivation" });
+      const Page = await TabPage({ params });
+      render(Page);
+
+      expect(screen.getByText(/Motivation content for Renesans/)).toBeInTheDocument();
     });
 
     it("renders coming soon when no content", async () => {

@@ -4,9 +4,9 @@ const PDF_SERVICE_URL =
   process.env.PDF_SERVICE_URL || "http://localhost:3010";
 
 const VARIANTS = {
-  sem: { path: "/cv", filename: "CV_Sem_Bozhyk_Software_Developer.pdf" },
+  sem: { path: "/forum/sem-bozhyk/cv", filename: "CV_Sem_Bozhyk_Software_Developer.pdf" },
   semen: {
-    path: "/cv/semen",
+    path: "/forum/semen-bozhyk/cv",
     filename: "CV_Semen_Bozhyk_Builder_and_Creator.pdf",
   },
 } as const;

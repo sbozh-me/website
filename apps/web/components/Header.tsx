@@ -16,13 +16,24 @@ import { ReaderThemeToggle } from "./ReaderTheme";
 const navItems = [
   {name: "Home", href: "/"},
   {name: "Blog", href: "/blog"},
-  {name: "CV", href: "/cv"},
+  {name: "Forum", href: "/forum"},
   {name: "Projects", href: "/projects"},
 ];
+
+// Sections own their sub-pages (the Forum holds each avatar's CV)
+function isActive(pathname: string | null, href: string) {
+  if (!pathname) return false;
+  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+
+  // Client demos under /demo carry their own branding
+  if (pathname?.startsWith("/demo/")) {
+    return null;
+  }
 
   return (
     <header className="relative z-10 border-b border-border bg-background">
@@ -62,7 +73,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={`relative transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:bg-primary after:transition-[width] after:duration-200 after:ease-out ${
-                  pathname === item.href
+                  isActive(pathname, item.href)
                     ? "text-primary after:w-full"
                     : "text-muted-foreground hover:text-primary after:w-0 hover:after:w-full"
                 }`}
@@ -114,7 +125,7 @@ export function Header() {
               href={item.href}
               onClick={() => setIsOpen(false)}
               className={`transition-colors ${
-                pathname === item.href
+                isActive(pathname, item.href)
                   ? "text-primary"
                   : "text-muted-foreground hover:text-primary"
               }`}
