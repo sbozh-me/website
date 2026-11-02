@@ -120,6 +120,29 @@ describe("Glitch", () => {
     expect(container.querySelector<HTMLElement>(".glitch-copy")?.style.clipPath).toContain("polygon(");
   });
 
+  it("backs the word first, under its echoes, at rest and through a burst", () => {
+    const { container } = render(word());
+    const back = () => container.querySelector(".glitch-layers")?.firstElementChild;
+
+    expect(back()).toHaveClass("glitch-back");
+    expect(back()).not.toHaveAttribute("data-bursting");
+
+    setVisible(true);
+    expect(back()).toHaveClass("glitch-back");
+    expect(back()).toHaveAttribute("data-bursting");
+    expect(container.querySelector(".glitch-echo")).not.toBeNull();
+  });
+
+  it("leaves a plain state at rest unbacked: it reads as article text", () => {
+    const { container } = render(
+      <Glitch rng={seeded(1)}>
+        <GlitchState plain>себя</GlitchState>
+        <GlitchState>US</GlitchState>
+      </Glitch>,
+    );
+    expect(container.querySelector(".glitch-back")).toBeNull();
+  });
+
   it("renders nothing without states", () => {
     const { container } = render(<Glitch />);
     expect(container.innerHTML).toBe("");

@@ -1,9 +1,9 @@
 /**
- * ROMAN WHITE Theme — the same words, held still
+ * ROMAN WHITE Theme — the same words, on stone
  *
  * A light reading theme picked by the reader (header switch or ?theme=roman-white).
- * The dark site performs; this one reads like a stone inscription: one meaning,
- * readable from across the room, nothing moving unless the reader asks.
+ * It reads like a stone inscription, readable from across the room: the page holds
+ * still and only the glitches in a post move, as they do in every theme.
  *
  * Palette (from roman-empire-paper; contrast on travertine):
  *   Background:        #F4EFE6  travertine
@@ -87,15 +87,6 @@ html[data-theme="roman-white"] {
   --toast-icon-warning: #6E4A1F;
   --toast-icon-info: #4A1C2A;
 
-  /* Glitch words never move here, but their colours still come from the theme */
-  --glitch-base: #4A1C2A;
-  --glitch-accent: #6E4A1F;
-  --glitch-obsidian: #F4EFE6;
-  --glitch-echo: #5C5346;
-  --glitch-plain: #1C1A17;
-  --glitch-red: #8B2E2E;
-  --glitch-pink: #4A1C2A;
-
   /* No curves */
   --radius-sm: 0;
   --radius-md: 0;
@@ -138,6 +129,21 @@ html[data-theme="roman-white"] {
   /* TOC */
   --toc-border-radius: 0;
   --toc-scrollbar-radius: 0;
+}
+
+/* Glitch colours: burgundy and bronze on paper. `html` outranks glitch.css's :root defaults,
+   which load after this file. */
+html[data-theme="roman-white"] {
+  --glitch-base: #4A1C2A;
+  --glitch-accent: #6E4A1F;
+  --glitch-obsidian: #F4EFE6;
+  --glitch-echo: #5C5346;
+  --glitch-plain: #1C1A17;
+  --glitch-red: #8B2E2E;
+  --glitch-pink: #4A1C2A;
+  /* The article's own face; capitals (below) are what set a glitch word apart */
+  --glitch-font: var(--font-sans);
+  --glitch-font-red: var(--font-sans);
 }
 
 [data-theme="roman-white"] body {
@@ -184,14 +190,14 @@ html[data-theme="roman-white"] {
 /* Outline buttons (header switch, CV actions): paper with a bronze edge, not the dark
    theme's filled outline (dark:bg-input/80 would fill them with bronze) */
 [data-theme="roman-white"] .reader-theme-toggle,
-[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"] {
+[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"]:not(.window-toggle) {
   background: var(--roman-travertine);
   border-color: var(--roman-bronze);
   color: var(--roman-basalt);
 }
 
 [data-theme="roman-white"] .reader-theme-toggle:hover,
-[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"]:hover {
+[data-theme="roman-white"] [data-slot="button"][class*="dark:bg-input"]:not(.window-toggle):hover {
   background: var(--roman-vellum);
 }
 
@@ -239,16 +245,42 @@ html[data-theme="roman-white"] {
   box-shadow: none;
 }
 
-/* Before hydration a glitch word shows its base as plain text; then the still
-   (final) state replaces it (see apps/web/lib/blog/glitch). */
-[data-theme="roman-white"] .glitch:not([data-off]) .glitch-layers {
-  display: none;
+/* Glitch words are the one thing that moves here (see apps/web/lib/blog/glitch): their bursts
+   are timers and transforms, untouched by the rules above, but the ✳ spin is a transition */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme="roman-white"] .dick-pitch .glitch-copy .censor {
+    transition-duration: 550ms !important;
+  }
 }
 
-[data-theme="roman-white"] .glitch:not([data-off]) .glitch-sizer {
-  opacity: 1;
-  font-family: inherit;
-  color: inherit;
+/* A black edge on every glitch word. Not on echoes (flat colour), a `||` state at rest (it reads
+   as article text), the ✳ (its text is transparent) or a Window button. */
+[data-theme="roman-white"] .glitch-copy:not(.glitch-echo):not([data-plain][data-tone="rest"]),
+[data-theme="roman-white"] .glitch-sizer[data-calm]:not([data-plain]) {
+  -webkit-text-stroke: 1px #000;
+  paint-order: stroke fill;
+}
+
+[data-theme="roman-white"] .glitch-copy .censor,
+[data-theme="roman-white"] .glitch-sizer .censor,
+[data-theme="roman-white"] .glitch-copy .window-toggle {
+  -webkit-text-stroke: 0;
+}
+
+/* Glitch words in capitals; the sizer too, so the word's slot fits it. `||` states stay as typed. */
+[data-theme="roman-white"] .glitch-copy:not([data-plain]),
+[data-theme="roman-white"] .glitch-back:not([data-plain]),
+[data-theme="roman-white"] .glitch-sizer:not([data-plain]) {
+  text-transform: uppercase;
+}
+
+[data-theme="roman-white"] .glitch-copy .window-toggle {
+  text-transform: none;
+}
+
+/* A link in a glitch word has the glitch's own thick underline */
+[data-theme="roman-white"] main .glitch-copy a:not([data-slot="button"]):not(.no-underline):not(:has(div, p, h1, h2, h3, h4, img)) {
+  text-decoration: none;
 }
 
 /* Hard-coded small text in the dark theme, lifted to the 16px floor */

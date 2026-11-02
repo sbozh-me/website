@@ -65,12 +65,14 @@
 
 /* `||` states keep the article's font; glitched ones use the glitch face */
 .glitch-sizer:not([data-plain]),
+.glitch-back:not([data-plain]),
 .glitch-copy:not([data-plain]) {
   font-family: var(--glitch-font);
   font-weight: 400;
 }
 
 .glitch-sizer[data-red]:not([data-plain]),
+.glitch-back[data-red]:not([data-plain]),
 .glitch-copy[data-red]:not([data-plain]) {
   font-family: var(--glitch-font-red);
 }
@@ -82,12 +84,36 @@
   user-select: none;
 }
 
-.glitch-copy {
+.glitch-copy,
+.glitch-back {
   position: absolute;
   top: 0;
   left: 50%;
   white-space: nowrap;
+}
+
+.glitch-copy {
   paint-order: stroke fill;
+}
+
+/* The theme's background under the word, sized by a blank copy of it. Below the echoes, so they
+   still show. Flush at rest, so it doesn't cut into the text beside the word. */
+.glitch-back {
+  background: var(--glitch-obsidian);
+  color: transparent;
+}
+
+.glitch-back > * {
+  visibility: hidden;
+}
+
+.glitch-back[data-cover] {
+  padding: 0 0.2em;
+}
+
+/* Wide enough for a burst's furthest slice (plan.ts) */
+.glitch-back[data-bursting] {
+  padding: 0 12px;
 }
 
 .glitch-copy[data-tone="rest"] {
@@ -224,6 +250,7 @@
 }
 
 .brand-mark .glitch-sizer,
+.brand-mark .glitch-back,
 .brand-mark .glitch-copy {
   font-family: var(--glitch-font);
   font-weight: 400;
