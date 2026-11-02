@@ -35,6 +35,21 @@ html[data-theme="roman-white"] {
   font-size: 125%;
 }
 
+/* A CV is paper: its page is sized in mm and its text in rem, so the 125% above would overflow
+   it. On a page that holds one, rem is Obsidian Forge's 18px (globals.css). */
+html[data-theme="roman-white"]:has(.pmdxjs-document) {
+  font-size: 18px;
+}
+
+/* …and the 16px floor below (text-xs / text-sm) goes back to Tailwind's sizes inside it */
+[data-theme="roman-white"] .pmdxjs-document {
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  line-height: 1.5;
+}
+
 [data-theme="roman-white"] {
   /* Structural */
   --color-background: #F4EFE6;
