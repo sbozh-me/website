@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - 2026-11-02
+
+### Changes
+
+- build(directus): add series collection and posts.series ([7faa639](https://github.com/sbozh-me/website/commit/7faa639f0c60a49b5bcf93b3c0d02cf08f8103b9))
+- feat(blog): keep previous/next inside a post's series ([882f022](https://github.com/sbozh-me/website/commit/882f0221dd181fe40356292377f010ce4f742fcc))
+- build(directus): add series.slug ([559d737](https://github.com/sbozh-me/website/commit/559d737c8c5a5c69ecb476ffbfd8588b24b4b489))
+- feat(blog): filter the blog by series ([16c2b87](https://github.com/sbozh-me/website/commit/16c2b87cd2b78bbd05b0efbc8a7c44dd3d6c3ff2))
+- build(directus): add series image, description and next_series ([40a4a83](https://github.com/sbozh-me/website/commit/40a4a8308a5ba066a1b6df439dce11713c9560a9))
+- feat(blog): add series view and series pages ([4970f81](https://github.com/sbozh-me/website/commit/4970f8164ad76a5b02406f327292c83844cf41cc))
+- feat(pmdxjs): add page photo and link-qr directive ([f3f1a0c](https://github.com/sbozh-me/website/commit/f3f1a0cdfc9d296b88e4d0c9f36285a49a6160ed))
+- feat(cv): add Semen Bozhyk avatar CV page ([972f275](https://github.com/sbozh-me/website/commit/972f2758071db02f059e37e6d46055d3a4696be4))
+- fix(blog): stop editor-picked next posts from creating loops ([ec50dc3](https://github.com/sbozh-me/website/commit/ec50dc35f54cc8265aa35986be1b67873bf060a6))
+- fix(blog): read publish dates in UTC ([5912ea4](https://github.com/sbozh-me/website/commit/5912ea4edf6a60eea1a84cd7c5ba9194de117771))
+- fix(blog): hide missing reading time and fix series card title size ([232c7e0](https://github.com/sbozh-me/website/commit/232c7e0c5fb2b49cf97ddea9703a1c37e86f0337))
+- feat(blog): add filterable card view as the default blog view ([dd601a2](https://github.com/sbozh-me/website/commit/dd601a2b2483aebd2b55cee3f53eae065adacb7b))
+- Merge branch 'worktree-cv' ([72bd016](https://github.com/sbozh-me/website/commit/72bd0167bba8cc070017f536ca739edbb21b4f94))
+- Merge branch 'worktree-packs' ([5e600b6](https://github.com/sbozh-me/website/commit/5e600b6c258e84d7cbcf147ce44bbd446618c781))
+- feat(glitch): animate glitches in Roman White theme ([f2eabdd](https://github.com/sbozh-me/website/commit/f2eabdd5e8b96939df94ab79b364733be5bb69f3))
+- Merge branch 'worktree-ren' ([2680de9](https://github.com/sbozh-me/website/commit/2680de9939cb353b47aaf30d04c6c2a178f965b8))
+
+
 ## [1.8.1] - 2026-10-30
 
 ### Changes
