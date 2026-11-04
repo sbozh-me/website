@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.3] - 2026-11-04
+
+### Changes
+
+- build(directus): sync schema snapshot with production ([8e86faf](https://github.com/sbozh-me/website/commit/8e86fafedbf70613578041c8b71c6d142f2904ac))
+- build(directus): re-export schema snapshot in Directus format ([0470384](https://github.com/sbozh-me/website/commit/04703847d40adfc0a5dc7b48aef033f7633296d8))
+- fix(themes): keep CV within paper in Roman White ([59c3d4f](https://github.com/sbozh-me/website/commit/59c3d4f0e0e18aac4e60e3903edcdc65ef888fd5))
+- fix(glitch): block browser translation of glitch words ([abad878](https://github.com/sbozh-me/website/commit/abad878a74e9f221ff05b8d15aec096e01dea46c))
+
+
 ## [1.8.2] - 2026-11-02
 
 ### Changes
