@@ -95,7 +95,9 @@ export function WindowButton({ off = false, inGlitch = false }: { off?: boolean;
       aria-keyshortcuts="W"
       title="Hotkey: W"
       tabIndex={inGlitch ? -1 : undefined}
-      className="window-toggle mx-1 align-middle font-mono"
+      // Its label flips on every toggle; kept away from page translators (see Glitch)
+      translate="no"
+      className="window-toggle notranslate mx-1 align-middle font-mono"
       onClick={() => setGlitchesEnabled(!on)}
     >
       <WindowIcon open={on} />

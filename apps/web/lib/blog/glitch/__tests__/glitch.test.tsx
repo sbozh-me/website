@@ -104,6 +104,17 @@ describe("Glitch", () => {
     expect(div.querySelector(".glitch")?.getAttribute("data-alt")).toBe("х✳й | c");
   });
 
+  it("keeps page translators out, from the server HTML on", () => {
+    const div = document.createElement("div");
+    div.innerHTML = renderToStaticMarkup(word());
+    const root = div.querySelector(".glitch");
+    expect(root).toHaveAttribute("translate", "no");
+    expect(root).toHaveClass("notranslate");
+
+    render(<WindowButton />);
+    expect(screen.getByRole("button", { name: /window/i })).toHaveAttribute("translate", "no");
+  });
+
   it("draws the decorative copies after mount, hidden from readers and snippets", () => {
     const { container } = render(word());
     expect(container.querySelector(".glitch-sizer[data-calm]")).toBeNull();

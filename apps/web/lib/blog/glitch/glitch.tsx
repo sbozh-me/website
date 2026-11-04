@@ -313,10 +313,14 @@ function GlitchEngine({
   const cover = mode === "return" && state !== restState && !look ? "" : undefined;
   const alt = texts?.filter((text, index) => index !== restState && text).join(" | ");
 
+  // translate="no" (+ notranslate for older Google Translate): a page translator swaps text nodes
+  // for its own <font> wrappers, and React, which keeps swapping these layers, then throws on
+  // removeChild/insertBefore and takes the page down. The word stays as written instead.
   return (
     <span
       ref={rootRef}
-      className={["glitch", className].filter(Boolean).join(" ")}
+      translate="no"
+      className={["glitch", "notranslate", className].filter(Boolean).join(" ")}
       data-bursting={look ? "" : undefined}
       data-off={on ? undefined : ""}
       data-alt={alt || undefined}

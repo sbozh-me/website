@@ -45,7 +45,7 @@ describe("renderTitle", () => {
     expect(html).not.toContain("<p>");
     expect(html).not.toContain("==");
     // A glitch word at rest shows its base; the alt state comes with a burst
-    expect(html).toContain('class="glitch"');
+    expect(html).toContain('class="glitch notranslate"');
     expect(html).toContain("Yeter");
   });
 
