@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.0] - 2026-11-06
+
+### Changes
+
+- feat(contact): add contact form and merge/push/deploy modes ([25df431](https://github.com/sbozh-me/website/commit/25df4316e3d8c62119636bee5ff28aa97b160492))
+
+
 ## [1.8.3] - 2026-11-04
 
 ### Changes
