@@ -114,14 +114,15 @@ services:
       # CSP
       CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC: ${CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC:-'self'}
 
-      # Email
+      # Email — defaults to the same SMTP_* account as the web app (as on
+      # tecraft); an explicit EMAIL_* value in .env still wins.
       EMAIL_TRANSPORT: ${EMAIL_TRANSPORT:-smtp}
-      EMAIL_FROM: ${EMAIL_FROM}
-      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
-      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT:-587}
-      EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
-      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
-      EMAIL_SMTP_SECURE: ${EMAIL_SMTP_SECURE:-true}
+      EMAIL_FROM: ${EMAIL_FROM:-${SMTP_USER}}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST:-${SMTP_HOST:-smtp.mailbox.org}}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT:-${SMTP_PORT:-587}}
+      EMAIL_SMTP_USER: ${EMAIL_SMTP_USER:-${SMTP_USER}}
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD:-${SMTP_PASSWORD}}
+      EMAIL_SMTP_SECURE: ${EMAIL_SMTP_SECURE:-false}
 
       # Rate Limiting (production)
       RATE_LIMITER_ENABLED: "true"
@@ -177,6 +178,18 @@ services:
       ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
       # Error tracking (GlitchTip)
       SENTRY_DSN: ${SENTRY_DSN}
+      # SMTP (mailbox.org) for the /contact form (apps/web/lib/mail.ts). Port
+      # 587 STARTTLS: Hetzner blocks outbound 25 and 465.
+      SMTP_HOST: ${SMTP_HOST:-smtp.mailbox.org}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM:-sbozh.me <noreply@sbozh.me>}
+      # Where contact letters land (the notification's To and the visitor
+      # receipt's Reply-To). CONTACT_FROM overrides the receipt's From, which
+      # is MAIL_FROM otherwise.
+      CONTACT_INBOX: ${CONTACT_INBOX:-sem.bozhyk@sbozh.me}
+      CONTACT_FROM: ${CONTACT_FROM:-}
     networks:
       - sbozh-me-network
     logging:

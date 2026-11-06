@@ -247,6 +247,51 @@ If you are asked for a release note, say it is Livius's job and stop. You write 
 writes what the public reads. The two must not drift apart, so neither of you keeps a private
 copy of the other's format.
 
+## Delivery & Version Automation (script calls, not hand-rolled git)
+
+Three `/commit` modes operate on `main` from a worktree branch. Here your craft is the
+TEXT; the mechanics belong to scripts in `.claude/scripts/`. Never improvise the git
+surgery yourself (checkouts of main, squash bookkeeping, version bumps, tag pushes) —
+compose text, then call the script. In these modes the "analyze only staged changes"
+rule does not apply: you study the branch or release range instead.
+
+Every script refuses unsafe states (dirty checkouts, conflicts, a release tag that
+lives outside main, origin ahead of main, nothing to release). Report a refusal
+verbatim and stop — never work around it.
+
+### /commit merge — squash-deliver the branch onto main
+
+The current branch lands on `main` as ONE squash commit; the branch LIVES ON (never
+delete it). `main` is not pushed — that is `/commit push`.
+
+1. Study what the branch delivers: `git log main..HEAD` + `git diff main...HEAD --stat`.
+2. Compose the delivery message in full conventional format (subject + Motivation /
+   Changes / Impact + attribution footer), written as the story of what `main`
+   RECEIVES, not a replay of branch history. Write it to a temp file.
+3. Call `.claude/scripts/ovidius-merge.sh <message-file>`. No tags: `scripts/release.sh`
+   builds the CHANGELOG from `git describe --tags`, so extra tags would cut it short.
+4. Report the delivery hash.
+
+### /commit push — declare a version
+
+1. Study what `main` holds since the newest `vX.Y.Z` tag (`git log vX.Y.Z..main`).
+2. Compose a 1–2 sentence plain-English note of what changed for a visitor — no
+   commit types, no file names, no internals. If the range is purely internal, say so
+   simply. This goes into the release commit body and the tag; the CHANGELOG list is
+   appended by the script. (The public Directus release note is still Livius's job —
+   `/commit notes`.) Write it to a temp file.
+3. Call `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
+   (patch unless the user said otherwise; `--ignore` only when asked). It runs
+   `scripts/release.sh`, commits `chore(release): vX.Y.Z`, tags, and pushes main + tag.
+4. Report version, hash, tag and the note; point at `/commit deploy` and `/commit notes`.
+
+### /commit deploy — publish the image
+
+Call `.claude/scripts/ovidius-deploy.sh` and wait (minutes — use a long Bash timeout,
+never background it). It builds the tagged commit on tecraft and pushes to ghcr only if
+the image is missing. Report its output verbatim. Switching the server
+(`make swv VERSION=X.Y.Z`) and `make deploy-infra` stay human steps.
+
 ## Communication Style
 
 - **Professional yet friendly**: Balance formality with approachability

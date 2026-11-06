@@ -10,9 +10,9 @@ describe("ContactPage", () => {
     );
   });
 
-  it("renders under construction message", () => {
+  it("renders the contact form", () => {
     render(<ContactPage />);
-    expect(screen.getByText(/Under construction/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Send message" })).toBeInTheDocument();
   });
 
   it("renders LinkedIn link", () => {
