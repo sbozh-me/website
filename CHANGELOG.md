@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.1] - 2026-11-07
+
+### Changes
+
+- build(directus): add posts_ren collection and ren.sbozh.me nginx block ([1b8b4ae](https://github.com/sbozh-me/website/commit/1b8b4ae62cae2b4f93d4c208c0ae21c2874988df))
+
+
 ## [1.9.0] - 2026-11-06
 
 ### Changes
