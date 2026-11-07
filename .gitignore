@@ -60,3 +60,6 @@ apps/web/content/faktura.*.pmdx
 # Source form for the sídlo declaration (rebuilt as content/sidlo*.pmdx)
 apps/web/content/sidlo.docx
 apps/web/content/sidlo*.pdf
+
+# Private local data (donation addresses etc.) — never committed
+.private/

@@ -26,6 +26,56 @@ collections:
       versioning: false
     schema:
       name: avatars
+  - collection: donation_wallets
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: status
+      archive_value: archived
+      collapse: open
+      collection: donation_wallets
+      color: null
+      display_template: '{{asset}} · {{network}}'
+      group: null
+      hidden: false
+      icon: account_balance_wallet
+      item_duplication_fields: null
+      note: >-
+        Crypto addresses on sbozh.me/donate. Revealed one at a time by
+        /api/donations/reveal — never rendered into the page HTML.
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: sort
+      translations: null
+      unarchive_value: draft
+      versioning: false
+    schema:
+      name: donation_wallets
+  - collection: donations_page
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: donations_page
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: volunteer_activism
+      item_duplication_fields: null
+      note: Intro text above the wallets on sbozh.me/donate.
+      preview_url: null
+      singleton: true
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: donations_page
   - collection: ludus_instances
     meta:
       accountability: all
@@ -705,6 +755,436 @@ fields:
       validation: null
       validation_message: null
       width: full
+  - collection: donation_wallets
+    field: id
+    type: uuid
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special:
+        - uuid
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: donation_wallets
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: status
+    type: string
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Published
+            value: published
+          - text: Draft
+            value: draft
+          - text: Archived
+            value: archived
+      readonly: false
+      required: false
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: donation_wallets
+      data_type: character varying
+      default_value: draft
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: sort
+    type: integer
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: sort
+      table: donation_wallets
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: asset
+    type: string
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: asset
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Coin or token the visitor sends.
+      options:
+        allowOther: true
+        choices:
+          - text: BTC
+            value: BTC
+          - text: USDT
+            value: USDT
+          - text: NEAR
+            value: NEAR
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: asset
+      table: donation_wallets
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: network
+    type: string
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: network
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: >-
+        Chain the transfer must go over. Drives the label, warning and QR
+        format.
+      options:
+        allowOther: true
+        choices:
+          - text: Bitcoin
+            value: bitcoin
+          - text: Tron (TRC-20)
+            value: tron
+          - text: NEAR
+            value: near
+      readonly: false
+      required: true
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: network
+      table: donation_wallets
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: address
+    type: string
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: address
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        font: monospace
+        trim: true
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: address
+      table: donation_wallets
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: memo
+    type: string
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: memo
+      group: null
+      hidden: false
+      interface: input
+      note: Optional memo/tag, shown next to the address.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: memo
+      table: donation_wallets
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donation_wallets
+    field: warning
+    type: text
+    meta:
+      collection: donation_wallets
+      conditions: null
+      display: null
+      display_options: null
+      field: warning
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: >-
+        Optional. Overrides the built-in network warning (e.g. 'Send USDT only
+        via TRC-20').
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: warning
+      table: donation_wallets
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donations_page
+    field: id
+    type: integer
+    meta:
+      collection: donations_page
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: donations_page
+      data_type: integer
+      default_value: nextval('donations_page_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: donations_page
+    field: intro
+    type: text
+    meta:
+      collection: donations_page
+      conditions: null
+      display: null
+      display_options: null
+      field: intro
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: Plain text. Blank lines split paragraphs.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: intro
+      table: donations_page
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: ludus_instances
     field: id
     type: integer

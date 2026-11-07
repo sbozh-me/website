@@ -41,6 +41,9 @@ export function Footer() {
             <Link href="/contact" className={linkClass("/contact")}>
               Contact
             </Link>
+            <Link href="/donate" className={linkClass("/donate")}>
+              Donate
+            </Link>
           </div>
           <div className="flex flex-col items-center sm:flex-row gap-4">
             <SocialLinks />

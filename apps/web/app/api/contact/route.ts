@@ -17,7 +17,7 @@
 import { NextResponse } from "next/server";
 
 import { contactAckMail, contactNotificationMail } from "@/lib/contact/mail-templates";
-import { rateLimited } from "@/lib/contact/rate-limit";
+import { clientIp, rateLimited } from "@/lib/contact/rate-limit";
 import { sendMail, smtpConfig } from "@/lib/mail";
 import { siteConfig } from "@/lib/site-config";
 
@@ -73,11 +73,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, delivered: false } satisfies ContactResponse);
   }
 
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
-  if (rateLimited(ip)) {
+  if (rateLimited(clientIp(request))) {
     return fail("rate_limited", 429);
   }
 
