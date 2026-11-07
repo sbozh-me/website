@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.3] - 2026-11-07
+
+### Changes
+
+- feat(web): add feed copy menu and Atom feeds ([c3166b4](https://github.com/sbozh-me/website/commit/c3166b4662edb4d8977affa5e23c7a82d8f07b8f))
+- feat(donate): add crypto donations page with guarded reveal ([75af033](https://github.com/sbozh-me/website/commit/75af0332a8df080e0e909efb83fb683671d3897c))
+- style(web): move feed menu into social icons ([c9b44ee](https://github.com/sbozh-me/website/commit/c9b44ee85b64e21874a201cca79029cc80f37703))
+
+
 ## [1.9.2] - 2026-11-07
 
 ### Changes
