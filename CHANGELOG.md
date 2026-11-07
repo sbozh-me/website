@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.9.2] - 2026-11-07
+
+### Changes
+
+- fix(cv): point Semen CV corner QR to forum URL ([8f82b9e](https://github.com/sbozh-me/website/commit/8f82b9e7a1a324c013ec982174461d99f093eec4))
+- feat(web): add RSS feeds and double opt-in subscriptions ([9a8eee7](https://github.com/sbozh-me/website/commit/9a8eee7463b7d26019d82b74708bc9519fc82083))
+
+
 ## [1.9.1] - 2026-11-07
 
 ### Changes
