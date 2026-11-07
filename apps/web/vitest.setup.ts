@@ -2,6 +2,15 @@ import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeEach } from "vitest";
 
+// jsdom has no ResizeObserver; Radix primitives (Switch in the footer's SubscribeForm) need one
+if (typeof globalThis.ResizeObserver === "undefined") {
+  globalThis.ResizeObserver = class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 // Mock localStorage and sessionStorage
 class MockStorage implements Storage {
   private store: Record<string, string> = {};

@@ -52,5 +52,9 @@ services:
       CORS_ORIGIN: "http://localhost:3000"
       WEBSOCKETS_ENABLED: "true"
       EXTENSIONS_AUTO_RELOAD: "true"
+      # Announcement flows ping the web dev server on the host
+      ANNOUNCE_URL: ${ANNOUNCE_URL:-http://host.docker.internal:3000/api/announce}
+      ANNOUNCE_SECRET: ${ANNOUNCE_SECRET:-local-announce-secret}
+      FLOWS_ENV_ALLOW_LIST: ANNOUNCE_URL,ANNOUNCE_SECRET
     volumes:
       - ./data/uploads:/directus/uploads

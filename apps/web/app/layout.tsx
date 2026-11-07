@@ -88,6 +88,15 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        { url: '/rss.xml', title: 'sbozh.me' },
+        { url: '/blog/rss.xml', title: 'sbozh.me blog' },
+        { url: '/releases/rss.xml', title: 'sbozh.me releases' },
+      ],
+    },
+  },
   openGraph: {
     title: 'sbozh.me',
     description: 'A place where I build and ship things in public.',

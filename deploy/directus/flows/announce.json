@@ -1,0 +1,68 @@
+[
+  {
+    "id": "7b53f39b-5276-4186-90ac-059ff218db7d",
+    "name": "Announce: on save",
+    "icon": "campaign",
+    "color": "#8B5CF6",
+    "description": "Pings the web announcer whenever a post or release note is saved. The web app decides what is due (published, date reached, Email subscribers on, not announced yet). Managed in the repo: deploy/directus/flows/announce.json.",
+    "status": "active",
+    "trigger": "event",
+    "accountability": "all",
+    "options": {
+      "type": "action",
+      "scope": ["items.create", "items.update"],
+      "collections": ["posts", "release_notes"]
+    },
+    "operations": [
+      {
+        "id": "f1340eb0-af7d-42f7-a506-6d3dc96d365c",
+        "name": "Ping announcer",
+        "key": "ping_announcer",
+        "type": "request",
+        "position_x": 19,
+        "position_y": 1,
+        "options": {
+          "method": "POST",
+          "url": "{{$env.ANNOUNCE_URL}}",
+          "headers": [
+            { "header": "X-Announce-Secret", "value": "{{$env.ANNOUNCE_SECRET}}" },
+            { "header": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"source\":\"save\"}"
+        }
+      }
+    ]
+  },
+  {
+    "id": "b1de3d50-6671-4986-9b82-f2f2470596f1",
+    "name": "Announce: every 15 minutes",
+    "icon": "schedule",
+    "color": "#F59E0B",
+    "description": "Catches what saves can't: posts scheduled for a later date, and retries after a mail failure. Managed in the repo: deploy/directus/flows/announce.json.",
+    "status": "active",
+    "trigger": "schedule",
+    "accountability": "all",
+    "options": {
+      "cron": "*/15 * * * *"
+    },
+    "operations": [
+      {
+        "id": "70178f9e-0ae5-45ec-8a2a-d147930ffded",
+        "name": "Ping announcer",
+        "key": "ping_announcer",
+        "type": "request",
+        "position_x": 19,
+        "position_y": 1,
+        "options": {
+          "method": "POST",
+          "url": "{{$env.ANNOUNCE_URL}}",
+          "headers": [
+            { "header": "X-Announce-Secret", "value": "{{$env.ANNOUNCE_SECRET}}" },
+            { "header": "Content-Type", "value": "application/json" }
+          ],
+          "body": "{\"source\":\"schedule\"}"
+        }
+      }
+    ]
+  }
+]

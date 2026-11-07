@@ -28,6 +28,8 @@ export interface MailMessage {
   readonly from?: string;
   /** Reply-To header — where an answer should go, when it differs from `from`. */
   readonly replyTo?: string;
+  /** Extra headers, e.g. List-Unsubscribe on subscriber announcements. */
+  readonly headers?: Readonly<Record<string, string>>;
 }
 
 export interface MailResult {
@@ -100,6 +102,7 @@ export async function sendMail(message: MailMessage): Promise<MailResult> {
   try {
     await transporterFor(config).sendMail({
       from: message.from ?? config.from,
+      headers: message.headers,
       html: message.html,
       replyTo: message.replyTo,
       subject: message.subject,

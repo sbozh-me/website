@@ -1,4 +1,4 @@
-.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring deploy-pdf push-web-image switch-web-version swv restart backup schema-pull schema-snapshot schema-diff schema-apply schema-diff-prod schema-apply-prod
+.PHONY: patch minor major minor-ignore major-ignore deploy deploy-web deploy-infra deploy-monitoring deploy-pdf push-web-image switch-web-version swv restart backup schema-pull schema-snapshot schema-diff schema-apply schema-diff-prod schema-apply-prod flows-plan flows-apply flows-plan-prod flows-apply-prod announce-backfill announce-backfill-prod
 
 VERSION := $(shell node -p "require('./apps/web/package.json').version")
 IMAGE := ghcr.io/sbozh-me/website
@@ -93,3 +93,27 @@ schema-diff-prod:
 
 schema-apply-prod:
 	./deploy/scripts/schema.sh apply prod
+
+# ── Directus flows ───────────────────────────────────────────────────────────
+# Flows aren't in the schema snapshot; they live in deploy/directus/flows/*.json
+# and are upserted by id. `plan` prints what would change.
+
+flows-plan:
+	./deploy/scripts/flows.sh plan local
+
+flows-apply:
+	./deploy/scripts/flows.sh apply local
+
+flows-plan-prod:
+	./deploy/scripts/flows.sh plan prod
+
+flows-apply-prod:
+	./deploy/scripts/flows.sh apply prod
+
+# Once, before the announcement flows first run on an instance: marks everything
+# already published as announced, so subscribers aren't mailed old news.
+announce-backfill:
+	./deploy/scripts/flows.sh backfill local
+
+announce-backfill-prod:
+	./deploy/scripts/flows.sh backfill prod

@@ -220,6 +220,30 @@ collections:
       versioning: false
     schema:
       name: series
+  - collection: subscribers
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: subscribers
+      color: null
+      display_template: '{{email}}'
+      group: null
+      hidden: false
+      icon: mail
+      item_duplication_fields: null
+      note: News subscribers (double opt-in)
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: subscribers
   - collection: tags
     meta:
       accountability: all
@@ -2091,6 +2115,91 @@ fields:
       has_auto_increment: false
       foreign_key_table: series
       foreign_key_column: id
+  - collection: posts
+    field: announced_at
+    type: timestamp
+    meta:
+      collection: posts
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: announced_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: >-
+        Set when subscribers were emailed (or the item was too old to announce).
+        Clear it to send again.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 23
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: announced_at
+      table: posts
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: posts
+    field: notify_subscribers
+    type: boolean
+    meta:
+      collection: posts
+      conditions: null
+      display: null
+      display_options: null
+      field: notify_subscribers
+      group: null
+      hidden: false
+      interface: boolean
+      note: 'Email confirmed subscribers (topic: blog) once this post is published.'
+      options:
+        label: Email subscribers
+      readonly: false
+      required: false
+      searchable: true
+      sort: 22
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: notify_subscribers
+      table: posts
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: posts_ren
     field: id
     type: uuid
@@ -3488,6 +3597,93 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
+  - collection: release_notes
+    field: announced_at
+    type: timestamp
+    meta:
+      collection: release_notes
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: announced_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: >-
+        Set when subscribers were emailed (or the item was too old to announce).
+        Clear it to send again.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 14
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: announced_at
+      table: release_notes
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: release_notes
+    field: notify_subscribers
+    type: boolean
+    meta:
+      collection: release_notes
+      conditions: null
+      display: null
+      display_options: null
+      field: notify_subscribers
+      group: null
+      hidden: false
+      interface: boolean
+      note: >-
+        Email confirmed subscribers (topic: releases) once this release is
+        published. Off by default: switch on for releases worth announcing.
+      options:
+        label: Email subscribers
+      readonly: false
+      required: false
+      searchable: true
+      sort: 13
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: notify_subscribers
+      table: release_notes
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: series
     field: description
     type: text
@@ -3752,6 +3948,340 @@ fields:
       data_type: character varying
       default_value: null
       max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: id
+    type: integer
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: subscribers
+      data_type: integer
+      default_value: nextval('subscribers_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: email
+    type: string
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: email
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: email
+      table: subscribers
+      data_type: character varying
+      default_value: null
+      max_length: 254
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: status
+    type: string
+    meta:
+      collection: subscribers
+      conditions: null
+      display: labels
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Pending
+            value: pending
+          - text: Confirmed
+            value: confirmed
+          - text: Unsubscribed
+            value: unsubscribed
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: status
+      table: subscribers
+      data_type: character varying
+      default_value: pending
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: date_created
+    type: timestamp
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: date_created
+      group: null
+      hidden: false
+      interface: datetime
+      note: When the address was first submitted
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 4
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: date_created
+      table: subscribers
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: confirmation_sent_at
+    type: timestamp
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: confirmation_sent_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: confirmation_sent_at
+      table: subscribers
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: confirmed_at
+    type: timestamp
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: confirmed_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: Proof of consent
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: confirmed_at
+      table: subscribers
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: unsubscribed_at
+    type: timestamp
+    meta:
+      collection: subscribers
+      conditions: null
+      display: null
+      display_options: null
+      field: unsubscribed_at
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: unsubscribed_at
+      table: subscribers
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: subscribers
+    field: topics
+    type: csv
+    meta:
+      collection: subscribers
+      conditions: null
+      display: labels
+      display_options: null
+      field: topics
+      group: null
+      hidden: false
+      interface: select-multiple-checkbox
+      note: What this subscriber gets emailed about
+      options:
+        choices:
+          - text: Blog posts
+            value: blog
+          - text: Release notes
+            value: releases
+      readonly: false
+      required: false
+      searchable: true
+      sort: 8
+      special:
+        - cast-csv
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: topics
+      table: subscribers
+      data_type: text
+      default_value: blog,releases
+      max_length: null
       numeric_precision: null
       numeric_scale: null
       is_nullable: false

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FlyingPig } from "./FlyingPig";
 import { SocialLinks } from "./SocialLinks";
+import { SubscribeForm } from "./SubscribeForm";
 import { getProject } from "@/lib/projects/data";
 
 export function Footer() {
@@ -25,6 +26,9 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-12">
       <div className="mx-auto px-6 md:px-12 lg:px-24">
+        <div className="mb-8 flex justify-center sm:justify-start">
+          <SubscribeForm />
+        </div>
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-8">
           <div className="flex items-center gap-4">
             <Link href="/terms" className={linkClass("/terms")}>
@@ -36,6 +40,9 @@ export function Footer() {
             <Link href="/contact" className={linkClass("/contact")}>
               Contact
             </Link>
+            <a href="/rss.xml" className={linkClass("/rss.xml")}>
+              RSS
+            </a>
           </div>
           <div className="flex flex-col items-center sm:flex-row gap-4">
             <SocialLinks />

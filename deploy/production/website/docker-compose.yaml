@@ -124,6 +124,12 @@ services:
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD:-${SMTP_PASSWORD}}
       EMAIL_SMTP_SECURE: ${EMAIL_SMTP_SECURE:-false}
 
+      # Announcement flows (deploy/directus/flows) ping the web app over the
+      # internal network; only these env vars are readable from flows
+      ANNOUNCE_URL: http://web:3000/api/announce
+      ANNOUNCE_SECRET: ${ANNOUNCE_SECRET}
+      FLOWS_ENV_ALLOW_LIST: ANNOUNCE_URL,ANNOUNCE_SECRET
+
       # Rate Limiting (production)
       RATE_LIMITER_ENABLED: "true"
       RATE_LIMITER_POINTS: "50"
@@ -190,6 +196,10 @@ services:
       # is MAIL_FROM otherwise.
       CONTACT_INBOX: ${CONTACT_INBOX:-sem.bozhyk@sbozh.me}
       CONTACT_FROM: ${CONTACT_FROM:-}
+      # News subscriptions (same SMTP_* mailbox): signs confirm/unsubscribe links
+      SUBSCRIBE_SECRET: ${SUBSCRIBE_SECRET}
+      # Shared with Directus: authenticates the announcement flows' calls
+      ANNOUNCE_SECRET: ${ANNOUNCE_SECRET}
     networks:
       - sbozh-me-network
     logging:

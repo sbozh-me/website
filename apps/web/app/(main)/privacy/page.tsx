@@ -69,6 +69,19 @@ export default function PrivacyPage() {
           and improving the website's functionality and user experience.
         </p>
 
+        <h2>Email Subscription</h2>
+        <p>
+          If you subscribe to news, we store your email address, what you chose to get (blog
+          posts, release notes or both), its subscription status, and when you asked, confirmed,
+          or unsubscribed. It is kept on our own servers, used only to
+          send you news from sbozh.me, and not shared with anyone for their own use. Emails are
+          sent through our mailbox provider.
+        </p>
+        <p>
+          News goes only to addresses that confirmed the subscription. To unsubscribe or have your
+          address deleted, use the link in our emails or the <a href="/contact">contact page</a>.
+        </p>
+
         <h2>Data Retention</h2>
         <p>We retain data only as long as necessary:</p>
         <ul>
@@ -81,7 +94,7 @@ export default function PrivacyPage() {
 
         <h2>What We Don't Collect</h2>
         <ul>
-          <li>Names, email addresses, or other personal identifiers</li>
+          <li>Names or other personal identifiers (your email address only if you subscribe)</li>
           <li>IP addresses (they are not stored or logged)</li>
           <li>Cross-site tracking or browsing history</li>
           <li>Data sold to advertisers or data brokers</li>
