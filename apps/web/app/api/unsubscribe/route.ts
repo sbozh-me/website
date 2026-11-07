@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { SITE_URL } from "@/lib/feed/entries";
 import { applyToken } from "@/lib/subscribers/service";
 import { verifyToken } from "@/lib/subscribers/token";
 
@@ -30,5 +31,5 @@ export async function POST(request: Request) {
 export function GET(request: Request) {
   const verified = unsubscribeToken(request);
   const target = verified ? `/subscribe?token=${verified.token}` : "/subscribe";
-  return NextResponse.redirect(new URL(target, "https://sbozh.me"), 303);
+  return NextResponse.redirect(new URL(target, SITE_URL), 303);
 }

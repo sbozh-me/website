@@ -1,6 +1,8 @@
 import { directusRest } from "@/lib/directus/rest";
 import { sendMail, smtpConfig } from "@/lib/mail";
 
+import { SITE_URL } from "@/lib/feed/entries";
+
 import { createToken, type TokenPayload } from "./token";
 import { describeTopics, TOPICS, type Topic } from "./topics";
 
@@ -15,7 +17,6 @@ interface Subscriber {
 /** A pending address gets at most one confirmation email per hour */
 const RESEND_AFTER_MS = 60 * 60 * 1000;
 
-const SITE_URL = "https://sbozh.me";
 
 function subscribers(path: string, init?: RequestInit) {
   return directusRest<{ data: unknown }>(`/items/subscribers${path}`, init);

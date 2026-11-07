@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FeedMenu } from "./FeedMenu";
 import { FlyingPig } from "./FlyingPig";
 import { SocialLinks } from "./SocialLinks";
 import { SubscribeForm } from "./SubscribeForm";
@@ -26,7 +27,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-12">
       <div className="mx-auto px-6 md:px-12 lg:px-24">
-        <div className="mb-8 flex justify-center sm:justify-start">
+        <div className="mb-8 flex justify-center">
           <SubscribeForm />
         </div>
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-8">
@@ -40,12 +41,10 @@ export function Footer() {
             <Link href="/contact" className={linkClass("/contact")}>
               Contact
             </Link>
-            <a href="/rss.xml" className={linkClass("/rss.xml")}>
-              RSS
-            </a>
           </div>
           <div className="flex flex-col items-center sm:flex-row gap-4">
             <SocialLinks />
+            <FeedMenu />
             <FlyingPig />
             <p className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} sbozh.me{sbozhMe?.version && ` v${sbozhMe.version}`}

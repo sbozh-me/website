@@ -44,7 +44,7 @@ export function SubscribeForm() {
 
   if (state === "sent") {
     return (
-      <p className="text-sm text-muted-foreground" role="status">
+      <p className="text-center text-sm text-muted-foreground" role="status">
         Check your inbox and confirm the subscription.
       </p>
     );
@@ -74,7 +74,7 @@ export function SubscribeForm() {
           Subscribe
         </Button>
       </div>
-      <fieldset className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+      <fieldset className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2">
         <legend className="sr-only">What to send</legend>
         {TOPICS.map((topic) => (
           <label key={topic} className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
@@ -86,7 +86,7 @@ export function SubscribeForm() {
           </label>
         ))}
       </fieldset>
-      <p className="mt-2 text-xs text-muted-foreground" role={state === "error" ? "alert" : undefined}>
+      <p className="mt-2 text-center text-xs text-muted-foreground" role={state === "error" ? "alert" : undefined}>
         {state === "error" ? (
           error
         ) : (

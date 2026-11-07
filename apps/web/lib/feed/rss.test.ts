@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { FeedChannel } from "./channels";
 import type { FeedEntry } from "./entries";
-import { feedResponse, renderRss } from "./rss";
-
-const channel = { title: "sbozh.me", link: "/", description: "News", self: "/rss.xml" };
+import { feedResponse, renderAtom, renderRss } from "./rss";
 
 const entry: FeedEntry = {
   topic: "blog",
@@ -11,6 +10,15 @@ const entry: FeedEntry = {
   url: "https://sbozh.me/blog/rock-and-roll",
   date: "2026-10-01T10:00:00.000Z",
   description: 'A "loud" post',
+};
+
+const channel: FeedChannel = {
+  title: "sbozh.me",
+  link: "/",
+  description: "News",
+  rss: "/rss.xml",
+  atom: "/atom.xml",
+  load: async () => [entry],
 };
 
 describe("renderRss", () => {
@@ -37,23 +45,50 @@ describe("renderRss", () => {
   });
 });
 
+describe("renderAtom", () => {
+  it("renders escaped entries with ids, dates and categories", () => {
+    const xml = renderAtom(channel, [entry]);
+
+    expect(xml).toContain('<feed xmlns="http://www.w3.org/2005/Atom">');
+    expect(xml).toContain('<link href="https://sbozh.me/atom.xml" rel="self" type="application/atom+xml"/>');
+    expect(xml).toContain("<updated>2026-10-01T10:00:00.000Z</updated>");
+    expect(xml).toContain("<entry><title>Rock &amp; &lt;roll&gt;</title>");
+    expect(xml).toContain("<id>https://sbozh.me/blog/rock-and-roll</id>");
+    expect(xml).toContain('<category term="blog" label="Blog posts"/>');
+    expect(xml).toContain("<summary>A &quot;loud&quot; post</summary>");
+  });
+
+  it("still has an updated date when empty, as Atom requires", () => {
+    const xml = renderAtom(channel, []);
+
+    expect(xml).not.toContain("<entry>");
+    expect(xml).toContain("<updated>1970-01-01T00:00:00.000Z</updated>");
+  });
+});
+
 describe("feedResponse", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
-  it("serves RSS", async () => {
-    const response = await feedResponse(channel, async () => [entry]);
+  it.each([
+    ["rss", "application/rss+xml"],
+    ["atom", "application/atom+xml"],
+  ] as const)("serves %s", async (format, type) => {
+    const response = await feedResponse(channel, format);
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("Content-Type")).toContain("application/rss+xml");
+    expect(response.headers.get("Content-Type")).toContain(type);
   });
 
   it("returns 503 rather than an empty feed when loading fails", async () => {
-    const response = await feedResponse(channel, async () => {
-      throw new Error("down");
-    });
+    const failing = {
+      ...channel,
+      load: async () => {
+        throw new Error("down");
+      },
+    };
 
-    expect(response.status).toBe(503);
+    expect((await feedResponse(failing, "rss")).status).toBe(503);
   });
 });

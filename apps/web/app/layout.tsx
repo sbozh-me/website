@@ -95,6 +95,7 @@ export const metadata: Metadata = {
         { url: '/blog/rss.xml', title: 'sbozh.me blog' },
         { url: '/releases/rss.xml', title: 'sbozh.me releases' },
       ],
+      'application/atom+xml': [{ url: '/atom.xml', title: 'sbozh.me' }],
     },
   },
   openGraph: {

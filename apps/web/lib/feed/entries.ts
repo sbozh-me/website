@@ -2,7 +2,8 @@ import { createBlogRepository } from "@/lib/blog/repository";
 import { directusRest } from "@/lib/directus/rest";
 import type { Topic } from "@/lib/subscribers/topics";
 
-export const SITE_URL = "https://sbozh.me";
+/** Absolute links in feeds and emails; SITE_URL lets a dev server mail links that point back to itself */
+export const SITE_URL = (process.env.SITE_URL || "https://sbozh.me").replace(/\/$/, "");
 
 /** One announceable thing, shared by the RSS feeds and the subscriber emails */
 export interface FeedEntry {
