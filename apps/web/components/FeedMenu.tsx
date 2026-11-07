@@ -63,10 +63,11 @@ export function FeedMenu({ feeds = FEED_PATHS.all, className }: FeedMenuProps) {
     >
       <DropdownMenuTrigger
         aria-label="Feeds"
-        className={`group flex size-10 items-center justify-center rounded-full transition-colors hover:bg-muted data-[state=open]:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${className ?? ""}`}
+        // Sized like the 20px social icons it sits between, with the same hover lift
+        className={`flex items-center rounded-md text-muted-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:text-primary data-[state=open]:-translate-y-0.5 data-[state=open]:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${className ?? ""}`}
       >
-        <span className="flex size-7 items-center justify-center rounded-md border-2 border-primary text-primary">
-          <Rss className="size-4" strokeWidth={2.5} />
+        <span className="flex size-5 items-center justify-center rounded-[5px] border-2 border-current">
+          <Rss className="size-3" strokeWidth={3} />
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent

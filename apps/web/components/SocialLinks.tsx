@@ -1,5 +1,8 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { contactMailto, siteConfig } from "@/lib/site-config";
+
+import { FeedMenu } from "./FeedMenu";
 
 const socials = [
   {
@@ -45,18 +48,21 @@ export function SocialLinks({ className }: { className?: string }) {
   return (
     <div className={`flex items-center gap-4 ${className ?? ""}`}>
       {socials.map((social) => (
-        <Link
-          key={social.name}
-          href={social.href}
-          className="text-muted-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:text-primary"
-          aria-label={social.name}
-          target={social.href.startsWith("mailto") ? undefined : "_blank"}
-          rel={
-            social.href.startsWith("mailto") ? undefined : "noopener noreferrer"
-          }
-        >
-          {social.icon}
-        </Link>
+        <Fragment key={social.name}>
+          {/* Feeds sit last, right before email */}
+          {social.name === "Email" && <FeedMenu />}
+          <Link
+            href={social.href}
+            className="text-muted-foreground transition-all duration-200 ease-out hover:-translate-y-0.5 hover:text-primary"
+            aria-label={social.name}
+            target={social.href.startsWith("mailto") ? undefined : "_blank"}
+            rel={
+              social.href.startsWith("mailto") ? undefined : "noopener noreferrer"
+            }
+          >
+            {social.icon}
+          </Link>
+        </Fragment>
       ))}
     </div>
   );

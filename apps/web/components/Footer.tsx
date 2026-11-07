@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FeedMenu } from "./FeedMenu";
 import { FlyingPig } from "./FlyingPig";
 import { SocialLinks } from "./SocialLinks";
 import { SubscribeForm } from "./SubscribeForm";
@@ -47,7 +46,6 @@ export function Footer() {
           </div>
           <div className="flex flex-col items-center sm:flex-row gap-4">
             <SocialLinks />
-            <FeedMenu />
             <FlyingPig />
             <p className="text-sm text-muted-foreground">
               &copy; {new Date().getFullYear()} sbozh.me{sbozhMe?.version && ` v${sbozhMe.version}`}
