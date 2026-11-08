@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { Input } from "@sbozh/react-ui/components/ui/input";
 import { Switch } from "@sbozh/react-ui/components/ui/switch";
-import { Textarea } from "@sbozh/react-ui/components/ui/textarea";
 
 import { useAnalytics } from "@/hooks/useAnalytics";
 import {
@@ -15,6 +14,7 @@ import {
   MIN_CONTENT,
 } from "@/lib/blog/submission-limits";
 
+import { MarkdownEditor } from "./MarkdownEditor";
 import { SubmissionPreview } from "./SubmissionPreview";
 
 /** The unsent draft stays in this browser only, so a closed tab doesn't eat a long text. */
@@ -197,13 +197,11 @@ export function SubmitForm() {
         <SubmissionPreview content={content} penName={penName} title={title} />
       ) : (
         <div className={NARROW}>
-          <Textarea
-            aria-label="Your text"
-            className="min-h-80 resize-y font-mono text-sm"
+          <MarkdownEditor
+            label="Your text"
             maxLength={MAX_CONTENT}
-            onChange={(event) => setContent(event.target.value)}
+            onChange={setContent}
             placeholder={"Write here. ==Words|teal:meanings== welcome."}
-            required
             value={content}
           />
         </div>

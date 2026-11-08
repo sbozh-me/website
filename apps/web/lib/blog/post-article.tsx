@@ -19,6 +19,8 @@ export interface PostArticleProps {
   readonly content: ReactNode;
   readonly attribution?: ReactNode;
   readonly imageAttribution?: ReactNode;
+  /** Stands in for the hero image (the submit preview: the editor picks the image) */
+  readonly hero?: ReactNode;
   /** Below the attribution: prev/next navigation on the post page */
   readonly footer?: ReactNode;
 }
@@ -32,6 +34,7 @@ export function PostArticle({
   content,
   attribution,
   imageAttribution,
+  hero,
   footer,
 }: PostArticleProps) {
   return (
@@ -49,7 +52,8 @@ export function PostArticle({
             {tldr}
           </div>
         )}
-        {post.image && (
+        {hero}
+        {!hero && post.image && (
           <figure className="my-8">
             <Image
               src={post.image.src}

@@ -77,7 +77,8 @@ export async function SdsCheatSheet() {
             Frontmatter at the top: <code className={CODE}>title</code>,{" "}
             <code className={CODE}>excerpt</code>, <code className={CODE}>tags</code>,{" "}
             <code className={CODE}>tldr</code>. Or start the text with{" "}
-            <code className={CODE}>**TL;DR:**</code>. Check it all in Preview below.
+            <code className={CODE}>**TL;DR:**</code>. No <code className={CODE}>image</code>: the
+            hero image is TheEmperor&apos;s call. Check it all in Preview below.
           </dd>
         </div>
       </dl>

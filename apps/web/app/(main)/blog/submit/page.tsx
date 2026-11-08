@@ -62,6 +62,12 @@ export default function SubmitPage() {
                 published. Watch the blog.
               </li>
               <li>
+                <strong className="text-foreground">Hero image.</strong>{" "}
+                Always TheEmperor&apos;s call. You send words; the picture on
+                top is chosen when the text is published. Images inside your
+                text stay yours.
+              </li>
+              <li>
                 <strong className="text-foreground">Credit.</strong> If
                 published, it&apos;s signed with your pen name, or
                 &ldquo;Anonymous&rdquo; if you leave it empty.

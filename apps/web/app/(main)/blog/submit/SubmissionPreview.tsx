@@ -74,6 +74,18 @@ export function SubmissionPreview({ content, title, penName }: SubmissionPreview
         toc={result.toc}
         tldr={result.tldr}
         content={result.content}
+        hero={
+          <figure
+            aria-label="Hero image"
+            className="my-8 flex aspect-[16/9] w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 px-6 text-center text-sm text-muted-foreground"
+          >
+            <figcaption>
+              Hero image goes here.
+              <br />
+              TheEmperor picks it when the text is published.
+            </figcaption>
+          </figure>
+        }
       />
     </section>
   );
