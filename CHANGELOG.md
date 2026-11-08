@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.2] - 2026-11-08
+
+### Changes
+
+- docs(roadmap): align roadmap with shipped releases and enforce it ([93085bf](https://github.com/sbozh-me/website/commit/93085bf846e66fbfa7ad35816ab3773604feabd5))
+- docs(roadmap): plan 1.11.0 Links & Cookies ([4ec6ee9](https://github.com/sbozh-me/website/commit/4ec6ee9a286b50dfee93fe28fabe8f5625bebf2e))
+
+
 ## [1.10.1] - 2026-11-08
 
 ### Changes
