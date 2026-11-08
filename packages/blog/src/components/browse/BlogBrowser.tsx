@@ -24,10 +24,12 @@ export interface BlogBrowserProps {
   series?: Series[];
   view: "cards" | "timeline";
   initialFilters?: PostFilters;
+  /** Passed to the view tabs: the anonymous submission page */
+  submitHref?: string;
 }
 
 /** The filter bar and its results. Filters live in the URL, so a filtered view can be shared. */
-export function BlogBrowser({ posts, series = [], view, initialFilters }: BlogBrowserProps) {
+export function BlogBrowser({ posts, series = [], view, initialFilters, submitHref }: BlogBrowserProps) {
   const { filters, setFilters, clearFilters, hasActiveFilters } = usePostFilters(initialFilters);
 
   const options = useMemo(() => getFilterOptions(posts, series), [posts, series]);
@@ -51,7 +53,12 @@ export function BlogBrowser({ posts, series = [], view, initialFilters }: BlogBr
   return (
     <>
       <div className="mt-6">
-        <BlogViewTabs value={view} filters={filters} showSeries={options.series.length > 0} />
+        <BlogViewTabs
+          value={view}
+          filters={filters}
+          showSeries={options.series.length > 0}
+          submitHref={submitHref}
+        />
       </div>
       <FilterBar
         className="mt-6"

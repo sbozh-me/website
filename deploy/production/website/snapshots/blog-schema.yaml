@@ -26,6 +26,32 @@ collections:
       versioning: false
     schema:
       name: avatars
+  - collection: blog_submissions
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: status
+      archive_value: rejected
+      collapse: open
+      collection: blog_submissions
+      color: null
+      display_template: '{{title}} · {{status}}'
+      group: null
+      hidden: false
+      icon: inbox
+      item_duplication_fields: null
+      note: >-
+        Anonymous post submissions from /blog/submit. Nothing here is public
+        until you copy it into posts.
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: new
+      versioning: false
+    schema:
+      name: blog_submissions
   - collection: donation_wallets
     meta:
       accountability: all
@@ -642,6 +668,31 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: avatars
+    field: personas
+    type: alias
+    meta:
+      collection: avatars
+      conditions: null
+      display: null
+      display_options: null
+      field: personas
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        template: '{{name}}'
+      readonly: false
+      required: false
+      searchable: true
+      sort: 11
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: avatars
     field: status
     type: string
     meta:
@@ -730,31 +781,309 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-  - collection: avatars
-    field: personas
-    type: alias
+  - collection: blog_submissions
+    field: id
+    type: integer
     meta:
-      collection: avatars
+      collection: blog_submissions
       conditions: null
       display: null
       display_options: null
-      field: personas
+      field: id
       group: null
-      hidden: false
-      interface: list-o2m
+      hidden: true
+      interface: input
       note: null
-      options:
-        template: '{{name}}'
-      readonly: false
+      options: null
+      readonly: true
       required: false
       searchable: true
-      sort: 11
-      special:
-        - o2m
+      sort: 1
+      special: null
       translations: null
       validation: null
       validation_message: null
       width: full
+    schema:
+      name: id
+      table: blog_submissions
+      data_type: integer
+      default_value: nextval('blog_submissions_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: status
+    type: string
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: labels
+      display_options:
+        choices:
+          - background: '#8B5CF6'
+            foreground: '#FFFFFF'
+            text: New
+            value: new
+          - background: '#22C55E'
+            foreground: '#FFFFFF'
+            text: Accepted
+            value: accepted
+          - background: '#EF4444'
+            foreground: '#FFFFFF'
+            text: Rejected
+            value: rejected
+        showAsDot: true
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: New
+            value: new
+          - text: Accepted
+            value: accepted
+          - text: Rejected
+            value: rejected
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: blog_submissions
+      data_type: character varying
+      default_value: new
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: date_created
+    type: timestamp
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: blog_submissions
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: title
+    type: string
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: Optional, from the author
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: title
+      table: blog_submissions
+      data_type: character varying
+      default_value: null
+      max_length: 200
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: pen_name
+    type: string
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: null
+      display_options: null
+      field: pen_name
+      group: null
+      hidden: false
+      interface: input
+      note: Optional signature. Not verified, not linked to anyone.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: pen_name
+      table: blog_submissions
+      data_type: character varying
+      default_value: null
+      max_length: 80
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: content
+    type: text
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: null
+      display_options: null
+      field: content
+      group: null
+      hidden: false
+      interface: input-rich-text-md
+      note: Raw text with SDS. Never render it as MDX without reviewing it.
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: content
+      table: blog_submissions
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: blog_submissions
+    field: editor_note
+    type: text
+    meta:
+      collection: blog_submissions
+      conditions: null
+      display: null
+      display_options: null
+      field: editor_note
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: Private, for you only
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: editor_note
+      table: blog_submissions
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: donation_wallets
     field: id
     type: uuid
@@ -2596,6 +2925,48 @@ fields:
       foreign_key_table: series
       foreign_key_column: id
   - collection: posts
+    field: notify_subscribers
+    type: boolean
+    meta:
+      collection: posts
+      conditions: null
+      display: null
+      display_options: null
+      field: notify_subscribers
+      group: null
+      hidden: false
+      interface: boolean
+      note: 'Email confirmed subscribers (topic: blog) once this post is published.'
+      options:
+        label: Email subscribers
+      readonly: false
+      required: false
+      searchable: true
+      sort: 22
+      special:
+        - cast-boolean
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: notify_subscribers
+      table: posts
+      data_type: boolean
+      default_value: true
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: posts
     field: announced_at
     type: timestamp
     meta:
@@ -2630,48 +3001,6 @@ fields:
       numeric_precision: null
       numeric_scale: null
       is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: posts
-    field: notify_subscribers
-    type: boolean
-    meta:
-      collection: posts
-      conditions: null
-      display: null
-      display_options: null
-      field: notify_subscribers
-      group: null
-      hidden: false
-      interface: boolean
-      note: 'Email confirmed subscribers (topic: blog) once this post is published.'
-      options:
-        label: Email subscribers
-      readonly: false
-      required: false
-      searchable: true
-      sort: 22
-      special:
-        - cast-boolean
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      name: notify_subscribers
-      table: posts
-      data_type: boolean
-      default_value: true
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: false
       is_unique: false
       is_indexed: false
       is_primary_key: false
@@ -4078,49 +4407,6 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: release_notes
-    field: announced_at
-    type: timestamp
-    meta:
-      collection: release_notes
-      conditions: null
-      display: datetime
-      display_options:
-        relative: true
-      field: announced_at
-      group: null
-      hidden: false
-      interface: datetime
-      note: >-
-        Set when subscribers were emailed (or the item was too old to announce).
-        Clear it to send again.
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 14
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: half
-    schema:
-      name: announced_at
-      table: release_notes
-      data_type: timestamp with time zone
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: release_notes
     field: notify_subscribers
     type: boolean
     meta:
@@ -4164,33 +4450,36 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-  - collection: series
-    field: description
-    type: text
+  - collection: release_notes
+    field: announced_at
+    type: timestamp
     meta:
-      collection: series
+      collection: release_notes
       conditions: null
-      display: null
-      display_options: null
-      field: description
+      display: datetime
+      display_options:
+        relative: true
+      field: announced_at
       group: null
       hidden: false
-      interface: input-multiline
-      note: Shown on the series card and page.
+      interface: datetime
+      note: >-
+        Set when subscribers were emailed (or the item was too old to announce).
+        Clear it to send again.
       options: null
       readonly: false
       required: false
       searchable: true
-      sort: 5
+      sort: 14
       special: null
       translations: null
       validation: null
       validation_message: null
-      width: full
+      width: half
     schema:
-      name: description
-      table: series
-      data_type: text
+      name: announced_at
+      table: release_notes
+      data_type: timestamp with time zone
       default_value: null
       max_length: null
       numeric_precision: null
@@ -4240,6 +4529,154 @@ fields:
       is_unique: true
       is_indexed: false
       is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: series
+    field: title
+    type: string
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: series
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: series
+    field: posts
+    type: alias
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: posts
+      group: null
+      hidden: false
+      interface: list-o2m
+      note: null
+      options:
+        enableCreate: false
+        template: '{{title}}'
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - o2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+  - collection: series
+    field: slug
+    type: string
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: 'Used in the blog filter URL: /blog?series=<slug>'
+      options:
+        slug: true
+        trim: true
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: slug
+      table: series
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: series
+    field: description
+    type: text
+    meta:
+      collection: series
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: Shown on the series card and page.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: series
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
       is_generated: false
       generation_expression: null
       has_auto_increment: false
@@ -4331,114 +4768,6 @@ fields:
       has_auto_increment: false
       foreign_key_table: series
       foreign_key_column: id
-  - collection: series
-    field: posts
-    type: alias
-    meta:
-      collection: series
-      conditions: null
-      display: null
-      display_options: null
-      field: posts
-      group: null
-      hidden: false
-      interface: list-o2m
-      note: null
-      options:
-        enableCreate: false
-        template: '{{title}}'
-      readonly: true
-      required: false
-      searchable: true
-      sort: 3
-      special:
-        - o2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: series
-    field: slug
-    type: string
-    meta:
-      collection: series
-      conditions: null
-      display: null
-      display_options: null
-      field: slug
-      group: null
-      hidden: false
-      interface: input
-      note: 'Used in the blog filter URL: /blog?series=<slug>'
-      options:
-        slug: true
-        trim: true
-      readonly: false
-      required: true
-      searchable: true
-      sort: 4
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: slug
-      table: series
-      data_type: character varying
-      default_value: null
-      max_length: 255
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: true
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: series
-    field: title
-    type: string
-    meta:
-      collection: series
-      conditions: null
-      display: null
-      display_options: null
-      field: title
-      group: null
-      hidden: false
-      interface: input
-      note: null
-      options: null
-      readonly: false
-      required: true
-      searchable: true
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: title
-      table: series
-      data_type: character varying
-      default_value: null
-      max_length: 255
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: false
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
   - collection: subscribers
     field: id
     type: integer

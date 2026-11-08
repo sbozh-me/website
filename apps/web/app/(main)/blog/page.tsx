@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   },
 };
 
+/** Anonymous submissions: anyone can send a text, nothing is published without review */
+const SUBMIT_HREF = "/blog/submit";
+
 interface BlogPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
@@ -83,7 +86,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         ) : activeView === "series" ? (
           <>
             <div className="mt-6">
-              <BlogViewTabs value="series" showSeries />
+              <BlogViewTabs value="series" showSeries submitHref={SUBMIT_HREF} />
             </div>
             <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {seriesWithPosts.map((item) => (
@@ -97,6 +100,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             series={series}
             view={activeView}
             initialFilters={parsePostFilters(params)}
+            submitHref={SUBMIT_HREF}
           />
         ) : null}
       </div>

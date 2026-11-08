@@ -75,6 +75,18 @@ describe("BlogPostPage", () => {
     expect(screen.getByText("The Founder")).toBeInTheDocument();
   });
 
+  it("shows the excerpt before the hero image", async () => {
+    const { MockBlogRepository } = await import("@sbozh/blog/data");
+    const post = await new MockBlogRepository().getPost("why-i-started-sbozh");
+    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const { container } = render(await BlogPostPage({ params }));
+
+    const excerpt = container.querySelector(".post-excerpt");
+    expect(excerpt).toHaveTextContent(post!.excerpt);
+    const image = screen.getByRole("img");
+    expect(excerpt!.compareDocumentPosition(image) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it("renders post header with persona", async () => {
     const params = Promise.resolve({ slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));

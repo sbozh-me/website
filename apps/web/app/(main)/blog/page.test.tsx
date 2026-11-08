@@ -53,6 +53,11 @@ describe("BlogPage", () => {
     expect(screen.queryByText("2025")).not.toBeInTheDocument();
   });
 
+  it("offers the anonymous submit page next to the views", async () => {
+    await renderPage();
+    expect(screen.getByRole("link", { name: "Submit" })).toHaveAttribute("href", "/blog/submit");
+  });
+
   it("renders timeline with posts when asked for", async () => {
     await renderPage("timeline");
     // Should show year markers from mock data

@@ -7,19 +7,13 @@ import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
-import {
-  ErrorState,
-  PostHeader,
-  PostLayout,
-  PostNavigation,
-  ScrollToTop,
-  TableOfContents,
-} from "@sbozh/blog/components";
+import { ErrorState, PostNavigation, ScrollToTop } from "@sbozh/blog/components";
 import { getAdjacentPosts, type TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
+import { PostArticle } from "@/lib/blog/post-article";
 import remarkGlitch from "@/lib/blog/remark-glitch";
 import remarkHeadingIds from "@/lib/blog/remark-heading-ids";
 import { renderTitle } from "@/lib/blog/title-heading";
@@ -200,53 +194,17 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
       <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
         <div className="max-w-6xl mx-auto">
-          <PostLayout toc={toc}>
-            <div>
-              <PostHeader post={post} adjacent={adjacent} title={title} />
-              {TldrContent && (
-                <div className="text-muted-foreground mb-6 [&_p]:inline">
-                  <span className="font-medium">TL;DR: </span>
-                  <TldrContent />
-                </div>
-              )}
-              {post.image && (
-                <figure className="my-8">
-                  <Image
-                    src={post.image.src}
-                    alt={post.image.alt}
-                    width={post.image.width || 1920}
-                    height={post.image.height || 1080}
-                    className="w-full h-auto rounded-lg"
-                    priority
-                  />
-                  {ImageAttributionContent && (
-                    <figcaption className="mt-2 text-right text-[11px] leading-snug text-muted-foreground/70 [&_a]:underline [&_a]:decoration-muted-foreground/30 [&_a]:underline-offset-2 [&_a:hover]:text-muted-foreground [&_p]:m-0">
-                      <ImageAttributionContent />
-                    </figcaption>
-                  )}
-                </figure>
-              )}
-              {toc && toc.length > 0 && (
-                <div className="lg:hidden mb-8">
-                  <TableOfContents items={toc} />
-                </div>
-              )}
-              <div className="prose">
-                <MDXContent components={blogMdxComponents} />
-              </div>
-              {AttributionContent && (
-                <div className="mt-12 pt-8 border-t border-border">
-                  <h4 className="text-xs font-medium text-muted-foreground mb-3">
-                    Attribution
-                  </h4>
-                  <div className="attribution-content text-xs text-muted-foreground [&_a]:text-muted-foreground [&_a]:underline [&_p]:m-0">
-                    <AttributionContent />
-                  </div>
-                </div>
-              )}
-              <PostNavigation {...adjacent} />
-            </div>
-          </PostLayout>
+          <PostArticle
+            post={post}
+            adjacent={adjacent}
+            title={title}
+            toc={toc}
+            tldr={TldrContent && <TldrContent />}
+            content={<MDXContent components={blogMdxComponents} />}
+            attribution={AttributionContent && <AttributionContent />}
+            imageAttribution={ImageAttributionContent && <ImageAttributionContent />}
+            footer={<PostNavigation {...adjacent} />}
+          />
         </div>
       </div>
       <ScrollToTop />

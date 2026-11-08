@@ -27,6 +27,17 @@ const posts = [
 ];
 
 describe("BlogBrowser", () => {
+  it("shows a Submit button only when given a target", () => {
+    const { rerender } = render(<BlogBrowser posts={posts} series={series} view="cards" />);
+    expect(screen.queryByRole("link", { name: "Submit" })).not.toBeInTheDocument();
+
+    rerender(<BlogBrowser posts={posts} series={series} view="cards" submitHref="/blog/submit" />);
+    const submit = screen.getByRole("link", { name: "Submit" });
+    expect(submit).toHaveAttribute("href", "/blog/submit");
+    // Outside the view tabs, so it never looks like a fourth view
+    expect(within(screen.getByRole("navigation", { name: "Blog view" })).queryByRole("link", { name: "Submit" })).toBeNull();
+  });
+
   it("shows every post as a tile linking to it", () => {
     render(<BlogBrowser posts={posts} series={series} view="cards" />);
 
