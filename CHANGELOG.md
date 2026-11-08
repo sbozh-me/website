@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.1] - 2026-11-08
+
+### Changes
+
+- chore(blog): hero image is the Senate's call ([ac364bf](https://github.com/sbozh-me/website/commit/ac364bf12aa080cb28ec9cfee072fde9c57f2633))
+- feat(web): add feed topic filter and fit select dropdowns ([4813402](https://github.com/sbozh-me/website/commit/48134025b0d661e40b5da1d7912ef28864e6ea71))
+
+
 ## [1.10.0] - 2026-11-08
 
 ### Changes
