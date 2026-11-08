@@ -93,7 +93,7 @@ describe("SubmitForm preview", () => {
     expect(preview).toHaveTextContent("Anonymous");
     expect(preview).toHaveTextContent("1 min read");
     // The writer never sets the hero image
-    expect(screen.getByRole("figure", { name: "Hero image" })).toHaveTextContent(/TheEmperor picks it/);
+    expect(screen.getByRole("figure", { name: "Hero image" })).toHaveTextContent(/The Senate picks it/);
 
     fireEvent.click(screen.getByRole("tab", { name: "Write" }));
     expect((screen.getByLabelText("Your text") as HTMLTextAreaElement).value).toContain("the Princeps");

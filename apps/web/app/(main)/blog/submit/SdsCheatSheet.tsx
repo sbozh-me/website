@@ -78,7 +78,7 @@ export async function SdsCheatSheet() {
             <code className={CODE}>excerpt</code>, <code className={CODE}>tags</code>,{" "}
             <code className={CODE}>tldr</code>. Or start the text with{" "}
             <code className={CODE}>**TL;DR:**</code>. No <code className={CODE}>image</code>: the
-            hero image is TheEmperor&apos;s call. Check it all in Preview below.
+            hero image is the Senate&apos;s call. Check it all in Preview below.
           </dd>
         </div>
       </dl>

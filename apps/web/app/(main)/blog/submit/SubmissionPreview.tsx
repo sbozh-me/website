@@ -82,7 +82,7 @@ export function SubmissionPreview({ content, title, penName }: SubmissionPreview
             <figcaption>
               Hero image goes here.
               <br />
-              TheEmperor picks it when the text is published.
+              The Senate picks it when the text is published.
             </figcaption>
           </figure>
         }

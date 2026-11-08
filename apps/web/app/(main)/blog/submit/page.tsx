@@ -63,7 +63,7 @@ export default function SubmitPage() {
               </li>
               <li>
                 <strong className="text-foreground">Hero image.</strong>{" "}
-                Always TheEmperor&apos;s call. You send words; the picture on
+                Always the Senate&apos;s call. You send words; the picture on
                 top is chosen when the text is published. Images inside your
                 text stay yours.
               </li>
