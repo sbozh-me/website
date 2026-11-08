@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.0] - 2026-11-08
+
+### Changes
+
+- feat(blog): add anonymous post submissions ([12bafda](https://github.com/sbozh-me/website/commit/12bafdac93f8e62e66c74b8317a7a87a4962e697))
+- feat(blog): add markdown editor to submit page ([21eba95](https://github.com/sbozh-me/website/commit/21eba95a0186c2113cbf2e0909034fd01c49ee31))
+- feat(blog): store post publish time as timestamp ([ec22e6a](https://github.com/sbozh-me/website/commit/ec22e6a24dc33be64d597a94134b932ba1f24d61))
+
+
 ## [1.9.3] - 2026-11-07
 
 ### Changes
