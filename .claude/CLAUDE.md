@@ -246,7 +246,7 @@ A dark, spacious aesthetic with deliberate motion.
 
 ## Current Focus
 
-**Version 1.11.0 - TBD** — see `ROADMAP.md`. Roadmap discipline is strict (see root `CLAUDE.md`): only build what's listed under the open version.
+**Version 1.11.0 - Links & Cookies** — see `ROADMAP.md`. Roadmap discipline is strict (see root `CLAUDE.md`): only build what's listed under the open version.
 
 ---
 
