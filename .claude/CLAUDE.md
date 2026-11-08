@@ -156,7 +156,7 @@ pnpm dlx shadcn@latest add button card input
 | File | Purpose | Notes |
 |------|---------|-------|
 | `CLAUDE.md` | Project instructions for Claude Code | Always check first |
-| `ROADMAP.md` | Version roadmap | Current: 1.3.0 |
+| `ROADMAP.md` | Version roadmap (strict) | Current: 1.11.0 |
 | `apps/web/app/page.tsx` | Main page | Motion animations |
 | `packages/blog/src/data/repository.ts` | Blog data abstraction | DirectusRepository |
 | `packages/pmdxjs/src/parser/index.ts` | CV markdown parser | Core PMDXJS logic |
@@ -246,15 +246,7 @@ A dark, spacious aesthetic with deliberate motion.
 
 ## Current Focus
 
-**Version 1.3.0 - Release Notes & Main Page**
-- Projects collection in Directus
-- Release Notes collection in Directus
-- Projects Changelog and Roadmap redesign into release notes
-- Release notes on Main page
-- Last blog post on main page
-- "What is this" button
-
-See `ROADMAP.md` for full roadmap through v1.9.0 (Subscriptions).
+**Version 1.11.0 - TBD** — see `ROADMAP.md`. Roadmap discipline is strict (see root `CLAUDE.md`): only build what's listed under the open version.
 
 ---
 

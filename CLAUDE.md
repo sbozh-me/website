@@ -7,6 +7,17 @@
 - Keep commits atomic and meaningful - one logical change per commit
 - Commit frequently as you complete each task
 
+## Roadmap Discipline (strict)
+
+`ROADMAP.md` is the source of truth for what gets built. Follow it, don't drift from it.
+
+- **Before starting any feature**, check that it is listed under the current open version in `ROADMAP.md`. If it isn't, stop and ask the user whether to add it to the roadmap (and under which version) — do not build unlisted features.
+- **Bug fixes and chores** don't need a roadmap entry, but they must not smuggle in new features.
+- **When an item ships**, strike it through (`~~item~~`) in the same commit or the release that ships it.
+- **Release only when the version's section is done.** `make minor` closes the open version: every item is struck through, or the leftover is explicitly moved to a later version with the user's OK. Mark the heading `~~x.y.0 - Name~~ ✅`.
+- **Never rewrite completed sections** to match what happened later — the roadmap must be accurate going forward.
+- If the open version has no items (`TBD`), ask the user what goes in it before starting feature work.
+
 ## Release Workflow
 
 After completing a feature or fix:

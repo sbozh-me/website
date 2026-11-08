@@ -1,5 +1,10 @@
 # Roadmap
 
+> **Rule:** every release ships against this file. Before starting work, the item
+> must be listed under the version being built. New idea → add it here first.
+> A release is only cut when its section is complete (or the leftover item is
+> explicitly moved to a later version). Mark items ~~done~~ ✅ as they ship.
+
 ## ~~0.2.0 - App Structure~~ ✅
 
 - ~~Home page with navigation menu~~
@@ -168,42 +173,41 @@ Author carousel with blog post filtering per author.
 
 The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around it.
 
-- ~~1.6.1 - Glitch-word markdown syntax (`==a|b==`, colours, links, censor `(;)`, `==D(;)ck pitch==`)~~
-- ~~1.6.1 - Window ON/OFF toggle (`==WINDOW==`, `W` hotkey) and window-synced video~~
-- ~~1.6.1 - Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
-- ~~1.6.1 - Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
+- ~~Glitch-word markdown syntax (`==a|b==`, colours, links, censor `(;)`, `==D(;)ck pitch==`)~~
+- ~~Window ON/OFF toggle (`==WINDOW==`, `W` hotkey) and window-synced video with mobile cuts~~
+- ~~Previous/next post navigation with editor-picked next post (`posts.next_post`)~~
+- ~~Downscaled asset thumbnails via `?w=`, TOC built from rendered headings~~
 - ~~`<Video>` for single looping clips (landscape or Shorts)~~
 - ~~Glitch syntax in release notes~~
+- ~~Voice, sbozhed and window button components~~
+- ~~Roman White reading theme with a reader switch~~
+- ~~`<Accordion>` for collapsed text, glitch syntax in post titles~~
+- ~~Sídlo declaration page with PDF export (PMDXJS `:::field` directive)~~
 
-## 1.8.0 - Blog enhancement
+## ~~1.8.0 - Renesans, Forum & Series~~ ✅
 
-- Renesans Inter project with a mobile-first demo (/demo/renesans-inter)
-- Internal link click handle
-- Link hover handle from directus
-- Blog filters (category, tags, personal, date)
-- Connected posts
+- ~~Renesans Inter project with a mobile-first demo (`/demo/renesans-inter`)~~
+- ~~Forum replaces the CV page, avatars from Directus~~
+- ~~Semen Bozhyk avatar CV (PMDXJS page photo + link-qr directive)~~
+- ~~Series collection: series pages, series filter, previous/next inside a series~~
+- ~~Filterable card view as the default blog view~~
+- ~~Directus schema snapshot synced with production~~
 
-## 1.9.0 - Personas introduction
+## ~~1.9.0 - Contact, Feeds & Subscriptions~~ ✅
 
-- Layouts in project sbozh.me
-- Extended personas collection
-- Link personas in blog posts
+- ~~Contact form~~
+- ~~`posts_ren` collection for ren.sbozh.me~~
+- ~~RSS and Atom feeds with a feed copy menu~~
+- ~~Double opt-in email subscriptions (own SMTP, subscribers in Directus)~~
+- ~~Post and release announcements to subscribers via Directus flows~~
+- ~~Crypto donations page with guarded reveal~~
 
-## 1.10.0 - Cookies rework
+## ~~1.10.0 - Anonymous Submissions~~ ✅
 
-- Remove marketing option
-- Make more analytics tracking (blog post reading time)
-- Read/unread state tracking for blog, release notes and projects
+- ~~Anonymous post submissions with a markdown editor~~
+- ~~Post publish time stored as a timestamp~~
+- ~~Feed topic filter~~
 
-## 1.11.0 - Subscriptions (Q4 2026)
-
-- **Subscribe** - Email signup with one-click topic selection
-- **Personalize** - Choose content types: blog posts, project updates, CV changes
-- **Control** - Set delivery frequency: instant, digest, or weekly roundup
-- **Engage** - Share thoughts and suggest topics
-- **Alternatives** - RSS feeds for feed reader users
-- **Backend** - Event tracking, processing, and reliable email delivery
-
-## llm.txt (Q4 2026)
+## 1.11.0 - TBD
 
 ---
