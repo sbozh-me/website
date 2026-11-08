@@ -7,6 +7,10 @@ describe("formatShortDate", () => {
     expect(formatShortDate("2024-01-15")).toBe("Jan 15");
   });
 
+  it("formats a publish timestamp by its UTC day", () => {
+    expect(formatShortDate("2026-11-08T23:30:00.000Z")).toBe("Nov 8");
+  });
+
   it("formats June date", () => {
     expect(formatShortDate("2024-06-01")).toBe("Jun 1");
   });

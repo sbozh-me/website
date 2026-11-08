@@ -79,6 +79,20 @@ describe("groupPostsByDate", () => {
     expect(result[0].months[0].posts[2].id).toBe("1");
   });
 
+  it("orders same-day posts by publish time", () => {
+    const posts = [
+      createPost("morning", "2026-11-08T08:00:00.000Z"),
+      createPost("evening", "2026-11-08T19:30:00.000Z"),
+      createPost("noon", "2026-11-08T12:00:00.000Z"),
+    ];
+
+    const newest = groupPostsByDate(posts)[0].months[0].posts.map((p) => p.id);
+    const oldest = groupPostsByDate(posts, "oldest")[0].months[0].posts.map((p) => p.id);
+
+    expect(newest).toEqual(["evening", "noon", "morning"]);
+    expect(oldest).toEqual(["morning", "noon", "evening"]);
+  });
+
   it("handles all 12 months correctly", () => {
     const posts = [
       createPost("1", "2024-01-15"),

@@ -2351,17 +2351,17 @@ fields:
       foreign_key_column: null
   - collection: posts
     field: date_published
-    type: date
+    type: timestamp
     meta:
       collection: posts
       conditions: null
-      display: null
+      display: datetime
       display_options: null
       field: date_published
       group: null
       hidden: false
       interface: datetime
-      note: null
+      note: Publish time; posts are listed newest first
       options: null
       readonly: false
       required: false
@@ -2375,7 +2375,7 @@ fields:
     schema:
       name: date_published
       table: posts
-      data_type: date
+      data_type: timestamp with time zone
       default_value: null
       max_length: null
       numeric_precision: null

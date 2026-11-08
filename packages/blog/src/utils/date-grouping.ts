@@ -50,7 +50,7 @@ export function groupPostsByDate(
 
   for (const post of sortedPosts) {
     const date = new Date(post.date);
-    // Publish dates have no time: read them in UTC so server and browser agree
+    // Publish timestamps are UTC: read them in UTC so server and browser agree
     const year = date.getUTCFullYear();
     const month = date.getUTCMonth();
 
