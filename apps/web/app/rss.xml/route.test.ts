@@ -22,13 +22,35 @@ vi.mock("@/lib/feed/entries", async (importOriginal) => ({
   getReleaseEntries: async () => [entry("releases", "release")],
 }));
 
+const request = (path: string) => new Request(`https://sbozh.me${path}`);
+
 describe("feed routes", () => {
+  it.each([
+    ["/rss.xml?topics=blog", ["post"]],
+    ["/rss.xml?topics=releases", ["release"]],
+    ["/rss.xml?topics=blog,releases", ["post", "release"]],
+    ["/rss.xml?topics=bogus", ["post", "release"]],
+  ] as const)("RSS %s narrows by topic", async (path, titles) => {
+    const xml = await (await allRss(request(path))).text();
+
+    const self = path.includes("bogus") || path.includes(",") ? "/rss.xml" : path;
+    expect(xml).toContain(`<atom:link href="https://sbozh.me${self}"`);
+    expect([...xml.matchAll(/<item><title>([^<]+)/g)].map((m) => m[1])).toEqual(titles);
+  });
+
+  it("Atom /atom.xml?topics=releases narrows by topic", async () => {
+    const xml = await (await allAtom(request("/atom.xml?topics=releases"))).text();
+
+    expect(xml).toContain("<id>https://sbozh.me/atom.xml?topics=releases</id>");
+    expect([...xml.matchAll(/<entry><title>([^<]+)/g)].map((m) => m[1])).toEqual(["release"]);
+  });
+
   it.each([
     ["/rss.xml", allRss, ["post", "release"]],
     ["/blog/rss.xml", blogRss, ["post"]],
     ["/releases/rss.xml", releasesRss, ["release"]],
   ] as const)("RSS %s serves its own entries", async (self, GET, titles) => {
-    const xml = await (await GET()).text();
+    const xml = await (await GET(request(self))).text();
 
     expect(xml).toContain(`<atom:link href="https://sbozh.me${self}"`);
     expect([...xml.matchAll(/<item><title>([^<]+)/g)].map((m) => m[1])).toEqual(titles);
@@ -39,7 +61,7 @@ describe("feed routes", () => {
     ["/blog/atom.xml", blogAtom, ["post"]],
     ["/releases/atom.xml", releasesAtom, ["release"]],
   ] as const)("Atom %s serves its own entries", async (self, GET, titles) => {
-    const xml = await (await GET()).text();
+    const xml = await (await GET(request(self))).text();
 
     expect(xml).toContain(`<id>https://sbozh.me${self}</id>`);
     expect([...xml.matchAll(/<entry><title>([^<]+)/g)].map((m) => m[1])).toEqual(titles);

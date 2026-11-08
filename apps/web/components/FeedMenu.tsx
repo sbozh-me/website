@@ -5,12 +5,16 @@ import { Check, Copy, Rss } from "lucide-react";
 
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@sbozh/react-ui/components/ui/dropdown-menu";
 
-import { FEED_PATHS, type FeedPaths } from "@/lib/feed/paths";
+import { feedPathsFor, type FeedPaths } from "@/lib/feed/paths";
+import { TOPIC_LABELS, TOPICS, type Topic } from "@/lib/subscribers/topics";
 
 type Format = keyof FeedPaths;
 
@@ -23,17 +27,29 @@ const LABELS: Record<Format, string> = {
 const COPIED_MS = 1200;
 
 interface FeedMenuProps {
-  feeds?: FeedPaths;
   className?: string;
 }
 
-/** RSS icon that opens a menu to copy the RSS or Atom feed URL */
-export function FeedMenu({ feeds = FEED_PATHS.all, className }: FeedMenuProps) {
+/**
+ * RSS icon that opens a menu to pick topics (blog, release notes) and copy the
+ * RSS or Atom feed URL; a partial pick is carried as /rss.xml?topics=…
+ */
+export function FeedMenu({ className }: FeedMenuProps) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState<Format | null>(null);
+  const [topics, setTopics] = useState<Topic[]>([...TOPICS]);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => clearTimeout(timer.current), []);
+
+  const feeds = feedPathsFor(topics);
+
+  function toggle(topic: Topic, checked: boolean) {
+    setCopied(null);
+    setTopics((current) =>
+      checked ? TOPICS.filter((t) => t === topic || current.includes(t)) : current.filter((t) => t !== topic)
+    );
+  }
 
   async function copy(format: Format) {
     const url = new URL(feeds[format], window.location.origin).toString();
@@ -75,6 +91,27 @@ export function FeedMenu({ feeds = FEED_PATHS.all, className }: FeedMenuProps) {
         sideOffset={8}
         className="min-w-48 rounded-xl border-white/10 bg-popover p-1.5 font-mono shadow-xl"
       >
+        <DropdownMenuLabel className="px-3 pt-2 pb-1 text-xs font-normal text-muted-foreground">
+          Include
+        </DropdownMenuLabel>
+        {TOPICS.map((topic) => {
+          const checked = topics.includes(topic);
+          return (
+            <DropdownMenuCheckboxItem
+              key={topic}
+              checked={checked}
+              // An empty feed is useless, so the last ticked topic stays ticked
+              disabled={checked && topics.length === 1}
+              onCheckedChange={(next) => toggle(topic, next === true)}
+              // Keep the menu open to tick several topics
+              onSelect={(event) => event.preventDefault()}
+              className="rounded-lg py-2 pr-3 pl-9 text-sm focus:bg-white/10 focus:text-foreground [&>span>span>svg]:text-primary"
+            >
+              {TOPIC_LABELS[topic]}
+            </DropdownMenuCheckboxItem>
+          );
+        })}
+        <DropdownMenuSeparator className="bg-white/10" />
         {(Object.keys(LABELS) as Format[]).map((format) => {
           const isCopied = copied === format;
           const Icon = isCopied ? Check : Copy;

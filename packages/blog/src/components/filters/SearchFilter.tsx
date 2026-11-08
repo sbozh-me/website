@@ -7,7 +7,8 @@ export interface SearchFilterProps {
 
 export function SearchFilter({ value, onChange }: SearchFilterProps) {
   return (
-    <div className="relative col-span-2 sm:col-auto">
+    // Takes whatever the selects leave on their row; drops to its own row below 11rem
+    <div className="relative col-span-2 sm:col-auto sm:min-w-44 sm:flex-1">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -30,7 +31,7 @@ export function SearchFilter({ value, onChange }: SearchFilterProps) {
         placeholder="Search"
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value || undefined)}
-        className="pl-9 w-full sm:w-44"
+        className="pl-9 w-full"
       />
     </div>
   );

@@ -1,5 +1,7 @@
 import { getAllEntries, getBlogEntries, getReleaseEntries, type FeedEntry } from "./entries";
-import { FEED_PATHS } from "./paths";
+import type { Topic } from "@/lib/subscribers/topics";
+
+import { FEED_PATHS, feedPathsFor } from "./paths";
 
 export interface FeedChannel {
   title: string;
@@ -35,3 +37,11 @@ export const FEEDS = {
     load: getReleaseEntries,
   },
 } satisfies Record<string, FeedChannel>;
+
+/** The site-wide feed narrowed to some topics, served from /rss.xml?topics=… with matching self links */
+export function channelForTopics(topics: readonly Topic[]): FeedChannel {
+  const paths = feedPathsFor(topics);
+  if (paths === FEED_PATHS.all) return FEEDS.all;
+  const base = topics.includes("blog") ? FEEDS.blog : FEEDS.releases;
+  return { ...base, ...paths };
+}

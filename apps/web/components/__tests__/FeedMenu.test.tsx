@@ -49,13 +49,33 @@ describe("FeedMenu", () => {
   it("opens the feed when the clipboard is unavailable", async () => {
     writeText.mockRejectedValue(new Error("denied"));
     const open = vi.spyOn(window, "open").mockImplementation(() => null);
-    render(<FeedMenu feeds={{ rss: "/blog/rss.xml", atom: "/blog/atom.xml" }} />);
+    render(<FeedMenu />);
     openMenu();
 
     await act(async () => {
       fireEvent.click(screen.getByRole("menuitem", { name: "Copy RSS URL" }));
     });
 
-    expect(open).toHaveBeenCalledWith(`${window.location.origin}/blog/rss.xml`, "_blank", "noopener");
+    expect(open).toHaveBeenCalledWith(`${window.location.origin}/rss.xml`, "_blank", "noopener");
+  });
+
+  it("includes both topics by default and narrows the URL with ?topics=", async () => {
+    render(<FeedMenu />);
+    openMenu();
+
+    const blog = screen.getByRole("menuitemcheckbox", { name: "Blog posts" });
+    const releases = screen.getByRole("menuitemcheckbox", { name: "Release notes" });
+    expect(blog).toHaveAttribute("aria-checked", "true");
+    expect(releases).toHaveAttribute("aria-checked", "true");
+
+    fireEvent.click(releases);
+    expect(releases).toHaveAttribute("aria-checked", "false");
+    // The last ticked topic can't be unticked
+    expect(screen.getByRole("menuitemcheckbox", { name: "Blog posts" })).toHaveAttribute("data-disabled");
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("menuitem", { name: "Copy RSS URL" }));
+    });
+    expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/rss.xml?topics=blog`);
   });
 });
