@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3] - 2026-11-10
+
+### Changes
+
+- feat(blog): add password-locked blog posts ([1ef9161](https://github.com/sbozh-me/website/commit/1ef9161297b89461ec4796a1f393ad94474756cf))
+
+
 ## [1.10.2] - 2026-11-08
 
 ### Changes
