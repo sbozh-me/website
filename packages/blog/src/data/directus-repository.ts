@@ -80,6 +80,7 @@ interface DirectusPost {
   theme: string | null;
   next_post: string | null;
   series: string | null;
+  is_locked: boolean | null;
 }
 
 interface DirectusPersona {
@@ -202,6 +203,7 @@ export class DirectusRepository implements BlogRepository {
             "reading_time",
             "next_post",
             "series",
+            "is_locked",
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
             { image: ["id", "filename_download", "width", "height"] },
@@ -368,6 +370,7 @@ export class DirectusRepository implements BlogRepository {
       ogGenerate: post.og_generate,
       isTocHidden: post.is_toc_hidden,
       theme: post.theme ?? undefined,
+      isLocked: post.is_locked ?? false,
     };
   }
 
@@ -385,6 +388,7 @@ export class DirectusRepository implements BlogRepository {
       image: post.image ? this.mapToImage(post.image) : undefined,
       nextPostId: post.next_post ?? undefined,
       seriesId: post.series ?? undefined,
+      isLocked: post.is_locked ?? false,
     };
   }
 

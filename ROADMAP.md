@@ -215,5 +215,6 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - Cookies rework: remove the marketing option
 - Track blog post reading time
 - Read/unread state for blog posts, release notes and projects
+- ~~Locked (paid) blog posts: Directus `is_locked` toggle, static password unlock until accounts exist~~
 
 ---

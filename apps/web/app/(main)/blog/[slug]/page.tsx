@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { evaluate } from "@mdx-js/mdx";
 import Image from "next/image";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -10,7 +11,9 @@ import remarkGfm from "remark-gfm";
 import { ErrorState, PostNavigation, ScrollToTop } from "@sbozh/blog/components";
 import { getAdjacentPosts, type TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
+import { LockedContent } from "@/components/LockedContent";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
+import { UNLOCK_COOKIE, isUnlockTokenValid } from "@/lib/content-lock";
 import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
 import { PostArticle } from "@/lib/blog/post-article";
@@ -121,6 +124,31 @@ export default async function BlogPostPage({ params }: PageProps) {
   }
 
   const adjacent = getAdjacentPosts(await postsPromise, post.slug, await seriesPromise);
+
+  // A locked post shows its header and excerpt only: the body (and its TL;DR and
+  // TOC) is never compiled, so none of it reaches the page until the reader unlocks
+  if (post.isLocked && !isUnlockTokenValid((await cookies()).get(UNLOCK_COOKIE)?.value)) {
+    // Drop the body from the object itself: props of server components can still be
+    // serialized into the page payload, so passing `post` whole would leak it
+    const teaser = { ...post, content: "", tldr: undefined, attribution: undefined };
+    const title = teaser.titleMarkup ? await renderTitle(teaser.titleMarkup) : undefined;
+    return (
+      <>
+        {teaser.theme && <PageTheme theme={teaser.theme} />}
+        <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
+          <div className="max-w-6xl mx-auto">
+            <PostArticle
+              post={teaser}
+              adjacent={adjacent}
+              title={title}
+              content={<LockedContent path={`/blog/${post.slug}`} />}
+              footer={<PostNavigation {...adjacent} />}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   // Compile and run MDX. The TOC comes from the processed headings (h2-h4), so glitch
   // syntax in a heading shows as its base text and the anchors match the heading ids.

@@ -30,6 +30,8 @@ export interface Post {
   ogGenerate?: boolean;
   isTocHidden?: boolean;
   theme?: string;
+  /** Paid post: the body is only served after the content password is entered */
+  isLocked?: boolean;
 }
 
 export interface PostListItem {
@@ -47,4 +49,6 @@ export interface PostListItem {
   nextPostId?: string;
   /** Series this post belongs to; previous/next stay inside it */
   seriesId?: string;
+  /** Paid post: the body is only served after the content password is entered */
+  isLocked?: boolean;
 }

@@ -13,6 +13,17 @@ vi.mock("next/cache", () => ({
   unstable_noStore: vi.fn(),
 }));
 
+// Mock next/headers: the unlock cookie for locked posts
+let mockUnlockCookie: string | undefined = undefined;
+vi.mock("next/headers", () => ({
+  cookies: vi.fn(async () => ({
+    get: (name: string) =>
+      name === "sbozh_unlock" && mockUnlockCookie !== undefined
+        ? { name, value: mockUnlockCookie }
+        : undefined,
+  })),
+}));
+
 // Mock next/image
 vi.mock("next/image", () => ({
   default: ({ src, alt, ...props }: { src: string; alt: string }) => (
@@ -65,6 +76,54 @@ describe("BlogPostPage", () => {
     mockShouldThrow = false;
     mockPostsShouldThrow = false;
     mockPostOverride = undefined;
+    mockUnlockCookie = undefined;
+  });
+
+  describe("locked posts", () => {
+    const lockedPost = {
+      id: "locked",
+      title: "Locked Post",
+      slug: "locked-post",
+      excerpt: "A public teaser",
+      tldr: "Secret summary",
+      content: "## Secret Heading\n\nThe paid part.",
+      date: "2025-01-01",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+      isLocked: true,
+    };
+
+    it("shows the title, excerpt and password form, but not the body", async () => {
+      mockPostOverride = lockedPost;
+      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+
+      expect(screen.getByText("Locked Post")).toBeInTheDocument();
+      expect(screen.getByText("A public teaser")).toBeInTheDocument();
+      expect(screen.getByText("This post is locked")).toBeInTheDocument();
+      expect(screen.getByLabelText("Password")).toBeInTheDocument();
+      expect(screen.queryByText(/The paid part/)).not.toBeInTheDocument();
+      expect(screen.queryByText("Secret summary")).not.toBeInTheDocument();
+      expect(screen.queryByText("Secret Heading")).not.toBeInTheDocument();
+    });
+
+    it("ignores a forged unlock cookie", async () => {
+      mockPostOverride = lockedPost;
+      mockUnlockCookie = "forged";
+      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+
+      expect(screen.getByText("This post is locked")).toBeInTheDocument();
+    });
+
+    it("renders the body with a valid unlock cookie", async () => {
+      const { unlockToken } = await import("@/lib/content-lock");
+      mockPostOverride = lockedPost;
+      mockUnlockCookie = unlockToken();
+      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+
+      expect(screen.getByText(/The paid part/)).toBeInTheDocument();
+      expect(screen.queryByText("This post is locked")).not.toBeInTheDocument();
+    });
   });
 
   it("renders post title and content", async () => {

@@ -125,6 +125,7 @@ describe("DirectusRepository", () => {
         date: "2025-01-15",
         lastModified: "2025-01-15",
         readingTime: 5,
+        isLocked: false,
         persona: {
           id: "persona-1",
           name: "The Founder",
@@ -430,6 +431,43 @@ describe("DirectusRepository", () => {
       mockRequest.mockRejectedValueOnce(new Error("Network error"));
 
       await expect(repository.getPost("test-post")).rejects.toThrow(DirectusError);
+    });
+  });
+
+  describe("is_locked", () => {
+    it("maps is_locked on list items and single posts, defaulting to false", async () => {
+      const base = {
+        id: "p",
+        status: "published",
+        title: "T",
+        slug: "t",
+        excerpt: "",
+        tldr: null,
+        content: "body",
+        date_published: "2025-01-15",
+        date_updated: null,
+        reading_time: 1,
+        persona: { id: "1", name: "N", slug: "n", color: "#000", description: null },
+        tags: [],
+        image: null,
+        image_attribution: null,
+        attribution: null,
+        og_image: null,
+        og_generate: true,
+        is_toc_hidden: false,
+        theme: null,
+        next_post: null,
+        series: null,
+      };
+      mockRequest.mockResolvedValueOnce([
+        { ...base, is_locked: true },
+        { ...base, id: "q", is_locked: null },
+      ]);
+      const posts = await repository.getPosts();
+      expect(posts.map((p) => p.isLocked)).toEqual([true, false]);
+
+      mockRequest.mockResolvedValueOnce([{ ...base, is_locked: true }]);
+      expect((await repository.getPost("t"))?.isLocked).toBe(true);
     });
   });
 
