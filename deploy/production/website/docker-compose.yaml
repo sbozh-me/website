@@ -200,6 +200,8 @@ services:
       SUBSCRIBE_SECRET: ${SUBSCRIBE_SECRET}
       # Shared with Directus: authenticates the announcement flows' calls
       ANNOUNCE_SECRET: ${ANNOUNCE_SECRET}
+      # Password for locked blog posts (apps/web/lib/content-lock.ts)
+      CONTENT_PASSWORD: ${CONTENT_PASSWORD}
     networks:
       - sbozh-me-network
     logging:
