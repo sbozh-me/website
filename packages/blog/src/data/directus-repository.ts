@@ -371,6 +371,7 @@ export class DirectusRepository implements BlogRepository {
       isTocHidden: post.is_toc_hidden,
       theme: post.theme ?? undefined,
       isLocked: post.is_locked ?? false,
+      isDraft: post.status === "draft",
     };
   }
 

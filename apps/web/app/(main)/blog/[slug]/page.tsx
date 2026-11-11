@@ -26,11 +26,20 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ draft?: string | string[] }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+/**
+ * `?draft=1` opens a draft by its direct link, so a post can be read before it goes
+ * live. It's a preview link, not access control: anyone with the link sees the draft.
+ */
+async function wantsDraft(searchParams: PageProps["searchParams"]): Promise<boolean> {
+  return (await searchParams)?.draft === "1";
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const repository = createBlogRepository();
+  const repository = createBlogRepository({ includeDrafts: await wantsDraft(searchParams) });
 
   try {
     const post = await repository.getPost(slug);
@@ -38,6 +47,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!post) {
       return {
         title: "Post Not Found",
+      };
+    }
+
+    // A draft preview is never indexed or shared as a card
+    if (post.isDraft) {
+      return {
+        title: `Draft: ${post.title}`,
+        robots: { index: false, follow: false },
       };
     }
 
@@ -87,10 +104,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function BlogPostPage({ params }: PageProps) {
+export default async function BlogPostPage({ params, searchParams }: PageProps) {
   noStore();
   const { slug } = await params;
-  const repository = createBlogRepository();
+  const repository = createBlogRepository({ includeDrafts: await wantsDraft(searchParams) });
 
   // Neighbour list is a nice-to-have: a failure only hides post navigation
   const postsPromise = repository.getPosts().catch(() => []);
@@ -123,6 +140,16 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
+  // A draft usually has no publish date yet; show today's instead of an invalid date
+  if (post.isDraft && !post.date) {
+    post = { ...post, date: new Date().toISOString() };
+  }
+  const draftBanner = post.isDraft ? (
+    <p className="mb-8 text-center text-xs uppercase tracking-widest text-muted-foreground">
+      Draft preview · not published
+    </p>
+  ) : null;
+
   const adjacent = getAdjacentPosts(await postsPromise, post.slug, await seriesPromise);
 
   // A locked post shows its header and excerpt only: the body (and its TL;DR and
@@ -137,6 +164,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {teaser.theme && <PageTheme theme={teaser.theme} />}
         <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
           <div className="max-w-6xl mx-auto">
+            {draftBanner}
             <PostArticle
               post={teaser}
               adjacent={adjacent}
@@ -222,6 +250,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       )}
       <div className="mx-auto px-6 md:px-12 lg:px-24 py-12">
         <div className="max-w-6xl mx-auto">
+          {draftBanner}
           <PostArticle
             post={post}
             adjacent={adjacent}

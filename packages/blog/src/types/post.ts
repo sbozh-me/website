@@ -32,6 +32,8 @@ export interface Post {
   theme?: string;
   /** Paid post: the body is only served after the content password is entered */
   isLocked?: boolean;
+  /** Not published yet; only reachable through a draft preview link */
+  isDraft?: boolean;
 }
 
 export interface PostListItem {

@@ -36,10 +36,11 @@ vi.mock("next/image", () => ({
 let mockShouldThrow = false;
 let mockPostsShouldThrow = false;
 let mockPostOverride: unknown = undefined;
+let lastRepositoryOptions: unknown = undefined;
 
 // Mock the repository
 vi.mock("@/lib/blog/repository", () => ({
-  createBlogRepository: () => ({
+  createBlogRepository: (options?: unknown) => (lastRepositoryOptions = options, {
     getPost: vi.fn(async (slug: string) => {
       if (mockShouldThrow) {
         throw new Error("Connection failed");
@@ -77,6 +78,56 @@ describe("BlogPostPage", () => {
     mockPostsShouldThrow = false;
     mockPostOverride = undefined;
     mockUnlockCookie = undefined;
+    lastRepositoryOptions = undefined;
+  });
+
+  describe("draft preview", () => {
+    const draftPost = {
+      id: "draft",
+      title: "Pitch deck",
+      slug: "pitch-deck",
+      excerpt: "",
+      content: "Still being redacted.",
+      date: null,
+      readingTime: 1,
+      persona: { id: "anon", name: "The Anon", slug: "the-anon", color: "#9CA3AF" },
+      tags: [],
+      isDraft: true,
+    };
+
+    it("only asks for drafts with ?draft=1", async () => {
+      await BlogPostPage({ params: Promise.resolve({ slug: "why-i-started-sbozh" }) });
+      expect(lastRepositoryOptions).toEqual({ includeDrafts: false });
+
+      await BlogPostPage({
+        params: Promise.resolve({ slug: "why-i-started-sbozh" }),
+        searchParams: Promise.resolve({ draft: "1" }),
+      });
+      expect(lastRepositoryOptions).toEqual({ includeDrafts: true });
+    });
+
+    it("renders a draft with a banner and no invalid date", async () => {
+      mockPostOverride = draftPost;
+      render(
+        await BlogPostPage({
+          params: Promise.resolve({ slug: "pitch-deck" }),
+          searchParams: Promise.resolve({ draft: "1" }),
+        }),
+      );
+      expect(screen.getByText("Draft preview · not published")).toBeInTheDocument();
+      expect(screen.getByText(/Still being redacted/)).toBeInTheDocument();
+      expect(screen.queryByText(/Invalid Date/)).not.toBeInTheDocument();
+    });
+
+    it("keeps a draft out of search engines", async () => {
+      mockPostOverride = draftPost;
+      const metadata = await generateMetadata({
+        params: Promise.resolve({ slug: "pitch-deck" }),
+        searchParams: Promise.resolve({ draft: "1" }),
+      });
+      expect(metadata.robots).toEqual({ index: false, follow: false });
+      expect(metadata.title).toBe("Draft: Pitch deck");
+    });
   });
 
   describe("locked posts", () => {
