@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.4] - 2026-11-11
+
+### Changes
+
+- fix(blog): sign submissions as The Anon, ask for contact ([d8bcb3d](https://github.com/sbozh-me/website/commit/d8bcb3d065520d8413620f87e04e0842e5180a91))
+- fix(deploy): pass CONTENT_PASSWORD to the web container ([913b7a7](https://github.com/sbozh-me/website/commit/913b7a79b77c5ed378df5fd9f0690fc2bc9beff6))
+
+
 ## [1.10.3] - 2026-11-10
 
 ### Changes
