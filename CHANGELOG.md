@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.5] - 2026-11-11
+
+### Changes
+
+- feat(blog): preview draft posts with ?draft=1 ([e031cfb](https://github.com/sbozh-me/website/commit/e031cfba6c8bec73fc5848b685b8fa9e5eab45c5))
+- feat(directus): publish blog submissions as draft posts ([eb1c33f](https://github.com/sbozh-me/website/commit/eb1c33f9280aeeaff9be61fc521c559f7ed10c9b))
+
+
 ## [1.10.4] - 2026-11-11
 
 ### Changes
