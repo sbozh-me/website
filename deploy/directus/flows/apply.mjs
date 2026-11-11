@@ -53,10 +53,17 @@ const flows = JSON.parse(process.env.FLOWS_JSON);
 for (const { operations, ...flow } of flows) {
   // The flow must exist before its operations; the first operation is linked after
   await upsert("flows", { ...flow, operation: null });
+  // Operations chain through `resolve`/`reject` (ids of other operations in the same
+  // flow). They're created unlinked first, since a link needs its target to exist.
   for (const operation of operations) {
     await upsert("operations", { ...operation, flow: flow.id, resolve: null, reject: null });
   }
-  if (!dryRun) await api("PATCH", `/flows/${flow.id}`, { operation: operations[0]?.id ?? null });
+  if (!dryRun) {
+    for (const { id, resolve = null, reject = null } of operations) {
+      if (resolve || reject) await api("PATCH", `/operations/${id}`, { resolve, reject });
+    }
+    await api("PATCH", `/flows/${flow.id}`, { operation: operations[0]?.id ?? null });
+  }
 }
 
 console.log(dryRun ? "Dry run only, nothing changed." : "Flows applied.");

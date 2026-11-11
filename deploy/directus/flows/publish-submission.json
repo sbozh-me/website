@@ -1,0 +1,94 @@
+[
+  {
+    "id": "ed44a458-951c-4955-9ff7-94ec05cd5757",
+    "name": "Publish as draft",
+    "icon": "post_add",
+    "color": "#9CA3AF",
+    "description": "Turns the selected blog submissions into DRAFT posts signed by The Anon and marks them accepted. Add the hero image, tags and excerpt, then publish the post as usual. Preview a draft at /blog/<slug>?draft=1. Managed in the repo: deploy/directus/flows/publish-submission.json.",
+    "status": "active",
+    "trigger": "manual",
+    "accountability": "all",
+    "options": {
+      "collections": ["blog_submissions"],
+      "location": "both",
+      "requireSelection": true,
+      "async": false,
+      "requireConfirmation": true,
+      "confirmationDescription": "Create a draft post signed by The Anon from each selected submission? Already accepted ones are skipped."
+    },
+    "operations": [
+      {
+        "id": "c315c4a3-5354-4063-a789-bfd38227036b",
+        "name": "Read submissions",
+        "key": "submissions",
+        "type": "item-read",
+        "position_x": 19,
+        "position_y": 1,
+        "resolve": "f13a557d-914b-46f7-9480-89597bd718d3",
+        "options": {
+          "collection": "blog_submissions",
+          "key": "{{$trigger.body.keys}}",
+          "permissions": "$trigger",
+          "emitEvents": false
+        }
+      },
+      {
+        "id": "f13a557d-914b-46f7-9480-89597bd718d3",
+        "name": "Read The Anon",
+        "key": "anon",
+        "type": "item-read",
+        "position_x": 37,
+        "position_y": 1,
+        "resolve": "a91e504b-4dd0-4654-a4a4-deb09c65b234",
+        "options": {
+          "collection": "personas",
+          "query": { "filter": { "slug": { "_eq": "the-anon" } }, "fields": ["id"], "limit": 1 },
+          "permissions": "$trigger",
+          "emitEvents": false
+        }
+      },
+      {
+        "id": "a91e504b-4dd0-4654-a4a4-deb09c65b234",
+        "name": "Prepare posts",
+        "key": "prepare",
+        "type": "exec",
+        "position_x": 55,
+        "position_y": 1,
+        "resolve": "f1660237-bf34-41bf-952f-efb067c10ad6",
+        "options": {
+          "code": "// Maps each selected submission to a draft post signed by The Anon.\n// Throws (stopping the flow) when there is nothing to do, so the later\n// update never runs with an empty key list (that would touch every row).\nmodule.exports = async function (data) {\n  const anon = [].concat(data.anon || [])[0];\n  if (!anon) throw new Error('Persona \"the-anon\" not found');\n\n  const submissions = [].concat(data.submissions || []).filter((s) => s && s.status !== 'accepted');\n  if (submissions.length === 0) throw new Error('Nothing to publish: the selected submissions are already accepted');\n\n  const slugify = (text) => text.normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase()\n    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);\n  // Same estimate as the submit page preview: 200 words a minute\n  const minutes = (text) => Math.max(1, Math.ceil(text.split(/\\s+/).filter(Boolean).length / 200));\n\n  return {\n    keys: submissions.map((s) => s.id),\n    posts: submissions.map((s) => ({\n      status: 'draft',\n      title: s.title || 'Submission ' + s.id,\n      slug: slugify(s.title || '') || 'submission-' + s.id,\n      content: s.content,\n      persona: anon.id,\n      reading_time: minutes(s.content || ''),\n    })),\n  };\n};\n"
+        }
+      },
+      {
+        "id": "f1660237-bf34-41bf-952f-efb067c10ad6",
+        "name": "Create draft posts",
+        "key": "posts",
+        "type": "item-create",
+        "position_x": 73,
+        "position_y": 1,
+        "resolve": "7d0c2f52-3f7e-4b8c-9a51-2a6f0e4b1c90",
+        "options": {
+          "collection": "posts",
+          "payload": "{{prepare.posts}}",
+          "permissions": "$trigger",
+          "emitEvents": true
+        }
+      },
+      {
+        "id": "7d0c2f52-3f7e-4b8c-9a51-2a6f0e4b1c90",
+        "name": "Mark accepted",
+        "key": "accepted",
+        "type": "item-update",
+        "position_x": 91,
+        "position_y": 1,
+        "options": {
+          "collection": "blog_submissions",
+          "key": "{{prepare.keys}}",
+          "payload": { "status": "accepted" },
+          "permissions": "$trigger",
+          "emitEvents": false
+        }
+      }
+    ]
+  }
+]
