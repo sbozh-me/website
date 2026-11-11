@@ -43,7 +43,7 @@ describe("SubmitForm", () => {
     await screen.findByText("Sent. Thank you.");
     const [url, init] = mockFetch.mock.calls[0];
     expect(url).toBe("/api/blog/submit");
-    expect(JSON.parse(init.body)).toMatchObject({ content: TEXT, penName: "", title: "Binary", website: "" });
+    expect(JSON.parse(init.body)).toMatchObject({ contact: "", content: TEXT, title: "Binary", website: "" });
     expect(window.localStorage.getItem("blog-submit-draft")).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Write another" }));
@@ -90,7 +90,7 @@ describe("SubmitForm preview", () => {
     const preview = await screen.findByRole("region", { name: "Preview" }, { timeout: 5000 });
     await waitFor(() => expect(preview.querySelector('[data-voice="teal"]')).not.toBeNull(), { timeout: 5000 });
     expect(preview).toHaveTextContent("Binary");
-    expect(preview).toHaveTextContent("Anonymous");
+    expect(preview).toHaveTextContent("The Anon");
     expect(preview).toHaveTextContent("1 min read");
     // The writer never sets the hero image
     expect(screen.getByRole("figure", { name: "Hero image" })).toHaveTextContent(/The Senate picks it/);

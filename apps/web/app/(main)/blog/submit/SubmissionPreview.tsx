@@ -8,13 +8,12 @@ import type { PreviewResult } from "@/lib/blog/submission-preview";
 /** Long enough not to recompile on every keystroke if the preview stays open. */
 const DEBOUNCE_MS = 250;
 
-/** Submissions are signed by a pen name, not a site persona: one neutral colour for all. */
-const GUEST_COLOR = "#a1a1aa";
+/** Published submissions are signed by the `the-anon` persona; its name and colour in Directus. */
+const ANON = { color: "#9CA3AF", id: "the-anon", name: "The Anon", slug: "the-anon" } as const;
 
 interface SubmissionPreviewProps {
   readonly content: string;
   readonly title: string;
-  readonly penName: string;
 }
 
 /**
@@ -22,7 +21,7 @@ interface SubmissionPreviewProps {
  * same plugins. The compiler is loaded on first use, so the submit page stays light
  * for people who never preview.
  */
-export function SubmissionPreview({ content, title, penName }: SubmissionPreviewProps) {
+export function SubmissionPreview({ content, title }: SubmissionPreviewProps) {
   const [result, setResult] = useState<PreviewResult | null>(null);
 
   useEffect(() => {
@@ -54,8 +53,6 @@ export function SubmissionPreview({ content, title, penName }: SubmissionPreview
     );
   }
 
-  const name = penName.trim() || result.meta.author || "Anonymous";
-
   return (
     <section aria-label="Preview">
       <p className="mb-8 text-center text-xs uppercase tracking-widest text-muted-foreground">
@@ -65,7 +62,7 @@ export function SubmissionPreview({ content, title, penName }: SubmissionPreview
         post={{
           date: new Date().toISOString(),
           excerpt: result.meta.excerpt ?? "",
-          persona: { color: GUEST_COLOR, id: "guest", name, slug: "guest" },
+          persona: ANON,
           readingTime: result.readingTime,
           tags: result.meta.tags.map((tag) => ({ id: tag, name: tag, slug: tag })),
           title: title.trim() || result.meta.title || "Untitled",

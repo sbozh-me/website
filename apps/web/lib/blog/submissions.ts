@@ -1,23 +1,25 @@
 // Anonymous post submissions from /blog/submit.
 //
-// A submission is raw text (SDS allowed) plus an optional title and pen name.
+// A submission is raw text (SDS allowed) plus an optional title and an optional
+// free-form contact. Published submissions are always signed by The Anon.
 // It lands in the Directus `blog_submissions` collection as `new` and is never
 // rendered on the site from there: Sem reads it in Directus, edits it, and
 // copies what he accepts into `posts` by hand.
 //
-// Anonymity is a promise, so nothing here takes an identity: no email, no IP,
-// no user agent. The route's rate limiter keeps IPs in process memory only.
+// Anonymity is a promise, so nothing here takes an identity on its own: no IP,
+// no user agent. The contact is whatever the author chose to leave, and only
+// Sem sees it. The route's rate limiter keeps IPs in process memory only.
 
 import { createRateLimiter } from "@/lib/contact/rate-limit";
 import { directusRest } from "@/lib/directus/rest";
 
-import { MAX_CONTENT, MAX_PEN_NAME, MAX_TITLE, MIN_CONTENT } from "./submission-limits";
+import { MAX_CONTACT, MAX_CONTENT, MAX_TITLE, MIN_CONTENT } from "./submission-limits";
 
-export { MAX_CONTENT, MAX_PEN_NAME, MAX_TITLE, MIN_CONTENT };
+export { MAX_CONTACT, MAX_CONTENT, MAX_TITLE, MIN_CONTENT };
 
 export interface SubmissionInput {
   readonly title: string | null;
-  readonly pen_name: string | null;
+  readonly contact: string | null;
   readonly content: string;
 }
 
@@ -31,12 +33,12 @@ export function parseSubmission(body: unknown): SubmissionInput | null {
 
   const content = str(record.content).replace(/\r\n/g, "\n").trim();
   const title = oneLine(str(record.title));
-  const penName = oneLine(str(record.penName));
+  const contact = oneLine(str(record.contact));
 
   if (content.length < MIN_CONTENT || content.length > MAX_CONTENT) return null;
-  if (title.length > MAX_TITLE || penName.length > MAX_PEN_NAME) return null;
+  if (title.length > MAX_TITLE || contact.length > MAX_CONTACT) return null;
 
-  return { content, pen_name: penName || null, title: title || null };
+  return { contact: contact || null, content, title: title || null };
 }
 
 /** Stores the submission as `new` and returns its id. */

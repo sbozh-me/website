@@ -6,7 +6,7 @@ import { SubmitForm } from "./SubmitForm";
 export const metadata: Metadata = {
   title: "Submit a text",
   description:
-    "Send a text to the sbozh.me blog. No account, no email, fully anonymous.",
+    "Send a text to the sbozh.me blog. No account, no name, published as The Anon.",
 };
 
 export default function SubmitPage() {
@@ -26,8 +26,8 @@ export default function SubmitPage() {
             Submit a text
           </h1>
           <p className="mt-4 text-muted-foreground">
-            Got something to say? Write it here and send it. No registration, no
-            email, no name required.
+            Got something to say? Write it here and send it. No registration,
+            no name. Leaving a contact is up to you.
           </p>
 
           <section
@@ -40,7 +40,8 @@ export default function SubmitPage() {
             <ul className="list-disc space-y-2 pl-5">
               <li>
                 <strong className="text-foreground">Anonymous.</strong> Nothing
-                that identifies you is stored with your text. Your IP address is
+                that identifies you is stored with your text unless you leave a
+                contact yourself, and only the editor sees it. Your IP address is
                 only held in memory for an hour to stop spam, and never saved
                 next to your words.
               </li>
@@ -57,9 +58,9 @@ export default function SubmitPage() {
               </li>
               <li>
                 <strong className="text-foreground">No take-backs.</strong>{" "}
-                Since we don&apos;t know who you are, you can&apos;t withdraw or
-                edit it after sending, and we can&apos;t tell you whether it was
-                published. Watch the blog.
+                You can&apos;t withdraw or edit it after sending. Without a
+                contact we can&apos;t tell you whether it was published; watch
+                the blog.
               </li>
               <li>
                 <strong className="text-foreground">Hero image.</strong>{" "}
@@ -69,8 +70,9 @@ export default function SubmitPage() {
               </li>
               <li>
                 <strong className="text-foreground">Credit.</strong> If
-                published, it&apos;s signed with your pen name, or
-                &ldquo;Anonymous&rdquo; if you leave it empty.
+                published, it&apos;s signed by{" "}
+                <strong className="text-foreground">The Anon</strong>. A contact
+                is never shown on the blog.
               </li>
               <li>
                 <strong className="text-foreground">Not a crisis line.</strong>{" "}

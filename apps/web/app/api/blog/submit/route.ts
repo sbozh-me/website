@@ -56,7 +56,7 @@ export async function POST(request: Request) {
   await sendMail({
     subject: `New anonymous submission${submission.title ? `: ${submission.title}` : ""}`,
     text: [
-      `Signed: ${submission.pen_name ?? "nobody"}`,
+      `Contact: ${submission.contact ?? "none left"}`,
       `${submission.content.length} characters. First lines:`,
       submission.content.slice(0, 400),
       `Review it: ${directusUrl}/admin/content/blog_submissions/${id}`,

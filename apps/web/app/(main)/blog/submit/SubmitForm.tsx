@@ -9,7 +9,7 @@ import { Switch } from "@sbozh/react-ui/components/ui/switch";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import {
   MAX_CONTENT,
-  MAX_PEN_NAME,
+  MAX_CONTACT,
   MAX_TITLE,
   MIN_CONTENT,
 } from "@/lib/blog/submission-limits";
@@ -27,7 +27,7 @@ type Status = "idle" | "sent" | "error" | "rate_limited" | "invalid";
 
 interface Draft {
   title: string;
-  penName: string;
+  contact: string;
   content: string;
 }
 
@@ -50,13 +50,14 @@ function writeDraft(draft: Draft | null) {
 }
 
 /**
- * Title and pen name (both optional), the text, and a consent switch.
+ * Title and contact (both optional), the text, and a consent switch.
+ * Published texts are signed by The Anon; the contact only reaches Sem.
  * POSTs to /api/blog/submit. Same bot brake as the contact form: a hidden
  * `website` honeypot and the render time (`startedAt`).
  */
 export function SubmitForm() {
   const [title, setTitle] = useState("");
-  const [penName, setPenName] = useState("");
+  const [contact, setContact] = useState("");
   const [content, setContent] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [mode, setMode] = useState<"write" | "preview">("write");
@@ -71,7 +72,7 @@ export function SubmitForm() {
     const draft = readDraft();
     if (draft) {
       setTitle(draft.title ?? "");
-      setPenName(draft.penName ?? "");
+      setContact(draft.contact ?? "");
       setContent(draft.content ?? "");
     }
     restored.current = true;
@@ -80,9 +81,9 @@ export function SubmitForm() {
   useEffect(() => {
     if (!restored.current || status === "sent") return;
     writeDraft(
-      title || penName || content ? { content, penName, title } : null,
+      title || contact || content ? { contact, content, title } : null,
     );
-  }, [title, penName, content, status]);
+  }, [title, contact, content, status]);
 
   if (status === "sent") {
     return (
@@ -93,13 +94,13 @@ export function SubmitForm() {
         <p className="text-foreground">Sent. Thank you.</p>
         <p className="mt-2">
           Your text is waiting to be read. It may be published, redacted or
-          cancelled, and nobody can trace it back to you.
+          cancelled. If it goes live, it&apos;s signed by The Anon.
         </p>
         <Button
           className="mt-6"
           onClick={() => {
             setTitle("");
-            setPenName("");
+            setContact("");
             setContent("");
             setAgreed(false);
             setMode("write");
@@ -129,8 +130,8 @@ export function SubmitForm() {
         try {
           const response = await fetch("/api/blog/submit", {
             body: JSON.stringify({
+              contact,
               content,
-              penName,
               startedAt: startedAt.current,
               title,
               website,
@@ -166,13 +167,13 @@ export function SubmitForm() {
             value={title}
           />
           <Input
-            aria-label="Pen name (optional)"
+            aria-label="Contact (optional)"
             autoComplete="off"
-            maxLength={MAX_PEN_NAME}
-            onChange={(event) => setPenName(event.target.value)}
-            placeholder="Pen name (optional)"
+            maxLength={MAX_CONTACT}
+            onChange={(event) => setContact(event.target.value)}
+            placeholder="Contact: email, Telegram… (optional)"
             type="text"
-            value={penName}
+            value={contact}
           />
         </div>
 
@@ -194,7 +195,7 @@ export function SubmitForm() {
       </div>
 
       {mode === "preview" ? (
-        <SubmissionPreview content={content} penName={penName} title={title} />
+        <SubmissionPreview content={content} title={title} />
       ) : (
         <div className={NARROW}>
           <MarkdownEditor
@@ -222,7 +223,7 @@ export function SubmitForm() {
           <span>
             I understand my text may be redacted or never published, that I
             can&apos;t take it back after sending, and that sbozh.me may publish
-            it under my pen name or as Anonymous.
+            it signed by The Anon.
           </span>
         </label>
 
