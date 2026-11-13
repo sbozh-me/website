@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { clearLinkPreviewCache, GET } from "./route";
+import { clearLinkPreviewCache } from "@/lib/link-preview-cache";
+import { GET } from "./route";
 
 function request(path: string | null) {
   const url = new URL("http://localhost:3100/api/link-preview");

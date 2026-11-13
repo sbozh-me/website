@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { type LinkPreviewMeta, parseOpenGraph } from "@/lib/link-preview";
+import { linkPreviewCache } from "@/lib/link-preview-cache";
 
 export const runtime = "nodejs";
 
@@ -9,12 +10,7 @@ const FETCH_TIMEOUT_MS = 5000;
 // Next streams metadata into <body> for browsers; crawlers get it blocking in <head>
 const CRAWLER_USER_AGENT = "sbozh-link-preview (facebookexternalhit)";
 
-const cache = new Map<string, { meta: LinkPreviewMeta; expires: number }>();
-
-/** Clears the in-memory cache (tests). */
-export function clearLinkPreviewCache() {
-  cache.clear();
-}
+const cache = linkPreviewCache;
 
 // Pages are fetched from this same server: straight to the app's port in the container,
 // or the request's own origin in dev
