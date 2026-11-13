@@ -7,6 +7,7 @@ import { ThemeProvider, readerThemeScript } from "@sbozh/themes";
 import { CookieConsentModal } from "@/components/CookieConsentModal";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { LinkPreview } from "@/components/LinkPreview";
 import { CyrillicHeadings } from "@/components/ReaderTheme";
 import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/providers/PerformanceProvider";
@@ -142,6 +143,7 @@ export default function RootLayout({
                 <Footer />
                 <Toaster />
                 <CookieConsentModal />
+                <LinkPreview />
               </PerformanceProvider>
             </AnalyticsProvider>
           </SentryProvider>
