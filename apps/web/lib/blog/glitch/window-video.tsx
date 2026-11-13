@@ -13,7 +13,7 @@ interface WindowVideoProps {
   off: string;
   onPoster?: string;
   offPoster?: string;
-  /** Optional mobile cuts (e.g. vertical Shorts), used below the md breakpoint. */
+  /** Optional mobile cuts (e.g. vertical Shorts), used on screens 980px wide or less. */
   mobileOn?: string;
   mobileOff?: string;
   mobileOnPoster?: string;
@@ -24,8 +24,8 @@ interface WindowVideoProps {
   windowOff?: boolean;
 }
 
-/** Tailwind's md breakpoint: below it the mobile cuts play. */
-export const MOBILE_QUERY = "(max-width: 767px)";
+/** Screens this wide or narrower (phones, small tablets) play the mobile cuts. */
+export const MOBILE_QUERY = "(max-width: 980px)";
 
 function subscribeMobile(onChange: () => void) {
   const query = window.matchMedia?.(MOBILE_QUERY);
@@ -85,6 +85,33 @@ export function WindowVideo({
       // Autoplay can be refused (e.g. data saver); the poster and controls-free frame stay
     });
   }, [open]);
+
+  // The browser picks a <source> only when the video loads, so a window resized or a
+  // phone rotated across the breakpoint keeps the wrong cut until we load it again.
+  // Comparing with currentSrc skips the hydration flip on phones, which already have it.
+  useEffect(() => {
+    const cuts: [HTMLVideoElement | null, string, string | undefined][] = [
+      [onRef.current, on, mobileOn],
+      [offRef.current, off, mobileOff],
+    ];
+    for (const [element, src, mobileSrc] of cuts) {
+      if (!element || !mobileSrc || !element.currentSrc) continue;
+      const wanted = new URL(mobile ? mobileSrc : src, window.location.href).href;
+      if (element.currentSrc === wanted) continue;
+      const time = element.currentTime;
+      const playing = !element.paused;
+      element.load();
+      element.addEventListener(
+        "loadedmetadata",
+        () => {
+          // Both cuts of a pair share their timeline, so the new one picks up where it was
+          if (Number.isFinite(time)) element.currentTime = time;
+        },
+        { once: true },
+      );
+      if (playing) element.play()?.catch(() => {});
+    }
+  }, [mobile, on, off, mobileOn, mobileOff]);
 
   const video = (
     src: string,

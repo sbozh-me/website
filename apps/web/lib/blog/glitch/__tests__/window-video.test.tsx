@@ -169,12 +169,58 @@ describe("WindowVideo", () => {
       expect(off).toHaveAttribute("poster", "/off-9x16.jpg");
     });
 
+    it("loads the other cut when the screen crosses the breakpoint, at the same timestamp", () => {
+      let listener: () => void = () => {};
+      let matches = false;
+      vi.stubGlobal(
+        "matchMedia",
+        vi.fn(() => ({
+          get matches() {
+            return matches;
+          },
+          addEventListener: (_: string, fn: () => void) => (listener = fn),
+          removeEventListener: vi.fn(),
+        })),
+      );
+      const load = vi.spyOn(HTMLMediaElement.prototype, "load").mockImplementation(() => {});
+      const { on, off } = videos(mobilePage().container);
+      // The desktop cuts were picked at load
+      Object.defineProperty(on, "currentSrc", { configurable: true, value: new URL("/on.mp4", location.href).href });
+      Object.defineProperty(off, "currentSrc", { configurable: true, value: new URL("/off.mp4", location.href).href });
+      Object.defineProperty(on, "paused", { configurable: true, value: false });
+      on.currentTime = 7;
+      play.mockClear();
+
+      matches = true;
+      act(() => listener());
+      expect(load).toHaveBeenCalledTimes(2);
+      expect(play).toHaveBeenCalledOnce();
+      expect(play.mock.contexts[0]).toBe(on);
+      on.currentTime = 0;
+      on.dispatchEvent(new Event("loadedmetadata"));
+      expect(on.currentTime).toBe(7);
+    });
+
+    it("doesn't reload a phone's video, which already has the mobile cut, when it hydrates", () => {
+      matchMedia(true);
+      const load = vi.spyOn(HTMLMediaElement.prototype, "load").mockImplementation(() => {});
+      // The browser picked the first <source>, the mobile cut
+      const currentSrc = vi.spyOn(HTMLMediaElement.prototype, "currentSrc", "get").mockImplementation(function (
+        this: HTMLMediaElement,
+      ) {
+        return new URL(this.querySelector("source")!.getAttribute("src")!, location.href).href;
+      });
+      mobilePage();
+      expect(currentSrc).toHaveBeenCalled();
+      expect(load).not.toHaveBeenCalled();
+    });
+
     it("renders the desktop poster on the server", () => {
       const html = renderToStaticMarkup(
         <WindowVideo on="/on.mp4" off="/off.mp4" onPoster="/on.jpg" mobileOn="/m.mp4" mobileOnPoster="/m.jpg" />,
       );
       expect(html).toContain('poster="/on.jpg"');
-      expect(html).toContain('media="(max-width: 767px)"');
+      expect(html).toContain('media="(max-width: 980px)"');
     });
   });
 });
