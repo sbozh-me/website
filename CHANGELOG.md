@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.9] - 2026-11-13
+
+### Changes
+
+- fix(blog): switch video cuts at 980px and on resize ([163f3be](https://github.com/sbozh-me/website/commit/163f3be4df706c814296aeb7c0b0a43cf4fb529c))
+
+
 ## [1.10.8] - 2026-11-13
 
 ### Changes

@@ -1,6 +1,6 @@
 {
   "name": "@sbozh/typescript-config",
-  "version": "1.10.8",
+  "version": "1.10.9",
   "private": true,
   "license": "MIT",
   "publishConfig": {
