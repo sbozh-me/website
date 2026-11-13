@@ -8,6 +8,9 @@ audio/video and stems stay local (git-ignored).
 **`media/production/live/sbozhme_pan-dude-reels-finalv100.mp4`** (also in `sound/saved/finalv100/` with `finalv100.wav`).
 `suno_exact.py` (working copy) == `sound/saved/finalv100/suno_exact.py`; both rebuild `finalv100.wav` byte-identical:
 `FFMPEG=… python suno_exact.py _work/stems-song1 finalv100`. Its candidates are listed below, newest last.
+Corporate (captions from `corporate.py`): `…/live/sbozhme_pan-dude-corporate-desktop-finalv100.mp4` (picture
+`media/production/sbozhme_pan-dude-archivo-corporate-web.mp4`) and `…-corporate-reels-finalv100.mp4` (picture
+`…-archivo-corporate-v3-shorts.mp4`), both with `finalv100.wav`. Same 39.88s timeline; the voice still sings the original lyrics.
 "To know, you need" is `emperor-god` via `LINE_FX`, at x1.00 via `FULL_SPEED`, ringing to ~23.55.
 
 ## Saves and experiments: `sound/` (see `sound/README.md`)
