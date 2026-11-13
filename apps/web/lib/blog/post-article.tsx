@@ -75,7 +75,8 @@ export function PostArticle({
             <TableOfContents items={toc} />
           </div>
         )}
-        <div className="prose">{content}</div>
+        {/* Links in the post body get hover previews (see LinkPreview) */}
+        <div className="prose" data-link-preview="">{content}</div>
         {attribution && (
           <div className="mt-12 pt-8 border-t border-border">
             <h4 className="text-xs font-medium text-muted-foreground mb-3">Attribution</h4>

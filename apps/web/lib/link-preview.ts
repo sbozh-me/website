@@ -4,20 +4,24 @@
 // and the preview is served by whichever host the reader is on
 export const SITE_ORIGINS = new Set(["https://sbozh.me", "https://www.sbozh.me"]);
 
+// Marks the blog post body; only links inside it get a preview (not lists, cards or nav)
+export const LINK_PREVIEW_ATTRIBUTE = "data-link-preview";
+
 // The site-wide fallback from the root layout — a page that only has this has no image of its own
 const DEFAULT_OG_IMAGE = "/ogdefault.png";
 
 export interface LinkPreviewMeta {
-  /** Same-site images are root-relative so the current host serves them */
+  /** Same-site images are root-relative so the current host serves them; external ones go through /api/link-preview/image */
   image: string | null;
   title: string | null;
 }
 
 /**
- * Maps a link to the site path whose preview it shows.
- * Returns null for external links, links to the current page, API routes and files.
+ * Maps a link to the /api/link-preview query for it: `path=` for pages of this site,
+ * `url=` for external http(s) pages. Returns null for links to the current page, API
+ * routes, files and non-web links (mailto:, tel:, …).
  */
-export function getLinkPreviewPath(href: string, currentHref: string): string | null {
+export function getLinkPreviewQuery(href: string, currentHref: string): string | null {
   let url: URL;
   let current: URL;
   try {
@@ -27,7 +31,11 @@ export function getLinkPreviewPath(href: string, currentHref: string): string | 
     return null;
   }
 
-  if (url.origin !== current.origin && !SITE_ORIGINS.has(url.origin)) return null;
+  if (url.origin !== current.origin && !SITE_ORIGINS.has(url.origin)) {
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    url.hash = "";
+    return new URLSearchParams({ url: url.href }).toString();
+  }
 
   const { pathname } = url;
   if (pathname === current.pathname) return null;
@@ -35,7 +43,7 @@ export function getLinkPreviewPath(href: string, currentHref: string): string | 
   // Feeds, PDFs and other files have no page to preview
   if (/\.[a-z0-9]+$/i.test(pathname)) return null;
 
-  return pathname + url.search;
+  return new URLSearchParams({ path: pathname + url.search }).toString();
 }
 
 const ENTITIES: Record<string, string> = {
@@ -61,8 +69,15 @@ function attribute(tag: string, name: string): string | null {
   return match ? decodeEntities(match[1] ?? match[2]) : null;
 }
 
-/** Reads og:image and og:title (falling back to <title>) from a page's HTML. */
-export function parseOpenGraph(html: string, pageUrl: string): LinkPreviewMeta {
+/**
+ * Reads og:image and og:title (falling back to <title>) from a page's HTML.
+ * `internal` marks a page of this site, whose images are made root-relative.
+ */
+export function parseOpenGraph(
+  html: string,
+  pageUrl: string,
+  { internal = false }: { internal?: boolean } = {},
+): LinkPreviewMeta {
   const headEnd = html.search(/<\/head>/i);
   const head = headEnd === -1 ? html : html.slice(0, headEnd);
 
@@ -77,12 +92,12 @@ export function parseOpenGraph(html: string, pageUrl: string): LinkPreviewMeta {
     meta["og:title"] ?? head.match(/<title[^>]*>([^<]*)<\/title>/i)?.[1]?.trim() ?? null;
 
   return {
-    image: normalizeImage(meta["og:image"], pageUrl),
+    image: normalizeImage(meta["og:image"] ?? meta["twitter:image"], pageUrl, internal),
     title: title ? decodeEntities(title) : null,
   };
 }
 
-function normalizeImage(image: string | undefined, pageUrl: string): string | null {
+function normalizeImage(image: string | undefined, pageUrl: string, internal: boolean): string | null {
   if (!image) return null;
 
   let url: URL;
@@ -92,7 +107,7 @@ function normalizeImage(image: string | undefined, pageUrl: string): string | nu
     return null;
   }
 
-  const sameSite = url.origin === new URL(pageUrl).origin || SITE_ORIGINS.has(url.origin);
+  const sameSite = (internal && url.origin === new URL(pageUrl).origin) || SITE_ORIGINS.has(url.origin);
   if (!sameSite) return url.href;
   if (url.pathname === DEFAULT_OG_IMAGE) return null;
   return url.pathname + url.search;

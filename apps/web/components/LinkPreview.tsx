@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { getLinkPreviewPath, type LinkPreviewMeta } from "@/lib/link-preview";
+import { getLinkPreviewQuery, LINK_PREVIEW_ATTRIBUTE, type LinkPreviewMeta } from "@/lib/link-preview";
 
 // OG images are 1200×630
 const OG_ASPECT = 630 / 1200;
@@ -19,7 +19,8 @@ interface Position {
 }
 
 interface PreviewState extends Position {
-  path: string;
+  /** The /api/link-preview query, identifying the linked page */
+  query: string;
   /** null while the page's preview is still being fetched */
   meta: LinkPreviewMeta | null;
 }
@@ -142,13 +143,13 @@ function PreviewCard({ preview, open }: { preview: PreviewState; open: boolean }
 
 const metaCache = new Map<string, Promise<LinkPreviewMeta | null>>();
 
-function loadMeta(path: string): Promise<LinkPreviewMeta | null> {
-  let pending = metaCache.get(path);
+function loadMeta(query: string): Promise<LinkPreviewMeta | null> {
+  let pending = metaCache.get(query);
   if (!pending) {
-    pending = fetch(`/api/link-preview?path=${encodeURIComponent(path)}`)
+    pending = fetch(`/api/link-preview?${query}`)
       .then((response) => (response.ok ? (response.json() as Promise<LinkPreviewMeta>) : null))
       .catch(() => null);
-    metaCache.set(path, pending);
+    metaCache.set(query, pending);
   }
   return pending;
 }
@@ -159,10 +160,11 @@ export function clearLinkPreviewMetaCache() {
 }
 
 /**
- * Shows the OG image of an internal page while a mouse hovers a link to it; pages without
- * their own OG image get the SparkMark placeholder with the page title. Works through event
- * delegation, so any internal `<a href>` on the page gets the preview without changes to the
- * component that renders it. External links and touch devices are skipped.
+ * Shows the OG image of the linked page while a mouse hovers a link in a blog post — pages
+ * of this site and external ones alike; pages without an OG image get the SparkMark
+ * placeholder with the page title. Works through event delegation: `<a href>`s inside an
+ * element marked with `data-link-preview` (the post body) get the preview. Touch devices
+ * are skipped.
  */
 export function LinkPreview() {
   const [preview, setPreview] = useState<PreviewState | null>(null);
@@ -188,20 +190,20 @@ export function LinkPreview() {
       if (event.pointerType !== "mouse") return;
 
       const link = (event.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
-      if (!link || link === activeLink.current) return;
+      if (!link || link === activeLink.current || !link.closest(`[${LINK_PREVIEW_ATTRIBUTE}]`)) return;
 
-      const path = getLinkPreviewPath(link.getAttribute("href") ?? "", window.location.href);
-      if (!path) return;
+      const query = getLinkPreviewQuery(link.getAttribute("href") ?? "", window.location.href);
+      if (!query) return;
 
       window.clearTimeout(showTimer);
       activeLink.current = link;
       // Start fetching right away so the delay hides the request
-      const meta = loadMeta(path);
+      const meta = loadMeta(query);
       showTimer = window.setTimeout(() => {
         if (activeLink.current !== link) return;
         // Show the card right away, spinning until the preview arrives
         window.clearTimeout(exitTimer);
-        setPreview({ path, meta: null, ...positionFor(link.getBoundingClientRect()) });
+        setPreview({ query, meta: null, ...positionFor(link.getBoundingClientRect()) });
         setOpen(true);
         void meta.then((resolved) => {
           if (activeLink.current !== link) return;
@@ -209,7 +211,7 @@ export function LinkPreview() {
             hide();
             return;
           }
-          setPreview((current) => (current?.path === path ? { ...current, meta: resolved } : current));
+          setPreview((current) => (current?.query === query ? { ...current, meta: resolved } : current));
         });
       }, SHOW_DELAY_MS);
     };
@@ -245,5 +247,5 @@ export function LinkPreview() {
 
   if (!preview) return null;
 
-  return <PreviewCard key={preview.path} preview={preview} open={open} />;
+  return <PreviewCard key={preview.query} preview={preview} open={open} />;
 }

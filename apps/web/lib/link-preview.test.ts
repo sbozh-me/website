@@ -1,50 +1,64 @@
 import { describe, expect, it } from "vitest";
-import { getLinkPreviewPath, parseOpenGraph } from "./link-preview";
+import { getLinkPreviewQuery, parseOpenGraph } from "./link-preview";
 
 const PAGE = "https://sbozh.me/blog/current-post";
 const LOCAL_PAGE = "http://localhost:3100/blog/current-post";
 
-describe("getLinkPreviewPath", () => {
+// Decodes the query so expectations read as plain paths and URLs
+function target(href: string, page = PAGE) {
+  const query = getLinkPreviewQuery(href, page);
+  return query === null ? null : Object.fromEntries(new URLSearchParams(query));
+}
+
+describe("getLinkPreviewQuery", () => {
   it("returns the path of same-origin links, relative or absolute", () => {
-    expect(getLinkPreviewPath("/blog/hello-world", PAGE)).toBe("/blog/hello-world");
-    expect(getLinkPreviewPath("https://sbozh.me/projects/tecraft", PAGE)).toBe("/projects/tecraft");
-    expect(getLinkPreviewPath("../cv", PAGE)).toBe("/cv");
+    expect(target("/blog/hello-world")).toEqual({ path: "/blog/hello-world" });
+    expect(target("https://sbozh.me/projects/tecraft")).toEqual({ path: "/projects/tecraft" });
+    expect(target("../cv")).toEqual({ path: "/cv" });
   });
 
   it("covers any internal page, not only posts and projects", () => {
-    expect(getLinkPreviewPath("/blog/series/my-series", PAGE)).toBe("/blog/series/my-series");
-    expect(getLinkPreviewPath("/projects/tecraft/releases/1-0-0", PAGE)).toBe(
-      "/projects/tecraft/releases/1-0-0",
-    );
-    expect(getLinkPreviewPath("/", PAGE)).toBe("/");
+    expect(target("/blog/series/my-series")).toEqual({ path: "/blog/series/my-series" });
+    expect(target("/projects/tecraft/releases/1-0-0")).toEqual({ path: "/projects/tecraft/releases/1-0-0" });
+    expect(target("/")).toEqual({ path: "/" });
   });
 
   it("keeps the query string and drops the hash", () => {
-    expect(getLinkPreviewPath("/blog?view=series#top", PAGE)).toBe("/blog?view=series");
+    expect(target("/blog?view=series#top")).toEqual({ path: "/blog?view=series" });
+    expect(getLinkPreviewQuery("/blog?view=series", PAGE)).toBe("path=%2Fblog%3Fview%3Dseries");
   });
 
   it("treats absolute production links as internal on other hosts", () => {
-    expect(getLinkPreviewPath("https://sbozh.me/blog/hello-world", LOCAL_PAGE)).toBe("/blog/hello-world");
-    expect(getLinkPreviewPath("https://www.sbozh.me/projects/tecraft", LOCAL_PAGE)).toBe("/projects/tecraft");
+    expect(target("https://sbozh.me/blog/hello-world", LOCAL_PAGE)).toEqual({ path: "/blog/hello-world" });
+    expect(target("https://www.sbozh.me/projects/tecraft", LOCAL_PAGE)).toEqual({ path: "/projects/tecraft" });
   });
 
-  it("skips external links, subdomains and non-navigational hrefs", () => {
-    expect(getLinkPreviewPath("https://example.com/blog/hello-world", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("https://ren.sbozh.me/blog/hello-world", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("mailto:hi@sbozh.me", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("http://[bad", PAGE)).toBeNull();
+  it("returns the full URL of external http(s) links, without the hash", () => {
+    expect(target("https://example.com/blog/hello-world?a=1#part")).toEqual({
+      url: "https://example.com/blog/hello-world?a=1",
+    });
+    expect(target("http://example.com")).toEqual({ url: "http://example.com/" });
+    expect(target("https://ren.sbozh.me/blog/x")).toEqual({ url: "https://ren.sbozh.me/blog/x" });
+  });
+
+  it("skips non-web links", () => {
+    expect(target("mailto:hi@sbozh.me")).toBeNull();
+    expect(target("tel:+420123")).toBeNull();
+    expect(target("javascript:alert(1)")).toBeNull();
+    expect(target("ftp://example.com/file")).toBeNull();
+    expect(target("http://[bad")).toBeNull();
   });
 
   it("skips links to the current page, API routes and files", () => {
-    expect(getLinkPreviewPath("#section", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("/blog/current-post#intro", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("/api/og/blog/hello-world", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("/blog/rss.xml", PAGE)).toBeNull();
-    expect(getLinkPreviewPath("/cv.pdf", PAGE)).toBeNull();
+    expect(target("#section")).toBeNull();
+    expect(target("/blog/current-post#intro")).toBeNull();
+    expect(target("/api/og/blog/hello-world")).toBeNull();
+    expect(target("/blog/rss.xml")).toBeNull();
+    expect(target("/cv.pdf")).toBeNull();
   });
 
   it("returns null for an unparseable current location", () => {
-    expect(getLinkPreviewPath("/blog/x", "not a url")).toBeNull();
+    expect(getLinkPreviewQuery("/blog/x", "not a url")).toBeNull();
   });
 });
 
@@ -67,6 +81,28 @@ describe("parseOpenGraph", () => {
       PAGE,
     );
     expect(meta).toEqual({ image: "/img.png?w=1&h=2", title: "Tom & Jerry's *" });
+  });
+
+  it("keeps images of external pages absolute, even from the page's own host", () => {
+    const meta = parseOpenGraph(
+      html('<meta property="og:image" content="/og.png"><meta name="twitter:image" content="/tw.png">'),
+      "https://example.com/post",
+    );
+    expect(meta.image).toBe("https://example.com/og.png");
+  });
+
+  it("makes same-host images root-relative for internal pages", () => {
+    const meta = parseOpenGraph(
+      html('<meta property="og:image" content="http://127.0.0.1:3000/og.png">'),
+      "http://127.0.0.1:3000/cv",
+      { internal: true },
+    );
+    expect(meta.image).toBe("/og.png");
+  });
+
+  it("falls back to twitter:image", () => {
+    const meta = parseOpenGraph(html('<meta name="twitter:image" content="https://cdn.example.com/tw.png">'), PAGE);
+    expect(meta.image).toBe("https://cdn.example.com/tw.png");
   });
 
   it("keeps external images absolute", () => {

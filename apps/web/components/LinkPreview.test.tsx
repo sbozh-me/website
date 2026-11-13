@@ -22,18 +22,17 @@ function stubFetch(body: unknown, ok = true) {
   return fetchMock;
 }
 
-function addLink(href: string, inProse = true) {
+// Puts the link in a blog post body by default, or in an unmarked container (a blog list,
+// a project page's prose)
+function addLink(href: string, inPostBody = true) {
   const link = document.createElement("a");
   link.href = href;
   link.textContent = "Link";
-  if (inProse) {
-    const prose = document.createElement("div");
-    prose.className = "prose";
-    prose.appendChild(link);
-    document.body.appendChild(prose);
-  } else {
-    document.body.appendChild(link);
-  }
+  const container = document.createElement("div");
+  container.className = "prose";
+  if (inPostBody) container.setAttribute("data-link-preview", "");
+  container.appendChild(link);
+  document.body.appendChild(container);
   return link;
 }
 
@@ -208,22 +207,35 @@ describe("LinkPreview", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("does not show a preview for external links", async () => {
+  it("previews external links through the url query", async () => {
+    const fetchMock = stubFetch({ image: "/api/link-preview/image?url=x", title: "Example" });
+    const link = addLink("https://example.com/blog/hello-world#part");
+    const { container } = render(<LinkPreview />);
+
+    await hoverAndWait(link);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/link-preview?url=https%3A%2F%2Fexample.com%2Fblog%2Fhello-world",
+    );
+    expect(container.querySelector("img")?.getAttribute("src")).toBe("/api/link-preview/image?url=x");
+  });
+
+  it("does not show a preview for non-web links", async () => {
     const fetchMock = stubFetch({ image: null, title: "x" });
-    const link = addLink("https://example.com/blog/hello-world");
+    const link = addLink("mailto:hi@sbozh.me");
     render(<LinkPreview />);
 
     await hoverAndWait(link);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("previews internal links anywhere on the page, not only in written content", async () => {
-    stubFetch({ image: null, title: "Nav" });
+  it("does not show a preview for links outside a blog post body", async () => {
+    const fetchMock = stubFetch({ image: null, title: "x" });
     const link = addLink("/blog/hello-world", false);
-    const { getByTestId } = render(<LinkPreview />);
+    const { container } = render(<LinkPreview />);
 
     await hoverAndWait(link);
-    expect(getByTestId("link-preview").getAttribute("data-open")).toBe("true");
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(container.firstElementChild).toBeNull();
   });
 
   it("hides the preview when the pointer leaves the link, and on Escape", async () => {
