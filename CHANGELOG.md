@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.8] - 2026-11-13
+
+### Changes
+
+- feat(react-ui): add shadcn slider component ([a7d6648](https://github.com/sbozh-me/website/commit/a7d66486223fe8193da5621b678a0f79b24fe453))
+- feat(blog): add click-to-pause and volume slider ([2b9d8b4](https://github.com/sbozh-me/website/commit/2b9d8b47df0f47c072060deae5ec2d4c20ab58fc))
+- docs(media): note the corporate finalv100 Pan Dude cuts ([8993ea0](https://github.com/sbozh-me/website/commit/8993ea0431b4b53c08e3b07c69f908c2852e4345))
+
+
 ## [1.10.7] - 2026-11-13
 
 ### Changes
