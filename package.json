@@ -1,7 +1,7 @@
 {
   "name": "@sbozh/website",
   "private": true,
-  "version": "1.10.5",
+  "version": "1.10.6",
   "workspaces": [
     "apps/*",
     "packages/*"

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.6] - 2026-11-13
+
+### Changes
+
+- feat(pan-dude): add Reel sound finalv100 ([94b4e03](https://github.com/sbozh-me/website/commit/94b4e03851db257fc932850636918b776fd6e6a0))
+- feat(blog): add fullscreen mode for post videos ([4e59441](https://github.com/sbozh-me/website/commit/4e59441463f3a9a587e32e31831917e8830b2ee1))
+- feat(web): add hover previews for internal links ([d7b268a](https://github.com/sbozh-me/website/commit/d7b268adf16250c4c2bb0e5ce9eb46750daa18dd))
+- feat(blog): add sound toggle to post videos ([16a628e](https://github.com/sbozh-me/website/commit/16a628efa640cc4141b07f42884c4abb0431ef51))
+
+
 ## [1.10.5] - 2026-11-11
 
 ### Changes
