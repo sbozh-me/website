@@ -14,3 +14,17 @@ glitch-corporate*.ass
 glitch-corporate*.filter
 glitch-*.ass
 glitch-*.filter
+
+# Sound work for the Reel (see SOUND.md): media and other experiments local
+*.wav
+*.mp3
+*.otf
+__pycache__/
+_work/
+audio.py
+voice.py
+suno_cut.py
+suno_mix.py
+
+# saved states and experiments (see sound/README.md): scripts and notes tracked, media local
+sound/**/*.mp4
