@@ -233,21 +233,26 @@
   border-radius: 0.5rem;
 }
 
-.window-video .video-fullscreen-button {
+.window-video .video-controls {
   position: absolute;
   right: 0.5rem;
   bottom: 0.5rem;
+  display: flex;
+  gap: 0.375rem;
+}
+
+.window-video .video-controls button {
   color: #fff;
   background: rgb(0 0 0 / 0.45);
   opacity: 0.7;
 }
 
-.window-video:hover .video-fullscreen-button,
-.window-video .video-fullscreen-button:focus-visible {
+.window-video:hover .video-controls button,
+.window-video .video-controls button:focus-visible {
   opacity: 1;
 }
 
-.window-video .video-fullscreen-button:hover {
+.window-video .video-controls button:hover {
   background: rgb(0 0 0 / 0.65);
   color: #fff;
 }

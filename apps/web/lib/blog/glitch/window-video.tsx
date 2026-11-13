@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
-import { FullscreenFrame } from "./fullscreen";
+import { VideoFrame } from "./video-frame";
 import { useGlitchesEnabled } from "./window";
 import "./glitch.css";
 
@@ -114,9 +114,9 @@ export function WindowVideo({
   );
 
   return (
-    <FullscreenFrame className="window-video" data-window={open ? "on" : "off"}>
+    <VideoFrame className="window-video" data-window={open ? "on" : "off"}>
       {video(on, onPoster, mobileOn, mobileOnPoster, open, onRef)}
       {video(off, offPoster, mobileOff, mobileOffPoster, !open, offRef)}
-    </FullscreenFrame>
+    </VideoFrame>
   );
 }

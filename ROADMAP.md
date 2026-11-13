@@ -217,5 +217,6 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - Read/unread state for blog posts, release notes and projects
 - ~~Locked (paid) blog posts: Directus `is_locked` toggle, static password unlock until accounts exist~~
 - ~~Post video fullscreen: button, double-click / double-tap~~
+- ~~Post video sound toggle (unmute button)~~
 
 ---

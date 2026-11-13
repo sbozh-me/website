@@ -1,6 +1,6 @@
 "use client";
 
-import { Maximize, Minimize } from "lucide-react";
+import { Maximize, Minimize, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
@@ -14,12 +14,17 @@ interface IOSVideo extends HTMLVideoElement {
 }
 
 /**
- * Fullscreen for a post's video frame: a corner button, a double click (mouse) or a double
+ * Controls for a post's video frame.
+ *
+ * Sound: videos start muted (browsers only autoplay silent video); the speaker button
+ * unmutes every video in the frame, so a <WindowVideo> keeps its sound across ON/OFF.
+ *
+ * Fullscreen: a corner button, a double click (mouse) or a double
  * tap (touch). The whole frame goes fullscreen, so a <WindowVideo> keeps switching cuts
  * with the W key. iPhone Safari can't fullscreen an element, only a <video>, so there the
  * visible video goes fullscreen natively instead.
  */
-export function FullscreenFrame({
+export function VideoFrame({
   className,
   children,
   ...data
@@ -31,6 +36,7 @@ export function FullscreenFrame({
   const frame = useRef<HTMLDivElement>(null);
   const lastTap = useRef<{ time: number; x: number; y: number } | null>(null);
   const [active, setActive] = useState(false);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     const update = () => setActive(!!frame.current && document.fullscreenElement === frame.current);
@@ -50,6 +56,18 @@ export function FullscreenFrame({
       video?.webkitEnterFullscreen?.();
     }
   }, []);
+
+  const toggleSound = useCallback(() => {
+    const element = frame.current;
+    if (!element) return;
+    const next = !muted;
+    for (const video of element.querySelectorAll("video")) video.muted = next;
+    if (!next) {
+      // The click is a user gesture, so this also starts a video whose autoplay was refused
+      element.querySelector<HTMLVideoElement>("video:not([hidden])")?.play()?.catch(() => {});
+    }
+    setMuted(next);
+  }, [muted]);
 
   return (
     <div
@@ -80,16 +98,27 @@ export function FullscreenFrame({
       }}
     >
       {children}
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="video-fullscreen-button"
-        aria-label={active ? "Exit fullscreen" : "Fullscreen"}
-        onClick={toggle}
-      >
-        {active ? <Minimize /> : <Maximize />}
-      </Button>
+      <div className="video-controls">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label={muted ? "Unmute" : "Mute"}
+          aria-pressed={!muted}
+          onClick={toggleSound}
+        >
+          {muted ? <VolumeX /> : <Volume2 />}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label={active ? "Exit fullscreen" : "Fullscreen"}
+          onClick={toggle}
+        >
+          {active ? <Minimize /> : <Maximize />}
+        </Button>
+      </div>
     </div>
   );
 }

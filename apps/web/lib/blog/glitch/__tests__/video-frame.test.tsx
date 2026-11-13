@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { DOUBLE_TAP_MS, FullscreenFrame } from "../fullscreen";
+import { DOUBLE_TAP_MS, VideoFrame } from "../video-frame";
 
 let fullscreenElement: Element | null = null;
 const requestFullscreen = vi.fn(function (this: Element) {
@@ -29,9 +29,9 @@ afterEach(() => {
 
 function frame() {
   const { container } = render(
-    <FullscreenFrame className="window-video" data-window="on">
+    <VideoFrame className="window-video" data-window="on">
       <video src="/a.mp4" />
-    </FullscreenFrame>,
+    </VideoFrame>,
   );
   return container.querySelector(".window-video") as HTMLElement;
 }
@@ -44,7 +44,31 @@ const tap = (element: Element, timeStamp: number, x = 10, y = 10) => {
   });
 };
 
-describe("FullscreenFrame", () => {
+describe("VideoFrame", () => {
+  it("starts muted and unmutes every video in the frame, playing the visible one", () => {
+    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(() => Promise.resolve());
+    const { container } = render(
+      <VideoFrame className="window-video">
+        <video src="/hidden.mp4" muted hidden />
+        <video src="/shown.mp4" muted />
+      </VideoFrame>,
+    );
+    const [hidden, shown] = Array.from(container.querySelectorAll("video"));
+    expect(hidden.muted && shown.muted).toBe(true);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unmute" }));
+    expect(hidden.muted || shown.muted).toBe(false);
+    expect(play).toHaveBeenCalledOnce();
+    expect(play.mock.contexts[0]).toBe(shown);
+    expect(screen.getByRole("button", { name: "Mute" })).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "Mute" }));
+    expect(hidden.muted && shown.muted).toBe(true);
+    expect(play).toHaveBeenCalledOnce();
+    play.mockRestore();
+  });
+
+
   it("passes data attributes through and toggles fullscreen with the button", async () => {
     const element = frame();
     expect(element).toHaveAttribute("data-window", "on");
@@ -60,7 +84,7 @@ describe("FullscreenFrame", () => {
     const element = frame();
     await act(async () => fireEvent.doubleClick(element.querySelector("video")!));
     expect(requestFullscreen).toHaveBeenCalledOnce();
-    await act(async () => fireEvent.doubleClick(screen.getByRole("button")));
+    await act(async () => fireEvent.doubleClick(screen.getByRole("button", { name: "Exit fullscreen" })));
     expect(exitFullscreen).not.toHaveBeenCalled();
   });
 
@@ -90,10 +114,10 @@ describe("FullscreenFrame", () => {
   it("falls back to the visible video's native fullscreen where elements can't go fullscreen (iPhone)", () => {
     delete (HTMLElement.prototype as Partial<HTMLElement>).requestFullscreen;
     const { container } = render(
-      <FullscreenFrame className="window-video">
+      <VideoFrame className="window-video">
         <video src="/hidden.mp4" hidden />
         <video src="/shown.mp4" />
-      </FullscreenFrame>,
+      </VideoFrame>,
     );
     const [hidden, shown] = Array.from(container.querySelectorAll("video"));
     const enterHidden = vi.fn();
