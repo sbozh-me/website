@@ -14,11 +14,14 @@ describe("Video", () => {
     for (const attribute of ["autoplay", "loop", "playsinline"]) expect(video).toHaveAttribute(attribute);
     // Browsers only autoplay before hydration if the server HTML says muted
     expect(video).toHaveAttribute("muted");
+    expect(div.querySelector(".window-video button")).toHaveAttribute("aria-label", "Fullscreen");
   });
 
   it("works without a poster or title", () => {
-    const html = renderToStaticMarkup(<Video src="/a.mp4" />);
-    expect(html).not.toContain("poster");
-    expect(html).not.toContain("aria-label");
+    const div = document.createElement("div");
+    div.innerHTML = renderToStaticMarkup(<Video src="/a.mp4" />);
+    const video = div.querySelector("video") as HTMLVideoElement;
+    expect(video).not.toHaveAttribute("poster");
+    expect(video).not.toHaveAttribute("aria-label");
   });
 });

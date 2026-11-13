@@ -1,5 +1,6 @@
 "use client";
 
+import { FullscreenFrame } from "./fullscreen";
 import "./glitch.css";
 
 interface VideoProps {
@@ -18,7 +19,7 @@ interface VideoProps {
  */
 export function Video({ src, poster, title }: VideoProps) {
   return (
-    <div className="window-video">
+    <FullscreenFrame className="window-video">
       <video
         src={src}
         poster={poster}
@@ -29,6 +30,6 @@ export function Video({ src, poster, title }: VideoProps) {
         preload="metadata"
         aria-label={title}
       />
-    </div>
+    </FullscreenFrame>
   );
 }

@@ -58,7 +58,7 @@ describe("WindowVideo", () => {
     play.mockClear();
     pause.mockClear();
 
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("button", { name: /window/i }));
     expect(on.hidden).toBe(true);
     expect(off.hidden).toBe(false);
     expect(off.currentTime).toBe(12.5);
@@ -66,7 +66,7 @@ describe("WindowVideo", () => {
     expect(play.mock.contexts).toContain(off);
 
     off.currentTime = 20;
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("button", { name: /window/i }));
     expect(on.hidden).toBe(false);
     expect(on.currentTime).toBe(20);
     expect(play.mock.contexts).toContain(on);
@@ -97,14 +97,14 @@ describe("WindowVideo", () => {
   it("starts OFF on a ==WINDOW OFF== page and opens with the button", () => {
     const { container } = page(true);
     expect(videos(container).off.hidden).toBe(false);
-    fireEvent.click(screen.getByRole("button"));
+    fireEvent.click(screen.getByRole("button", { name: /window/i }));
     expect(videos(container).on.hidden).toBe(false);
   });
 
   it("survives a refused autoplay", () => {
     play.mockImplementation(() => Promise.reject(new Error("NotAllowedError")));
     const { container } = page();
-    expect(() => fireEvent.click(screen.getByRole("button"))).not.toThrow();
+    expect(() => fireEvent.click(screen.getByRole("button", { name: /window/i }))).not.toThrow();
     expect(videos(container).off.hidden).toBe(false);
   });
 

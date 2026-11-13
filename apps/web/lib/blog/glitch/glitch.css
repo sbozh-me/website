@@ -213,6 +213,16 @@
 
 /* Window video ---------------------------------------------------------- */
 
+/* The frame hugs the video so the fullscreen button sits on its corner */
+.window-video {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 2rem auto;
+  /* No double-tap zoom: a double tap goes fullscreen */
+  touch-action: manipulation;
+}
+
 /* Fits landscape and vertical (Shorts) cuts: full column width, at most 80% of the screen tall */
 .window-video video {
   display: block;
@@ -220,8 +230,44 @@
   max-width: 100%;
   height: auto;
   max-height: 80vh;
-  margin: 2rem auto;
   border-radius: 0.5rem;
+}
+
+.window-video .video-fullscreen-button {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  color: #fff;
+  background: rgb(0 0 0 / 0.45);
+  opacity: 0.7;
+}
+
+.window-video:hover .video-fullscreen-button,
+.window-video .video-fullscreen-button:focus-visible {
+  opacity: 1;
+}
+
+.window-video .video-fullscreen-button:hover {
+  background: rgb(0 0 0 / 0.65);
+  color: #fff;
+}
+
+.window-video:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  background: #000;
+}
+
+.window-video:fullscreen video {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: contain;
+  border-radius: 0;
 }
 
 .window-video video[hidden] {

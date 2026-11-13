@@ -1,0 +1,107 @@
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { DOUBLE_TAP_MS, FullscreenFrame } from "../fullscreen";
+
+let fullscreenElement: Element | null = null;
+const requestFullscreen = vi.fn(function (this: Element) {
+  fullscreenElement = this;
+  document.dispatchEvent(new Event("fullscreenchange"));
+  return Promise.resolve();
+});
+const exitFullscreen = vi.fn(() => {
+  fullscreenElement = null;
+  document.dispatchEvent(new Event("fullscreenchange"));
+  return Promise.resolve();
+});
+
+beforeEach(() => {
+  fullscreenElement = null;
+  Object.defineProperty(document, "fullscreenElement", { configurable: true, get: () => fullscreenElement });
+  Object.defineProperty(document, "exitFullscreen", { configurable: true, value: exitFullscreen });
+  Object.defineProperty(HTMLElement.prototype, "requestFullscreen", { configurable: true, value: requestFullscreen });
+});
+
+afterEach(() => {
+  vi.clearAllMocks();
+  delete (HTMLElement.prototype as Partial<HTMLElement>).requestFullscreen;
+});
+
+function frame() {
+  const { container } = render(
+    <FullscreenFrame className="window-video" data-window="on">
+      <video src="/a.mp4" />
+    </FullscreenFrame>,
+  );
+  return container.querySelector(".window-video") as HTMLElement;
+}
+
+const tap = (element: Element, timeStamp: number, x = 10, y = 10) => {
+  const event = new MouseEvent("pointerup", { bubbles: true, clientX: x, clientY: y });
+  Object.defineProperties(event, { pointerType: { value: "touch" }, timeStamp: { value: timeStamp } });
+  act(() => {
+    element.dispatchEvent(event);
+  });
+};
+
+describe("FullscreenFrame", () => {
+  it("passes data attributes through and toggles fullscreen with the button", async () => {
+    const element = frame();
+    expect(element).toHaveAttribute("data-window", "on");
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: "Fullscreen" })));
+    expect(requestFullscreen).toHaveBeenCalledOnce();
+    expect(element).toHaveAttribute("data-fullscreen");
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: "Exit fullscreen" })));
+    expect(exitFullscreen).toHaveBeenCalledOnce();
+    expect(element).not.toHaveAttribute("data-fullscreen");
+  });
+
+  it("goes fullscreen on a double click, but not on the button's own double click", async () => {
+    const element = frame();
+    await act(async () => fireEvent.doubleClick(element.querySelector("video")!));
+    expect(requestFullscreen).toHaveBeenCalledOnce();
+    await act(async () => fireEvent.doubleClick(screen.getByRole("button")));
+    expect(exitFullscreen).not.toHaveBeenCalled();
+  });
+
+  it("goes fullscreen on a quick double tap, not on slow or far-apart taps", () => {
+    const video = frame().querySelector("video")!;
+    // React reads a 0 timeStamp as "now", so start later
+    const start = 1000;
+    tap(video, start);
+    tap(video, start + DOUBLE_TAP_MS + 50);
+    expect(requestFullscreen).not.toHaveBeenCalled();
+    tap(video, start + DOUBLE_TAP_MS + 100, 200, 200);
+    expect(requestFullscreen).not.toHaveBeenCalled();
+    tap(video, start + DOUBLE_TAP_MS + 200, 200, 200);
+    expect(requestFullscreen).toHaveBeenCalledOnce();
+  });
+
+  it("ignores mouse pointer-ups (those use dblclick)", () => {
+    const video = frame().querySelector("video")!;
+    for (const timeStamp of [1000, 1050]) {
+      const event = new MouseEvent("pointerup", { bubbles: true });
+      Object.defineProperties(event, { pointerType: { value: "mouse" }, timeStamp: { value: timeStamp } });
+      video.dispatchEvent(event);
+    }
+    expect(requestFullscreen).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the visible video's native fullscreen where elements can't go fullscreen (iPhone)", () => {
+    delete (HTMLElement.prototype as Partial<HTMLElement>).requestFullscreen;
+    const { container } = render(
+      <FullscreenFrame className="window-video">
+        <video src="/hidden.mp4" hidden />
+        <video src="/shown.mp4" />
+      </FullscreenFrame>,
+    );
+    const [hidden, shown] = Array.from(container.querySelectorAll("video"));
+    const enterHidden = vi.fn();
+    const enterShown = vi.fn();
+    Object.assign(hidden, { webkitEnterFullscreen: enterHidden });
+    Object.assign(shown, { webkitEnterFullscreen: enterShown });
+    fireEvent.click(screen.getByRole("button", { name: "Fullscreen" }));
+    expect(enterShown).toHaveBeenCalledOnce();
+    expect(enterHidden).not.toHaveBeenCalled();
+  });
+});
