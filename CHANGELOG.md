@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.7] - 2026-11-13
+
+### Changes
+
+- fix(web): move link preview cache out of route file ([17ff648](https://github.com/sbozh-me/website/commit/17ff648d174703fcbfc2d9165a6eb4cab9f84762))
+
+
 ## [1.10.6] - 2026-11-13
 
 ### Changes
