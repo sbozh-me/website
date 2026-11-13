@@ -101,6 +101,16 @@ describe("WindowVideo", () => {
     expect(videos(container).on.hidden).toBe(false);
   });
 
+  it("keeps a video the reader paused paused when the window switches cuts", () => {
+    const { container } = page();
+    const { on } = videos(container);
+    Object.defineProperty(on, "paused", { configurable: true, value: false });
+    fireEvent.click(on);
+    play.mockClear();
+    fireEvent.click(screen.getByRole("button", { name: /window/i }));
+    expect(play).not.toHaveBeenCalled();
+  });
+
   it("survives a refused autoplay", () => {
     play.mockImplementation(() => Promise.reject(new Error("NotAllowedError")));
     const { container } = page();

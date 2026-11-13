@@ -79,6 +79,8 @@ export function WindowVideo({
     // Skip the sync on mount: autoPlay already started the right one from the beginning
     if (!first.current && Number.isFinite(hidden.currentTime)) shown.currentTime = hidden.currentTime;
     first.current = false;
+    // A reader who paused the video keeps it paused on the other cut
+    if (shown.closest("[data-paused]")) return;
     shown.play()?.catch(() => {
       // Autoplay can be refused (e.g. data saver); the poster and controls-free frame stay
     });

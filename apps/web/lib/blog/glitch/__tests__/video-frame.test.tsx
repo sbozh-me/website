@@ -45,6 +45,65 @@ const tap = (element: Element, timeStamp: number, x = 10, y = 10) => {
 };
 
 describe("VideoFrame", () => {
+  it("pauses on a click on the video, shows the play mark, and resumes on the next", () => {
+    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(() => Promise.resolve());
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
+    const element = frame();
+    const video = element.querySelector("video")!;
+    Object.defineProperty(video, "paused", { configurable: true, value: false });
+
+    fireEvent.click(video);
+    expect(pause).toHaveBeenCalledOnce();
+    expect(element).toHaveAttribute("data-paused");
+    expect(element.querySelector(".video-paused-mark")).toBeInTheDocument();
+
+    Object.defineProperty(video, "paused", { configurable: true, value: true });
+    fireEvent.click(video);
+    expect(play).toHaveBeenCalledOnce();
+    expect(element).not.toHaveAttribute("data-paused");
+    expect(element.querySelector(".video-paused-mark")).toBeNull();
+
+    // Clicks on the controls don't count
+    fireEvent.click(screen.getByRole("button", { name: "Fullscreen" }));
+    expect(pause).toHaveBeenCalledOnce();
+    play.mockRestore();
+    pause.mockRestore();
+  });
+
+  it("sets the volume of every video from the slider, muting at zero", () => {
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(() => Promise.resolve());
+    const { container } = render(
+      <VideoFrame className="window-video">
+        <video src="/hidden.mp4" muted hidden />
+        <video src="/shown.mp4" muted />
+      </VideoFrame>,
+    );
+    const videos = Array.from(container.querySelectorAll("video"));
+    const slider = screen.getByRole("slider", { name: "Volume" });
+    expect(slider).toHaveAttribute("aria-valuenow", "0");
+    expect(slider).toHaveAttribute("aria-orientation", "vertical");
+
+    fireEvent.click(screen.getByRole("button", { name: "Unmute" }));
+    expect(slider).toHaveAttribute("aria-valuenow", "100");
+
+    // Radix steps the vertical slider with the arrow keys
+    fireEvent.keyDown(slider, { key: "PageDown" });
+    for (const video of videos) {
+      expect(video.muted).toBe(false);
+      expect(video.volume).toBeCloseTo(0.9);
+    }
+    fireEvent.keyDown(slider, { key: "Home" });
+    expect(slider).toHaveAttribute("aria-valuenow", "0");
+    for (const video of videos) expect(video.muted).toBe(true);
+    expect(screen.getByRole("button", { name: "Unmute" })).toBeInTheDocument();
+
+    // Unmuting after sliding to zero comes back at the last level
+    fireEvent.click(screen.getByRole("button", { name: "Unmute" }));
+    for (const video of videos) expect(video.volume).toBeCloseTo(0.9);
+    expect(slider).toHaveAttribute("aria-valuenow", "90");
+  });
+
+
   it("starts muted and unmutes every video in the frame, playing the visible one", () => {
     const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockImplementation(() => Promise.resolve());
     const { container } = render(

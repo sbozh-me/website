@@ -15,7 +15,7 @@ describe("Video", () => {
     // Browsers only autoplay before hydration if the server HTML says muted
     expect(video).toHaveAttribute("muted");
     const buttons = Array.from(div.querySelectorAll(".window-video button"), (b) => b.getAttribute("aria-label"));
-    expect(buttons).toEqual(["Unmute", "Fullscreen"]);
+    expect(buttons).toEqual(["Pause", "Unmute", "Fullscreen"]);
   });
 
   it("works without a poster or title", () => {

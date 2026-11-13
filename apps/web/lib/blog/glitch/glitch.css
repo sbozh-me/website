@@ -241,6 +241,58 @@
   gap: 0.375rem;
 }
 
+/* A click pauses: the mark says so, and the pointer says the video is clickable */
+.window-video video {
+  cursor: pointer;
+}
+
+.window-video .video-paused-mark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  color: #fff;
+}
+
+.window-video .video-paused-mark svg {
+  width: 4rem;
+  height: 4rem;
+  padding: 1rem;
+  border-radius: 9999px;
+  background: rgb(0 0 0 / 0.5);
+  fill: currentColor;
+}
+
+/* Volume: a vertical slider above the speaker, opened by hovering it (mouse only;
+   iPhones ignore page volume, so touch screens just get the mute button) */
+.window-video .video-volume {
+  position: relative;
+}
+
+.window-video .video-volume-slider {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  display: none;
+  height: 7.5rem;
+  padding: 0.75rem 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+  background: rgb(0 0 0 / 0.65);
+  transform: translateX(-50%);
+}
+
+.window-video .video-volume-slider [data-slot="slider"] {
+  min-height: 0;
+}
+
+@media (hover: hover) {
+  .window-video .video-volume:hover .video-volume-slider,
+  .window-video .video-volume:focus-within .video-volume-slider {
+    display: block;
+  }
+}
+
 .window-video .video-controls button {
   color: #fff;
   background: rgb(0 0 0 / 0.45);
