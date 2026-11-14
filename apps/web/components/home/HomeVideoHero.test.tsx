@@ -20,6 +20,7 @@ beforeEach(() => {
     removeEventListener: vi.fn(),
   })) as unknown as typeof window.matchMedia;
   vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+  vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => {});
   window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;
 });
 
@@ -63,5 +64,72 @@ describe("HomeVideoHero", () => {
     render(<HomeVideoHero />);
     fireEvent.click(screen.getByRole("button", { name: "Scroll to content" }));
     expect(window.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: "smooth" }));
+  });
+
+  it("waits for the video to end before Kagurame talks", () => {
+    render(<HomeVideoHero />);
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.getByRole("button", { name: /Talk to Kagurame/ })).toBeInTheDocument();
+    expect(video().loop).toBe(false);
+  });
+
+  it("pauses at the end of the first run and opens the dialogue, then loops", async () => {
+    render(<HomeVideoHero />);
+    fireEvent.play(video());
+    expect(screen.getByRole("button", { name: "Pause video" })).toBeInTheDocument();
+    // A video that runs out fires pause, then ended
+    fireEvent.pause(video());
+    fireEvent.ended(video());
+    // The Talk button fades out first (AnimatePresence "wait")
+    expect(await screen.findByRole("dialog", { name: "Kagurame" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Play video" })).toBeInTheDocument();
+    expect(video().loop).toBe(true);
+    // Ended: the video steps aside for the poster, and comes back when played again
+    expect(video()).toHaveAttribute("data-ended");
+    expect(video()).toHaveClass("opacity-0");
+    fireEvent.play(video());
+    expect(video()).not.toHaveAttribute("data-ended");
+    expect(video()).toHaveClass("opacity-100");
+  });
+
+  it("toggles with the Play/Pause button", () => {
+    render(<HomeVideoHero />);
+    fireEvent.play(video());
+    fireEvent.click(screen.getByRole("button", { name: "Pause video" }));
+    expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+    fireEvent.pause(video());
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    fireEvent.click(screen.getByRole("button", { name: "Play video" }));
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+
+  it("toggles with a click on the video", () => {
+    render(<HomeVideoHero />);
+    fireEvent.play(video());
+    fireEvent.click(video());
+    expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+    fireEvent.pause(video());
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    fireEvent.click(video());
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalled();
+  });
+
+  it("doesn't restart a paused video on rotation", () => {
+    render(<HomeVideoHero />);
+    fireEvent.play(video());
+    fireEvent.click(screen.getByRole("button", { name: "Pause video" }));
+    fireEvent.pause(video());
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    portrait = true;
+    act(() => listener?.());
+    expect(video()).toHaveAttribute("data-cut", "mobile");
+    expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+  });
+
+  it("keeps the sound button next to Play/Pause", () => {
+    render(<HomeVideoHero />);
+    const sound = screen.getByRole("button", { name: "Unmute video" });
+    const play = screen.getByRole("button", { name: /(Play|Pause) video/ });
+    expect(sound.parentElement).toBe(play.parentElement);
   });
 });
