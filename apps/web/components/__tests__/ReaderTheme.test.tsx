@@ -43,7 +43,10 @@ describe("ReaderThemeToggle", () => {
 
     expect(root.getAttribute("data-theme")).toBe("roman-white");
     expect(window.localStorage.getItem(READER_THEME_KEY)).toBe("roman-white");
-    expect(screen.getByRole("button", { name: "Switch to the dark theme" })).toHaveTextContent("Dark");
+    // Icon only: no "White" / "Dark" wording, the label and tooltip say it
+    const toggle = screen.getByRole("button", { name: "Switch to the dark theme" });
+    expect(toggle).toHaveTextContent("");
+    expect(toggle).toHaveAttribute("title", "Dark theme");
   });
 
   it("restores the saved choice on the next visit", () => {

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight, X } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
-import { useGlitchesEnabled, WindowToggle } from "@/lib/blog/glitch/window"
+import { useGlitchesEnabled, useWindowStartsClosed } from "@/lib/blog/glitch/window"
 import { choiceKey, lineKey, resolveScene, type ScrollTarget, type Target } from "@/lib/kagurame/fabula"
 import type { KagurameScript } from "@/lib/kagurame/script"
 
@@ -192,8 +192,8 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
             </>
           )}
         </p>
+        {/* The Window button lives in the site header now (HeaderWindowToggle) */}
         <div className="-mr-2 -mt-1 flex shrink-0 items-center gap-1">
-          <WindowToggle off />
           <Button
             variant="ghost"
             size="icon-sm"
@@ -280,12 +280,15 @@ interface HeroDialogueProps {
  *
  * His lines live in `content/kagurame/onboarding.fabula` (see lib/kagurame/fabula.ts).
  *
- * The window starts OFF (as `==WINDOW OFF==` in a post): his title reads "17th Company".
+ * The window starts OFF on his page (as `==WINDOW OFF==` in a post): his title reads
+ * "17th Company". The switch is the site header's (or W).
  * Open it (button or W) and it glitches into "17th Dimension" and a red "17th Legion",
  * and so do the glitch words in his lines.
  */
 export function HeroDialogue({ script, onScroll, open, onOpenChange, toolbar }: HeroDialogueProps) {
   const reduceMotion = useReducedMotion() ?? false
+  // He keeps the home page's window closed until the visitor opens it (header button or W)
+  useWindowStartsClosed(Boolean(script))
   const close = useCallback(() => onOpenChange(false), [onOpenChange])
 
   return (

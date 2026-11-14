@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react"
 import { act, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
+import { setGlitchesEnabled, WindowButton } from "@/lib/blog/glitch/window"
 import { loadKagurameScript, type KagurameScript } from "@/lib/kagurame/script"
 
 const push = vi.fn()
@@ -38,13 +39,17 @@ function Harness({
 }) {
   const [open, setOpen] = useState(initialOpen)
   return (
-    <HeroDialogue
-      open={open}
-      onOpenChange={setOpen}
-      script={given === undefined ? script : given}
-      onScroll={onScroll}
-      toolbar={toolbar}
-    />
+    <>
+      <HeroDialogue
+        open={open}
+        onOpenChange={setOpen}
+        script={given === undefined ? script : given}
+        onScroll={onScroll}
+        toolbar={toolbar}
+      />
+      {/* The page's switch, as the site header holds it */}
+      <WindowButton />
+    </>
   )
 }
 
@@ -58,6 +63,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.useRealTimers()
   vi.restoreAllMocks()
+  // The window is page-wide: the next test starts at the page's default
+  act(() => setGlitchesEnabled(null))
 })
 
 describe("HeroDialogue", () => {
@@ -300,10 +307,17 @@ describe("HeroDialogue with the window ON", () => {
 })
 
 describe("HeroDialogue window", () => {
-  it("starts with the window OFF: his title reads 17th Company", () => {
+  it("keeps his page's window closed: the header reads OFF, his title 17th Company", () => {
     render(<Harness />)
     expect(screen.getByRole("button", { name: /Window OFF/ })).toHaveAttribute("aria-pressed", "false")
     expect(screen.getByRole("dialog")).toHaveTextContent("17th Company")
+    // The switch is the header's, not in his box
+    expect(screen.getByRole("dialog").querySelector(".window-toggle")).toBeNull()
+  })
+
+  it("leaves the window open on a page where his script is broken", () => {
+    render(<Harness script={null} />)
+    expect(screen.getByRole("button", { name: /Window ON/ })).toHaveAttribute("aria-pressed", "true")
   })
 
   it("opens the window with the button", () => {

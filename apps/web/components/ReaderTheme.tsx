@@ -18,11 +18,12 @@ export function ReaderThemeToggle({ className = "" }: { className?: string }) {
       variant="outline"
       aria-pressed={white}
       aria-label={white ? "Switch to the dark theme" : "Switch to the white reading theme"}
-      className={`reader-theme-toggle h-11 min-w-11 border-primary text-foreground hover:bg-primary/10 ${className}`}
+      title={white ? "Dark theme" : "White reading theme"}
+      className={`reader-theme-toggle size-11 border-primary text-foreground hover:bg-primary/10 ${className}`}
       onClick={() => setReaderTheme(white ? null : STILL_THEME)}
     >
+      {/* Icon only: the label says which theme it switches to */}
       {white ? <MoonIcon /> : <SunIcon />}
-      {white ? "Dark" : "White"}
     </Button>
   );
 }

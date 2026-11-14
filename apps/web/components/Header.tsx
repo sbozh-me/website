@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@sbozh/react-ui/components/ui/tooltip";
 
+import { HeaderWindowToggle } from "@/lib/blog/glitch/window";
 import { ReaderThemeToggle } from "./ReaderTheme";
 
 const navItems = [
@@ -47,35 +48,38 @@ export function Header() {
           : "relative z-10 border-b border-border bg-background"
       }
     >
-      <div className="mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 py-6">
-        <div className="relative">
-          <Link href="/" className="text-xl font-bold tracking-tight">
-            sbozh.me
-          </Link>
-          <span className="left-0 top-full w-30 ml-2 text-muted-foreground">
-            - Personal startup
-          </span>
-          <TooltipProvider delayDuration={1337}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="cursor-help inline-block">
-                  <Image
-                    src="/favicon-32x32.png"
-                    alt="sbozh.me logo"
-                    width={8}
-                    height={8}
-                    className="inline-block/ mb-2"
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>Easter egg is under construction</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+      {/* Three columns, the brand centred whatever the sides hold: the window and theme
+          switches left, the menu right (the burger on phones) */}
+      <div className="mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-4 sm:px-6 md:gap-3 md:px-12 lg:px-24">
+        <div className="flex items-center gap-1 justify-self-start md:gap-2">
+          <HeaderWindowToggle page={pathname} />
+          {/* Smaller on phones, so both fit beside the centred brand */}
+          <ReaderThemeToggle className="size-10 md:size-11" />
         </div>
 
-        <div className="flex items-center gap-4 md:gap-8">
+        {/* "Personal startup" takes the width of sbozh.me (w-0 min-w-full) and is sized to fit inside it */}
+        <div className="inline-flex flex-col items-center justify-self-center" data-brand>
+          <Link href="/" className="text-2xl font-bold leading-none tracking-tight md:text-3xl">
+            sbozh.me
+          </Link>
+          <span className="mt-1 flex w-0 min-w-full justify-center whitespace-nowrap text-[0.625rem] leading-none text-muted-foreground md:text-xs">
+            Personal startup
+            <TooltipProvider delayDuration={1337}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="-mt-0.5 ml-0.5 inline-block cursor-help">
+                    <Image src="/favicon-32x32.png" alt="sbozh.me logo" width={8} height={8} />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p>Easter egg is under construction</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
+        </div>
+
+        <div className="flex items-center justify-self-end">
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
@@ -92,8 +96,6 @@ export function Header() {
               </Link>
             ))}
           </nav>
-
-          <ReaderThemeToggle />
 
           {/* Mobile hamburger button */}
           <button
