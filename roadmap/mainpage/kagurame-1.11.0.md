@@ -17,9 +17,13 @@ Shipped in 1.11.0 (on main):
 
 - `components/home/HomeVideoHero.tsx`: full-screen Pan Dude video (desktop and reels cuts by
   orientation) under the translucent home header (`components/Header.tsx`, `data-over-video`).
-- `components/home/HeroDialogue.tsx`: the RPG dialogue box. It types each line out, replies
-  are picked by click or keys 1–4, Escape collapses it to "Talk to Kagurame", and return visits
-  are remembered in localStorage (`sbozh:kagurame:met`). It has a Window toggle (starts OFF, W
+  The first run plays once. At the end the video fades to the poster, pauses, and the dialogue
+  opens. After that, Play loops it. A click on the video pauses or plays it. Play/Pause and the
+  sound button sit side by side above the dialogue.
+- `components/home/HeroDialogue.tsx`: the RPG dialogue box, controlled by the hero (`open`,
+  `onOpenChange`, a `toolbar` slot). It types each line out, and replies are picked by click or
+  keys 1–4. Escape collapses it to the **"Ave ✳"** button: "Ave" with the brand ✳ (the favicon
+  mark) turning slowly. Return visits are remembered in localStorage (`sbozh:kagurame:met`). It has a Window toggle (starts OFF, W
   hotkey) and the title `Kagurame · ==17th Company|17th Dimension|red:17th Legion==`, built from
   `lib/blog/glitch`.
 - `components/home/dialogue.ts`: the hardcoded tree. Nodes: start, hello, where, silence, who,
@@ -40,19 +44,42 @@ returning-visitor greeting and reduced-motion handling.
 - The voice is corporate-absurd, calm and a little tired. Short lines: one or two sentences, at most
   ~160 characters, because the box types them out on a phone. English, no emoji, no sales pitch,
   never explain the joke.
-- The openers are fixed by the author: **"Hello." / "Where am I?" / "..."**. Never change them.
+- The openers are fixed by the author: **"Hello." / "Where am I?" / "..." / "What is AVE?"**.
+  Never change them. The fourth one is new, so add it to the port.
 - Characters and facts come only from published posts. Invent nothing about real people.
+
+### AVE
+
+The button that opens Kagurame says **"Ave ✳"**, so "What is AVE?" is the first question a visitor
+has, and it gets its own scene (`ave`). The facts are the author's; keep to them:
+
+- **AVE is a CLI for managing agents' focus and getting predictable behaviour from them.**
+  Its full name is Avatar Virtual Engine, a context-control layer between a human and their AI
+  agents.
+- It's open source: https://github.com/sbozh/ave. That's the scene's link out.
+- "Ave" is also Latin for "hail": Kagurame greets you with it. He may play on that, but the CLI
+  is what the scene explains.
+- The author owns this scene. Plautus never rewrites it.
+
+Draft (the author has the final word):
+
+```
+== ave
+AVE. A CLI that keeps agents focused and their behaviour predictable. In my 17th company we call that a miracle.
+* Show me. -> https://github.com/sbozh/ave
+* And you are? -> hello
+* Back. -> start
+```
 
 ## Deliverables
 
 ### 0. Roadmap
 
-- [ ] Under the open `## 1.11.0 - Links & Cookies`, add:
+- [x] Under the open `## 1.11.0 - Links & Cookies`, add:
   - `Kagurame dialogue as a graph script (.fabula) with a validating, graph-drawing CLI`
   - `Plautus: agent that reviews new posts and release notes into Kagurame's script`
-- [ ] Add a later section below 1.11.0 (e.g. `## 2.x.x - Later`) with
+- [x] Add a later section below 1.11.0, `## 2.x.x - Later`, with
   `Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line`.
-  Confirm the heading wording with the user.
 - [ ] Strike each 1.11.0 item through in the commit that ships it.
 
 ### 1. The `.fabula` script format
@@ -70,10 +97,12 @@ Proposed grammar (refine it if something reads badly, but keep it line-based):
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
+* What is AVE? -> ave
 Oh. A three-dimensional. You walked right into my context window.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
+* What is AVE? -> ave
 
 == fresh
 ?latest The freshest scroll in the archive: «{latest.title}». About {latest.minutes} min of your dimension.
@@ -98,25 +127,35 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
 - Variant markers: `?returning` / `?latest` are conditions (the first one that holds wins), `~` is
   a random pool, and an unmarked line is the default. The "let him decide" randomness lives in the
   script, not in code.
-- Targets: `scene-id`, `/path` (navigate), `#content` / `#releases` (scroll), `!close`.
-- Placeholders `{latest.title|minutes|href}` are only allowed in `?latest` variants.
+- Targets: `scene-id`, `/path` (navigate), `https://…` (external, opens a new tab with
+  `rel="noopener"`), `#content` / `#releases` (scroll), `!close`.
+- Placeholders `{latest.title|minutes|href}` are only allowed in `?latest` variants. A `?latest`
+  variant holds only when there is a latest post **and** it has a value for every placeholder
+  the variant uses. So `fresh` has a second `?latest` variant without `{latest.minutes}` for
+  posts with no reading time, the way `dialogue.ts` drops that sentence today.
 - Text may use the glitch syntax (`==a|b==`, `red:`, `(;)`). The window decides whether it glitches.
-- Port **every** current node and line from `dialogue.ts` into the file, then delete the
-  hardcoded tree.
+- Port **every** current node and line from `dialogue.ts` into the file, add the `ave` scene
+  and the fourth opener, then delete the hardcoded tree.
 
 ### 2. Parser and validator: `apps/web/lib/kagurame/fabula.ts`
 
 - [ ] `parseFabula(source) → Fabula` (scenes, variants, choices, `@title`) with line-numbered
       errors.
-- [ ] `validateFabula(fabula) → Problem[]`. Hard errors:
+- [ ] `validateFabula(fabula, { routes }) → Problem[]` (each an error or a warning). The module
+      has no imports, so it can't read the file system: the CLI and the test collect the route
+      patterns from `app/**/page.tsx` (dropping route groups like `(main)`) and pass them in.
+      Hard errors:
   - unknown scene targets or malformed lines;
   - scenes not reachable from `start`, or scenes with no choices (dead ends);
   - placeholders outside `?latest`;
   - `/paths` that don't match a route under `apps/web/app/**/page.tsx` (dynamic segments match
     any slug);
-  - `/blog`, `/forum`, `/projects`, `/subscribe` and `#releases` not all reachable;
-  - the three openers changed;
-  - over-long lines or labels.
+  - `/blog`, `/forum`, `/projects`, `/subscribe`, `#releases` and the `ave` scene not all
+    reachable;
+  - external links to a host outside an allowlist (start with `github.com/sbozh/*`);
+  - the four openers changed;
+  - lines over 200 characters or labels over 48. Lines over 160 are a **warning**: the
+    ported `hello` line (189) stays as the author wrote it, and Plautus keeps to 160.
 - [ ] `resolveScene(fabula, id, ctx)` replaces `resolveLine`: same context (`returning`,
       `latestPost`, injectable `random`).
 - [ ] **Dependency-free, a single module with no imports**, using only TypeScript syntax Node can
@@ -144,7 +183,7 @@ Plautus's deterministic hands, the way `ovidius-*.sh` are Ovidius's:
   `check --live` also does an HTTP check that every `/blog/<slug>` and release link resolves on
   https://sbozh.me.
 - `graph`: print a Mermaid flowchart. Scenes are nodes; choices are labelled edges; routes,
-  scrolls and close are distinct node shapes; conditional and random variants use dashed edges
+  external links, scrolls and close are distinct node shapes; conditional and random variants use dashed edges
   marked `?latest` / `~`. `graph --open` writes a self-contained HTML page (Mermaid pinned from
   jsdelivr) to a temp dir and `open`s it straight away.
 - `pending`: fetch https://sbozh.me/rss.xml (posts and release notes, each with a `<category>`)
@@ -170,8 +209,9 @@ His job, in order:
 2. For each item, read the live page. Decide whether it earns a line: not everything does.
    Skipping with a reason is a valid verdict.
 3. Write at most one scene per item, in Kagurame's voice (canon above). Posts hang off `fresh` and
-   releases off `built`; the openers are never touched. Keep the script lean: about 3 post scenes
-   and 2 release scenes live at once. Older ones are cut, and the ledger keeps the record.
+   releases off `built`; the openers and the `ave` scene are never touched. Keep the script lean:
+   about 3 post scenes and 2 release scenes live at once. Older ones are cut, and the ledger keeps
+   the record.
 4. `plautus.ts check` must pass, then `mark` each item.
 5. Report: the diff of the script, `graph --open`, and every verdict with its reason.
 
@@ -198,6 +238,8 @@ and write scenes only for the newest 2–3 items.
 
 - [ ] All of `dialogue.ts` lives in `onboarding.fabula`, the hardcoded tree is gone, and the home
       dialogue behaves exactly as before. Glitch lines also glitch with the window ON.
+- [ ] "What is AVE?" is the fourth opener. Kagurame answers it, and "Show me." opens
+      https://github.com/sbozh/ave in a new tab. `graph --open` shows the `ave` branch.
 - [ ] `node .claude/scripts/plautus.ts check` passes, and `graph --open` shows the whole tree.
 - [ ] A Plautus run against the live feed seeds the ledger and adds 2–3 scenes that pass `check`.
 - [ ] `pnpm test` is green for the touched areas. No new `tsc` errors (the baseline already has
