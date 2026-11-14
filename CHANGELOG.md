@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.10] - 2026-11-14
+
+### Changes
+
+- feat(web): preview external links in blog posts ([8f9effb](https://github.com/sbozh-me/website/commit/8f9effba44e649b0fb4b7b0cae092fd967ec87c0))
+
+
 ## [1.10.9] - 2026-11-13
 
 ### Changes
