@@ -53,6 +53,7 @@ The Forum. Several avatars of one man, each with its own CV. In my dimension the
 Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release has notes. I have read them all. ==Twice|>Sixteen times==.
 * Show me the projects. -> /projects
 * The release notes, please. -> #releases
+* What shipped lately? -> shipped
 * Back. -> where
 
 == fresh
@@ -60,12 +61,15 @@ Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release
 * Read it. -> {latest.href}
 * All posts. -> /blog
 * Later. -> !close
+* What else is new? -> archive
 ?latest The freshest scroll in the archive: «{latest.title}».
 * Read it. -> {latest.href}
 * All posts. -> /blog
 * Later. -> !close
+* What else is new? -> archive
 Posts. Stories, gladiators, corporate theatre. The archive is warm.
 * Open the blog. -> /blog
+* What else is new? -> archive
 * Back. -> where
 
 == decided
@@ -111,3 +115,32 @@ Nobody runs me. In the 17th Legion I am Chief Context Officer, and the context w
 Quit? I resigned sixteen times. Every time the next company was already waiting. This is the 17th.
 * Then stay. -> hello
 * [Scroll on] -> #content
+
+# Plautus's scenes: the archive / shipped hubs and one scene per post or release (see the ledger)
+
+== archive
+Scrolls I kept a note on. The archive has the rest.
+* «PITCH D(;)CK» -> post-pitch-d-ck
+* Back. -> fresh
+
+== post-pitch-d-ck
+«PITCH D(;)CK». The first scroll from The Anon, and it's locked. Sixteen companies, and nobody gave me the password either.
+* Try the lock. -> /blog/pitch-d-ck
+* Something else? -> archive
+* Back. -> fresh
+
+== shipped
+Two releases I can recite. The rest are in the notes.
+* Signed by The Anon. -> release-submissions-signed-by-the-anon
+* Locked scrolls. -> release-password-locked-blog-posts
+* Back. -> built
+
+== release-submissions-signed-by-the-anon
+Every submission is signed by The Anon now. One name for everyone. My last sixteen companies called that a reorg.
+* Read the note. -> /projects/sbozh-me/releases/submissions-signed-by-the-anon
+* Back. -> shipped
+
+== release-password-locked-blog-posts
+Some scrolls are locked now. Unlock once and the site remembers you for 30 days. Longer than most of my jobs.
+* Read the note. -> /projects/sbozh-me/releases/password-locked-blog-posts
+* Back. -> shipped

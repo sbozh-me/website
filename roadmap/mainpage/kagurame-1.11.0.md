@@ -247,12 +247,12 @@ and write scenes only for the newest 2–3 items.
 
 ## Done when
 
-- [ ] All of `dialogue.ts` lives in `onboarding.fabula`, the hardcoded tree is gone, and the home
+- [x] All of `dialogue.ts` lives in `onboarding.fabula`, the hardcoded tree is gone, and the home
       dialogue behaves exactly as before. Glitch lines also glitch with the window ON.
-- [ ] "What is AVE?" is the fourth opener. Kagurame answers it, and "Show me." opens
+- [x] "What is AVE?" is the fourth opener. Kagurame answers it, and "Show me." opens
       https://github.com/sbozh/ave in a new tab. `graph --open` shows the `ave` branch.
-- [ ] `node .claude/scripts/plautus.ts check` passes, and `graph --open` shows the whole tree.
-- [ ] A Plautus run against the live feed seeds the ledger and adds 2–3 scenes that pass `check`.
+- [x] `node .claude/scripts/plautus.ts check` passes, and `graph --open` shows the whole tree.
+- [x] A Plautus run against the live feed seeds the ledger and adds 2–3 scenes that pass `check`.
 - [ ] `pnpm test` is green for the touched areas. No new `tsc` errors (the baseline already has
       ~145 in old tests). The dev server works. Port 3000 is the renbg site, so use another port,
       e.g. `pnpm exec next dev -p 3017` in `apps/web`.
