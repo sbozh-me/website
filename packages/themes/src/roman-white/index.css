@@ -342,3 +342,28 @@ html[data-theme="roman-white"] {
   height: auto;
   color: var(--roman-stone);
 }
+
+/* ── Dark islands: a subtree that stays Obsidian Forge (the home video hero and the header
+   over it; obsidian-forge/index.css restores the tokens). The rules above that dress
+   elements, not tokens, stand down there. Unlayered, so revert-layer falls back to the
+   elements' own utility classes. ─────────────────────────────────────────────────── */
+
+[data-theme="roman-white"] [data-theme-island] .reader-theme-toggle,
+[data-theme="roman-white"] [data-theme-island] [data-slot="button"][class*="dark:bg-input"]:not(.window-toggle),
+[data-theme="roman-white"] [data-theme-island] .reader-theme-toggle:hover,
+[data-theme="roman-white"] [data-theme-island] [data-slot="button"][class*="dark:bg-input"]:not(.window-toggle):hover {
+  background: revert-layer;
+  border-color: revert-layer;
+  color: revert-layer;
+}
+
+[data-theme="roman-white"] [data-theme-island] .glitch-copy,
+[data-theme="roman-white"] [data-theme-island] .glitch-back,
+[data-theme="roman-white"] [data-theme-island] .glitch-sizer {
+  -webkit-text-stroke: 0;
+  text-transform: none;
+}
+
+[data-theme="roman-white"] [data-theme-island] [class*="text-[0.625rem]"] {
+  font-size: 0.625rem !important;
+}

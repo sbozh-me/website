@@ -113,6 +113,8 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
       // The poster shows from the first paint, before the cut is picked on the client
       style={{ backgroundImage: `url(${POSTER})` }}
       className="relative h-svh w-full overflow-hidden bg-background bg-cover bg-center"
+      // Dark on a dark video whatever the reader's theme: buttons, Kagurame, his box
+      data-theme-island="obsidian-forge"
     >
       {cut && (
         <video
@@ -139,9 +141,6 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
           className={`absolute inset-0 h-full w-full cursor-pointer object-cover transition-opacity duration-700 ${ended ? "opacity-0" : "opacity-100"}`}
         />
       )}
-
-      {/* Fades the video into the page below */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
 
       <HeroDialogue
         script={script}

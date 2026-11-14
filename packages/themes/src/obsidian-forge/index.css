@@ -59,3 +59,44 @@
   --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
+
+/*
+ * A dark island: a subtree that stays Obsidian Forge whatever the reader's theme, e.g. the
+ * home page's video hero and the header over it. A reader theme overrides the @theme
+ * values above on <html>, so the island declares them again. Keep them in sync.
+ * (roman-white/index.css undoes its own descendant rules inside an island.)
+ */
+[data-theme-island="obsidian-forge"] {
+  --color-background: #0a0a0f;
+  --color-foreground: #e5e7eb;
+  --color-muted: #18181b;
+  --color-muted-foreground: #6b7280;
+  --color-primary: #8b5cf6;
+  --color-primary-foreground: #fff;
+  --color-secondary: #f59e0b;
+  --color-secondary-foreground: #0a0a0f;
+  --color-accent: #22c55e;
+  --color-accent-foreground: #0a0a0f;
+  --color-border: #27272a;
+  --color-ring: #f59e0b;
+  --color-card: #18181b;
+  --color-card-foreground: #e5e7eb;
+  --color-popover: #18181b;
+  --color-popover-foreground: #e5e7eb;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #e5e7eb;
+  --color-input: #27272a;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
+  --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.25 / 0.875);
+  /* Inherited from <body> as already-resolved values, so set again here */
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: var(--color-foreground);
+}

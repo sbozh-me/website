@@ -42,6 +42,8 @@ export function Header() {
   return (
     <header
       data-over-video={overVideo || undefined}
+      // Over the video it stays dark whatever the reader's theme (a dark island)
+      data-theme-island={overVideo ? "obsidian-forge" : undefined}
       className={
         overVideo
           ? "absolute inset-x-0 top-0 z-20 border-b border-border/40 bg-background/40 backdrop-blur-md"
@@ -50,7 +52,7 @@ export function Header() {
     >
       {/* Three columns, the brand centred whatever the sides hold: the menu left (the burger
           on phones), the window and theme switches right */}
-      <div className="mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-4 sm:px-6 md:gap-3 md:px-12 lg:px-24">
+      <div className="mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-1.5 px-3 py-4 sm:gap-2 sm:px-6 md:gap-3 md:px-12 lg:px-16 xl:px-24">
         <div className="flex items-center justify-self-start">
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
@@ -119,8 +121,8 @@ export function Header() {
 
         <div className="flex items-center gap-1 justify-self-end md:gap-2">
           <HeaderWindowToggle page={pathname} />
-          {/* Smaller on phones, so both fit beside the centred brand */}
-          <ReaderThemeToggle className="size-10 md:size-11" />
+          {/* 44px on phones in any theme (rem is 20px in Roman White), so both fit beside the centred brand */}
+          <ReaderThemeToggle className="size-[44px] md:size-11" />
         </div>
       </div>
 

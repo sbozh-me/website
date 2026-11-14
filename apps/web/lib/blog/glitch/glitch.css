@@ -1,9 +1,11 @@
 /*
  * Blog glitch words, ✳ censor and D✳CK PITCH (see .claude/specs/blog-glitch-syntax.md).
- * Colours are custom properties so a post theme can override them.
+ * Colours are custom properties so a post theme can override them. A dark island
+ * (data-theme-island="obsidian-forge") takes the defaults back whatever the page's theme.
  */
 
-:root {
+:root,
+[data-theme-island="obsidian-forge"] {
   --glitch-base: var(--color-primary);
   --glitch-accent: var(--color-secondary);
   --glitch-obsidian: var(--color-background);

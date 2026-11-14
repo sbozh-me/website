@@ -179,7 +179,7 @@ export function HeaderWindowToggle({ page }: { page: string | null }) {
   // Icon only on phones, where the header has no room for the label
   return (
     <WindowButton
-      className="size-10 px-0 has-[>svg]:px-0 md:h-11 md:w-auto md:px-3 md:has-[>svg]:px-2.5"
+      className="size-[44px] px-0 has-[>svg]:px-0 md:h-11 md:w-auto md:px-3 md:has-[>svg]:px-2.5"
       labelClassName="sr-only md:not-sr-only"
     />
   );
