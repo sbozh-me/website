@@ -6,6 +6,7 @@ import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components"
 import { Voice } from "@/lib/blog/glitch/voice"
 import { compileTitle, hasTitleMarkup } from "@/lib/blog/title"
 import {
+  choiceKey,
   fillPlaceholders,
   lineKey,
   parseFabula,
@@ -30,13 +31,15 @@ export interface ScriptLine {
 export interface KagurameScript {
   fabula: Fabula
   latestPost?: LatestPost
-  /** "Kagurame" from `@title` */
-  name: string
+  /** "Kagurame" from `@title`, glitching like the rest of it */
+  name: ScriptLine
   /** What follows the name's " · " */
   subtitle?: ScriptLine
-  /** Lines with glitch syntax, compiled, by `lineKey(scene, variant)` */
+  /** Lines and reply labels with glitch syntax, compiled, by `lineKey` / `choiceKey` */
   lines: Record<string, ScriptLine>
 }
+
+const GLITCH_SYNTAX = /==|\(;\)/
 
 // MDX hands these the props remark-glitch wrote
 type Props = any
@@ -96,8 +99,16 @@ export async function loadKagurameScript(latestPost?: LatestPost): Promise<Kagur
       scene.variants.map(async (variant, index) => {
         // A ?latest line that can't hold is never said
         if (variant.kind === "latest" && !variantHolds(variant, { returning: false, latestPost })) return
-        const line = await compileLine(fillPlaceholders(variant.text, latestPost))
-        if (line) lines[lineKey(scene.id, index)] = line
+        const compiled = await Promise.all([
+          compileLine(fillPlaceholders(variant.text, latestPost)),
+          // Labels like "[Scroll on]" read as markdown: only glitch syntax earns a reply the MDX pass
+          ...variant.choices.map(({ label }) =>
+            GLITCH_SYNTAX.test(label) ? compileLine(fillPlaceholders(label, latestPost)) : null
+          ),
+        ])
+        compiled.forEach((line, at) => {
+          if (line) lines[at === 0 ? lineKey(scene.id, index) : choiceKey(scene.id, index, at - 1)] = line
+        })
       })
     )
   )
@@ -106,8 +117,12 @@ export async function loadKagurameScript(latestPost?: LatestPost): Promise<Kagur
   return {
     fabula,
     latestPost,
-    name,
-    subtitle: subtitle ? ((await compileLine(subtitle)) ?? { plain: subtitle, node: subtitle }) : undefined,
+    name: await titlePart(name),
+    subtitle: subtitle ? await titlePart(subtitle) : undefined,
     lines,
   }
+}
+
+async function titlePart(text: string): Promise<ScriptLine> {
+  return (await compileLine(text)) ?? { plain: text, node: text }
 }

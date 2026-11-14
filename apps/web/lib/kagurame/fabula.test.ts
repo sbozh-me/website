@@ -20,7 +20,7 @@ Hi.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* What is AVE? -> ave
+* ==||What is AVE?|>Why color has changed?== -> ave
 
 == hello
 Hello.
@@ -227,8 +227,9 @@ describe("validateFabula", () => {
   })
 
   it("keeps the author's four openers", () => {
-    expect(errors(BASE.replace("* What is AVE? -> ave", "* What is this? -> ave"))).toEqual([
-      '5: the openers are the author\'s: start offers "Hello.", "Where am I?", "...", "What is AVE?", in that order',
+    // As written, glitch and all
+    expect(errors(BASE.replace("* ==||What is AVE?|>Why color has changed?== -> ave", "* What is AVE? -> ave"))).toEqual([
+      '5: the openers are the author\'s: start offers "Hello.", "Where am I?", "...", "==||What is AVE?|>Why color has changed?==", in that order',
     ])
     const swapped = BASE.replace("* Hello. -> hello\n* Where am I? -> where", "* Where am I? -> where\n* Hello. -> hello")
     expect(errors(swapped)).toHaveLength(1)

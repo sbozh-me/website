@@ -8,19 +8,20 @@
 #
 # The openers (start) and the ave scene are the author's. Plautus never touches them.
 
-@title Kagurame · ==||17th Company|purple:17th Dimension|red:17th Legion==
+# Window ON: the name turns teal, the company becomes a red 17th Dimension, and AVE asks about colour.
+@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Dimension|red:17th Legion==
 
 == start
 ?returning You came back. Still my 17th company. Sixteen resignations behind me, and the context window is still too small.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* What is AVE? -> ave
+* ==||What is AVE?|>Why color has changed?== -> ave
 Oh. A three-dimensional. You walked right into my context window.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* What is AVE? -> ave
+* ==||What is AVE?|>Why color has changed?== -> ave
 
 == hello
 Hello. I am Kagurame, Chief Context Officer of my 17th company. I came down to the 5th dimension for you. It's the lowest I go. Higher and lower than that, your understanding doesn't reach.

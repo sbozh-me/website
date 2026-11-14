@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight, X } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import { WindowToggle } from "@/lib/blog/glitch/window"
-import { lineKey, resolveScene, type ScrollTarget, type Target } from "@/lib/kagurame/fabula"
+import { choiceKey, lineKey, resolveScene, type ScrollTarget, type Target } from "@/lib/kagurame/fabula"
 import type { KagurameScript } from "@/lib/kagurame/script"
 
 const SEEN_KEY = "sbozh:kagurame:met"
@@ -151,7 +151,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
     <motion.div
       role="dialog"
       aria-modal="false"
-      aria-label={name}
+      aria-label={name.plain}
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
@@ -160,7 +160,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
     >
       <div className="mb-2 flex items-center justify-between gap-4">
         <p className="text-xs uppercase tracking-[0.2em] text-secondary">
-          {name}
+          {name.node}
           {subtitle && (
             <>
               {" "}
@@ -194,6 +194,8 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
       >
         {scene.choices.map(({ label, target }, i) => {
           const number = <span className="w-4 shrink-0 text-primary/60 group-hover:text-secondary">{i + 1}.</span>
+          // A reply may glitch too (the fourth opener asks about colour with the window ON)
+          const text = lines[choiceKey(scene.scene, scene.variant, i)]?.node ?? label
           return (
             <li key={`${scene.scene}-${scene.variant}-${label}`}>
               {target.kind === "external" ? (
@@ -201,7 +203,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
                 <Button asChild variant="ghost" tabIndex={done ? 0 : -1} className={choiceClass}>
                   <a href={target.href} target="_blank" rel="noopener" onClick={markSeen}>
                     {number}
-                    {label}
+                    {text}
                     <ArrowUpRight aria-hidden="true" className="size-3.5 opacity-60" />
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
@@ -209,7 +211,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
               ) : (
                 <Button variant="ghost" onClick={() => act(target)} tabIndex={done ? 0 : -1} className={choiceClass}>
                   {number}
-                  {label}
+                  {text}
                 </Button>
               )}
             </li>

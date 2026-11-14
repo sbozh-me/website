@@ -40,12 +40,15 @@ returning-visitor greeting and reduced-motion handling.
   How much higher or lower he goes is beyond our understanding. He never explains this fully.
 - This is his **17th company**. He has resigned sixteen times. He is Chief Context Officer, and
   his context window is never big enough.
-- With the window open, his title glitches: 17th Company → 17th Dimension → 17th Legion (red).
+- With the window ON, the colours change: the name turns teal, the title rests on a bold red
+  "17th Dimension" (it still bursts into 17th Company and 17th Legion), and "What is AVE?" glitches
+  into "Why color has changed?". With it OFF: gold name, grey "17th Company", "What is AVE?".
 - The voice is corporate-absurd, calm and a little tired. Short lines: one or two sentences, at most
   ~160 characters, because the box types them out on a phone. English, no emoji, no sales pitch,
   never explain the joke.
 - The openers are fixed by the author: **"Hello." / "Where am I?" / "..." / "What is AVE?"**.
-  Never change them. The fourth one is new, so add it to the port.
+  Never change them. The fourth one is new, so add it to the port. It is written
+  `==||What is AVE?|>Why color has changed?==`, and the validator holds it to that exact text.
 - Characters and facts come only from published posts. Invent nothing about real people.
 
 ### AVE
@@ -90,7 +93,7 @@ Proposed grammar (refine it if something reads badly, but keep it line-based):
 
 ```
 # comment
-@title Kagurame · ==17th Company|17th Dimension|red:17th Legion==
+@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Dimension|red:17th Legion==
 
 == start
 ?returning You came back. Still my 17th company. Sixteen resignations behind me.
@@ -133,7 +136,8 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
   variant holds only when there is a latest post **and** it has a value for every placeholder
   the variant uses. So `fresh` has a second `?latest` variant without `{latest.minutes}` for
   posts with no reading time, the way `dialogue.ts` drops that sentence today.
-- Text may use the glitch syntax (`==a|b==`, `red:`, `(;)`). The window decides whether it glitches.
+- Text, reply labels and the `@title` may use the glitch syntax (`==a|b==`, `==||a|>b==`,
+  `red:`, `(;)`). The window decides whether it glitches; `>` is the state shown while it's ON.
 - Port **every** current node and line from `dialogue.ts` into the file, add the `ave` scene
   and the fourth opener, then delete the hardcoded tree.
 

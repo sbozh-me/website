@@ -16,6 +16,8 @@
  *   The unmarked line: what he says otherwise.
  *   * Back. -> start
  *
+ * Lines, reply labels and the title may use the blog's glitch syntax (`==a|>b==`, `teal:`, `(;)`).
+ *
  * A scene is one or more variants: a line, then its replies. Conditions (`?returning`,
  * `?latest`) are tried in order and the first that holds wins; otherwise one `~` line is
  * picked at random, or the unmarked line is said. A `?latest` variant holds only when the
@@ -107,12 +109,15 @@ export interface ValidateOptions {
   routes?: string[]
 }
 
-/** The openers are the author's: every variant of `start` offers exactly these. */
+/**
+ * The openers are the author's: every variant of `start` offers exactly these, as written.
+ * With the window ON the fourth one turns into "Why color has changed?".
+ */
 export const OPENERS: readonly { label: string; scene: string }[] = [
   { label: "Hello.", scene: "hello" },
   { label: "Where am I?", scene: "where" },
   { label: "...", scene: "silence" },
-  { label: "What is AVE?", scene: "ave" },
+  { label: "==||What is AVE?|>Why color has changed?==", scene: "ave" },
 ]
 
 /** Every visitor must be able to reach these from `start`: routes, scrolls and scenes. */
@@ -474,6 +479,11 @@ export function resolveScene(fabula: Fabula, id: string, ctx: SceneContext): Res
 /** Key of one variant's line, for lines compiled on the server. */
 export function lineKey(scene: string, variant: number): string {
   return `${scene}:${variant}`
+}
+
+/** Key of one reply's label, for labels compiled on the server. */
+export function choiceKey(scene: string, variant: number, choice: number): string {
+  return `${scene}:${variant}:${choice}`
 }
 
 /** `@title` "Kagurame · subtitle" as its name and subtitle. */

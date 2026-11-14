@@ -36,12 +36,18 @@ describe("loadKagurameScript", () => {
   it("prepares the real script with its glitching title", async () => {
     const script = await loadKagurameScript()
     expect(script).not.toBeNull()
-    expect(script!.name).toBe("Kagurame")
+    expect(script!.name.plain).toBe("Kagurame")
     expect(script!.subtitle!.plain).toBe("17th Company")
     expect(script!.fabula.scenes.map((s) => s.id)).toContain("ave")
-    render(<p data-testid="title">{script!.subtitle!.node}</p>)
-    // The window starts OFF: the glitch word rests on its plain base
-    expect(screen.getByTestId("title")).toHaveTextContent("17th Company")
+    render(
+      <p data-testid="title">
+        {script!.name.node} · {script!.subtitle!.node}
+      </p>
+    )
+    // The window starts OFF: the glitch words rest on their plain bases
+    expect(screen.getByTestId("title")).toHaveTextContent("Kagurame · 17th Company")
+    // The fourth opener glitches too
+    expect(script!.lines["start:1:3"].plain).toBe("What is AVE?")
   })
 
   it("compiles a ?latest line whose post title glitches", async () => {
@@ -75,7 +81,7 @@ Hi.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* What is AVE? -> ave
+* ==||What is AVE?|>Why color has changed?== -> ave
 == hello
 Hello.
 * Blog. -> /blog
@@ -93,9 +99,9 @@ AVE.
 * Back. -> start
 `
     const script = await loadKagurameScript()
-    expect(script!.name).toBe("Kagurame")
+    expect(script!.name).toEqual({ plain: "Kagurame", node: "Kagurame" })
     expect(script!.subtitle).toBeUndefined()
-    expect(script!.lines).toEqual({})
+    expect(Object.keys(script!.lines)).toEqual(["start:0:3"])
   })
 })
 
