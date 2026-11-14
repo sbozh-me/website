@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ErrorState, getSeriesWithPosts, PostCard, type SeriesWithPosts } from "@sbozh/blog";
+import {
+  ErrorState,
+  getSeriesWithPosts,
+  PostCard,
+  SeriesStatusBadge,
+  type SeriesWithPosts,
+} from "@sbozh/blog";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 
 export const dynamic = "force-dynamic";
@@ -88,7 +94,7 @@ export default async function SeriesPage({ params }: PageProps) {
         </a>
 
         {series.image && (
-          <figure className="mt-6">
+          <figure className="relative mt-6">
             <Image
               src={series.image.src}
               alt={series.image.alt}
@@ -97,10 +103,22 @@ export default async function SeriesPage({ params }: PageProps) {
               className="w-full h-auto rounded-lg"
               priority
             />
+            {series.status && (
+              <SeriesStatusBadge
+                status={series.status}
+                className="absolute left-3 top-3 shadow-lg backdrop-blur-md md:left-4 md:top-4 md:px-3 md:py-1 md:text-sm"
+              />
+            )}
           </figure>
         )}
 
-        <h1 className="mt-8 text-3xl md:text-4xl font-bold tracking-tight">{series.title}</h1>
+        {/* Without a Hero, the badge sits above the title */}
+        {series.status && !series.image && <SeriesStatusBadge status={series.status} className="mt-8" />}
+        <h1
+          className={`${series.status && !series.image ? "mt-3" : "mt-8"} text-3xl md:text-4xl font-bold tracking-tight`}
+        >
+          {series.title}
+        </h1>
         {series.description && (
           <p className="mt-2 text-muted-foreground whitespace-pre-line">{series.description}</p>
         )}

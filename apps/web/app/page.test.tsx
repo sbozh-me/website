@@ -64,6 +64,12 @@ vi.mock("@/components/home", () => ({
       <p>Software Developer</p>
     </div>
   ),
+  SeriesPromo: ({ big }: any) => (big ? <aside data-testid="series-promo">{big.series.title}</aside> : null),
+}));
+
+// Mock the promoted series
+vi.mock("@/lib/blog/promoted-series", () => ({
+  getPromotedSeries: vi.fn(async () => ({})),
 }));
 
 // Mock avatars from Directus
@@ -99,6 +105,7 @@ vi.mock("@/actions/blog-posts", () => ({
 import Home, { dynamic } from "./page";
 import { getAvatars } from "@/lib/avatars";
 import { getPostsByAuthors } from "@/actions/blog-posts";
+import { getPromotedSeries } from "@/lib/blog/promoted-series";
 import { loadKagurameScript } from "@/lib/kagurame/script";
 
 const mockReadFile = vi.mocked(readFile);
@@ -173,6 +180,27 @@ describe("Home", () => {
       const Page = await Home();
       render(Page);
       expect(screen.getByText(/Software Developer/)).toBeInTheDocument();
+    });
+  });
+
+  describe("series promotion", () => {
+    it("shows nothing when no series is promoted", async () => {
+      render(await Home());
+      expect(screen.queryByTestId("series-promo")).not.toBeInTheDocument();
+    });
+
+    it("shows the promoted series above the avatar hero", async () => {
+      vi.mocked(getPromotedSeries).mockResolvedValueOnce({
+        big: { series: { id: "s1", title: "Pan Dude Stand-up", slug: "pan-dude", promotion: "big" }, posts: [] },
+      });
+      render(await Home());
+
+      const promo = screen.getByTestId("series-promo");
+      expect(promo).toHaveTextContent("Pan Dude Stand-up");
+      expect(
+        promo.compareDocumentPosition(screen.getByTestId("home-content")) &
+          Node.DOCUMENT_POSITION_FOLLOWING
+      ).toBeTruthy();
     });
   });
 

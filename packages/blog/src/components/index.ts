@@ -10,7 +10,7 @@ export type {
 
 export type { BlogBrowserProps, PostGridProps, PostTileProps } from "./browse";
 
-export type { BlogViewTabsProps, SeriesCardProps } from "./series";
+export type { BlogViewTabsProps, SeriesCardProps, SeriesStatusBadgeProps } from "./series";
 
 export type {
   EmptyStateProps,
@@ -33,7 +33,7 @@ export {
 
 export { BlogBrowser, PostGrid, PostTile } from "./browse";
 
-export { BlogViewTabs, SeriesCard } from "./series";
+export { BlogViewTabs, SeriesCard, SeriesStatusBadge } from "./series";
 
 export {
   EmptyState,

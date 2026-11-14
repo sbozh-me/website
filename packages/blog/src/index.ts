@@ -15,6 +15,7 @@ export type {
   SelectOption,
   SelectProps,
   SeriesCardProps,
+  SeriesStatusBadgeProps,
   TagFilterProps,
   TimelineProps,
   YearMarkerProps,
@@ -29,7 +30,7 @@ export type { PostFilters, PostSort } from "./types/filters";
 
 export type { Persona } from "./types/persona";
 export type { Post, PostListItem } from "./types/post";
-export type { Series } from "./types/series";
+export type { Series, SeriesPromotion, SeriesStatus } from "./types/series";
 export type { Tag } from "./types/tag";
 export type { BlogView, FilterOptions, GroupedPosts, MonthGroup, SeriesPart, SeriesWithPosts } from "./utils";
 // Components
@@ -49,6 +50,7 @@ export {
   SearchFilter,
   Select,
   SeriesCard,
+  SeriesStatusBadge,
   TagFilter,
   Timeline,
   YearMarker,

@@ -10,7 +10,7 @@ import type { Avatar, AvatarStatusColor } from "../types/avatar";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
-import type { Series } from "../types/series";
+import { SERIES_PROMOTIONS, SERIES_STATUSES, type Series } from "../types/series";
 import type { Tag } from "../types/tag";
 
 export class DirectusError extends Error {
@@ -117,6 +117,8 @@ interface DirectusSeries {
   description: string | null;
   image: DirectusFile | null;
   next_series: string | null;
+  status: string | null;
+  promotion: string | null;
 }
 
 interface DirectusFile {
@@ -312,6 +314,8 @@ export class DirectusRepository implements BlogRepository {
             "slug",
             "description",
             "next_series",
+            "status",
+            "promotion",
             { image: ["id", "filename_download", "width", "height"] },
           ] as unknown as (keyof DirectusSeries)[],
           sort: ["title"],
@@ -435,6 +439,8 @@ export class DirectusRepository implements BlogRepository {
       description: series.description ?? undefined,
       image: series.image ? this.mapToImage(series.image) : undefined,
       nextSeriesId: series.next_series ?? undefined,
+      status: SERIES_STATUSES.find((status) => status === series.status),
+      promotion: SERIES_PROMOTIONS.find((slot) => slot === series.promotion),
     };
   }
 

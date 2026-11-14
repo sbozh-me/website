@@ -65,7 +65,9 @@ export const mockTags: Tag[] = [
   { id: "5", name: "Creative", slug: "creative" },
 ];
 
-export const mockSeries: Series[] = [{ id: "1", title: "Stand-up", slug: "stand-up" }];
+export const mockSeries: Series[] = [
+  { id: "1", title: "Stand-up", slug: "stand-up", status: "ongoing" },
+];
 
 export const mockPosts: Post[] = [
   {

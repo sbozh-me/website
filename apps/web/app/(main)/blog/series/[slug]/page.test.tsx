@@ -24,6 +24,7 @@ vi.mock("@/lib/blog/repository", () => ({
         throw new Error("Connection failed");
       }
       return [
+        makePost("plain-a", "plain"),
         makePost("two-a", "part-2"),
         makePost("article"),
         makePost("one-b", "part-1"),
@@ -38,8 +39,10 @@ vi.mock("@/lib/blog/repository", () => ({
         description: "The first run",
         image: hero,
         nextSeriesId: "part-2",
+        status: "finished",
       },
-      { id: "part-2", title: "Part 2", slug: "part-2" },
+      { id: "part-2", title: "Part 2", slug: "part-2", status: "planned" },
+      { id: "plain", title: "Plain", slug: "plain" },
       { id: "draft", title: "Draft", slug: "draft" },
     ]),
   }),
@@ -69,6 +72,32 @@ describe("SeriesPage", () => {
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Part 1");
     expect(screen.getByText("The first run")).toBeInTheDocument();
     expect(screen.getByAltText("hero.png")).toBeInTheDocument();
+  });
+
+  it("puts the status badge on the Hero image", async () => {
+    render(await SeriesPage(params("part-1")));
+
+    const badge = screen.getByText("Finished");
+    expect(badge).toHaveAttribute("data-status", "finished");
+    expect(badge).toHaveClass("absolute");
+    expect(badge.closest("figure")).toContainElement(screen.getByAltText("hero.png"));
+  });
+
+  it("puts the status badge above the title when there is no Hero image", async () => {
+    render(await SeriesPage(params("part-2")));
+
+    const badge = screen.getByText("Planned");
+    expect(badge.closest("figure")).toBeNull();
+    expect(
+      badge.compareDocumentPosition(screen.getByRole("heading", { level: 1 })) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
+  it("shows no badge when the series has no status", async () => {
+    const { container } = render(await SeriesPage(params("plain")));
+
+    expect(container.querySelector("[data-status]")).toBeNull();
   });
 
   it("lists only its posts in reading order", async () => {

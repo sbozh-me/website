@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import type { PostListItem } from "@sbozh/blog/types";
-import { HomeContent, HomeVideoHero } from "@/components/home";
+import { HomeContent, HomeVideoHero, SeriesPromo } from "@/components/home";
 import { getAvatars, toAuthor } from "@/lib/avatars";
+import { getPromotedSeries } from "@/lib/blog/promoted-series";
 import { getPostsByAuthors } from "@/actions/blog-posts";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
@@ -90,7 +91,7 @@ async function getReleases(): Promise<ReleasesResult> {
 
 export default async function Home() {
   // Releases in parallel with avatars, whose first one picks the initial posts
-  const [releasesResult, [authors, postsResult]] = await Promise.all([
+  const [releasesResult, [authors, postsResult], promoted] = await Promise.all([
     getReleases(),
     getAvatars().then(async (avatars) => {
       const authors = avatars.map(toAuthor);
@@ -99,6 +100,7 @@ export default async function Home() {
         await getPostsByAuthors(authors[0]?.blogAuthorSlugs ?? [], 3),
       ] as const;
     }),
+    getPromotedSeries(),
   ]);
 
   const initialPosts: PostListItem[] = postsResult.success
@@ -120,6 +122,7 @@ export default async function Home() {
       {/* Full-bleed, outside main's padding; runs under the translucent home header */}
       <HomeVideoHero script={kagurame} />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
+        <SeriesPromo {...promoted} />
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
         {releasesResult.success ? (

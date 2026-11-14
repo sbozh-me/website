@@ -286,8 +286,19 @@ describe("DirectusRepository", () => {
           description: "Jokes",
           image: { id: "file-1", filename_download: "hero.png", width: 1600, height: 900 },
           next_series: "series-2",
+          status: "ongoing",
+          promotion: "big",
         },
-        { id: "series-2", title: "Part 2", slug: "part-2", description: null, image: null, next_series: null },
+        {
+          id: "series-2",
+          title: "Part 2",
+          slug: "part-2",
+          description: null,
+          image: null,
+          next_series: null,
+          status: null,
+          promotion: null,
+        },
       ]);
 
       const [first, second] = await repository.getSeries();
@@ -296,10 +307,25 @@ describe("DirectusRepository", () => {
         description: "Jokes",
         nextSeriesId: "series-2",
         image: { src: expect.stringContaining("/file-1"), alt: "hero.png", width: 1600, height: 900 },
+        status: "ongoing",
+        promotion: "big",
       });
       expect(second.description).toBeUndefined();
       expect(second.image).toBeUndefined();
       expect(second.nextSeriesId).toBeUndefined();
+      expect(second.status).toBeUndefined();
+      expect(second.promotion).toBeUndefined();
+    });
+
+    it("drops a series status or promotion slot it doesn't know", async () => {
+      mockRequest.mockResolvedValueOnce([
+        { id: "s", title: "S", slug: "s", description: null, image: null, next_series: null, status: "paused", promotion: "center" },
+      ]);
+
+      const [series] = await repository.getSeries();
+
+      expect(series.status).toBeUndefined();
+      expect(series.promotion).toBeUndefined();
     });
 
     it("handles posts with empty tags", async () => {

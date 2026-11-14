@@ -4849,6 +4849,131 @@ fields:
       has_auto_increment: false
       foreign_key_table: series
       foreign_key_column: id
+  - collection: series
+    field: status
+    type: string
+    meta:
+      collection: series
+      conditions: null
+      display: labels
+      display_options:
+        choices:
+          - text: Planned
+            value: planned
+            foreground: '#0a0a0f'
+            background: '#f59e0b'
+          - text: Ongoing
+            value: ongoing
+            foreground: '#0a0a0f'
+            background: '#22c55e'
+          - text: Finished
+            value: finished
+            foreground: '#ffffff'
+            background: '#8b5cf6'
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: Badge on the series page and its main-page promo. Empty shows no badge.
+      options:
+        allowNone: true
+        choices:
+          - text: Planned
+            value: planned
+          - text: Ongoing
+            value: ongoing
+          - text: Finished
+            value: finished
+      readonly: false
+      required: false
+      searchable: true
+      sort: 8
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: series
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: series
+    field: promotion
+    type: string
+    meta:
+      collection: series
+      conditions: null
+      display: labels
+      display_options:
+        choices:
+          - text: Big
+            value: big
+            foreground: '#ffffff'
+            background: '#8b5cf6'
+          - text: Left
+            value: left
+            foreground: '#0a0a0f'
+            background: '#f59e0b'
+          - text: Right
+            value: right
+            foreground: '#0a0a0f'
+            background: '#22c55e'
+      field: promotion
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: >-
+        Main page promo above the avatar hero: Big on top, Left and Right under
+        it. Empty keeps the series off the main page. If two series share a slot,
+        the most recently updated wins.
+      options:
+        allowNone: true
+        choices:
+          - text: Big
+            value: big
+          - text: Left
+            value: left
+          - text: Right
+            value: right
+      readonly: false
+      required: false
+      searchable: true
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: promotion
+      table: series
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
   - collection: subscribers
     field: id
     type: integer
