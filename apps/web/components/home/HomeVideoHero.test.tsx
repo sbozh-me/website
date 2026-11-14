@@ -1,11 +1,18 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { loadKagurameScript, type KagurameScript } from "@/lib/kagurame/script";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 import { HomeVideoHero } from "./HomeVideoHero";
 
 let portrait = false;
+let script: KagurameScript;
+
+// Kagurame's real script, prepared as the home page does
+beforeAll(async () => {
+  script = (await loadKagurameScript())!;
+});
 let listener: (() => void) | null = null;
 
 beforeEach(() => {
@@ -67,14 +74,14 @@ describe("HomeVideoHero", () => {
   });
 
   it("waits for the video to end before Kagurame talks", () => {
-    render(<HomeVideoHero />);
+    render(<HomeVideoHero script={script} />);
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(screen.getByRole("button", { name: /Talk to Kagurame/ })).toBeInTheDocument();
     expect(video().loop).toBe(false);
   });
 
   it("pauses at the end of the first run and opens the dialogue, then loops", async () => {
-    render(<HomeVideoHero />);
+    render(<HomeVideoHero script={script} />);
     fireEvent.play(video());
     expect(screen.getByRole("button", { name: "Pause video" })).toBeInTheDocument();
     // A video that runs out fires pause, then ended
@@ -90,6 +97,14 @@ describe("HomeVideoHero", () => {
     fireEvent.play(video());
     expect(video()).not.toHaveAttribute("data-ended");
     expect(video()).toHaveClass("opacity-100");
+  });
+
+  it("keeps the video controls when Kagurame's script is broken", () => {
+    render(<HomeVideoHero script={null} />);
+    fireEvent.ended(video());
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(screen.queryByRole("button", { name: /Talk to Kagurame/ })).toBeNull();
+    expect(screen.getByRole("button", { name: "Play video" })).toBeInTheDocument();
   });
 
   it("toggles with the Play/Pause button", () => {

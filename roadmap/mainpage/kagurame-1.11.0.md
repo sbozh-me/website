@@ -139,9 +139,9 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
 
 ### 2. Parser and validator: `apps/web/lib/kagurame/fabula.ts`
 
-- [ ] `parseFabula(source) → Fabula` (scenes, variants, choices, `@title`) with line-numbered
+- [x] `parseFabula(source) → Fabula` (scenes, variants, choices, `@title`) with line-numbered
       errors.
-- [ ] `validateFabula(fabula, { routes }) → Problem[]` (each an error or a warning). The module
+- [x] `validateFabula(fabula, { routes }) → Problem[]` (each an error or a warning). The module
       has no imports, so it can't read the file system: the CLI and the test collect the route
       patterns from `app/**/page.tsx` (dropping route groups like `(main)`) and pass them in.
       Hard errors:
@@ -156,23 +156,23 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
   - the four openers changed;
   - lines over 200 characters or labels over 48. Lines over 160 are a **warning**: the
     ported `hello` line (189) stays as the author wrote it, and Plautus keeps to 160.
-- [ ] `resolveScene(fabula, id, ctx)` replaces `resolveLine`: same context (`returning`,
+- [x] `resolveScene(fabula, id, ctx)` replaces `resolveLine`: same context (`returning`,
       `latestPost`, injectable `random`).
-- [ ] **Dependency-free, a single module with no imports**, using only TypeScript syntax Node can
+- [x] **Dependency-free, a single module with no imports**, using only TypeScript syntax Node can
       strip (no enums, namespaces or parameter properties). Node 24 then runs it directly from the
       CLI (native type stripping, no tsx), *and* the app imports it. One parser, not two.
 
 ### 3. Wiring
 
-- [ ] `app/page.tsx` (server, already `force-dynamic`) reads and parses the script and passes the
+- [x] `app/page.tsx` (server, already `force-dynamic`) reads and parses the script and passes the
       graph to `HomeVideoHero` → `HeroDialogue`. A broken script must never take the home page
       down: log the problem and hide the dialogue.
-- [ ] Glitch lines: compile them on the server with the `compileTitle` pattern
+- [x] Glitch lines: compile them on the server with the `compileTitle` pattern
       (`lib/blog/title.ts`, `lib/releases/compile-summary.tsx`) and pass rendered nodes to the
       client. The typewriter types the **plain** text (`plainTitle`), then swaps in the compiled
       line when it finishes. `@title` goes through the same path, replacing the hardcoded
       `<Glitch>` in `HeroDialogue`.
-- [ ] Delete `components/home/dialogue.ts` and move its tests onto the real script: a test that
+- [x] Delete `components/home/dialogue.ts` and move its tests onto the real script: a test that
       parses and validates `onboarding.fabula` means CI catches any edit that breaks the graph.
 
 ### 4. CLI: `.claude/scripts/plautus.ts` (run with `node .claude/scripts/plautus.ts <cmd>`)

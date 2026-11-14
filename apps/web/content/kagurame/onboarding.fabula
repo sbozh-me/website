@@ -1,0 +1,91 @@
+# Kagurame's onboarding dialogue over the home video. Format: lib/kagurame/fabula.ts,
+# docs: .claude/modules/kagurame.md. Check it with: node .claude/scripts/plautus.ts check
+#
+# == id starts a scene: a line, then its replies (* label -> target).
+# ?returning / ?latest: conditions, the first that holds wins. ~: a random pool.
+# An unmarked line is what he says otherwise.
+# Targets: scene-id, /path, https://… (new tab), #content / #releases (scroll), !close.
+#
+# The openers (start) and the ave scene are the author's. Plautus never touches them.
+
+@title Kagurame · ==||17th Company|purple:17th Dimension|red:17th Legion==
+
+== start
+?returning You came back. Still my 17th company. Sixteen resignations behind me, and the context window is still too small.
+* Hello. -> hello
+* Where am I? -> where
+* ... -> silence
+* What is AVE? -> ave
+Oh. A three-dimensional. You walked right into my context window.
+* Hello. -> hello
+* Where am I? -> where
+* ... -> silence
+* What is AVE? -> ave
+
+== hello
+Hello. I am Kagurame, Chief Context Officer of my 17th company. I came down to the 5th dimension for you. It's the lowest I go. Higher and lower than that, your understanding doesn't reach.
+* What is this place? -> where
+* What's new? -> fresh
+* Bye. -> bye
+
+== where
+sbozh.me. A personal startup. One man builds it in public and ships whatever survives. I am what survived.
+* What do you write? -> fresh
+* Who runs this place? -> who
+* What gets built here? -> built
+* Keep me posted. -> /subscribe
+
+== silence
+...  ...  Respect. Silence is the biggest context window there is. Do you want to scroll on alone, or shall I decide for you?
+* [Scroll on] -> #content
+* [Let him decide] -> decided
+
+== who
+The Forum. Several avatars of one man, each with its own CV. In my dimension they are one person. In yours, a team.
+* Enter the Forum. -> /forum
+* And what gets built? -> built
+* Back. -> where
+
+== built
+Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release has notes. I have read them all. Twice.
+* Show me the projects. -> /projects
+* The release notes, please. -> #releases
+* Back. -> where
+
+== fresh
+?latest The freshest scroll in the archive: «{latest.title}». About {latest.minutes} min of your dimension.
+* Read it. -> {latest.href}
+* All posts. -> /blog
+* Later. -> !close
+?latest The freshest scroll in the archive: «{latest.title}».
+* Read it. -> {latest.href}
+* All posts. -> /blog
+* Later. -> !close
+Posts. Stories, gladiators, corporate theatre. The archive is warm.
+* Open the blog. -> /blog
+* Back. -> where
+
+== decided
+~ Decided. The blog. Read something you didn't come for.
+* Go to the blog. -> /blog
+* No. -> bye
+~ Decided. The Forum. Meet the avatars. All of them are one man. Don't tell them.
+* Enter the Forum. -> /forum
+* No. -> bye
+~ Decided. Projects. Things that shipped. Some of them even on purpose.
+* See the projects. -> /projects
+* No. -> bye
+~ Decided. Subscribe. I whisper into your inbox when something ships. Rarely. Politely.
+* Subscribe. -> /subscribe
+* No. -> bye
+
+== bye
+Fine. I'll be here, looping. Thirty-nine seconds at a time.
+* [Scroll on] -> #content
+* Wait, where am I? -> where
+
+== ave
+AVE. A CLI that keeps agents focused and their behaviour predictable. In my 17th company we call that a miracle.
+* Show me. -> https://github.com/sbozh/ave
+* And you are? -> hello
+* Back. -> start

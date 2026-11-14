@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from "react"
-import { fireEvent, render, screen } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { act, fireEvent, render, screen } from "@testing-library/react"
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest"
+import { loadKagurameScript, type KagurameScript } from "@/lib/kagurame/script"
 
 const push = vi.fn()
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }))
 
-// Reduced motion by default: lines show at once. Off for the spinning-mark test.
+// Reduced motion by default: lines show at once. Off for the typing and spinning-mark tests.
 const motionPref = vi.hoisted(() => ({ reduce: true }))
 vi.mock("framer-motion", async (orig) => ({
   ...(await orig<typeof import("framer-motion")>()),
@@ -18,18 +19,32 @@ import { HeroDialogue } from "./HeroDialogue"
 
 const onScroll = vi.fn()
 
+// The real script, prepared the way the home page prepares it
+let script: KagurameScript
+let withPost: KagurameScript
+beforeAll(async () => {
+  script = (await loadKagurameScript())!
+  withPost = (await loadKagurameScript({ title: "Gladiators", slug: "gladiators" }))!
+})
+
 function Harness({
   initialOpen = true,
-  latestPost,
+  script: given,
   toolbar,
 }: {
   initialOpen?: boolean
-  latestPost?: { title: string; slug: string }
+  script?: KagurameScript | null
   toolbar?: ReactNode
 }) {
   const [open, setOpen] = useState(initialOpen)
   return (
-    <HeroDialogue open={open} onOpenChange={setOpen} latestPost={latestPost} onScroll={onScroll} toolbar={toolbar} />
+    <HeroDialogue
+      open={open}
+      onOpenChange={setOpen}
+      script={given === undefined ? script : given}
+      onScroll={onScroll}
+      toolbar={toolbar}
+    />
   )
 }
 
@@ -40,13 +55,17 @@ beforeEach(() => {
   window.localStorage.clear()
 })
 
+afterEach(() => {
+  vi.useRealTimers()
+  vi.restoreAllMocks()
+})
+
 describe("HeroDialogue", () => {
-  it("greets a stranger with three replies", () => {
+  it("greets a stranger with four replies", () => {
     render(<Harness />)
     expect(screen.getByRole("dialog", { name: "Kagurame" })).toHaveTextContent("three-dimensional")
-    expect(screen.getByRole("button", { name: /Hello\./ })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Where am I\?/ })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /\.\.\./ })).toBeInTheDocument()
+    const replies = screen.getAllByRole("listitem").map((item) => item.textContent)
+    expect(replies).toEqual(["1.Hello.", "2.Where am I?", "3....", "4.What is AVE?"])
   })
 
   it("walks the tree and navigates", () => {
@@ -59,12 +78,58 @@ describe("HeroDialogue", () => {
   })
 
   it("picks replies with number keys", () => {
-    render(<Harness latestPost={{ title: "Gladiators", slug: "gladiators" }} />)
+    render(<Harness script={withPost} />)
     fireEvent.keyDown(window, { key: "1" }) // Hello.
     fireEvent.keyDown(window, { key: "2" }) // What's new?
     expect(screen.getByRole("dialog")).toHaveTextContent("«Gladiators»")
     fireEvent.keyDown(window, { key: "1" }) // Read it.
     expect(push).toHaveBeenCalledWith("/blog/gladiators")
+  })
+
+  it("answers What is AVE with a link to the repo in a new tab", () => {
+    render(<Harness />)
+    fireEvent.click(screen.getByRole("button", { name: /What is AVE\?/ }))
+    expect(screen.getByRole("dialog")).toHaveTextContent("A CLI that keeps agents focused")
+    const link = screen.getByRole("link", { name: /Show me\./ })
+    expect(link).toHaveAttribute("href", "https://github.com/sbozh/ave")
+    expect(link).toHaveAttribute("target", "_blank")
+    expect(link).toHaveAttribute("rel", "noopener")
+    expect(link).toHaveAccessibleName(/opens in a new tab/)
+    fireEvent.click(link)
+    expect(window.localStorage.getItem("sbozh:kagurame:met")).toBe("1")
+  })
+
+  it("opens the repo from the keyboard too", () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null)
+    render(<Harness />)
+    fireEvent.keyDown(window, { key: "4" }) // What is AVE?
+    fireEvent.keyDown(window, { key: "1" }) // Show me.
+    expect(open).toHaveBeenCalledWith("https://github.com/sbozh/ave", "_blank", "noopener")
+  })
+
+  it("lets him decide once, without reshuffling while he types", () => {
+    motionPref.reduce = false
+    vi.useFakeTimers()
+    render(<Harness />)
+    act(() => vi.advanceTimersByTime(5_000))
+    fireEvent.click(screen.getByRole("button", { name: /^3\.\.\.\./ }))
+    act(() => vi.advanceTimersByTime(5_000))
+    // The blog when he decides; any later pick would say Subscribe instead
+    const random = vi.spyOn(Math, "random").mockReturnValue(0)
+    fireEvent.click(screen.getByRole("button", { name: /Let him decide/ }))
+    random.mockReturnValue(0.99)
+    act(() => vi.advanceTimersByTime(5_000))
+    expect(screen.getByRole("dialog")).toHaveTextContent("Decided. The blog. Read something you didn't come for.")
+    expect(screen.getByRole("button", { name: /Go to the blog\./ })).toBeInTheDocument()
+  })
+
+  it("closes on !close", () => {
+    render(<Harness script={withPost} />)
+    fireEvent.click(screen.getByRole("button", { name: /Hello\./ }))
+    fireEvent.click(screen.getByRole("button", { name: /What's new\?/ }))
+    fireEvent.click(screen.getByRole("button", { name: /Later\./ }))
+    expect(screen.queryByRole("dialog")).toBeNull()
+    expect(onScroll).not.toHaveBeenCalled()
   })
 
   it("scrolls to the release notes and tucks away", () => {
@@ -89,6 +154,13 @@ describe("HeroDialogue", () => {
     render(<Harness initialOpen={false} />)
     expect(screen.queryByRole("dialog")).toBeNull()
     expect(screen.getByRole("button", { name: /Talk to Kagurame/ })).toBeInTheDocument()
+  })
+
+  it("stays away when his script is broken, leaving the toolbar", () => {
+    render(<Harness script={null} toolbar={<button>Pause</button>} />)
+    expect(screen.queryByRole("dialog")).toBeNull()
+    expect(screen.queryByRole("button", { name: /Talk to Kagurame/ })).toBeNull()
+    expect(screen.getByRole("button", { name: "Pause" })).toBeInTheDocument()
   })
 
   it("reads Ave with the brand mark spinning", () => {
@@ -120,6 +192,30 @@ describe("HeroDialogue", () => {
     expect(screen.getByRole("button", { name: "Pause" }).compareDocumentPosition(talk)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING
     )
+  })
+})
+
+describe("HeroDialogue glitch lines", () => {
+  // The stranger's greeting, compiled as if it had glitch syntax
+  const rich = () => ({
+    ...script,
+    lines: { "start:1": { plain: "Oh. A plain line.", node: <em>Oh. A glitching line.</em> } },
+  })
+
+  it("types the plain text, then swaps in the rendered line", () => {
+    motionPref.reduce = false
+    vi.useFakeTimers()
+    render(<Harness script={rich()} />)
+    act(() => vi.advanceTimersByTime(22 * 5))
+    expect(screen.getByRole("dialog")).toHaveTextContent("Oh. A")
+    expect(screen.queryByText("Oh. A glitching line.")).toBeNull()
+    act(() => vi.advanceTimersByTime(5_000))
+    expect(screen.getByText("Oh. A glitching line.").tagName).toBe("EM")
+  })
+
+  it("shows the rendered line at once under reduced motion", () => {
+    render(<Harness script={rich()} />)
+    expect(screen.getByText("Oh. A glitching line.")).toBeInTheDocument()
   })
 })
 

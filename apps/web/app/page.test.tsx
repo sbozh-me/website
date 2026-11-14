@@ -55,7 +55,9 @@ vi.mock("@/components/releases/ReleaseTimelineWithLoadMore", () => ({
 
 // Mock HomeContent component
 vi.mock("@/components/home", () => ({
-  HomeVideoHero: () => <section data-testid="home-video-hero" />,
+  HomeVideoHero: ({ script }: any) => (
+    <section data-testid="home-video-hero" data-script={script ? script.name : "none"} />
+  ),
   HomeContent: () => (
     <div data-testid="home-content">
       <h1>Sem Bozhyk</h1>
@@ -84,6 +86,11 @@ vi.mock("@/lib/avatars", () => ({
   }),
 }));
 
+// Kagurame's script, prepared on the server
+vi.mock("@/lib/kagurame/script", () => ({
+  loadKagurameScript: vi.fn(async () => ({ name: "Kagurame" })),
+}));
+
 // Mock blog posts action
 vi.mock("@/actions/blog-posts", () => ({
   getPostsByAuthors: vi.fn(async () => ({ success: true, posts: [] })),
@@ -92,6 +99,7 @@ vi.mock("@/actions/blog-posts", () => ({
 import Home, { dynamic } from "./page";
 import { getAvatars } from "@/lib/avatars";
 import { getPostsByAuthors } from "@/actions/blog-posts";
+import { loadKagurameScript } from "@/lib/kagurame/script";
 
 const mockReadFile = vi.mocked(readFile);
 const mockCreateRepository = vi.mocked(createReleaseRepository);
@@ -118,6 +126,27 @@ describe("Home", () => {
       const hero = screen.getByTestId("home-video-hero");
       expect(hero).toBeInTheDocument();
       expect(hero.closest("main")).toBeNull();
+    });
+
+    it("hands Kagurame the latest post", async () => {
+      vi.mocked(getPostsByAuthors).mockResolvedValueOnce({
+        success: true,
+        posts: [{ title: "Gladiators", slug: "gladiators", readingTime: 7 } as any],
+      });
+      render(await Home());
+      expect(loadKagurameScript).toHaveBeenCalledWith({
+        title: "Gladiators",
+        slug: "gladiators",
+        readingTime: 7,
+      });
+      expect(screen.getByTestId("home-video-hero")).toHaveAttribute("data-script", "Kagurame");
+    });
+
+    it("passes no post when there is none, and no script when it is broken", async () => {
+      vi.mocked(loadKagurameScript).mockResolvedValueOnce(null);
+      render(await Home());
+      expect(loadKagurameScript).toHaveBeenCalledWith(undefined);
+      expect(screen.getByTestId("home-video-hero")).toHaveAttribute("data-script", "none");
     });
 
     it("renders author name", async () => {

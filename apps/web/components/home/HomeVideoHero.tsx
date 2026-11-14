@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { ChevronDown, Pause, Play, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import { HeroDialogue } from "./HeroDialogue"
-import type { LatestPost } from "./dialogue"
+import type { KagurameScript } from "@/lib/kagurame/script"
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
@@ -24,8 +24,8 @@ function pickCut(): Cut {
 }
 
 interface HomeVideoHeroProps {
-  /** Offered by Kagurame as the freshest read */
-  latestPost?: LatestPost
+  /** Kagurame's dialogue, prepared on the server; null when his script is broken */
+  script?: KagurameScript | null
 }
 
 /**
@@ -36,7 +36,7 @@ interface HomeVideoHeroProps {
  * The first run plays once: when it ends the video fades out to the poster (the
  * section's background) and Kagurame starts talking. After that, Play loops it.
  */
-export function HomeVideoHero({ latestPost }: HomeVideoHeroProps = {}) {
+export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null)
   // Chosen after mount: the server can't know the screen, and a wrong guess would
   // download the other cut first
@@ -144,7 +144,7 @@ export function HomeVideoHero({ latestPost }: HomeVideoHeroProps = {}) {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
 
       <HeroDialogue
-        latestPost={latestPost}
+        script={script}
         onScroll={scrollTo}
         open={dialogueOpen}
         onOpenChange={setDialogueOpen}

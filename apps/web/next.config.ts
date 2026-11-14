@@ -4,6 +4,10 @@ import { withSentryConfig } from "@sentry/nextjs";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  // Kagurame's script is read at request time (lib/kagurame/script.tsx): ship it in the image
+  outputFileTracingIncludes: {
+    "/": ["./content/kagurame/**/*"],
+  },
   // TODO: Enable when build server has more memory
   // productionBrowserSourceMaps: true, // Enable public source maps for better error tracking
   async redirects() {

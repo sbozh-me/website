@@ -13,6 +13,7 @@ import {
   DirectusError,
 } from "@/lib/releases/repository";
 import { compileSummary } from "@/lib/releases/compile-summary";
+import { loadKagurameScript } from "@/lib/kagurame/script";
 
 // Release notes and posts come from Directus at request time. Without this, a build that
 // can't see DIRECTUS_* (e.g. from a worktree) prerenders the page with no releases and
@@ -104,18 +105,20 @@ export default async function Home() {
     ? postsResult.posts
     : [];
 
+  // Kagurame offers the latest post as the freshest read; a broken script hides him
+  const latest = initialPosts[0];
+  const kagurame = await loadKagurameScript(
+    latest && {
+      title: latest.title,
+      slug: latest.slug,
+      readingTime: latest.readingTime,
+    },
+  );
+
   return (
     <>
       {/* Full-bleed, outside main's padding; runs under the translucent home header */}
-      <HomeVideoHero
-        latestPost={
-          initialPosts[0] && {
-            title: initialPosts[0].title,
-            slug: initialPosts[0].slug,
-            readingTime: initialPosts[0].readingTime,
-          }
-        }
-      />
+      <HomeVideoHero script={kagurame} />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
