@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.11] - 2026-11-14
+
+### Changes
+
+- feat(web): add video hero to main page ([af429eb](https://github.com/sbozh-me/website/commit/af429ebac305359de1ebf7699822d195869552e7))
+- feat(blog): render censor as logo in excerpts and titles ([48a7f00](https://github.com/sbozh-me/website/commit/48a7f00f52441619f4664c68ff91d108e518a283))
+- feat(web): add Kagurame dialogue to home hero ([691dad5](https://github.com/sbozh-me/website/commit/691dad523ad9ae1fc7d9813c83898f3f1d41b72c))
+- docs(roadmap): plan Kagurame script for 1.11.0 ([7613887](https://github.com/sbozh-me/website/commit/761388797de271a301d501a67b4a9e59d5151097))
+- feat(web): play hero video once, then open Kagurame ([34a051c](https://github.com/sbozh-me/website/commit/34a051cd70c06645f38e43338cb436e833fdd590))
+- docs(roadmap): add Kagurame script and Plautus to 1.11.0 ([187665f](https://github.com/sbozh-me/website/commit/187665fa8bf20a853f8b40db3498ba01a2fa8999))
+- feat(web): move Kagurame's dialogue into a .fabula script ([a4238c2](https://github.com/sbozh-me/website/commit/a4238c229f6890f35a0da056e602d919dcc0a1ef))
+- feat(web): recolour Kagurame's title and AVE opener with the window ON ([a7976d6](https://github.com/sbozh-me/website/commit/a7976d6fe5e36bb1a57daae16d012095d3a6c614))
+- feat(web): glitch Kagurame's lines and branch replies on the window ([8db70e3](https://github.com/sbozh-me/website/commit/8db70e330750f05733e622d71966a4ce4f21eaf1))
+- feat(claude): add plautus CLI to check, graph and track Kagurame's script ([ca38a76](https://github.com/sbozh-me/website/commit/ca38a76f39e222c8898d84691ee9efdfe85fcba6))
+- feat(claude): add Plautus, the agent who writes Kagurame's lines ([e2f95e6](https://github.com/sbozh-me/website/commit/e2f95e667f0e5a4a9cf857b3a4e10ad02d7a5f77))
+- feat(web): Plautus's first scenes for Kagurame (The Anon, locked posts) ([3436bf7](https://github.com/sbozh-me/website/commit/3436bf7b2544e58c39e27c8a80ba6507f333d02d))
+- docs(claude): seed Plautus's ledger one guid per line ([29d8d30](https://github.com/sbozh-me/website/commit/29d8d30644ad70c6afef3c50495c8cbf05bb03af))
+- feat(web): colour everything in Kagurame's box with the window ON ([c259566](https://github.com/sbozh-me/website/commit/c2595668617102fbfc480bf5031f4244dea45811))
+- feat(web): glitch Kagurame's personal startup into conquest ([3284480](https://github.com/sbozh-me/website/commit/3284480b10ad70403e371898a526d5e264502465))
+- fix(web): glitch only startup into Conquest in Kagurame's line ([2c9afe9](https://github.com/sbozh-me/website/commit/2c9afe98ebac614bf0cf83ada86a6c85b27078e6))
+- fix(web): give Keep me posted a real subscribe page ([cce8cb9](https://github.com/sbozh-me/website/commit/cce8cb91f9b02723bb5cbb403bb7c13a75c80d99))
+- chore(release): v1.10.11 ([ee0de5e](https://github.com/sbozh-me/website/commit/ee0de5e9daa77cc176b42755edbf6754812a16fd))
+- feat(web): centre the brand and move the Window switch into the header ([75554e6](https://github.com/sbozh-me/website/commit/75554e6ddf91ef041ce58c9c16c230a1bb5c8841))
+- fix(web): menu left, switches right in the header ([eb6c321](https://github.com/sbozh-me/website/commit/eb6c3214d871bcc6a934694d4916e974f502f52d))
+- feat(blog): add series status badge and home promo ([338628b](https://github.com/sbozh-me/website/commit/338628bda6559bc47d1d5a01d953fdbc4a9b2579))
+- fix(web): keep the home hero dark in the white theme ([e81d5f5](https://github.com/sbozh-me/website/commit/e81d5f5ea49c1aa6f4dd00788a9eef3b7e5be55a))
+- feat(web): play the home video in HD when the network allows ([07b3e94](https://github.com/sbozh-me/website/commit/07b3e942698c64b0dc41c2290920147f57a243af))
+- revert: drop the v1.10.11 release ([9f9bdad](https://github.com/sbozh-me/website/commit/9f9bdad3040d254a0985af6ec00b176bb8607319))
+
+
 ## [1.10.10] - 2026-11-14
 
 ### Changes
