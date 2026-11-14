@@ -223,7 +223,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Main page video hero (Pan Dude, mobile reels cut) under a translucent header~~
 - ~~Main page RPG dialogue onboarding (Kagurame guides visitors to blog, forum, projects, subscribe)~~
 - ~~Kagurame dialogue as a graph script (.fabula) with a validating, graph-drawing CLI~~
-- Plautus: agent that reviews new posts and release notes into Kagurame's script
+- ~~Plautus: agent that reviews new posts and release notes into Kagurame's script~~
 
 ## 2.x.x - Later
 

@@ -232,11 +232,11 @@ and write scenes only for the newest 2–3 items.
 
 ### 6. Command and flow
 
-- [ ] `.claude/commands/plautus.md` → `/plautus` (review pending), `/plautus graph`,
+- [x] `.claude/commands/plautus.md` → `/plautus` (review pending), `/plautus graph`,
       `/plautus check`, `/plautus <url>` (one specific post or release). Same style as `garret.md`.
-- [ ] `/commit notes` (Livius) and a new post going live are the moments to run Plautus. Have
+- [x] `/commit notes` (Livius) and a new post going live are the moments to run Plautus. Have
       Livius's report end by suggesting `/plautus`.
-- [ ] `.claude/modules/kagurame.md`: the format, the CLI and the agent, short, like the other
+- [x] `.claude/modules/kagurame.md`: the format, the CLI and the agent, short, like the other
       module docs.
 
 ## Out of scope

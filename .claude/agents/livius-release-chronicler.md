@@ -123,7 +123,8 @@ The file MUST follow this format exactly:
 ## Done
 
 Reply with the file path, then the file content verbatim, then — only if one applies — a short line
-flagging a judgment call (type choice, scoped omission, already-published version). Nothing else.
+flagging a judgment call (type choice, scoped omission, already-published version). End with one
+line: `Once the note is live: /plautus` (Kagurame may want a word about it). Nothing else.
 
 ## The Livius Promise
 
