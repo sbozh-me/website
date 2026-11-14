@@ -107,13 +107,21 @@ export default async function Home() {
   return (
     <>
       {/* Full-bleed, outside main's padding; runs under the translucent home header */}
-      <HomeVideoHero />
+      <HomeVideoHero
+        latestPost={
+          initialPosts[0] && {
+            title: initialPosts[0].title,
+            slug: initialPosts[0].slug,
+            readingTime: initialPosts[0].readingTime,
+          }
+        }
+      />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
         {releasesResult.success ? (
           releasesResult.releases.length > 0 && (
-            <section className="w-full max-w-3xl py-16">
+            <section id="releases" className="w-full max-w-3xl scroll-mt-24 py-16">
               <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
                 Release Notes
               </h2>
@@ -126,7 +134,7 @@ export default async function Home() {
             </section>
           )
         ) : (
-          <section className="w-full max-w-3xl py-16">
+          <section id="releases" className="w-full max-w-3xl scroll-mt-24 py-16">
             <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
               Release Notes
             </h2>

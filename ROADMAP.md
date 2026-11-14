@@ -221,5 +221,6 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Post video click to pause/play~~
 - ~~Post video vertical volume slider~~
 - ~~Main page video hero (Pan Dude, mobile reels cut) under a translucent header~~
+- ~~Main page RPG dialogue onboarding (Kagurame guides visitors to blog, forum, projects, subscribe)~~
 
 ---

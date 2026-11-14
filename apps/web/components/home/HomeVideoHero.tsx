@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronDown, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
+import { HeroDialogue } from "./HeroDialogue"
+import type { LatestPost } from "./dialogue"
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
@@ -21,12 +23,17 @@ function pickCut(): Cut {
   return window.matchMedia(PORTRAIT_QUERY).matches ? "mobile" : "desktop"
 }
 
+interface HomeVideoHeroProps {
+  /** Offered by Kagurame as the freshest read */
+  latestPost?: LatestPost
+}
+
 /**
  * Full-bleed Pan Dude video at the top of the home page. It starts at the very
  * top of the viewport: the home header is absolute and translucent, so the video runs
- * under it.
+ * under it. Kagurame's onboarding dialogue sits over it.
  */
-export function HomeVideoHero() {
+export function HomeVideoHero({ latestPost }: HomeVideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null)
   // Chosen after mount: the server can't know the screen, and a wrong guess would
   // download the other cut first
@@ -59,13 +66,21 @@ export function HomeVideoHero() {
     if (!next) video.play().catch(() => {})
   }
 
+  const sectionRef = useRef<HTMLElement>(null)
+
   const scrollDown = () => {
-    const hero = videoRef.current?.closest("section")
-    window.scrollTo({ top: hero?.offsetHeight ?? window.innerHeight, behavior: "smooth" })
+    window.scrollTo({ top: sectionRef.current?.offsetHeight ?? window.innerHeight, behavior: "smooth" })
+  }
+
+  const scrollTo = (target: "content" | "releases") => {
+    const releases = target === "releases" ? document.getElementById("releases") : null
+    if (releases) releases.scrollIntoView({ behavior: "smooth", block: "start" })
+    else scrollDown()
   }
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Pan Dude, Chief Context Officer"
       // The poster shows from the first paint, before the cut is picked on the client
       style={{ backgroundImage: `url(${POSTER})` }}
@@ -90,6 +105,8 @@ export function HomeVideoHero() {
 
       {/* Fades the video into the page below */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-background" />
+
+      <HeroDialogue latestPost={latestPost} onScroll={scrollTo} />
 
       <div className="absolute inset-x-0 bottom-6 flex items-center justify-between px-6 md:px-12 lg:px-24">
         <Button
