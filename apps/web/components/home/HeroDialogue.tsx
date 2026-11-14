@@ -50,7 +50,8 @@ function useTypewriter(text: string, instant: boolean, line: unknown) {
       setShown((n) => {
         if (n >= length.current) {
           clearInterval(timer)
-          return n
+          // Finished for good: a longer reading (the window flipped) must not reopen the line
+          return Infinity
         }
         return n + 1
       })
@@ -91,7 +92,7 @@ interface PanelProps {
 }
 
 const choiceClass =
-  "group h-auto w-full justify-start whitespace-normal px-2 py-1.5 text-left font-[inherit] text-muted-foreground hover:bg-primary/10 hover:text-primary"
+  "group h-auto w-full justify-start whitespace-normal px-2 py-1.5 text-left font-[inherit] hover:bg-primary/10 hover:text-primary"
 
 /**
  * One conversation. It mounts on every opening, so he always starts from his first line
@@ -112,6 +113,9 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
       windowOn && choice.openTarget ? choice.openTarget : choice.target,
     [windowOn]
   )
+
+  // Window ON: everything is coloured, nothing grey. White counts as a colour.
+  const quiet = windowOn ? "text-foreground" : "text-muted-foreground"
 
   // A glitch line types out as plain text, then the rendered line takes its place
   const rich = lines[lineKey(scene.scene, scene.variant)]
@@ -171,6 +175,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
       role="dialog"
       aria-modal="false"
       aria-label={name.plain}
+      data-window={windowOn ? "on" : "off"}
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
@@ -183,7 +188,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
           {subtitle && (
             <>
               {" "}
-              <span className="text-muted-foreground">· {subtitle.node}</span>
+              <span className={quiet}>· {subtitle.node}</span>
             </>
           )}
         </p>
@@ -194,7 +199,7 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
             size="icon-sm"
             onClick={onClose}
             aria-label="Close dialogue"
-            className="text-muted-foreground hover:text-foreground"
+            className={`${quiet} hover:text-foreground`}
           >
             <X />
           </Button>
@@ -214,14 +219,20 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
         {scene.choices.map((choice, i) => {
           const { label } = choice
           const target = pathOf(choice)
-          const number = <span className="w-4 shrink-0 text-primary/60 group-hover:text-secondary">{i + 1}.</span>
+          const number = (
+            <span
+              className={`w-4 shrink-0 group-hover:text-secondary ${windowOn ? "text-primary" : "text-primary/60"}`}
+            >
+              {i + 1}.
+            </span>
+          )
           // A reply may glitch too (the fourth opener asks about colour with the window ON)
           const text = lines[choiceKey(scene.scene, scene.variant, i)]?.node ?? label
           return (
             <li key={`${scene.scene}-${scene.variant}-${label}`}>
               {target.kind === "external" ? (
                 // A real link: the new tab opens from the click itself, and the URL shows on hover
-                <Button asChild variant="ghost" tabIndex={done ? 0 : -1} className={choiceClass}>
+                <Button asChild variant="ghost" tabIndex={done ? 0 : -1} className={`${choiceClass} ${quiet}`}>
                   <a href={target.href} target="_blank" rel="noopener" onClick={markSeen}>
                     {number}
                     {text}
@@ -233,7 +244,12 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
                   </a>
                 </Button>
               ) : (
-                <Button variant="ghost" onClick={() => act(target)} tabIndex={done ? 0 : -1} className={choiceClass}>
+                <Button
+                  variant="ghost"
+                  onClick={() => act(target)}
+                  tabIndex={done ? 0 : -1}
+                  className={`${choiceClass} ${quiet}`}
+                >
                   {number}
                   {text}
                 </Button>

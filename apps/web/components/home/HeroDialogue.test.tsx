@@ -246,6 +246,22 @@ describe("HeroDialogue with the window ON", () => {
     expect(screen.getByRole("dialog")).toHaveTextContent("I resigned sixteen times")
   })
 
+  it("leaves nothing grey: replies, the separator and the close button turn white", () => {
+    render(<Harness />)
+    const dialog = screen.getByRole("dialog")
+    const greys = () => dialog.querySelectorAll(".text-muted-foreground").length
+    const hello = screen.getByRole("button", { name: /Hello\./ })
+    expect(dialog).toHaveAttribute("data-window", "off")
+    expect(hello).toHaveClass("text-muted-foreground")
+    expect(greys()).toBeGreaterThan(0)
+    openWindow()
+    expect(dialog).toHaveAttribute("data-window", "on")
+    expect(hello).toHaveClass("text-foreground")
+    expect(screen.getByRole("button", { name: "Close dialogue" })).toHaveClass("text-foreground")
+    expect(hello.querySelector("span")).toHaveClass("text-primary")
+    expect(greys()).toBe(0)
+  })
+
   it("types his glitch words the way they read with the window open", () => {
     window.localStorage.setItem("sbozh:kagurame:met", "1")
     motionPref.reduce = false
@@ -256,6 +272,18 @@ describe("HeroDialogue with the window ON", () => {
     const dialog = screen.getByRole("dialog")
     expect(dialog).toHaveTextContent("Still my 17th legion")
     expect(dialog).not.toHaveTextContent("17th company")
+  })
+
+  it("stays finished when the window flips after the line is typed", () => {
+    motionPref.reduce = false
+    vi.useFakeTimers()
+    render(<Harness />)
+    act(() => vi.advanceTimersByTime(5_000))
+    // The window-ON reading of the greeting is longer than the one just typed
+    openWindow()
+    act(() => vi.advanceTimersByTime(100))
+    expect(screen.getByRole("dialog")).toHaveTextContent("three-dimensional with the window open")
+    expect(screen.getByRole("list", { name: "Replies" })).toHaveClass("opacity-100")
   })
 
   it("keeps typing when the window flips mid-line", () => {
