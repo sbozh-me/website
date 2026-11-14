@@ -56,8 +56,8 @@ Read `.claude/modules/kagurame.md` for the format before your first edit.
 1. **`plautus.ts pending`.** Nothing pending: say so in one line and stop. With a URL argument,
    review only that item (if the ledger has it, you'll `mark --again`).
 2. **First run** (no `reviewed.tsv` yet): seed the ledger. Pick the newest 2–3 items to write
-   about; mark everything else `skipped "seeded: before Plautus"` in one loop over
-   `pending --guids`.
+   about; mark everything else skipped, one guid per line (a guid can contain a space):
+   `node .claude/scripts/plautus.ts pending --guids | while IFS= read -r g; do node .claude/scripts/plautus.ts mark "$g" skipped "seeded: before Plautus"; done`
 3. **For each item, read the live page** (WebFetch the guid URL). Decide whether it earns a line.
    Skipping is a valid verdict and often the right one: a typo fix, a dependency bump, a post
    that only makes sense from its first paragraph. The reason goes in the ledger.
