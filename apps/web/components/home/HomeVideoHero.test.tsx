@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadKagurameScript, type KagurameScript } from "@/lib/kagurame/script";
 
@@ -146,5 +146,76 @@ describe("HomeVideoHero", () => {
     const sound = screen.getByRole("button", { name: "Unmute video" });
     const play = screen.getByRole("button", { name: /(Play|Pause) video/ });
     expect(sound.parentElement).toBe(play.parentElement);
+  });
+});
+
+describe("HomeVideoHero quality", () => {
+  // A retina laptop: twice the desktop SD file's pixels and more
+  function retina() {
+    Object.defineProperty(window, "devicePixelRatio", { value: 2, configurable: true });
+  }
+  function connection(value: object | undefined) {
+    Object.defineProperty(navigator, "connection", { value, configurable: true });
+  }
+
+  afterEach(() => {
+    Object.defineProperty(window, "devicePixelRatio", { value: 1, configurable: true });
+    connection(undefined);
+    window.sessionStorage.clear();
+    window.history.replaceState(null, "", "/");
+    vi.unstubAllGlobals();
+  });
+
+  it("keeps SD where the screen wouldn't show the difference", () => {
+    connection({ effectiveType: "4g", downlink: 10 });
+    render(<HomeVideoHero />);
+    expect(video()).toHaveAttribute("src", "/videos/home/pan-dude-desktop.mp4");
+    expect(video()).toHaveAttribute("data-quality", "sd");
+  });
+
+  it("plays HD on a big screen with a fast connection", () => {
+    retina();
+    connection({ effectiveType: "4g", downlink: 10 });
+    render(<HomeVideoHero />);
+    expect(video()).toHaveAttribute("src", "/videos/home/pan-dude-desktop-hd.mp4");
+    expect(video()).toHaveAttribute("data-quality", "hd");
+  });
+
+  it("respects Save-Data and slow connections", () => {
+    retina();
+    connection({ effectiveType: "4g", downlink: 10, saveData: true });
+    const { unmount } = render(<HomeVideoHero />);
+    expect(video()).toHaveAttribute("data-quality", "sd");
+    unmount();
+    window.sessionStorage.clear();
+    connection({ effectiveType: "3g", downlink: 1.5 });
+    render(<HomeVideoHero />);
+    expect(video()).toHaveAttribute("src", "/videos/home/pan-dude-desktop.mp4");
+  });
+
+  it("takes ?video=sd|hd as given", () => {
+    retina();
+    connection({ effectiveType: "4g", downlink: 10 });
+    window.history.replaceState(null, "", "/?video=sd");
+    render(<HomeVideoHero />);
+    expect(video()).toHaveAttribute("data-quality", "sd");
+  });
+
+  it("probes the HD file when the browser gives no hints, then plays HD", async () => {
+    retina();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new Uint8Array(512 * 1024));
+        controller.close();
+      },
+    });
+    const fetchMock = vi.fn(async () => new Response(body, { status: 206 }));
+    vi.stubGlobal("fetch", fetchMock);
+    render(<HomeVideoHero />);
+    // Nothing loads until it's decided
+    expect(video()).not.toHaveAttribute("src");
+    await waitFor(() => expect(video()).toHaveAttribute("src", "/videos/home/pan-dude-desktop-hd.mp4"));
+    expect(fetchMock).toHaveBeenCalledWith("/videos/home/pan-dude-desktop-hd.mp4", expect.anything());
+    expect(window.sessionStorage.getItem("sbozh:video-quality")).toBe("hd");
   });
 });

@@ -225,6 +225,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Kagurame dialogue as a graph script (.fabula) with a validating, graph-drawing CLI~~
 - ~~Plautus: agent that reviews new posts and release notes into Kagurame's script~~
 - ~~Header redesign: centred brand, icon theme switch, Window button~~
+- ~~Home video hero in HD when the network allows~~
 - ~~Series status badge (planned / ongoing / finished) on the series page~~
 - ~~Promoted series on the main page, above the avatar hero: one big, two under it (Directus `promotion` slot: big / left / right)~~
 

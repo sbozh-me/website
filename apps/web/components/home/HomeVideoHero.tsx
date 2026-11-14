@@ -5,14 +5,29 @@ import { ChevronDown, Pause, Play, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import { HeroDialogue } from "./HeroDialogue"
 import type { KagurameScript } from "@/lib/kagurame/script"
+import { browserQualityEnv, chooseQuality, quickQuality, type Quality, type Rendition } from "./video-quality"
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
 
+// Each cut in SD and HD (1080p, from the finalv100 HD masters: media/pan-dude/web-encode.swift).
+// HD only where the screen and the network are up to it (video-quality.ts).
 const CUTS = {
-  desktop: { src: "/videos/home/pan-dude-desktop.mp4", poster: POSTER },
-  mobile: { src: "/videos/home/pan-dude-mobile.mp4", poster: POSTER },
-} as const
+  desktop: {
+    sd: "/videos/home/pan-dude-desktop.mp4",
+    hd: "/videos/home/pan-dude-desktop-hd.mp4",
+    sdLongEdge: 832,
+    hdMbps: 4.7,
+    poster: POSTER,
+  },
+  mobile: {
+    sd: "/videos/home/pan-dude-mobile.mp4",
+    hd: "/videos/home/pan-dude-mobile-hd.mp4",
+    sdLongEdge: 1280,
+    hdMbps: 4.8,
+    poster: POSTER,
+  },
+} as const satisfies Record<string, Rendition & { poster: string }>
 
 type Cut = keyof typeof CUTS
 
@@ -41,6 +56,10 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   // Chosen after mount: the server can't know the screen, and a wrong guess would
   // download the other cut first
   const [cut, setCut] = useState<Cut | null>(null)
+  // SD or HD, decided once per cut before it loads, so nobody downloads both
+  const [qualities, setQualities] = useState<Partial<Record<Cut, Quality>>>({})
+  const quality = cut ? qualities[cut] : undefined
+  const src = cut && quality ? CUTS[cut][quality] : undefined
   const [muted, setMuted] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [finishedOnce, setFinishedOnce] = useState(false)
@@ -59,15 +78,30 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     return () => query.removeEventListener("change", update)
   }, [])
 
-  // Starts the video once a cut is picked; a cut switch keeps the sound choice and
+  // Picks SD or HD for a cut the first time it shows: at once when the screen, the browser's
+  // network hints or this session already know, else after a short probe of the HD file
+  useEffect(() => {
+    if (!cut || qualities[cut]) return
+    let cancelled = false
+    const decide = (q: Quality) => !cancelled && setQualities((known) => ({ ...known, [cut]: q }))
+    const env = browserQualityEnv()
+    const quick = quickQuality(CUTS[cut], env)
+    if (quick) decide(quick)
+    else chooseQuality(CUTS[cut], env).then(decide)
+    return () => {
+      cancelled = true
+    }
+  }, [cut, qualities])
+
+  // Starts the video once its file is picked; a cut switch keeps the sound choice and
   // plays on only if it was playing
   useEffect(() => {
     const video = videoRef.current
-    if (!video || !cut) return
+    if (!video || !src) return
     video.muted = muted
     if (wantPlay.current) video.play().catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cut])
+  }, [src])
 
   const togglePlay = () => {
     const video = videoRef.current
@@ -120,8 +154,9 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
         <video
           ref={videoRef}
           key={cut}
-          src={CUTS[cut].src}
+          src={src}
           poster={CUTS[cut].poster}
+          data-quality={quality}
           // No loop on the first run: it ends, pauses, and Kagurame speaks
           loop={finishedOnce}
           muted
