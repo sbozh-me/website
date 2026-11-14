@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
-import { PostHeader, PostLayout, TableOfContents } from "@sbozh/blog/components";
+import { Censored, PostHeader, PostLayout, TableOfContents } from "@sbozh/blog/components";
 import type { Post } from "@sbozh/blog";
 import type { AdjacentPosts, TOCItem } from "@sbozh/blog/utils";
 
@@ -43,7 +43,7 @@ export function PostArticle({
         <PostHeader post={post as Post} adjacent={adjacent} title={title} />
         {post.excerpt && (
           <p className="post-excerpt mb-6 text-lg leading-relaxed text-foreground/85">
-            {post.excerpt}
+            <Censored text={post.excerpt} />
           </p>
         )}
         {tldr && (

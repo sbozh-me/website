@@ -46,6 +46,7 @@ export {
 } from "./timeline";
 
 export {
+  Censored,
   PostHeader,
   PostLayout,
   PostNavArrows,

@@ -1,3 +1,4 @@
+export { Censored } from "./Censored";
 export { PostHeader } from "./PostHeader";
 export { PostLayout } from "./PostLayout";
 export { PostNavArrows } from "./PostNavArrows";

@@ -9,6 +9,7 @@ import type { PostListItem } from "../../types";
 import type { AdjacentPosts } from "../../utils";
 import { formatShortDate } from "../../utils";
 import { ArrowIcon } from "./ArrowIcon";
+import { Censored } from "./Censored";
 import { PostThumbnail } from "./PostThumbnail";
 
 type Direction = "previous" | "next";
@@ -67,10 +68,10 @@ function NavArrow({
               {label} · {formatShortDate(post.date)}
             </div>
             <div className="mb-1 font-semibold leading-snug text-foreground">
-              {post.title}
+              <Censored text={post.title} />
             </div>
             <p className="line-clamp-3 text-sm text-muted-foreground">
-              {post.excerpt}
+              <Censored text={post.excerpt} />
             </p>
           </div>
         </a>

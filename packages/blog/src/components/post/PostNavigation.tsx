@@ -2,6 +2,7 @@ import type { PostListItem } from "../../types";
 import type { AdjacentPosts } from "../../utils";
 import { formatShortDate } from "../../utils";
 import { ArrowIcon } from "./ArrowIcon";
+import { Censored } from "./Censored";
 import { PostThumbnail } from "./PostThumbnail";
 
 /**
@@ -72,10 +73,10 @@ function NavCard({
           )}
         </div>
         <div className="mb-1 font-semibold leading-snug text-foreground line-clamp-2">
-          {post.title}
+          <Censored text={post.title} />
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2 max-sm:hidden">
-          {post.excerpt}
+          <Censored text={post.excerpt} />
         </p>
         <time dateTime={post.date} className="text-xs text-muted-foreground sm:hidden">
           {formatShortDate(post.date)}

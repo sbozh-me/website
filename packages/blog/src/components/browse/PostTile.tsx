@@ -1,5 +1,6 @@
 import { Badge } from "@sbozh/react-ui/components/ui/badge";
 
+import { Censored } from "../post/Censored";
 import { PostThumbnail } from "../post/PostThumbnail";
 import { PersonaDot } from "../timeline/PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
@@ -39,8 +40,8 @@ export function PostTile({ post, seriesPart }: PostTileProps) {
             )}
           </div>
           {/* Important: the global h2 size in globals.css is unlayered and beats utilities */}
-          <h2 className="mt-3 text-lg! font-semibold leading-snug text-foreground">{post.title}</h2>
-          <p className="mt-2 mb-3 text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
+          <h2 className="mt-3 text-lg! font-semibold leading-snug text-foreground"><Censored text={post.title} /></h2>
+          <p className="mt-2 mb-3 text-sm text-muted-foreground line-clamp-2"><Censored text={post.excerpt} /></p>
           {post.tags.length > 0 && (
             <div className="mt-auto flex flex-wrap gap-1">
               {post.tags.slice(0, VISIBLE_TAGS).map((tag) => (

@@ -13,6 +13,8 @@ import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
 import { PerformanceProvider } from "@/providers/PerformanceProvider";
 import { SentryProvider } from "@/providers/SentryProvider";
 import "./globals.css";
+// The ✳ censor in excerpts shows on every post list (blog, series, 404), not only in posts
+import "@/lib/blog/glitch/glitch.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],

@@ -1,3 +1,4 @@
+import { Censored } from "../post/Censored";
 import { PersonaDot } from "./PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
 import { formatReadingTime } from "../../utils/reading-time";
@@ -37,11 +38,11 @@ export function PostCard({ post, seriesPart }: PostCardProps) {
         </div>
 
         <h4 className="text-lg font-semibold text-foreground mb-2">
-          {post.title}
+          <Censored text={post.title} />
         </h4>
 
         <p className="text-muted-foreground text-sm line-clamp-2">
-          {post.excerpt}
+          <Censored text={post.excerpt} />
         </p>
       </a>
       {seriesPart && (
