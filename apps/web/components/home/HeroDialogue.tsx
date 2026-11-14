@@ -1,12 +1,12 @@
 "use client"
 
-import { useCallback, useEffect, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight, X } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
-import { WindowToggle } from "@/lib/blog/glitch/window"
+import { useGlitchesEnabled, WindowToggle } from "@/lib/blog/glitch/window"
 import { choiceKey, lineKey, resolveScene, type ScrollTarget, type Target } from "@/lib/kagurame/fabula"
 import type { KagurameScript } from "@/lib/kagurame/script"
 
@@ -31,18 +31,24 @@ function markSeen() {
   }
 }
 
-function useTypewriter(text: string, instant: boolean) {
-  const [shown, setShown] = useState(instant ? text.length : 0)
+/**
+ * Types `text` out, starting over on every new `line`. The text itself may change mid-line
+ * (the window flips a glitch word's reading): typing just carries on over the new words.
+ */
+function useTypewriter(text: string, instant: boolean, line: unknown) {
+  const [shown, setShown] = useState(instant ? Infinity : 0)
+  const length = useRef(text.length)
+  length.current = text.length
 
   useEffect(() => {
     if (instant) {
-      setShown(text.length)
+      setShown(Infinity)
       return
     }
     setShown(0)
     const timer = setInterval(() => {
       setShown((n) => {
-        if (n >= text.length) {
+        if (n >= length.current) {
           clearInterval(timer)
           return n
         }
@@ -50,12 +56,12 @@ function useTypewriter(text: string, instant: boolean) {
       })
     }, TYPE_MS)
     return () => clearInterval(timer)
-  }, [text, instant])
+  }, [line, instant])
 
   return {
     visible: text.slice(0, shown),
     done: shown >= text.length,
-    skip: () => setShown(text.length),
+    skip: () => setShown(Infinity),
   }
 }
 
@@ -98,9 +104,22 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
   // A scene's line is picked once per visit: a ~ pool must not reshuffle on every render
   const [scene, setScene] = useState(() => resolveScene(fabula, "start", context))
 
+  // The window (W) is page-wide: with it ON, glitch words read their `>` state and some
+  // replies lead elsewhere (`-> ==ave|>color==`)
+  const windowOn = useGlitchesEnabled(true)
+  const pathOf = useCallback(
+    (choice: { target: Target; openTarget?: Target }) =>
+      windowOn && choice.openTarget ? choice.openTarget : choice.target,
+    [windowOn]
+  )
+
   // A glitch line types out as plain text, then the rendered line takes its place
   const rich = lines[lineKey(scene.scene, scene.variant)]
-  const { visible, done, skip } = useTypewriter(rich?.plain ?? scene.text, reduceMotion)
+  const { visible, done, skip } = useTypewriter(
+    rich ? (windowOn ? rich.open : rich.plain) : scene.text,
+    reduceMotion,
+    scene
+  )
 
   const act = useCallback(
     (target: Target) => {
@@ -141,11 +160,11 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
         return
       }
       const choice = scene.choices[index]
-      if (choice) act(choice.target)
+      if (choice) act(pathOf(choice))
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [done, skip, scene, act, onClose])
+  }, [done, skip, scene, act, pathOf, onClose])
 
   return (
     <motion.div
@@ -192,7 +211,9 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
         aria-label="Replies"
         className={`mt-3 flex flex-col gap-0.5 transition-opacity duration-200 ${done ? "opacity-100" : "pointer-events-none opacity-0"}`}
       >
-        {scene.choices.map(({ label, target }, i) => {
+        {scene.choices.map((choice, i) => {
+          const { label } = choice
+          const target = pathOf(choice)
           const number = <span className="w-4 shrink-0 text-primary/60 group-hover:text-secondary">{i + 1}.</span>
           // A reply may glitch too (the fourth opener asks about colour with the window ON)
           const text = lines[choiceKey(scene.scene, scene.variant, i)]?.node ?? label
@@ -204,7 +225,10 @@ function DialoguePanel({ script, reduceMotion, onScroll, onClose }: PanelProps) 
                   <a href={target.href} target="_blank" rel="noopener" onClick={markSeen}>
                     {number}
                     {text}
-                    <ArrowUpRight aria-hidden="true" className="size-3.5 opacity-60" />
+                    {/* Wrapped: a bare <svg> child would widen the button's padding (has-[>svg]) */}
+                    <span aria-hidden="true" className="inline-flex opacity-60">
+                      <ArrowUpRight className="size-3.5" />
+                    </span>
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
                 </Button>

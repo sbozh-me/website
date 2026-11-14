@@ -52,14 +52,20 @@ function visitHeadings(
   }
 }
 
-/** A node's text as it reads with the glitch effects at rest (also used for post titles). */
-export function plainText(node: Nodes): string {
+/**
+ * A node's text as it reads with the glitch effects at rest (also used for post titles).
+ * `open`: as it reads with the window ON, where a `==shut|>open==` word rests on its `>` state.
+ */
+export function plainText(node: Nodes, open = false): string {
   if (node.type === "text" || node.type === "inlineCode") return node.value;
   if (node.type === "mdxJsxTextElement") {
     switch (node.name) {
-      case "Glitch":
-        // Only the base state is what the heading reads as
-        return node.children[0] ? plainText(node.children[0] as Nodes) : "";
+      case "Glitch": {
+        // The base state is what the heading reads as; with the window open, the `>` state
+        const openState = open ? Number(attributeValue(node, "openState")) : 0;
+        const state = node.children[Number.isInteger(openState) ? openState : 0] ?? node.children[0];
+        return state ? plainText(state as Nodes, open) : "";
+      }
       case "Censor":
         return "✳";
       case "DickPitch":
@@ -72,6 +78,10 @@ export function plainText(node: Nodes): string {
         return "";
     }
   }
-  if ("children" in node) return node.children.map((child) => plainText(child as Nodes)).join("");
+  if ("children" in node) return node.children.map((child) => plainText(child as Nodes, open)).join("");
   return "";
+}
+
+function attributeValue(node: Extract<Nodes, { type: "mdxJsxTextElement" }>, name: string): unknown {
+  return node.attributes.find((a) => a.type === "mdxJsxAttribute" && a.name === name)?.value;
 }

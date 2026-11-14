@@ -46,8 +46,12 @@ describe("loadKagurameScript", () => {
     )
     // The window starts OFF: the glitch words rest on their plain bases
     expect(screen.getByTestId("title")).toHaveTextContent("Kagurame · 17th Company")
-    // The fourth opener glitches too
-    expect(script!.lines["start:1:3"].plain).toBe("What is AVE?")
+    // The fourth opener glitches too, and so do his lines
+    expect(script!.lines["start:1:3"]).toMatchObject({ plain: "What is AVE?", open: "Why color has changed?" })
+    expect(script!.lines["start:0"]).toMatchObject({
+      plain: expect.stringContaining("Still my 17th company."),
+      open: expect.stringContaining("Still my 17th legion."),
+    })
   })
 
   it("compiles a ?latest line whose post title glitches", async () => {
@@ -81,7 +85,7 @@ Hi.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* ==||What is AVE?|>Why color has changed?== -> ave
+* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==
 == hello
 Hello.
 * Blog. -> /blog
@@ -97,9 +101,12 @@ Quiet.
 == ave
 AVE.
 * Back. -> start
+== color
+Colours.
+* Back. -> start
 `
     const script = await loadKagurameScript()
-    expect(script!.name).toEqual({ plain: "Kagurame", node: "Kagurame" })
+    expect(script!.name).toEqual({ plain: "Kagurame", open: "Kagurame", node: "Kagurame" })
     expect(script!.subtitle).toBeUndefined()
     expect(Object.keys(script!.lines)).toEqual(["start:0:3"])
   })

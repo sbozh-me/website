@@ -4,6 +4,7 @@ import {
   matchesRoute,
   parseFabula,
   parseTarget,
+  readGlitch,
   resolveScene,
   routeFromPageFile,
   splitTitle,
@@ -20,7 +21,7 @@ Hi.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* ==||What is AVE?|>Why color has changed?== -> ave
+* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==
 
 == hello
 Hello.
@@ -40,6 +41,10 @@ Here.
 == ave
 AVE.
 * Show me. -> https://github.com/sbozh/ave
+* Back. -> start
+
+== color
+Colours.
 * Back. -> start
 `
 
@@ -61,18 +66,25 @@ function withScene(scene: string, reply = "* More. -> extra") {
   return BASE.replace("* Releases. -> #releases", `* Releases. -> #releases\n${reply}`) + `\n${scene}\n`
 }
 
+/** The line `== extra` lands on in withScene */
+const X = withScene("== extra").split("\n").indexOf("== extra") + 1
+
 describe("parseFabula", () => {
   it("reads the title, scenes, variants and replies", () => {
     const { fabula, problems } = parseFabula(BASE)
     expect(problems).toEqual([])
     expect(fabula.title).toBe("Kagurame · ==17th Company|17th Dimension==")
     expect(fabula.titleLine).toBe(2)
-    expect(fabula.scenes.map((s) => s.id)).toEqual(["start", "hello", "where", "silence", "ave"])
+    expect(fabula.scenes.map((s) => s.id)).toEqual(["start", "hello", "where", "silence", "ave", "color"])
     const [start] = fabula.scenes
     expect(start.line).toBe(4)
     expect(start.variants).toHaveLength(1)
     expect(start.variants[0]).toMatchObject({ kind: "default", text: "Hi.", line: 5 })
-    expect(start.variants[0].choices[0]).toEqual({ label: "Hello.", target: { kind: "scene", scene: "hello" }, line: 6 })
+    expect(start.variants[0].choices[0]).toEqual({
+      label: "Hello.",
+      target: { kind: "scene", scene: "hello" },
+      line: 6,
+    })
   })
 
   it("unescapes a line that starts with a marker", () => {
@@ -96,6 +108,23 @@ describe("parseFabula", () => {
       ["latest", "New: {latest.title}."],
       ["random", "One."],
       ["random", "Two."],
+    ])
+  })
+
+  it("reads a glitch target: another path with the window ON", () => {
+    const { fabula, problems } = parseFabula("== a\nLine.\n* ==Bye.|>I quit.== -> ==bye|>/projects==")
+    expect(problems).toEqual([])
+    expect(fabula.scenes[0].variants[0].choices[0]).toMatchObject({
+      target: { kind: "scene", scene: "bye" },
+      openTarget: { kind: "route", href: "/projects" },
+    })
+  })
+
+  it("explains a glitch target that isn't ==closed|>open==", () => {
+    const { problems } = parseFabula("== a\nLine.\n* Go. -> ==bye|resign==\n* Go. -> ==bye|>!open==")
+    expect(problems.map((p) => `${p.line}: ${p.message}`)).toEqual([
+      '3: glitch target "==bye|resign==" must read ==closed|>open==, e.g. ==ave|>color==',
+      '4: unknown command "!open": only !close exists',
     ])
   })
 
@@ -144,7 +173,10 @@ describe("parseTarget", () => {
     expect(parseTarget("hello")).toEqual({ kind: "scene", scene: "hello" })
     expect(parseTarget("/blog")).toEqual({ kind: "route", href: "/blog" })
     expect(parseTarget("{latest.href}")).toEqual({ kind: "route", href: "{latest.href}" })
-    expect(parseTarget("https://github.com/sbozh/ave")).toEqual({ kind: "external", href: "https://github.com/sbozh/ave" })
+    expect(parseTarget("https://github.com/sbozh/ave")).toEqual({
+      kind: "external",
+      href: "https://github.com/sbozh/ave",
+    })
     expect(parseTarget("#content")).toEqual({ kind: "scroll", to: "content" })
     expect(parseTarget("#releases")).toEqual({ kind: "scroll", to: "releases" })
     expect(parseTarget("!close")).toEqual({ kind: "close" })
@@ -174,40 +206,46 @@ describe("validateFabula", () => {
   it("rejects unknown scenes, unreachable scenes and dead ends", () => {
     expect(errors(withScene("== extra\nLine.", "* More. -> nowhere"))).toEqual([
       '21: no scene "nowhere"',
-      '32: scene "extra" can\'t be reached from start',
-      '33: dead end in "extra": a line needs at least one reply',
+      `${X}: scene "extra" can't be reached from start`,
+      `${X + 1}: dead end in "extra": a line needs at least one reply`,
     ])
   })
 
   it("rejects a scene with nothing to say", () => {
-    expect(errors(withScene("== extra"))).toEqual(['32: scene "extra" says nothing'])
+    expect(errors(withScene("== extra"))).toEqual([`${X}: scene "extra" says nothing`])
   })
 
   it("needs a fallback when no condition holds, and only one kind of it", () => {
     expect(errors(withScene("== extra\n?returning Again.\n* Back. -> start"))).toEqual([
-      '32: scene "extra" has nothing to say when no condition holds: add an unmarked or ~ line',
+      `${X}: scene "extra" has nothing to say when no condition holds: add an unmarked or ~ line`,
     ])
     expect(errors(withScene("== extra\nOne.\n* Back. -> start\nTwo.\n* Back. -> start"))).toEqual([
-      '35: scene "extra" has a second unmarked line: only the first is ever said',
+      `${X + 3}: scene "extra" has a second unmarked line: only the first is ever said`,
     ])
     expect(errors(withScene("== extra\nOne.\n* Back. -> start\n~ Two.\n* Back. -> start"))).toEqual([
-      '35: scene "extra" mixes a ~ pool with an unmarked line: pick one',
+      `${X + 3}: scene "extra" mixes a ~ pool with an unmarked line: pick one`,
     ])
   })
 
   it("keeps placeholders to ?latest lines", () => {
     expect(
-      errors(withScene("== extra\n?latest {latest.slug}\n* Read {latest.title}. -> {latest.href}\nNew: {latest.title}.\n* Go. -> {latest.href}"))
+      errors(
+        withScene(
+          "== extra\n?latest {latest.slug}\n* Read {latest.title}. -> {latest.href}\nNew: {latest.title}.\n* Go. -> {latest.href}"
+        )
+      )
     ).toEqual([
-      "33: unknown placeholder {latest.slug}: use title, minutes or href",
-      "35: {latest.title} only works in a ?latest line",
-      "36: {latest.href} only works in a ?latest line",
+      `${X + 1}: unknown placeholder {latest.slug}: use title, minutes or href`,
+      `${X + 3}: {latest.title} only works in a ?latest line`,
+      `${X + 4}: {latest.href} only works in a ?latest line`,
     ])
   })
 
   it("checks /paths against the app's routes", () => {
-    const source = withScene("== extra\nLine.\n* A. -> /blog/some-post\n* B. -> /blog?topic=x\n* C. -> /nowhere\n* D. -> start")
-    expect(errors(source)).toEqual(["36: no page for /nowhere under app/"])
+    const source = withScene(
+      "== extra\nLine.\n* A. -> /blog/some-post\n* B. -> /blog?topic=x\n* C. -> /nowhere\n* D. -> start"
+    )
+    expect(errors(source)).toEqual([`${X + 4}: no page for /nowhere under app/`])
     // An empty route list matches nothing; no list at all (the running app) skips the check
     expect(errors(source, [])).toHaveLength(7)
     const { fabula } = parseFabula(source)
@@ -215,9 +253,15 @@ describe("validateFabula", () => {
   })
 
   it("keeps external links on the allowlist", () => {
-    expect(errors(withScene("== extra\nLine.\n* Off. -> https://example.com/sbozh\n* Sneaky. -> https://github.com/sbozhevil\n* Back. -> start"))).toEqual([
-      "34: https://example.com/sbozh is off the external allowlist (github.com/sbozh/)",
-      "35: https://github.com/sbozhevil is off the external allowlist (github.com/sbozh/)",
+    expect(
+      errors(
+        withScene(
+          "== extra\nLine.\n* Off. -> https://example.com/sbozh\n* Sneaky. -> https://github.com/sbozhevil\n* Back. -> start"
+        )
+      )
+    ).toEqual([
+      `${X + 2}: https://example.com/sbozh is off the external allowlist (github.com/sbozh/)`,
+      `${X + 3}: https://github.com/sbozhevil is off the external allowlist (github.com/sbozh/)`,
     ])
   })
 
@@ -228,31 +272,69 @@ describe("validateFabula", () => {
 
   it("keeps the author's four openers", () => {
     // As written, glitch and all
-    expect(errors(BASE.replace("* ==||What is AVE?|>Why color has changed?== -> ave", "* What is AVE? -> ave"))).toEqual([
+    expect(
+      errors(BASE.replace("* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==", "* What is AVE? -> ==ave|>color=="))
+    ).toEqual([
       '5: the openers are the author\'s: start offers "Hello.", "Where am I?", "...", "==||What is AVE?|>Why color has changed?==", in that order',
     ])
-    const swapped = BASE.replace("* Hello. -> hello\n* Where am I? -> where", "* Where am I? -> where\n* Hello. -> hello")
+    const swapped = BASE.replace(
+      "* Hello. -> hello\n* Where am I? -> where",
+      "* Where am I? -> where\n* Hello. -> hello"
+    )
     expect(errors(swapped)).toHaveLength(1)
     expect(errors(BASE.replace("* ... -> silence", "* ... -> #content"))).toEqual([
       expect.stringContaining("the openers are the author's"),
-      "22: scene \"silence\" can't be reached from start",
+      '22: scene "silence" can\'t be reached from start',
+    ])
+  })
+
+  it("checks glitch paths like any other, and warns when the label doesn't glitch", () => {
+    expect(check(withScene("== extra\nLine.\n* Go. -> ==start|>nowhere==\n* ==Go.|>Run.== -> ==start|>/nowhere=="))).toEqual([
+      {
+        severity: "warning",
+        line: X + 2,
+        message: "this reply reads the same with the window ON: give its label a >state so the other path shows",
+      },
+      { severity: "error", line: X + 2, message: 'no scene "nowhere"' },
+      { severity: "error", line: X + 3, message: "no page for /nowhere under app/" },
+    ])
+  })
+
+  it("reaches scenes through glitch paths", () => {
+    // `extra` is only reachable with the window ON
+    expect(errors(withScene("== extra\nLine.\n* Back. -> start", "* ==More.|>Less.== -> ==where|>extra=="))).toEqual([])
+  })
+
+  it("measures lines as they read, glitch syntax aside", () => {
+    const word = (n: number) => "x".repeat(n)
+    // 150 characters either way: the markup doesn't count
+    expect(check(withScene(`== extra\n${word(140)} ==${word(10)}|>${word(10)}==\n* Back. -> start`))).toEqual([])
+    // ...but the longer reading does
+    expect(check(withScene(`== extra\n${word(140)} ==a|>${word(30)}==\n* Back. -> start`))).toEqual([
+      { severity: "warning", line: X + 1, message: "line is 171 characters: keep to 160 on a phone" },
     ])
   })
 
   it("warns about long lines and fails very long ones", () => {
     const line = (n: number) => "x".repeat(n)
-    const problems = check(withScene(`== extra\n${line(170)}\n* Back. -> start\n?returning ${line(201)}\n* Back. -> start`))
+    const problems = check(
+      withScene(`== extra\n${line(170)}\n* Back. -> start\n?returning ${line(201)}\n* Back. -> start`)
+    )
     expect(problems).toEqual([
-      { severity: "warning", line: 33, message: "line is 170 characters: keep to 160 on a phone" },
-      { severity: "error", line: 35, message: "line is 201 characters, over the 200 limit" },
+      { severity: "warning", line: X + 1, message: "line is 170 characters: keep to 160 on a phone" },
+      { severity: "error", line: X + 3, message: "line is 201 characters, over the 200 limit" },
     ])
   })
 
   it("fails long labels and a fifth reply", () => {
     const label = "y".repeat(49)
-    expect(errors(withScene(`== extra\nLine.\n* ${label} -> start\n* 2. -> start\n* 3. -> start\n* 4. -> start\n* 5. -> start`))).toEqual([
-      `34: reply "${label}" is 49 characters, over the 48 limit`,
-      "38: more than 4 replies: keys 1–4 can't reach it",
+    expect(
+      errors(
+        withScene(`== extra\nLine.\n* ${label} -> start\n* 2. -> start\n* 3. -> start\n* 4. -> start\n* 5. -> start`)
+      )
+    ).toEqual([
+      `${X + 2}: reply "${label}" is 49 characters, over the 48 limit`,
+      `${X + 6}: more than 4 replies: keys 1–4 can't reach it`,
     ])
   })
 })
@@ -327,10 +409,34 @@ Nothing new.
     expect(resolveScene(fabula, "pool", { returning: false, random: () => 0.99 }).text).toBe("Two.")
   })
 
+  it("carries a reply's glitch path, placeholders filled", () => {
+    const { fabula: paths } = parseFabula("== a\n?latest New.\n* ==Read.|>Run.== -> ==a|>{latest.href}==")
+    expect(resolveScene(paths, "a", { returning: false, latestPost: post }).choices[0]).toEqual({
+      label: "==Read.|>Run.==",
+      target: { kind: "scene", scene: "a" },
+      openTarget: { kind: "route", href: "/blog/gladiators" },
+    })
+  })
+
   it("throws on a scene that isn't there or has nothing to say", () => {
     expect(() => resolveScene(fabula, "nowhere", { returning: false })).toThrow(/no scene "nowhere"/)
     const { fabula: mute } = parseFabula("== a\n?returning Only then.\n* Go. -> a")
     expect(() => resolveScene(mute, "a", { returning: false })).toThrow(/nothing to say/)
+  })
+})
+
+describe("readGlitch", () => {
+  it("reads glitch words closed, or open with the window ON", () => {
+    const text = "Still my 17th ==company|>legion==. ==||Bye.|>teal:I quit.== A (;) and ==a|b==."
+    expect(readGlitch(text)).toBe("Still my 17th company. Bye. A ✳ and a.")
+    expect(readGlitch(text, true)).toBe("Still my 17th legion. I quit. A ✳ and a.")
+  })
+
+  it("drops window-only words and the window switch when closed", () => {
+    expect(readGlitch("Hi ==|there==.")).toBe("Hi .")
+    expect(readGlitch("Hi ==|there==.", true)).toBe("Hi there.")
+    expect(readGlitch("==WINDOW OFF== on")).toBe(" on")
+    expect(readGlitch("a ==mark== b")).toBe("a mark b")
   })
 })
 

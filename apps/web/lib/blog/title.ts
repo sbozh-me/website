@@ -19,6 +19,8 @@ const MARKUP = /==|\(;\)|[*_`[\]~\\]/;
 
 export interface CompiledTitle {
   text: string;
+  /** The text as it reads with the window ON (`==shut|>open==` words on their `>` state) */
+  openText: string;
   Title: ComponentType<{ components?: Record<string, ComponentType<any>> }>;
 }
 
@@ -40,6 +42,7 @@ export function titleMarkdown(title: string): string {
 
 export async function compileTitle(title: string): Promise<CompiledTitle> {
   let text = title;
+  let openText = title;
   const { default: Title } = await evaluate(titleMarkdown(title), {
     ...runtime,
     // Plain markdown: `<` and `{` in a title are text, not JSX or expressions
@@ -49,10 +52,11 @@ export async function compileTitle(title: string): Promise<CompiledTitle> {
       remarkGlitch,
       () => (tree: Root) => {
         text = plainText(tree).replace(/\s+/g, " ").trim();
+        openText = plainText(tree, true).replace(/\s+/g, " ").trim();
       },
     ],
   } as any);
-  return { text, Title };
+  return { text, openText, Title };
 }
 
 /** The title's plain text; titles without markup are returned as they are. */

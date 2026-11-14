@@ -38,7 +38,10 @@ describe("Kagurame's onboarding script", () => {
   it("answers What is AVE with the repo", () => {
     const ave = resolveScene(fabula, "ave", stranger)
     expect(ave.text).toMatch(/^AVE\. A CLI/)
-    expect(ave.choices[0]).toEqual({ label: "Show me.", target: { kind: "external", href: "https://github.com/sbozh/ave" } })
+    expect(ave.choices[0]).toEqual({
+      label: "Show me.",
+      target: { kind: "external", href: "https://github.com/sbozh/ave" },
+    })
   })
 
   it("offers the latest post with its reading time", () => {

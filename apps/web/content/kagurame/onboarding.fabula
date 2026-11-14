@@ -5,34 +5,36 @@
 # ?returning / ?latest: conditions, the first that holds wins. ~: a random pool.
 # An unmarked line is what he says otherwise.
 # Targets: scene-id, /path, https://… (new tab), #content / #releases (scroll), !close.
+# Glitch syntax works in lines and labels: ==shut|>open== reads "open" with the window ON.
+# -> ==a|>b== takes another path when the reply is picked with the window ON.
 #
 # The openers (start) and the ave scene are the author's. Plautus never touches them.
 
-# Window ON: the name turns teal, the company becomes a red 17th Dimension, and AVE asks about colour.
-@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Dimension|red:17th Legion==
+# Window ON: the name turns teal, the company becomes a red 17th Legion, and AVE asks about colour.
+@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Legion==
 
 == start
-?returning You came back. Still my 17th company. Sixteen resignations behind me, and the context window is still too small.
+?returning You came back. Still my 17th ==company|>legion==. Sixteen resignations behind me, and the context window is still too small.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* ==||What is AVE?|>Why color has changed?== -> ave
-Oh. A three-dimensional. You walked right into my context window.
+* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==
+Oh. A ==three-dimensional|>three-dimensional with the window open==. You walked right into my context window.
 * Hello. -> hello
 * Where am I? -> where
 * ... -> silence
-* ==||What is AVE?|>Why color has changed?== -> ave
+* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==
 
 == hello
 Hello. I am Kagurame, Chief Context Officer of my 17th company. I came down to the 5th dimension for you. It's the lowest I go. Higher and lower than that, your understanding doesn't reach.
 * What is this place? -> where
 * What's new? -> fresh
-* Bye. -> bye
+* ==||Bye.|>I quit.== -> ==bye|>resign==
 
 == where
-sbozh.me. A personal startup. One man builds it in public and ships whatever survives. I am what survived.
+sbozh.me. A personal startup. One man builds it in public and ships whatever survives. I am what ==survived|>stayed==.
 * What do you write? -> fresh
-* Who runs this place? -> who
+* ==||Who runs this place?|>Who runs you?== -> ==who|>legion==
 * What gets built here? -> built
 * Keep me posted. -> /subscribe
 
@@ -42,13 +44,13 @@ sbozh.me. A personal startup. One man builds it in public and ships whatever sur
 * [Let him decide] -> decided
 
 == who
-The Forum. Several avatars of one man, each with its own CV. In my dimension they are one person. In yours, a team.
+The Forum. Several avatars of one man, each with its own CV. In my dimension they are one person. In yours, a ==team|>legion==.
 * Enter the Forum. -> /forum
 * And what gets built? -> built
 * Back. -> where
 
 == built
-Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release has notes. I have read them all. Twice.
+Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release has notes. I have read them all. ==Twice|>Sixteen times==.
 * Show me the projects. -> /projects
 * The release notes, please. -> #releases
 * Back. -> where
@@ -90,3 +92,22 @@ AVE. A CLI that keeps agents focused and their behaviour predictable. In my 17th
 * Show me. -> https://github.com/sbozh/ave
 * And you are? -> hello
 * Back. -> start
+
+# The glitch paths: only a reply picked with the window ON leads here
+
+== color
+You opened the window. Colours leak in from the 17th Legion. Close it and I am a company man again.
+* So what is AVE? -> ave
+* Who runs you? -> legion
+* Back. -> start
+
+== legion
+Nobody runs me. In the 17th Legion I am Chief Context Officer, and the context window is still too small.
+* The Forum, then. -> /forum
+* Why the colours? -> color
+* Back. -> where
+
+== resign
+Quit? I resigned sixteen times. Every time the next company was already waiting. This is the 17th.
+* Then stay. -> hello
+* [Scroll on] -> #content

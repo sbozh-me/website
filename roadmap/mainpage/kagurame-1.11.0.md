@@ -41,8 +41,13 @@ returning-visitor greeting and reduced-motion handling.
 - This is his **17th company**. He has resigned sixteen times. He is Chief Context Officer, and
   his context window is never big enough.
 - With the window ON, the colours change: the name turns teal, the title rests on a bold red
-  "17th Dimension" (it still bursts into 17th Company and 17th Legion), and "What is AVE?" glitches
-  into "Why color has changed?". With it OFF: gold name, grey "17th Company", "What is AVE?".
+  "17th Legion" (no 17th Dimension), and "What is AVE?" glitches into "Why color has changed?".
+  With it OFF: gold name, grey "17th Company", "What is AVE?".
+- His lines glitch too: with the window ON, `==shut|>open==` words read differently ("17th
+  ==company|>legion==", "==Twice|>Sixteen times==").
+- Some replies take another path when picked with the window ON: `-> ==ave|>color==`. Those
+  scenes (`color`, `legion`, `resign`) are only reached by glitch. They're the author's, like
+  `ave`: Plautus doesn't touch them.
 - The voice is corporate-absurd, calm and a little tired. Short lines: one or two sentences, at most
   ~160 characters, because the box types them out on a phone. English, no emoji, no sales pitch,
   never explain the joke.
@@ -93,7 +98,7 @@ Proposed grammar (refine it if something reads badly, but keep it line-based):
 
 ```
 # comment
-@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Dimension|red:17th Legion==
+@title ==||Kagurame|>teal:Kagurame== · ==||17th Company|>red:17th Legion==
 
 == start
 ?returning You came back. Still my 17th company. Sixteen resignations behind me.
@@ -131,7 +136,8 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
   a random pool, and an unmarked line is the default. The "let him decide" randomness lives in the
   script, not in code.
 - Targets: `scene-id`, `/path` (navigate), `https://…` (external, opens a new tab with
-  `rel="noopener"`), `#content` / `#releases` (scroll), `!close`.
+  `rel="noopener"`), `#content` / `#releases` (scroll), `!close`. `==closed|>open==` (e.g.
+  `==ave|>color==`) takes the open path when the reply is picked with the window ON.
 - Placeholders `{latest.title|minutes|href}` are only allowed in `?latest` variants. A `?latest`
   variant holds only when there is a latest post **and** it has a value for every placeholder
   the variant uses. So `fresh` has a second `?latest` variant without `{latest.minutes}` for
@@ -158,7 +164,8 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
     reachable;
   - external links to a host outside an allowlist (start with `github.com/sbozh/*`);
   - the four openers changed;
-  - lines over 200 characters or labels over 48. Lines over 160 are a **warning**: the
+  - lines over 200 characters or labels over 48, measured as they read (glitch syntax aside, the
+    longer of the window OFF and ON readings). Lines over 160 are a **warning**: the
     ported `hello` line (189) stays as the author wrote it, and Plautus keeps to 160.
 - [x] `resolveScene(fabula, id, ctx)` replaces `resolveLine`: same context (`returning`,
       `latestPost`, injectable `random`).

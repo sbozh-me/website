@@ -17,6 +17,8 @@
  *   * Back. -> start
  *
  * Lines, reply labels and the title may use the blog's glitch syntax (`==a|>b==`, `teal:`, `(;)`).
+ * A reply can also take another path when it's picked with the window ON, the way its label
+ * glitches: `* ==||What is AVE?|>Why color has changed?== -> ==ave|>color==`.
  *
  * A scene is one or more variants: a line, then its replies. Conditions (`?returning`,
  * `?latest`) are tried in order and the first that holds wins; otherwise one `~` line is
@@ -44,6 +46,8 @@ export type Target =
 export interface Choice {
   label: string
   target: Target
+  /** `-> ==closed|>open==`: where the reply leads when it's picked with the window ON */
+  openTarget?: Target
   line: number
 }
 
@@ -91,6 +95,7 @@ export interface SceneContext {
 export interface ResolvedChoice {
   label: string
   target: Target
+  openTarget?: Target
 }
 
 export interface ResolvedScene {
@@ -113,11 +118,11 @@ export interface ValidateOptions {
  * The openers are the author's: every variant of `start` offers exactly these, as written.
  * With the window ON the fourth one turns into "Why color has changed?".
  */
-export const OPENERS: readonly { label: string; scene: string }[] = [
+export const OPENERS: readonly { label: string; scene: string; open?: string }[] = [
   { label: "Hello.", scene: "hello" },
   { label: "Where am I?", scene: "where" },
   { label: "...", scene: "silence" },
-  { label: "==||What is AVE?|>Why color has changed?==", scene: "ave" },
+  { label: "==||What is AVE?|>Why color has changed?==", scene: "ave", open: "color" },
 ]
 
 /** Every visitor must be able to reach these from `start`: routes, scrolls and scenes. */
@@ -127,7 +132,7 @@ export const MUST_REACH: readonly string[] = ["/blog", "/forum", "/projects", "/
 export const EXTERNAL_ALLOWLIST: readonly string[] = ["github.com/sbozh/"]
 
 export const LIMITS = {
-  /** Characters in a line: above `lineSoft` warns, above `line` fails */
+  /** Characters in a line as it reads (glitch syntax aside): above `lineSoft` warns, above `line` fails */
   line: 200,
   lineSoft: 160,
   label: 48,
@@ -197,10 +202,19 @@ export function parseFabula(source: string): { fabula: Fabula; problems: Problem
         return
       }
       const label = body.slice(0, arrow).trim()
-      const target = parseTarget(body.slice(arrow + 2).trim())
+      const raw = body.slice(arrow + 2).trim()
+      // `==closed|>open==`: another path when the reply is picked with the window ON
+      const glitch = /^==([^|=]+)\|>([^|=]+)==$/.exec(raw)
+      if (raw.startsWith("==") && !glitch) {
+        error(n, `glitch target "${raw}" must read ==closed|>open==, e.g. ==ave|>color==`)
+        return
+      }
+      const target = parseTarget(glitch ? glitch[1].trim() : raw)
+      const openTarget = glitch ? parseTarget(glitch[2].trim()) : undefined
       if (!label) error(n, "a reply needs a label")
       else if (typeof target === "string") error(n, target)
-      else variant.choices.push({ label, target, line: n })
+      else if (typeof openTarget === "string") error(n, openTarget)
+      else variant.choices.push(openTarget ? { label, target, openTarget, line: n } : { label, target, line: n })
       return
     }
 
@@ -276,36 +290,52 @@ export function validateFabula(fabula: Fabula, options: ValidateOptions = {}): P
     }
     const defaults = scene.variants.filter((v) => v.kind === "default")
     const pool = scene.variants.filter((v) => v.kind === "random")
-    if (defaults.length > 1) error(defaults[1].line, `scene "${id}" has a second unmarked line: only the first is ever said`)
-    if (defaults.length > 0 && pool.length > 0) error(pool[0].line, `scene "${id}" mixes a ~ pool with an unmarked line: pick one`)
+    if (defaults.length > 1)
+      error(defaults[1].line, `scene "${id}" has a second unmarked line: only the first is ever said`)
+    if (defaults.length > 0 && pool.length > 0)
+      error(pool[0].line, `scene "${id}" mixes a ~ pool with an unmarked line: pick one`)
     if (defaults.length === 0 && pool.length === 0) {
       error(scene.line, `scene "${id}" has nothing to say when no condition holds: add an unmarked or ~ line`)
     }
 
     for (const variant of scene.variants) {
-      const length = variant.text.length
+      const length = readLength(variant.text)
       if (length > LIMITS.line) error(variant.line, `line is ${length} characters, over the ${LIMITS.line} limit`)
-      else if (length > LIMITS.lineSoft) warn(variant.line, `line is ${length} characters: keep to ${LIMITS.lineSoft} on a phone`)
+      else if (length > LIMITS.lineSoft)
+        warn(variant.line, `line is ${length} characters: keep to ${LIMITS.lineSoft} on a phone`)
       if (variant.choices.length === 0) error(variant.line, `dead end in "${id}": a line needs at least one reply`)
       if (variant.choices.length > LIMITS.choices) {
-        error(variant.choices[LIMITS.choices].line, `more than ${LIMITS.choices} replies: keys 1–${LIMITS.choices} can't reach it`)
+        error(
+          variant.choices[LIMITS.choices].line,
+          `more than ${LIMITS.choices} replies: keys 1–${LIMITS.choices} can't reach it`
+        )
       }
       checkPlaceholders(variant.text, variant, variant.line, error)
 
       for (const choice of variant.choices) {
-        const { label, target, line } = choice
-        if (label.length > LIMITS.label) error(line, `reply "${label}" is ${label.length} characters, over the ${LIMITS.label} limit`)
+        const { label, line } = choice
+        const labelLength = readLength(label)
+        if (labelLength > LIMITS.label)
+          error(line, `reply "${label}" is ${labelLength} characters, over the ${LIMITS.label} limit`)
         checkPlaceholders(label, variant, line, error)
-        if (target.kind === "scene" && !findScene(fabula, target.scene)) {
-          error(line, `no scene "${target.scene}"`)
-        } else if (target.kind === "route") {
-          checkPlaceholders(target.href, variant, line, error)
-          const placeholder = target.href.includes("{")
-          if (!placeholder && options.routes && !matchesRoute(target.href, options.routes)) {
-            error(line, `no page for ${target.href} under app/`)
+        if (choice.openTarget && !label.includes("|>")) {
+          warn(line, "this reply reads the same with the window ON: give its label a >state so the other path shows")
+        }
+        for (const target of choice.openTarget ? [choice.target, choice.openTarget] : [choice.target]) {
+          if (target.kind === "scene" && !findScene(fabula, target.scene)) {
+            error(line, `no scene "${target.scene}"`)
+          } else if (target.kind === "route") {
+            checkPlaceholders(target.href, variant, line, error)
+            const placeholder = target.href.includes("{")
+            if (!placeholder && options.routes && !matchesRoute(target.href, options.routes)) {
+              error(line, `no page for ${target.href} under app/`)
+            }
+          } else if (
+            target.kind === "external" &&
+            !EXTERNAL_ALLOWLIST.some((prefix) => target.href.slice(8).startsWith(prefix))
+          ) {
+            error(line, `${target.href} is off the external allowlist (${EXTERNAL_ALLOWLIST.join(", ")})`)
           }
-        } else if (target.kind === "external" && !EXTERNAL_ALLOWLIST.some((prefix) => target.href.slice(8).startsWith(prefix))) {
-          error(line, `${target.href} is off the external allowlist (${EXTERNAL_ALLOWLIST.join(", ")})`)
         }
       }
     }
@@ -319,7 +349,7 @@ export function validateFabula(fabula: Fabula, options: ValidateOptions = {}): P
     const destinations = new Set<string>(reached)
     for (const id of reached) {
       for (const variant of findScene(fabula, id)?.variants ?? []) {
-        for (const { target } of variant.choices) {
+        for (const target of variant.choices.flatMap(targetsOf)) {
           if (target.kind === "route") destinations.add(stripQuery(target.href))
           if (target.kind === "scroll") destinations.add(`#${target.to}`)
         }
@@ -328,11 +358,17 @@ export function validateFabula(fabula: Fabula, options: ValidateOptions = {}): P
     const missing = MUST_REACH.filter((place) => !destinations.has(place))
     if (missing.length) error(0, `can't reach ${missing.join(", ")} from start`)
 
+    const sceneOf = (target?: Target) => (target ? (target.kind === "scene" ? target.scene : "…") : "")
     for (const variant of start.variants) {
-      const offered = variant.choices.map(({ label, target }) => `${label} -> ${target.kind === "scene" ? target.scene : "…"}`)
-      const expected = OPENERS.map(({ label, scene }) => `${label} -> ${scene}`)
+      const offered = variant.choices.map(
+        ({ label, target, openTarget }) => `${label} -> ${sceneOf(target)} / ${sceneOf(openTarget)}`
+      )
+      const expected = OPENERS.map(({ label, scene, open }) => `${label} -> ${scene} / ${open ?? ""}`)
       if (offered.join("\n") !== expected.join("\n")) {
-        error(variant.line, `the openers are the author's: start offers ${OPENERS.map((o) => `"${o.label}"`).join(", ")}, in that order`)
+        error(
+          variant.line,
+          `the openers are the author's: start offers ${OPENERS.map((o) => `"${o.label}"`).join(", ")}, in that order`
+        )
       }
     }
   }
@@ -350,12 +386,48 @@ export function reachableScenes(fabula: Fabula): Set<string> {
     if (!scene || reached.has(id)) continue
     reached.add(id)
     for (const variant of scene.variants) {
-      for (const { target } of variant.choices) {
+      for (const target of variant.choices.flatMap(targetsOf)) {
         if (target.kind === "scene") queue.push(target.scene)
       }
     }
   }
   return reached
+}
+
+/** A reply's targets: where it leads, and where it leads with the window ON. */
+export function targetsOf(choice: Pick<Choice, "target" | "openTarget">): Target[] {
+  return choice.openTarget ? [choice.target, choice.openTarget] : [choice.target]
+}
+
+/**
+ * Text as it reads, glitch syntax aside: each `==a|b==` word as its base state, or with the
+ * window ON (`open`) as its `>` state. A light reading for tools and limits; the app renders
+ * the real thing through remark-glitch.
+ */
+export function readGlitch(text: string, open = false): string {
+  return text
+    .replace(/(?<!=)(===?)(?!=)([\s\S]*?)(?<!=)\1(?!=)/g, (_whole, _mark, inner: string) => {
+      if (inner === "WINDOW" || inner === "WINDOW OFF") return ""
+      const windowOnly = inner.startsWith("|") && !inner.startsWith("||")
+      const states = inner.replace(/^\|\|?/, "").split(/\|\|?/)
+      if (windowOnly && !open) return ""
+      const rest = open
+        ? Math.max(
+            0,
+            states.findIndex((state) => state.trimStart().startsWith(">"))
+          )
+        : 0
+      return states[rest]
+        .trim()
+        .replace(/^>\s*/, "")
+        .replace(/^(gold|purple|teal|white|red|pink):\s*/i, "")
+    })
+    .replace(/\(;\)/g, "✳")
+}
+
+/** The longer of a text's two readings, window OFF and ON. */
+function readLength(text: string): number {
+  return Math.max(readGlitch(text).length, readGlitch(text, true).length)
 }
 
 function checkPlaceholders(
@@ -365,7 +437,8 @@ function checkPlaceholders(
   error: (line: number, message: string) => void
 ) {
   for (const name of placeholdersIn(text)) {
-    if (!PLACEHOLDER_NAMES.includes(name)) error(line, `unknown placeholder {latest.${name}}: use title, minutes or href`)
+    if (!PLACEHOLDER_NAMES.includes(name))
+      error(line, `unknown placeholder {latest.${name}}: use title, minutes or href`)
     else if (variant.kind !== "latest") error(line, `{latest.${name}} only works in a ?latest line`)
   }
 }
@@ -434,9 +507,9 @@ export function fillPlaceholders(text: string, post?: LatestPost): string {
 
 function variantPlaceholders(variant: Variant): string[] {
   const texts = [variant.text]
-  for (const { label, target } of variant.choices) {
-    texts.push(label)
-    if (target.kind === "route") texts.push(target.href)
+  for (const choice of variant.choices) {
+    texts.push(choice.label)
+    for (const target of targetsOf(choice)) if (target.kind === "route") texts.push(target.href)
   }
   return texts.flatMap(placeholdersIn)
 }
@@ -450,7 +523,9 @@ export function variantHolds(variant: Variant, ctx: SceneContext): boolean {
 
 /** Which variant of the scene he says: the first condition that holds, else the pool or the unmarked line. */
 export function pickVariant(scene: Scene, ctx: SceneContext): number {
-  const conditional = scene.variants.findIndex((v) => v.kind !== "default" && v.kind !== "random" && variantHolds(v, ctx))
+  const conditional = scene.variants.findIndex(
+    (v) => v.kind !== "default" && v.kind !== "random" && variantHolds(v, ctx)
+  )
   if (conditional >= 0) return conditional
   const pool = scene.variants.flatMap((v, index) => (v.kind === "random" ? [index] : []))
   if (pool.length) return pool[Math.floor((ctx.random ?? Math.random)() * pool.length) % pool.length]
@@ -469,11 +544,16 @@ export function resolveScene(fabula: Fabula, id: string, ctx: SceneContext): Res
     scene: id,
     variant: index,
     text: fillPlaceholders(variant.text, post),
-    choices: variant.choices.map(({ label, target }) => ({
+    choices: variant.choices.map(({ label, target, openTarget }) => ({
       label: fillPlaceholders(label, post),
-      target: target.kind === "route" ? { kind: "route", href: fillPlaceholders(target.href, post) } : target,
+      target: fillTarget(target, post),
+      ...(openTarget ? { openTarget: fillTarget(openTarget, post) } : {}),
     })),
   }
+}
+
+function fillTarget(target: Target, post?: LatestPost): Target {
+  return target.kind === "route" ? { kind: "route", href: fillPlaceholders(target.href, post) } : target
 }
 
 /** Key of one variant's line, for lines compiled on the server. */

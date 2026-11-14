@@ -21,9 +21,13 @@ import {
 /** Kagurame's script, relative to the app (`process.cwd()`); the build traces it into the image. */
 export const SCRIPT_FILE = join("content", "kagurame", "onboarding.fabula")
 
-/** A line with glitch syntax: typed out as `plain`, then swapped for the rendered `node`. */
+/**
+ * A line with glitch syntax: typed out as `plain` (or `open` with the window ON, where
+ * `==shut|>open==` words read their `>` state), then swapped for the rendered `node`.
+ */
 export interface ScriptLine {
   plain: string
+  open: string
   node: ReactNode
 }
 
@@ -60,8 +64,8 @@ const lineComponents: Record<string, ComponentType<any>> = {
 export async function compileLine(text: string): Promise<ScriptLine | null> {
   if (!hasTitleMarkup(text)) return null
   try {
-    const { text: plain, Title } = await compileTitle(text)
-    return { plain, node: <Title components={lineComponents} /> }
+    const { text: plain, openText: open, Title } = await compileTitle(text)
+    return { plain, open, node: <Title components={lineComponents} /> }
   } catch (error) {
     console.error(`Kagurame: can't compile "${text}", it shows as written`, error)
     return null
@@ -124,5 +128,5 @@ export async function loadKagurameScript(latestPost?: LatestPost): Promise<Kagur
 }
 
 async function titlePart(text: string): Promise<ScriptLine> {
-  return (await compileLine(text)) ?? { plain: text, node: text }
+  return (await compileLine(text)) ?? { plain: text, open: text, node: text }
 }

@@ -199,7 +199,9 @@ describe("HeroDialogue glitch lines", () => {
   // The stranger's greeting, compiled as if it had glitch syntax
   const rich = () => ({
     ...script,
-    lines: { "start:1": { plain: "Oh. A plain line.", node: <em>Oh. A glitching line.</em> } },
+    lines: {
+      "start:1": { plain: "Oh. A plain line.", open: "Oh. An open line.", node: <em>Oh. A glitching line.</em> },
+    },
   })
 
   it("types the plain text, then swaps in the rendered line", () => {
@@ -216,6 +218,56 @@ describe("HeroDialogue glitch lines", () => {
   it("shows the rendered line at once under reduced motion", () => {
     render(<Harness script={rich()} />)
     expect(screen.getByText("Oh. A glitching line.")).toBeInTheDocument()
+  })
+})
+
+describe("HeroDialogue with the window ON", () => {
+  const openWindow = () => fireEvent.click(screen.getByRole("button", { name: /Window OFF/ }))
+
+  it("asks about colour instead of AVE, and takes the glitch path", () => {
+    render(<Harness />)
+    expect(screen.getByRole("button", { name: /What is AVE\?/ })).toBeInTheDocument()
+    openWindow()
+    fireEvent.click(screen.getByRole("button", { name: /Why color has changed\?/ }))
+    expect(screen.getByRole("dialog")).toHaveTextContent("You opened the window")
+  })
+
+  it("takes the usual path with the window closed", () => {
+    render(<Harness />)
+    fireEvent.click(screen.getByRole("button", { name: /What is AVE\?/ }))
+    expect(screen.getByRole("dialog")).toHaveTextContent("A CLI that keeps agents focused")
+  })
+
+  it("takes the glitch path from the keyboard too", () => {
+    render(<Harness />)
+    fireEvent.keyDown(window, { key: "1" }) // Hello.
+    openWindow()
+    fireEvent.keyDown(window, { key: "3" }) // I quit.
+    expect(screen.getByRole("dialog")).toHaveTextContent("I resigned sixteen times")
+  })
+
+  it("types his glitch words the way they read with the window open", () => {
+    window.localStorage.setItem("sbozh:kagurame:met", "1")
+    motionPref.reduce = false
+    vi.useFakeTimers()
+    render(<Harness />)
+    openWindow()
+    act(() => vi.advanceTimersByTime(22 * 40))
+    const dialog = screen.getByRole("dialog")
+    expect(dialog).toHaveTextContent("Still my 17th legion")
+    expect(dialog).not.toHaveTextContent("17th company")
+  })
+
+  it("keeps typing when the window flips mid-line", () => {
+    window.localStorage.setItem("sbozh:kagurame:met", "1")
+    motionPref.reduce = false
+    vi.useFakeTimers()
+    render(<Harness />)
+    act(() => vi.advanceTimersByTime(22 * 20))
+    openWindow()
+    act(() => vi.advanceTimersByTime(22 * 20))
+    // 40 characters in, not 20 from a fresh start
+    expect(screen.getByRole("dialog")).toHaveTextContent("You came back. Still my 17th legion. Si")
   })
 })
 
