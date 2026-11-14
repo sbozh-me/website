@@ -11,7 +11,13 @@ import { TOPIC_LABELS, TOPICS, type Topic } from "@/lib/subscribers/topics";
 
 type FormState = "idle" | "sending" | "sent" | "error";
 
-export function SubscribeForm() {
+interface SubscribeFormProps {
+  /** "large": the /subscribe page's own copy, in the middle of the page */
+  size?: "default" | "large";
+}
+
+export function SubscribeForm({ size = "default" }: SubscribeFormProps = {}) {
+  const large = size === "large";
   const [state, setState] = useState<FormState>("idle");
   const [error, setError] = useState("");
   const [topics, setTopics] = useState<Topic[]>([...TOPICS]);
@@ -44,16 +50,17 @@ export function SubscribeForm() {
 
   if (state === "sent") {
     return (
-      <p className="text-center text-sm text-muted-foreground" role="status">
+      <p className={`text-center text-muted-foreground ${large ? "text-lg" : "text-sm"}`} role="status">
         Check your inbox and confirm the subscription.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md">
-      <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className={`w-full ${large ? "max-w-xl" : "max-w-md"}`} data-size={size}>
+      <div className={`flex ${large ? "gap-3" : "gap-2"}`}>
         <Input
+          className={large ? "h-12 px-4 text-base md:text-base" : undefined}
           type="email"
           name="email"
           required
@@ -70,14 +77,22 @@ export function SubscribeForm() {
           aria-hidden="true"
           className="absolute -left-[9999px]"
         />
-        <Button type="submit" disabled={state === "sending" || topics.length === 0}>
+        <Button
+          type="submit"
+          size={large ? "lg" : "default"}
+          className={large ? "h-12 px-8 text-base" : undefined}
+          disabled={state === "sending" || topics.length === 0}
+        >
           Subscribe
         </Button>
       </div>
-      <fieldset className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2">
+      <fieldset className={`flex flex-wrap justify-center gap-y-2 ${large ? "mt-5 gap-x-8" : "mt-3 gap-x-5"}`}>
         <legend className="sr-only">What to send</legend>
         {TOPICS.map((topic) => (
-          <label key={topic} className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+          <label
+            key={topic}
+            className={`flex items-center gap-2 text-muted-foreground cursor-pointer ${large ? "text-sm" : "text-xs"}`}
+          >
             <Switch
               checked={topics.includes(topic)}
               onCheckedChange={(checked) => toggleTopic(topic, checked)}
@@ -86,7 +101,10 @@ export function SubscribeForm() {
           </label>
         ))}
       </fieldset>
-      <p className="mt-2 text-center text-xs text-muted-foreground" role={state === "error" ? "alert" : undefined}>
+      <p
+        className={`text-center text-muted-foreground ${large ? "mt-4 text-sm" : "mt-2 text-xs"}`}
+        role={state === "error" ? "alert" : undefined}
+      >
         {state === "error" ? (
           error
         ) : (

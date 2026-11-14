@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 
 import { submitSubscriptionToken } from "@/actions/subscribe";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { verifyToken } from "@/lib/subscribers/token";
 import { describeTopics } from "@/lib/subscribers/topics";
 
@@ -18,6 +19,24 @@ interface SubscribePageProps {
 
 export default async function SubscribePage({ searchParams }: SubscribePageProps) {
   const { token, status } = await searchParams;
+
+  // No link from an email: someone came to subscribe (Kagurame's "Keep me posted").
+  // The form sits in the middle, larger, and the footer drops its own copy.
+  if (!token && !status) {
+    return (
+      <div
+        data-subscribe-page
+        className="container mx-auto flex min-h-[70svh] flex-col items-center justify-center px-4 py-16 text-center"
+      >
+        <h1 className="mb-4 text-4xl font-bold md:text-5xl">Keep me posted</h1>
+        <p className="mb-10 max-w-lg text-muted-foreground md:text-lg">
+          New blog posts and release notes from sbozh.me, in your inbox. Pick what you want.
+        </p>
+        <SubscribeForm size="large" />
+      </div>
+    );
+  }
+
   const payload = token ? verifyToken(token) : null;
 
   let heading = "This link is no longer valid";

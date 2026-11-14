@@ -26,7 +26,8 @@ export function Footer() {
   return (
     <footer className="border-t border-border py-12">
       <div className="mx-auto px-6 md:px-12 lg:px-24">
-        <div className="mb-8 flex justify-center">
+        {/* Hidden on a page that shows the form itself (see globals.css: data-subscribe-page) */}
+        <div className="mb-8 flex justify-center" data-footer-subscribe>
           <SubscribeForm />
         </div>
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:gap-8">

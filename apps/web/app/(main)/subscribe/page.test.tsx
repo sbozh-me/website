@@ -20,6 +20,24 @@ describe("SubscribePage", () => {
     vi.unstubAllEnvs();
   });
 
+  it("shows the form itself, large, when there's no link (Keep me posted)", async () => {
+    const { container } = render(await SubscribePage({ searchParams: Promise.resolve({}) }));
+
+    expect(screen.getByRole("heading", { name: "Keep me posted" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Email address" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Subscribe" })).toBeInTheDocument();
+    expect(container.querySelector("form")).toHaveAttribute("data-size", "large");
+    // The footer hides its own copy of the form on this page (globals.css)
+    expect(container.querySelector("[data-subscribe-page]")).not.toBeNull();
+    expect(screen.queryByText("This link is no longer valid")).toBeNull();
+  });
+
+  it("still says an unknown link is no longer valid", async () => {
+    await renderPage({ token: "nonsense" });
+
+    expect(screen.getByRole("heading", { name: "This link is no longer valid" })).toBeInTheDocument();
+  });
+
   it("asks to confirm the topics carried by the link", async () => {
     await renderPage({ token: createToken("a@b.co", "confirm", Date.now(), ["releases"]) });
 

@@ -82,6 +82,12 @@ code, pre {
   color: var(--color-foreground);
 }
 
+/* A page that shows the subscription form itself (/subscribe with no link params) hides
+   the footer's copy; decided from the server HTML, so the footer form never flashes */
+body:has([data-subscribe-page]) [data-footer-subscribe] {
+  display: none;
+}
+
 /* Override focus ring to 1px secondary */
 *:focus-visible,
 *:focus {
