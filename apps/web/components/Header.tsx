@@ -35,8 +35,18 @@ export function Header() {
     return null;
   }
 
+  // Home: the header floats over the video hero, translucent so the video shows under it
+  const overVideo = pathname === "/";
+
   return (
-    <header className="relative z-10 border-b border-border bg-background">
+    <header
+      data-over-video={overVideo || undefined}
+      className={
+        overVideo
+          ? "absolute inset-x-0 top-0 z-20 border-b border-border/40 bg-background/40 backdrop-blur-md"
+          : "relative z-10 border-b border-border bg-background"
+      }
+    >
       <div className="mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 py-6">
         <div className="relative">
           <Link href="/" className="text-xl font-bold tracking-tight">
@@ -114,7 +124,7 @@ export function Header() {
 
       {/* Mobile nav menu */}
       <nav
-        className={`md:hidden border-t border-border overflow-hidden transition-[max-height] duration-300 ease-out ${
+        className={`md:hidden border-t ${overVideo ? "border-border/40" : "border-border"} overflow-hidden transition-[max-height] duration-300 ease-out ${
           isOpen ? "max-h-64" : "max-h-0"
         }`}
       >

@@ -55,6 +55,7 @@ vi.mock("@/components/releases/ReleaseTimelineWithLoadMore", () => ({
 
 // Mock HomeContent component
 vi.mock("@/components/home", () => ({
+  HomeVideoHero: () => <section data-testid="home-video-hero" />,
   HomeContent: () => (
     <div data-testid="home-content">
       <h1>Sem Bozhyk</h1>
@@ -110,6 +111,13 @@ describe("Home", () => {
       const Page = await Home();
       render(Page);
       expect(screen.getByTestId("home-content")).toBeInTheDocument();
+    });
+
+    it("opens with the video hero, before the main content", async () => {
+      render(await Home());
+      const hero = screen.getByTestId("home-video-hero");
+      expect(hero).toBeInTheDocument();
+      expect(hero.closest("main")).toBeNull();
     });
 
     it("renders author name", async () => {

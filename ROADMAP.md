@@ -220,5 +220,6 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Post video sound toggle (unmute button)~~
 - ~~Post video click to pause/play~~
 - ~~Post video vertical volume slider~~
+- ~~Main page video hero (Pan Dude, mobile reels cut) under a translucent header~~
 
 ---
