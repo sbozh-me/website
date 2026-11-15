@@ -34,6 +34,8 @@ export interface Post {
   isLocked?: boolean;
   /** Not published yet; only reachable through a draft preview link */
   isDraft?: boolean;
+  /** Published with a publish time still ahead: listed with a badge, body held back until then */
+  isPlanned?: boolean;
 }
 
 export interface PostListItem {
@@ -53,4 +55,6 @@ export interface PostListItem {
   seriesId?: string;
   /** Paid post: the body is only served after the content password is entered */
   isLocked?: boolean;
+  /** Publish time still ahead: listed with a Planned badge */
+  isPlanned?: boolean;
 }

@@ -31,7 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let latestBlogPostDate: Date | undefined;
   try {
     const repository = createBlogRepository();
-    const posts = await repository.getPosts();
+    // A planned post is only a teaser until its publish time: index it from then
+    const posts = (await repository.getPosts()).filter((post) => !post.isPlanned);
 
     // Track the latest post date for the /blog route
     if (posts.length > 0) {

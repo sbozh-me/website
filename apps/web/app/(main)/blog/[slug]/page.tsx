@@ -12,6 +12,7 @@ import { ErrorState, PostNavigation, ScrollToTop } from "@sbozh/blog/components"
 import { getAdjacentPosts, type TOCItem } from "@sbozh/blog/utils";
 import { PageTheme, ThemeLoaderOverlay, DEFAULT_THEME } from "@sbozh/themes";
 import { LockedContent } from "@/components/LockedContent";
+import { PlannedContent } from "@/components/PlannedContent";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { UNLOCK_COOKIE, isUnlockTokenValid } from "@/lib/content-lock";
 import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
@@ -107,7 +108,8 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 export default async function BlogPostPage({ params, searchParams }: PageProps) {
   noStore();
   const { slug } = await params;
-  const repository = createBlogRepository({ includeDrafts: await wantsDraft(searchParams) });
+  const preview = await wantsDraft(searchParams);
+  const repository = createBlogRepository({ includeDrafts: preview });
 
   // Neighbour list is a nice-to-have: a failure only hides post navigation
   const postsPromise = repository.getPosts().catch(() => []);
@@ -152,9 +154,16 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
 
   const adjacent = getAdjacentPosts(await postsPromise, post.slug, await seriesPromise);
 
-  // A locked post shows its header and excerpt only: the body (and its TL;DR and
-  // TOC) is never compiled, so none of it reaches the page until the reader unlocks
-  if (post.isLocked && !isUnlockTokenValid((await cookies()).get(UNLOCK_COOKIE)?.value)) {
+  // A planned post (until its publish time) and a locked post (until the reader
+  // unlocks) show their header and excerpt only: the body, TL;DR and TOC are never
+  // compiled, so none of it reaches the page. A ?draft=1 preview reads a planned post.
+  let heldBack: React.ReactNode = null;
+  if (post.isPlanned && !preview) {
+    heldBack = <PlannedContent date={post.date} />;
+  } else if (post.isLocked && !isUnlockTokenValid((await cookies()).get(UNLOCK_COOKIE)?.value)) {
+    heldBack = <LockedContent path={`/blog/${post.slug}`} />;
+  }
+  if (heldBack) {
     // Drop the body from the object itself: props of server components can still be
     // serialized into the page payload, so passing `post` whole would leak it
     const teaser = { ...post, content: "", tldr: undefined, attribution: undefined };
@@ -169,7 +178,7 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
               post={teaser}
               adjacent={adjacent}
               title={title}
-              content={<LockedContent path={`/blog/${post.slug}`} />}
+              content={heldBack}
               footer={<PostNavigation {...adjacent} />}
             />
           </div>

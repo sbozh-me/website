@@ -45,10 +45,11 @@ describe("SeriesPromo", () => {
     expect(within(link).getByRole("heading", { level: 2 })).toHaveTextContent("Title pan-dude")
     expect(within(link).getByText("About pan-dude")).toBeInTheDocument()
 
-    // Status badge sits on the Hero image
+    // Status badge sits on the Hero image: its positioned box holds the image (the
+    // badge's theme-island wrapper in between is display: contents, so it has no box)
     const badge = within(link).getByText("Finished")
     expect(badge).toHaveClass("absolute")
-    expect(badge.parentElement).toContainElement(screen.getByAltText("pan-dude.png"))
+    expect(badge.closest(".relative")).toContainElement(screen.getByAltText("pan-dude.png"))
   })
 
   it("puts left and right under the big one, in that order", () => {

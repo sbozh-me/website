@@ -3,6 +3,7 @@ import type { Post } from "../../types";
 import type { AdjacentPosts } from "../../utils";
 import { formatReadingTime, formatShortDate } from "../../utils";
 import { PersonaDot } from "../timeline/PersonaDot";
+import { PlannedBadge } from "./PlannedBadge";
 import { PostNavArrows } from "./PostNavArrows";
 
 interface PostHeaderProps {
@@ -30,6 +31,7 @@ export function PostHeader({ post, adjacent, title }: PostHeaderProps) {
             <time dateTime={post.date}>{formatShortDate(post.date)}</time>
             <span>•</span>
             <span>{formatReadingTime(post.readingTime)}</span>
+            {post.isPlanned && <PlannedBadge />}
           </div>
         </div>
         {adjacent && <PostNavArrows {...adjacent} />}

@@ -1,4 +1,5 @@
 import { Censored } from "../post/Censored";
+import { PlannedBadge } from "../post/PlannedBadge";
 import { PersonaDot } from "./PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
 import { formatReadingTime } from "../../utils/reading-time";
@@ -34,6 +35,7 @@ export function PostCard({ post, seriesPart }: PostCardProps) {
                 <span>{formatReadingTime(post.readingTime)}</span>
               </>
             )}
+            {post.isPlanned && <PlannedBadge />}
           </div>
         </div>
 

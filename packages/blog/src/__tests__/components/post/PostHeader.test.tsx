@@ -72,4 +72,12 @@ describe("PostHeader", () => {
     const dot = container.querySelector('[aria-hidden="true"]');
     expect(dot).toHaveStyle({ backgroundColor: "#8b5cf6" });
   });
+
+  it("shows a Planned badge only for a planned post", () => {
+    const { rerender } = render(<PostHeader post={mockPost} />);
+    expect(screen.queryByText("Planned")).not.toBeInTheDocument();
+
+    rerender(<PostHeader post={{ ...mockPost, isPlanned: true }} />);
+    expect(screen.getByText("Planned")).toBeInTheDocument();
+  });
 });

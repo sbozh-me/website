@@ -6,7 +6,8 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const repository = createBlogRepository();
-    const posts = await repository.getPosts();
+    // A random read should be readable: planned posts are teasers until they're out
+    const posts = (await repository.getPosts()).filter((post) => !post.isPlanned);
 
     if (posts.length === 0) {
       return NextResponse.json({ error: "No posts found" }, { status: 404 });

@@ -107,8 +107,9 @@ export default async function Home() {
     ? postsResult.posts
     : [];
 
-  // Kagurame offers the latest post as the freshest read; a broken script hides him
-  const latest = initialPosts[0];
+  // Kagurame offers the latest post as the freshest read (not a planned teaser); a
+  // broken script hides him
+  const latest = initialPosts.find((post) => !post.isPlanned);
   const kagurame = await loadKagurameScript(
     latest && {
       title: latest.title,

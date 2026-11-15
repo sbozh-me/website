@@ -68,4 +68,16 @@ describe("feed entries", () => {
 
     expect(entries.map((e) => e.title)).toEqual(["New", "sbozh.me v1.9.0: Feeds", "Old"]);
   });
+
+  it("leaves planned posts out until their publish time", async () => {
+    fetchMock.mockResolvedValue({ ok: true, json: async () => ({ data: [] }) });
+    getPosts.mockResolvedValue([
+      { title: "Soon", slug: "soon", excerpt: "", date: "2026-11-17", isPlanned: true },
+      { title: "Out", slug: "out", excerpt: "", date: "2026-11-05" },
+    ]);
+
+    const entries = await getAllEntries();
+
+    expect(entries.map((e) => e.title)).toEqual(["Out"]);
+  });
 });

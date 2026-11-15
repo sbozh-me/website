@@ -177,6 +177,59 @@ describe("BlogPostPage", () => {
     });
   });
 
+  describe("planned posts", () => {
+    const plannedPost = {
+      id: "planned",
+      title: "Planned Post",
+      slug: "planned-post",
+      excerpt: "Out soon",
+      tldr: "Early summary",
+      content: "## Early Heading\n\nNot out yet.",
+      date: "2026-11-17T09:00:00Z",
+      readingTime: 2,
+      persona: { id: "1", name: "Test Author", slug: "test", color: "#000" },
+      tags: [],
+      isPlanned: true,
+    };
+
+    it("shows the title, excerpt, badge and publish date, but not the body", async () => {
+      mockPostOverride = plannedPost;
+      render(await BlogPostPage({ params: Promise.resolve({ slug: "planned-post" }) }));
+
+      expect(screen.getByText("Planned Post")).toBeInTheDocument();
+      expect(screen.getByText("Out soon")).toBeInTheDocument();
+      expect(screen.getByText("Planned")).toBeInTheDocument();
+      expect(screen.getByText(/Comes out/)).toHaveTextContent("Comes out Nov 17");
+      expect(screen.getByRole("link", { name: "Keep me posted" })).toHaveAttribute("href", "/subscribe");
+      expect(screen.queryByText(/Not out yet/)).not.toBeInTheDocument();
+      expect(screen.queryByText("Early summary")).not.toBeInTheDocument();
+      expect(screen.queryByText("Early Heading")).not.toBeInTheDocument();
+    });
+
+    it("holds a planned post back even with a valid unlock cookie", async () => {
+      const { unlockToken } = await import("@/lib/content-lock");
+      mockPostOverride = { ...plannedPost, isLocked: true };
+      mockUnlockCookie = unlockToken();
+      render(await BlogPostPage({ params: Promise.resolve({ slug: "planned-post" }) }));
+
+      expect(screen.getByText(/Comes out/)).toBeInTheDocument();
+      expect(screen.queryByText(/Not out yet/)).not.toBeInTheDocument();
+    });
+
+    it("reads in full through a ?draft=1 preview", async () => {
+      mockPostOverride = plannedPost;
+      render(
+        await BlogPostPage({
+          params: Promise.resolve({ slug: "planned-post" }),
+          searchParams: Promise.resolve({ draft: "1" }),
+        }),
+      );
+
+      expect(screen.getByText(/Not out yet/)).toBeInTheDocument();
+      expect(screen.queryByText(/Comes out/)).not.toBeInTheDocument();
+    });
+  });
+
   it("renders post title and content", async () => {
     const params = Promise.resolve({ slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));

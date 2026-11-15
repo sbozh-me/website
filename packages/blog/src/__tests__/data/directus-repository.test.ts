@@ -126,6 +126,7 @@ describe("DirectusRepository", () => {
         lastModified: "2025-01-15",
         readingTime: 5,
         isLocked: false,
+        isPlanned: false,
         persona: {
           id: "persona-1",
           name: "The Founder",
@@ -494,6 +495,22 @@ describe("DirectusRepository", () => {
 
       mockRequest.mockResolvedValueOnce([{ ...base, is_locked: true }]);
       expect((await repository.getPost("t"))?.isLocked).toBe(true);
+    });
+  });
+
+  describe("planned posts", () => {
+    it("marks a post with a publish time still ahead as planned", async () => {
+      const ahead = new Date(Date.now() + 86_400_000).toISOString();
+      const past = new Date(Date.now() - 86_400_000).toISOString();
+      mockRequest.mockResolvedValueOnce([
+        { ...mockDirectusPost, id: "a", date_published: ahead },
+        { ...mockDirectusPost, id: "b", date_published: past },
+      ]);
+      const posts = await repository.getPosts();
+      expect(posts.map((p) => p.isPlanned)).toEqual([true, false]);
+
+      mockRequest.mockResolvedValueOnce([{ ...mockDirectusPost, date_published: ahead }]);
+      expect((await repository.getPost("test-post"))?.isPlanned).toBe(true);
     });
   });
 

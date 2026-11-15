@@ -6,6 +6,7 @@ vi.mock("@/lib/blog/repository", () => ({
     getPosts: vi.fn(async () => [
       { slug: "test-post-1", date: "2024-01-15" },
       { slug: "test-post-2", date: "2024-02-20", seriesId: "s1" },
+      { slug: "planned-post", date: "2099-01-01", isPlanned: true },
     ]),
     getSeries: vi.fn(async () => [
       { id: "s1", title: "Stand-up", slug: "stand-up" },
@@ -59,6 +60,7 @@ describe("sitemap.ts", () => {
 
     expect(urls).toContain("https://sbozh.me/blog/test-post-1");
     expect(urls).toContain("https://sbozh.me/blog/test-post-2");
+    expect(urls).not.toContain("https://sbozh.me/blog/planned-post");
   });
 
   it("includes project tab routes", async () => {

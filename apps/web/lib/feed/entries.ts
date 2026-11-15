@@ -57,7 +57,8 @@ export function teaser(markdown: string | null, maxLength = 280): string {
 
 export async function getBlogEntries(): Promise<FeedEntry[]> {
   const posts = await createBlogRepository().getPosts();
-  return posts.map((post) => ({
+  // A planned post joins the feed at its publish time, as the subscriber email does
+  return posts.filter((post) => !post.isPlanned).map((post) => ({
     topic: "blog",
     title: post.title,
     url: postUrl(post.slug),

@@ -1,6 +1,7 @@
 import { Badge } from "@sbozh/react-ui/components/ui/badge";
 
 import { Censored } from "../post/Censored";
+import { PlannedBadge } from "../post/PlannedBadge";
 import { PostThumbnail } from "../post/PostThumbnail";
 import { PersonaDot } from "../timeline/PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
@@ -38,6 +39,7 @@ export function PostTile({ post, seriesPart }: PostTileProps) {
                 <span>{formatReadingTime(post.readingTime)}</span>
               </>
             )}
+            {post.isPlanned && <PlannedBadge />}
           </div>
           {/* Important: the global h2 size in globals.css is unlayered and beats utilities */}
           <h2 className="mt-3 text-lg! font-semibold leading-snug text-foreground"><Censored text={post.title} /></h2>

@@ -12,6 +12,7 @@ import type { Persona } from "../types/persona";
 import type { Post, PostListItem } from "../types/post";
 import { SERIES_PROMOTIONS, SERIES_STATUSES, type Series } from "../types/series";
 import type { Tag } from "../types/tag";
+import { isPlannedDate } from "../utils/planned";
 
 export class DirectusError extends Error {
   constructor(
@@ -376,6 +377,7 @@ export class DirectusRepository implements BlogRepository {
       theme: post.theme ?? undefined,
       isLocked: post.is_locked ?? false,
       isDraft: post.status === "draft",
+      isPlanned: isPlannedDate(post.date_published),
     };
   }
 
@@ -394,6 +396,7 @@ export class DirectusRepository implements BlogRepository {
       nextPostId: post.next_post ?? undefined,
       seriesId: post.series ?? undefined,
       isLocked: post.is_locked ?? false,
+      isPlanned: isPlannedDate(post.date_published),
     };
   }
 
