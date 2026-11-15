@@ -85,6 +85,8 @@ const slideVariants = {
 }
 
 const SETTLE_DELAY = 300 // ms to wait before showing card after rapid clicks
+// Tailwind's md breakpoint (media-query rem is always 16px, whatever the theme's root size)
+const MD_UP = "(min-width: 48rem)"
 
 export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps) {
   const [[activeIndex, direction], setActiveIndex] = useState([0, 0])
@@ -116,16 +118,22 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
     }
 
     measureCards()
-    window.addEventListener("resize", measureCards)
-    return () => window.removeEventListener("resize", measureCards)
+    // Re-measure whenever the cards' box changes: a phone can lay the page out wider while
+    // it loads and narrow it later without firing a window resize
+    const observer = new ResizeObserver(measureCards)
+    if (measureRef.current) observer.observe(measureRef.current)
+    return () => observer.disconnect()
   }, [authors])
 
-  // Check if mobile on mount and resize
+  // Phone layout below Tailwind's md. A media query, not innerWidth: on phones innerWidth
+  // follows the layout viewport, which runs wider while the page loads (and stays wider
+  // once a fixed-width slide overflows it), so the desktop width could lock in
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    const desktop = window.matchMedia(MD_UP)
+    const checkMobile = () => setIsMobile(!desktop.matches)
     checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
+    desktop.addEventListener("change", checkMobile)
+    return () => desktop.removeEventListener("change", checkMobile)
   }, [])
 
   // Start settle timer - card will show after delay
