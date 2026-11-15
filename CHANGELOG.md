@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.12] - 2026-11-15
+
+### Changes
+
+- fix(web): stop home page overflowing on phones ([f77e91a](https://github.com/sbozh-me/website/commit/f77e91af4ae7b0883ad1d4ffdc660247ff4587ab))
+- feat(web): pin the header as frosted glass ([8cb4adc](https://github.com/sbozh-me/website/commit/8cb4adc32e21a57bfe19c1fa10cd3e75a941b065))
+- fix(blog): keep series status badges on obsidian in every theme ([6587aaf](https://github.com/sbozh-me/website/commit/6587aaf4d1c34e3dfe2a431a7c2ae799abd31ebf))
+- feat(web): Kagurame recites the video hero release ([516b5b9](https://github.com/sbozh-me/website/commit/516b5b95093dedcf657e2aceff6ac46f94b10e86))
+
+
 ## [1.10.11] - 2026-11-14
 
 ### Changes
