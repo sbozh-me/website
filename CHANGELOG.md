@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.13] - 2026-11-15
+
+### Changes
+
+- feat(blog): show future-dated posts as planned teasers ([07bdb1a](https://github.com/sbozh-me/website/commit/07bdb1a26dfa8b518111f354ceffb407c5794227))
+
+
 ## [1.10.12] - 2026-11-15
 
 ### Changes
