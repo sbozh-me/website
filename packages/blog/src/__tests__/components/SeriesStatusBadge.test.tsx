@@ -16,6 +16,17 @@ describe("SeriesStatusBadge", () => {
     expect(badge).toHaveClass(color);
   });
 
+  it.each(["planned", "ongoing", "finished"] as const)(
+    "sits on obsidian whatever the theme (%s)",
+    (status) => {
+      const { container } = render(<SeriesStatusBadge status={status} />);
+      const badge = container.querySelector(`[data-status="${status}"]`);
+
+      expect(badge?.closest('[data-theme-island="obsidian-forge"]')).not.toBeNull();
+      expect(badge).toHaveClass("bg-background");
+    }
+  );
+
   it("pulses only while ongoing", () => {
     const { container, rerender } = render(<SeriesStatusBadge status="ongoing" />);
     expect(container.querySelector(".animate-pulse")).not.toBeNull();
