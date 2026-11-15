@@ -31,6 +31,8 @@
 /* Base typography */
 html {
   font-size: 18px;
+  /* Anchor jumps (TOC links, scrollIntoView) land below the sticky header */
+  scroll-padding-top: 6rem;
 }
 
 body {

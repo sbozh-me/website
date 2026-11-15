@@ -104,7 +104,7 @@ export default async function ReleaseDetailPage({ params }: ReleaseDetailPagePro
 
       {/* Header */}
       <header className="mb-8">
-        <h1 id="release-title" className="text-4xl font-bold mb-4 scroll-mt-[100px]">{release.title}</h1>
+        <h1 id="release-title" className="text-4xl font-bold mb-4 scroll-mt-12">{release.title}</h1>
 
         {/* Meta information */}
         <div className="flex flex-wrap items-center gap-4 text-sm">

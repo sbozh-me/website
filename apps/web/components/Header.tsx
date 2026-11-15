@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import {useState} from "react";
+import {type RefObject, useEffect, useRef, useState} from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -27,28 +27,55 @@ function isActive(pathname: string | null, href: string) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
+// Home: true while the video hero is still under the header (and before it has mounted)
+function useOverHero(onHome: boolean, header: RefObject<HTMLElement | null>) {
+  const [over, setOver] = useState(true);
+
+  useEffect(() => {
+    if (!onHome) return;
+    const update = () => {
+      const hero = document.querySelector("[data-home-hero]");
+      setOver(!hero || hero.getBoundingClientRect().bottom > (header.current?.offsetHeight ?? 0));
+    };
+    update();
+    window.addEventListener("scroll", update, {passive: true});
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [onHome, header]);
+
+  return onHome && over;
+}
+
 export function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const onHome = pathname === "/";
+  const overVideo = useOverHero(onHome, headerRef);
 
   // Client demos under /demo carry their own branding
   if (pathname?.startsWith("/demo/")) {
     return null;
   }
 
-  // Home: the header floats over the video hero, translucent so the video shows under it
-  const overVideo = pathname === "/";
+  // Frosted glass pinned to the top: page content blurs behind it. On home it is fixed so
+  // the video hero runs under it; elsewhere sticky, so it keeps its place in the flow.
+  const position = onHome ? "fixed inset-x-0" : "sticky";
+  const glass = overVideo
+    ? "border-border/40 bg-background/40 backdrop-blur-md"
+    : "border-border/60 bg-background/90 backdrop-blur-lg backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60";
 
   return (
     <header
+      ref={headerRef}
+      data-site-header
       data-over-video={overVideo || undefined}
       // Over the video it stays dark whatever the reader's theme (a dark island)
       data-theme-island={overVideo ? "obsidian-forge" : undefined}
-      className={
-        overVideo
-          ? "absolute inset-x-0 top-0 z-20 border-b border-border/40 bg-background/40 backdrop-blur-md"
-          : "relative z-10 border-b border-border bg-background"
-      }
+      className={`${position} top-0 z-30 border-b transition-[background-color,border-color] duration-300 ${glass}`}
     >
       {/* Three columns, the brand centred whatever the sides hold: the menu left (the burger
           on phones), the window and theme switches right */}
@@ -128,7 +155,7 @@ export function Header() {
 
       {/* Mobile nav menu */}
       <nav
-        className={`lg:hidden border-t ${overVideo ? "border-border/40" : "border-border"} overflow-hidden transition-[max-height] duration-300 ease-out ${
+        className={`lg:hidden border-t ${overVideo ? "border-border/40" : "border-border/60"} overflow-hidden transition-[max-height] duration-300 ease-out ${
           isOpen ? "max-h-64" : "max-h-0"
         }`}
       >

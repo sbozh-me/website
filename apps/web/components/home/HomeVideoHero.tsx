@@ -131,7 +131,10 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null)
 
   const scrollDown = () => {
-    window.scrollTo({ top: sectionRef.current?.offsetHeight ?? window.innerHeight, behavior: "smooth" })
+    // The fixed header stays on top: land the content just under it
+    const header = document.querySelector<HTMLElement>("[data-site-header]")?.offsetHeight ?? 0
+    const hero = sectionRef.current?.offsetHeight ?? window.innerHeight
+    window.scrollTo({ top: hero - header, behavior: "smooth" })
   }
 
   const scrollTo = (target: "content" | "releases") => {
@@ -149,6 +152,8 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
       className="relative h-svh w-full overflow-hidden bg-background bg-cover bg-center"
       // Dark on a dark video whatever the reader's theme: buttons, Kagurame, his box
       data-theme-island="obsidian-forge"
+      // The site header turns from dark glass to the reader's theme once this is behind it
+      data-home-hero
     >
       {cut && (
         <video
