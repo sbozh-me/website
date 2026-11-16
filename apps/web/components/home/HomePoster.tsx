@@ -88,7 +88,8 @@ export function HomePoster({ src, alt, width, height, href, title = "Commercial 
   return (
     <section
       aria-labelledby="home-poster-title"
-      className="flex w-full max-w-3xl flex-col items-center pt-10 md:pt-16"
+      // Above the series promo below, so the glow spills over its image instead of being cut by it
+      className="relative z-10 flex w-full max-w-3xl flex-col items-center pt-10 md:pt-16"
     >
       {/* Sets the poster apart from the video above; ruled on both sides */}
       <SectionTitle id="home-poster-title" className="mb-10 md:mb-14">
@@ -100,7 +101,7 @@ export function HomePoster({ src, alt, width, height, href, title = "Commercial 
           aria-hidden
           className={cn(
             // Gradient and its travel around the poster: .poster-glow in globals.css
-            "poster-glow absolute -inset-4 -z-10 rounded-[2.5rem] opacity-70 blur-3xl sm:-inset-8",
+            "poster-glow pointer-events-none absolute -inset-4 -z-10 rounded-[2.5rem] opacity-70 blur-3xl sm:-inset-8",
             "transition-opacity duration-500 group-hover:opacity-100"
           )}
         />
