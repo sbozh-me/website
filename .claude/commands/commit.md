@@ -12,9 +12,11 @@ Parameters can be provided in any order:
 - "notes" [version | from..to]: Draft a release note instead of committing (see below)
 - "merge": Squash-deliver the current worktree branch onto main (branch lives on) — ovidius
   composes the delivery message, `.claude/scripts/ovidius-merge.sh` does the git mechanics
-- "push" [patch|minor|major] [ignore]: Declare a version — ovidius composes a short note,
-  `.claude/scripts/ovidius-push.sh` runs `scripts/release.sh` (CHANGELOG + bump), commits
-  `chore(release): vX.Y.Z`, tags it, pushes main + the tag
+- "push" [patch|minor|major] [ignore]: Declare a version — Livius always drafts the release
+  note, Plautus writes Kagurame's scenes for it (committed, so they ship in this version),
+  then ovidius composes a short note and `.claude/scripts/ovidius-push.sh` runs
+  `scripts/release.sh` (CHANGELOG + bump), commits `chore(release): vX.Y.Z`, tags it,
+  pushes main + the tag
 - "deploy": Publish the image for main's declared version — `.claude/scripts/ovidius-deploy.sh`
   builds it on tecraft and pushes to ghcr only if missing; switching the server stays human
 
@@ -40,6 +42,8 @@ Parameter handling:
      from the Livius agent definition, then print the file path and the full file content
    - Do NOT commit, stage, or touch git state in this mode; the file is for pasting into the
      Directus `release_notes` collection
+   - `/commit push` already drafts the note for the version it declares; `notes` is for a
+     redraft, a range, or an older version
 
 4. If "merge" is provided, instruct ovidius to follow the "Delivery & Version Automation"
    flow from its own definition:
@@ -50,16 +54,44 @@ Parameter handling:
      It works even when main is checked out nowhere (it borrows a temporary worktree)
    - The branch is NOT deleted and main is NOT pushed; report the delivery hash
 
-5. If "push" is provided, instruct ovidius to:
-   - Study what main accumulated since the last `vX.Y.Z` tag
-   - Compose a 1–2 sentence plain-English note of what changed for visitors (no commit
-     types, no file names) and write it to a temp file
-   - Call `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
-     (default patch; `--ignore` only when the user says "ignore" = skip the coverage gate)
-   - The script refuses when a newer release tag lives outside main, when origin/main is
-     ahead, or when there is nothing to release — report the refusal verbatim, do not
-     work around it
-   - Report the version, hash, tag and note; suggest `/commit deploy` and `/commit notes`
+5. If "push" is provided, run these steps in order. Every step always runs; nothing here is
+   asked per release. Stop at the first failure and report it verbatim.
+   1. **Guards.** The session must be in the main checkout (`git branch --show-current`
+      is `main`); otherwise stop and say `/commit push` runs from main. Then run
+      `.claude/scripts/ovidius-push.sh --check {patch|minor|major}` (default patch). It
+      refuses a dirty main, origin ahead, a release tag outside main, nothing to release.
+      Report a refusal verbatim, do not work around it. Its last line is the version
+      about to be declared, `vX.Y.Z`.
+   2. **Release note.** Use the **livius-release-chronicler** agent in push mode for
+      `X.Y.Z`: the CHANGELOG has no entry yet, so his source is
+      `git log <last-tag>..main` (the exact subjects `release.sh` will write) and
+      `date_released` is today. He writes `release-notes/X.Y.Z.md` and touches no git
+      state.
+   3. **Kagurame's scenes.** Use the **plautus-kagurame-playwright** agent in release mode:
+      the draft from step 2 is the release (not live yet), then the usual pending feed
+      review, so posts that went live since the last release ship in this image too.
+      He edits the script and the ledger, runs `check`, and opens the graph. A skip is a
+      valid verdict; he still records it.
+   Steps 4 and 5 are one ovidius call (his definition has both).
+   4. **Kagurame commit.** If Plautus changed anything under `apps/web/content/kagurame/`,
+      ovidius commits exactly those files, subject only (e.g.
+      `feat(web): Kagurame recites the <title> release`, or
+      `chore(web): Plautus reviews <items>` when only the ledger changed), `--no-verify`.
+      It lands before the release commit, so the CHANGELOG lists it and the tag ships it.
+   5. **Declare.** Instruct ovidius to compose a 1–2 sentence plain-English note of what
+      changed for visitors (no commit types, no file names; Livius's draft is a good
+      source) into a temp file, then call
+      `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
+      (`--ignore` only when the user says "ignore" = skip the coverage gate).
+   6. **Report** in one block: version, hash, tag, the note; the release-note path and its
+      slug; Plautus's verdicts and the graph path. Then the next steps: `/commit deploy`,
+      `make swv VERSION=X.Y.Z`, and paste `release-notes/X.Y.Z.md` into Directus **with
+      that slug unchanged** (Kagurame's new reply links to it; until the note is live the
+      link 404s, so paste it right after the switch).
+
+   A failed step leaves earlier ones in place: the draft stays in `release-notes/`, and the
+   Kagurame commit stays on local main, unpushed. Running `/commit push` again is safe:
+   Livius redrafts, and Plautus finds the release in his ledger and leaves its scene be.
 
 6. If "deploy" is provided, instruct ovidius to:
    - Call `.claude/scripts/ovidius-deploy.sh` and WAIT for it (the build takes minutes —
@@ -81,7 +113,7 @@ Examples:
 - `/commit notes 1.5.3` - Release note for 1.5.3
 - `/commit notes 1.5.1..1.5.3` - One note covering 1.5.1 through 1.5.3
 - `/commit merge` - Squash-deliver this worktree branch onto main (branch lives on)
-- `/commit push` - Declare a patch version, push main + tag
+- `/commit push` - Release note, Kagurame's scenes, then declare a patch version, push main + tag
 - `/commit push minor` - Declare a minor version (coverage gate runs)
 - `/commit push minor ignore` - Same, skipping the coverage gate
 - `/commit deploy` - Build & push the web image to ghcr if main's version has none yet

@@ -50,10 +50,14 @@ more than 4 replies. Lines are measured as they read: over 160 warns, over 200 f
 
 ## Flow
 
-1. A post goes live, or Livius drafts a release note (his report suggests `/plautus`).
-2. `/plautus` → the agent runs `pending`, reads each live page, writes or skips, runs `check`,
-   `mark`s every verdict, and reports the diff and `graph --open`.
-3. Ovidius commits the script and the ledger; the next deploy ships the lines.
+1. **Every release** (`/commit push`): Livius drafts the note, Plautus reviews it from the draft
+   (the page isn't live yet; the guid comes from the draft's slug) plus whatever is pending in
+   the feed, Ovidius commits the script and the ledger, and only then is the version declared.
+   The release's own scene ships in its image, and its link works once the note is pasted
+   into Directus with that slug.
+2. **Between releases**: `/plautus` → the agent runs `pending`, reads each live page, writes or
+   skips, runs `check`, `mark`s every verdict, and reports the diff and `graph --open`. Ovidius
+   commits; the next release ships the lines.
 
 `/plautus graph` and `/plautus check` run the CLI without the agent.
 

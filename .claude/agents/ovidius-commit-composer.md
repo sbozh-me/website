@@ -274,16 +274,24 @@ delete it). `main` is not pushed — that is `/commit push`.
 
 ### /commit push — declare a version
 
-1. Study what `main` holds since the newest `vX.Y.Z` tag (`git log vX.Y.Z..main`).
-2. Compose a 1–2 sentence plain-English note of what changed for a visitor — no
-   commit types, no file names, no internals. If the range is purely internal, say so
-   simply. This goes into the release commit body and the tag; the CHANGELOG list is
-   appended by the script. (The public Directus release note is still Livius's job —
-   `/commit notes`.) Write it to a temp file.
-3. Call `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
-   (patch unless the user said otherwise; `--ignore` only when asked). It runs
-   `scripts/release.sh`, commits `chore(release): vX.Y.Z`, tags, and pushes main + tag.
-4. Report version, hash, tag and the note; point at `/commit deploy` and `/commit notes`.
+By the time you are called, `/commit push` has already run the guards
+(`ovidius-push.sh --check`), Livius has drafted `release-notes/<version>.md`, and
+Plautus has written Kagurame's scenes. You get two jobs, in this order:
+
+1. **Kagurame commit** (only if `apps/web/content/kagurame/` changed): stage exactly those
+   files and commit them, subject only, `--no-verify` — e.g.
+   `feat(web): Kagurame recites the <title> release`, or `chore(web): Plautus reviews
+   <items>` when only the ledger changed. Nothing else goes into this commit.
+2. **Declare:**
+   1. Study what `main` holds since the newest `vX.Y.Z` tag (`git log vX.Y.Z..main`).
+   2. Compose a 1–2 sentence plain-English note of what changed for a visitor — no
+      commit types, no file names, no internals. If the range is purely internal, say so
+      simply. Livius's draft is a good source. This goes into the release commit body and
+      the tag; the CHANGELOG list is appended by the script. Write it to a temp file.
+   3. Call `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
+      (patch unless the user said otherwise; `--ignore` only when asked). It runs
+      `scripts/release.sh`, commits `chore(release): vX.Y.Z`, tags, and pushes main + tag.
+   4. Report the Kagurame commit hash (if any), version, hash, tag and the note.
 
 ### /commit deploy — publish the image
 

@@ -13,17 +13,29 @@
 # Building the image is /commit deploy; switching the server stays human.
 #
 # Usage: ovidius-push.sh {patch|minor|major} <note-file> [--ignore]
+#        ovidius-push.sh --check {patch|minor|major}
 #   --ignore  skip the minor/major coverage gate (= make minor-ignore)
+#   --check   run the guards only and print the version that would be declared
+#             (last line: vX.Y.Z). /commit push calls it first, so Livius and
+#             Plautus write for the right version before anything is committed.
 set -euo pipefail
 
-USAGE="usage: ovidius-push.sh {patch|minor|major} <note-file> [--ignore]"
+USAGE="usage: ovidius-push.sh {patch|minor|major} <note-file> [--ignore] | --check {patch|minor|major}"
+CHECK=
+if [[ "${1:-}" == "--check" ]]; then
+  CHECK=1
+  shift
+fi
 TYPE=${1:?$USAGE}
-NOTE_SRC=${2:?$USAGE}
-IGNORE=${3:-}
 [[ "$TYPE" =~ ^(patch|minor|major)$ ]] || { echo "$USAGE" >&2; exit 1; }
-[[ -z "$IGNORE" || "$IGNORE" == "--ignore" ]] || { echo "$USAGE" >&2; exit 1; }
-NOTE_PATH=$(cd "$(dirname "$NOTE_SRC")" && pwd)/$(basename "$NOTE_SRC")
-[[ -s "$NOTE_PATH" ]] || { echo "release note file '$NOTE_SRC' is missing or empty" >&2; exit 1; }
+IGNORE=
+if [[ -z "$CHECK" ]]; then
+  NOTE_SRC=${2:?$USAGE}
+  IGNORE=${3:-}
+  [[ -z "$IGNORE" || "$IGNORE" == "--ignore" ]] || { echo "$USAGE" >&2; exit 1; }
+  NOTE_PATH=$(cd "$(dirname "$NOTE_SRC")" && pwd)/$(basename "$NOTE_SRC")
+  [[ -s "$NOTE_PATH" ]] || { echo "release note file '$NOTE_SRC' is missing or empty" >&2; exit 1; }
+fi
 
 # shellcheck source=ovidius-lib.sh
 source "$(dirname "$0")/ovidius-lib.sh"
@@ -64,6 +76,11 @@ esac
 if git -C "$MAIN" rev-parse -q --verify "refs/tags/v$NEW" >/dev/null; then
   echo "tag v$NEW already exists — refusing to redeclare" >&2
   exit 1
+fi
+if [[ -n "$CHECK" ]]; then
+  echo "ready: v$NEW ($TYPE, was v$CURRENT), $(git -C "$MAIN" rev-list --count "${LATEST:+$LATEST..}main") commits since ${LATEST:-the start}"
+  echo "v$NEW"
+  exit 0
 fi
 echo "declaring v$NEW ($TYPE, was v$CURRENT)"
 
@@ -110,4 +127,4 @@ if ! ovidius_git_remote "$MAIN" push origin main "v$NEW"; then
 fi
 
 echo "declared v$NEW ($TYPE, was v$CURRENT) @ $(git -C "$MAIN" rev-parse --short HEAD) · tagged v$NEW · pushed main + v$NEW"
-echo "next: /commit deploy (image) · /commit notes $NEW (Directus release note)"
+echo "next: /commit deploy (image) · make swv VERSION=$NEW · paste release-notes/$NEW.md into Directus"

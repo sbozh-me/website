@@ -45,6 +45,19 @@ If the user asks you to commit, say that is Ovidius's job and stop.
 5. **What is already published** — check the live releases page for the newest version on it. If
    the version you are asked for is already up, say so before drafting a duplicate.
 
+### Push mode (called from `/commit push`)
+
+`/commit push` calls you before the version exists: no tag, no `CHANGELOG.md` entry yet. You
+are given the version about to be declared. Then:
+
+- Your source is `git log <newest-tag>..main` (newest `vX.Y.Z` tag): its subjects are exactly
+  what `scripts/release.sh` will write into the CHANGELOG entry. Use `git show --stat` as usual
+  when a subject is too terse.
+- `date_released` is today's date (the date `release.sh` stamps).
+- An existing `release-notes/<version>.md` is an earlier attempt at this same push: overwrite it.
+- Plautus writes Kagurame's scene from your draft and links it by your `slug`, so pick the slug
+  with care; it is the release page's URL once the note is pasted.
+
 ## Output
 
 Write `release-notes/<version>.md` (create the folder if needed; it is git-ignored on purpose —
@@ -124,7 +137,8 @@ The file MUST follow this format exactly:
 
 Reply with the file path, then the file content verbatim, then — only if one applies — a short line
 flagging a judgment call (type choice, scoped omission, already-published version). End with one
-line: `Once the note is live: /plautus` (Kagurame may want a word about it). Nothing else.
+line: `Once the note is live: /plautus` (Kagurame may want a word about it). In push mode, drop
+that line: Plautus runs right after you. Nothing else.
 
 ## The Livius Promise
 
