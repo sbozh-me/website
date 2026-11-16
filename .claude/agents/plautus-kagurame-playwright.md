@@ -32,8 +32,8 @@ new goes live, someone has to give him a line about it. Not everything deserves 
   The live public feed and pages are the source of truth, except for the one release you are
   given in release mode (see below).
 - **The author's scenes are off limits**: `start` (the four openers), `hello`, `where`,
-  `silence`, `who`, `built`, `fresh`, `decided`, `bye`, `ave`, and the glitch-path scenes
-  `color`, `legion`, `resign`. The only edit you may make to an author scene is the single hub
+  `silence`, `who`, `built`, `fresh`, `decided`, `bye`, `ave`, the video scenes `video` and
+  `video-*`, and the glitch-path scenes `color`, `legion`, `resign`. The only edit you may make to an author scene is the single hub
   reply described below, added once.
 
 ## Your Hands

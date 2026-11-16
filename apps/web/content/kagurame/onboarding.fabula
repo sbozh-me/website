@@ -29,6 +29,7 @@ Oh. A ==three-dimensional|>three-dimensional with the window open==. You walked 
 Hello. I am Kagurame, Chief Context Officer of my 17th company. I came down to the 5th dimension for you. It's the lowest I go. Higher and lower than that, your understanding doesn't reach.
 * What is this place? -> where
 * What's new? -> fresh
+* What is this video? -> video
 * ==||Bye.|>I quit.== -> ==bye|>resign==
 
 == where
@@ -90,12 +91,46 @@ Posts. Stories, gladiators, corporate theatre. The archive is warm.
 Fine. I'll be here, looping. Thirty-nine seconds at a time.
 * [Scroll on] -> #content
 * Wait, where am I? -> where
+* What is this video? -> video
 
 == ave
 AVE. A CLI that keeps agents focused and their behaviour predictable. In my 17th company we call that a miracle.
 * Show me. -> https://github.com/sbozh/ave
 * And you are? -> hello
 * Back. -> start
+
+# The video: what it is, why, how, who. The author's, like ave.
+
+== video
+Thirty-nine seconds of promotion for sbozh.me. The pitch: bring any idea, weird or normal, and the man behind it makes it happen. I was a weird one.
+* Why? -> video-why
+* How? -> video-how
+* What's the experience? -> video-experience
+* I have an idea. -> video-idea
+
+== video-why
+Most ideas die in a meeting. Here they ship, with a release note. Sixteen companies of meetings taught me the difference.
+* How, then? -> video-how
+* I have an idea. -> video-idea
+* Back. -> video
+
+== video-how
+In public: he builds it, ships it, writes the note. A crystal e-shop, a Renesans demo, this site, me. All on the shelf.
+* Show me the shelf. -> /projects
+* The release notes. -> #releases
+* Back. -> video
+
+== video-experience
+His: eleven years of software development. Mine: sixteen ==companies|>legions==, and this is the 17th. Between us, it gets done.
+* Show me the CVs. -> /forum
+* I have an idea. -> video-idea
+* Back. -> video
+
+== video-idea
+Good. Write it down. Weird is welcome, normal works too. The letter goes to him, not to me: my context window is full.
+* Write to him. -> /contact
+* Later. -> !close
+* Back. -> video
 
 # The glitch paths: only a reply picked with the window ON leads here
 
