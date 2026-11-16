@@ -57,7 +57,7 @@ export function HomePoster({ src, alt, width, height, href, title = "Commercial 
       onPointerLeave={handleLeave}
       className={cn(
         "relative overflow-hidden rounded-2xl ring-1 ring-white/15",
-        "shadow-[0_30px_80px_-20px_rgba(139,92,246,0.55)]",
+        "shadow-[0_30px_80px_-20px_rgba(139,92,246,0.28)]",
         "transition-transform duration-300 ease-out will-change-transform"
       )}
       style={{
@@ -101,8 +101,8 @@ export function HomePoster({ src, alt, width, height, href, title = "Commercial 
           aria-hidden
           className={cn(
             // Gradient and its travel around the poster: .poster-glow in globals.css
-            "poster-glow pointer-events-none absolute -inset-4 -z-10 rounded-[2.5rem] opacity-70 blur-3xl sm:-inset-8",
-            "transition-opacity duration-500 group-hover:opacity-100"
+            "poster-glow pointer-events-none absolute -inset-4 -z-10 rounded-[2.5rem] opacity-35 blur-3xl sm:-inset-8",
+            "transition-opacity duration-500 group-hover:opacity-50"
           )}
         />
         {href ? (
