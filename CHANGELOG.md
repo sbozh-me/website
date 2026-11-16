@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.1] - 2026-11-16
+
+### Changes
+
+- fix(web): poster glow spills over the series promo instead of being cut by it ([ce77842](https://github.com/sbozh-me/website/commit/ce77842f0f71794a43e4ecdd88e01259e59af01c))
+- fix(web): poster glows at half strength ([420e106](https://github.com/sbozh-me/website/commit/420e1066644e260b7257a161004d0fb214d2a734))
+- docs(roadmap): open 1.12.0 - Current Focus ([6790ebd](https://github.com/sbozh-me/website/commit/6790ebd2b115bc227e38b95b50b4008d21b0908f))
+- feat(web): project versions come from Directus for sister projects ([2d1b21a](https://github.com/sbozh-me/website/commit/2d1b21a4f9c1ffaa5f11a8356525dd3af075b09f))
+- feat(web): My current focus on the main page with the Renesans Inter card ([5db07e8](https://github.com/sbozh-me/website/commit/5db07e876b044b0b0b02294bf3da850f64928ec5))
+- feat(web): Personal startup in the header leads home ([09062ba](https://github.com/sbozh-me/website/commit/09062ba6806fb4c46d528636fb4d2cdd2e49e7ae))
+- chore(release): post the note at push, go live and mail at deploy ([eefbaf8](https://github.com/sbozh-me/website/commit/eefbaf8c31f6f5636a9ac7f8f3e29745875c5a04))
+- feat(web): Kagurame recites the My current focus release ([7fe13f8](https://github.com/sbozh-me/website/commit/7fe13f8efd9763031247bfe0849ba24262a9a887))
+
+
 ## [1.11.0] - 2026-11-16
 
 ### Changes
