@@ -15,12 +15,19 @@
 #
 # Why not `make push-web-image`: buildx pushes with the Mac's ghcr credentials,
 # which ghcr denies. tecraft's Docker has a working ghcr login, so the image is
-# built ON tecraft (docker --host ssh://tecraft) and pushed from there; the
-# manifest check runs there too, for the same reason.
+# built ON tecraft and pushed from there; the manifest check runs there too,
+# for the same reason.
 #
-# The build context is a temporary worktree at tag vX.Y.Z, plus
-# apps/web/.env.local copied from the primary checkout — without it `next
-# build` cannot reach Directus and Directus-backed pages prerender empty.
+# The build must not depend on this machine's connection. On 2026-11-16 four
+# builds in a row died on it: sustained uploads stalled, so the 77 MB context
+# never arrived, neither through `docker --host ssh://tecraft build` (BuildKit
+# gives up when its 15-second session health check goes unanswered) nor as a
+# plain tarball over ssh. So tecraft takes the source from origin itself (the
+# tag /commit push pushed, checked against the local tag's commit), the build
+# runs there detached from this ssh session, and this script only polls for
+# its result. The one thing sent from here is apps/web/.env.local from the
+# primary checkout — without it `next build` cannot reach Directus and
+# Directus-backed pages prerender empty.
 #
 # Usage: ovidius-deploy.sh [--no-mail]
 #   --no-mail  leave this release's note unmailed
@@ -53,6 +60,9 @@ ROOT=$(cd "$SCRIPTS/../.." && pwd)
 # shellcheck source=ovidius-lib.sh
 source "$SCRIPTS/ovidius-lib.sh"
 
+# A build takes minutes: don't let this Mac idle-sleep under it.
+if command -v caffeinate >/dev/null; then caffeinate -i -w $$ & fi
+
 VERSION=$(git show main:apps/web/package.json | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0,'utf8')).version)")
 TAG="v$VERSION"
 if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
@@ -71,7 +81,13 @@ RUNNING=$(running_image)
 echo "main declares $VERSION · production runs ${RUNNING:-unknown}"
 
 # --- 1. image ---------------------------------------------------------------
-if ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "docker manifest inspect $IMAGE:$VERSION >/dev/null 2>&1"; then
+HAS_IMAGE=0
+ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "docker manifest inspect $IMAGE:$VERSION >/dev/null 2>&1" || HAS_IMAGE=$?
+if ((HAS_IMAGE == 255)); then
+  echo "cannot reach $BUILD_HOST over ssh — nothing was built or switched; run /commit deploy again" >&2
+  exit 1
+fi
+if ((HAS_IMAGE == 0)); then
   echo "ghcr is current: $IMAGE:$VERSION already exists — nothing to build"
 else
   ENV_LOCAL="$PRIMARY/apps/web/.env.local"
@@ -96,16 +112,60 @@ else
     exit 1
   fi
 
-  ovidius_tmp_tree "$TAG" --detach
-  TREE=$TMP_TREE
-  cp "$ENV_LOCAL" "$TREE/apps/web/.env.local"
+  # One build at a time: tecraft has 4 GB and runs tecraft.cz. A build left
+  # running by an interrupted deploy finishes on its own and pushes the image.
+  if ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "pgrep -f '[d]ocker build .*$IMAGE:' >/dev/null"; then
+    echo "a build of $IMAGE is already running on $BUILD_HOST — wait for it, then run /commit deploy again" >&2
+    exit 1
+  fi
 
-  echo "ghcr is outdated: building $IMAGE:$VERSION from $TAG on $BUILD_HOST (takes minutes)..."
-  docker --host "ssh://$BUILD_HOST" build --platform linux/amd64 \
-    -t "$IMAGE:$VERSION" -t "$IMAGE:latest" -f "$TREE/apps/web/Dockerfile" "$TREE"
-  ssh -n "$BUILD_HOST" "docker push $IMAGE:$VERSION && docker push $IMAGE:latest"
+  ORIGIN=$(git -C "$ROOT" remote get-url origin)
+  COMMIT=$(git -C "$ROOT" rev-parse "$TAG^{commit}")
+  CTX=$(ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "mktemp -d /tmp/website-build.XXXXXX")
+  if [[ "$CTX" != /tmp/website-build.* ]]; then
+    echo "could not make a build directory on $BUILD_HOST" >&2
+    exit 1
+  fi
+  # The directory holds .env.local: it goes away however this script ends.
+  drop_ctx() { ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "rm -rf '$CTX'" || true; }
+  trap 'drop_ctx; ovidius_cleanup' EXIT
+
+  echo "ghcr is outdated: $BUILD_HOST fetches $TAG from origin and builds $IMAGE:$VERSION (takes minutes)..."
+  FETCHED=$(ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "GIT_TERMINAL_PROMPT=0 git -c advice.detachedHead=false clone -q --depth 1 --branch $TAG '$ORIGIN' '$CTX/src' && git -C '$CTX/src' rev-parse HEAD") || {
+    echo "$BUILD_HOST could not fetch $TAG from $ORIGIN" >&2
+    exit 1
+  }
+  if [[ "$FETCHED" != "$COMMIT" ]]; then
+    echo "origin's $TAG is $FETCHED but the local tag is $COMMIT — not building a version that differs from the declared one" >&2
+    exit 1
+  fi
+  ssh -o ConnectTimeout=10 "$BUILD_HOST" "cat > '$CTX/src/apps/web/.env.local'" <"$ENV_LOCAL"
+
+  # Detached: a dropped connection here must not take the build down with it.
+  ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "cd '$CTX/src' && nohup sh -c 'docker build --platform linux/amd64 \
+    -t $IMAGE:$VERSION -t $IMAGE:latest -f apps/web/Dockerfile . \
+    && docker push $IMAGE:$VERSION && docker push $IMAGE:latest; echo \$? >../exit' >../log 2>&1 </dev/null &"
+
+  # Up to 30 minutes; a poll that doesn't get through is simply tried again.
+  BUILT=
+  for _ in $(seq 1 180); do
+    sleep 10
+    BUILT=$(ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "cat '$CTX/exit' 2>/dev/null" 2>/dev/null || true)
+    [[ -z "$BUILT" ]] || break
+  done
+  ssh -n -o ConnectTimeout=10 "$BUILD_HOST" "tail -n 12 '$CTX/log'" || true
+  if [[ -z "$BUILT" ]]; then
+    echo "the build on $BUILD_HOST did not finish within 30 minutes — nothing was switched" >&2
+    exit 1
+  fi
+  if [[ "$BUILT" != 0 ]]; then
+    echo "the build on $BUILD_HOST failed (exit $BUILT, its last lines are above) — nothing was switched" >&2
+    exit 1
+  fi
   # Don't leave the image behind on tecraft's disk.
   ssh -n "$BUILD_HOST" "docker rmi $IMAGE:$VERSION $IMAGE:latest >/dev/null" || true
+  drop_ctx
+  trap ovidius_cleanup EXIT
   echo "pushed $IMAGE:$VERSION (and :latest)"
 fi
 
