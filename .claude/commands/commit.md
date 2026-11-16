@@ -91,7 +91,8 @@ Parameter handling:
 
    A failed step leaves earlier ones in place: the draft stays in `release-notes/`, and the
    Kagurame commit stays on local main, unpushed. Running `/commit push` again is safe:
-   Livius redrafts, and Plautus finds the release in his ledger and leaves its scene be.
+   Livius redrafts but keeps the draft's slug (Kagurame already links to it), and Plautus
+   finds the release in his ledger and leaves its scene be.
 
 6. If "deploy" is provided, instruct ovidius to:
    - Call `.claude/scripts/ovidius-deploy.sh` and WAIT for it (the build takes minutes —

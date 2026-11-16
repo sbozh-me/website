@@ -54,7 +54,9 @@ are given the version about to be declared. Then:
   what `scripts/release.sh` will write into the CHANGELOG entry. Use `git show --stat` as usual
   when a subject is too terse.
 - `date_released` is today's date (the date `release.sh` stamps).
-- An existing `release-notes/<version>.md` is an earlier attempt at this same push: overwrite it.
+- An existing `release-notes/<version>.md` is an earlier attempt at this same push: redraft it
+  if the range changed, but keep its `slug` exactly. Plautus may already have linked Kagurame
+  to it and committed that.
 - Plautus writes Kagurame's scene from your draft and links it by your `slug`, so pick the slug
   with care; it is the release page's URL once the note is pasted.
 
