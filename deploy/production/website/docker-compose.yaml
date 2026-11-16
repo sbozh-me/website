@@ -125,8 +125,10 @@ services:
       EMAIL_SMTP_SECURE: ${EMAIL_SMTP_SECURE:-false}
 
       # Announcement flows (deploy/directus/flows) ping the web app over the
-      # internal network; only these env vars are readable from flows
-      ANNOUNCE_URL: http://web:3000/api/announce
+      # internal network; only these env vars are readable from flows.
+      # By container name, not `web`: renbg's web container joins this network
+      # too and also answers to `web`, so that name hits either site.
+      ANNOUNCE_URL: http://sbozh-me-production-web-1:3000/api/announce
       ANNOUNCE_SECRET: ${ANNOUNCE_SECRET}
       FLOWS_ENV_ALLOW_LIST: ANNOUNCE_URL,ANNOUNCE_SECRET
 
