@@ -10,6 +10,7 @@ import {
 } from "@/components/home";
 import { getAvatars, toAuthor } from "@/lib/avatars";
 import { getPromotedSeries } from "@/lib/blog/promoted-series";
+import { getProjectWithVersion } from "@/lib/projects/versions";
 import { getPostsByAuthors } from "@/actions/blog-posts";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "@/components/releases/ReleaseTimelineWithLoadMore";
@@ -46,6 +47,9 @@ const POSTER = {
   width: 1280,
   height: 1920,
 };
+
+// Project shown under the promoted series in "My current focus"
+const FOCUS_PROJECT = "renesans-inter";
 
 async function getCurrentVersion(): Promise<string> {
   try {
@@ -105,7 +109,7 @@ async function getReleases(): Promise<ReleasesResult> {
 
 export default async function Home() {
   // Releases in parallel with avatars, whose first one picks the initial posts
-  const [releasesResult, [authors, postsResult], promoted] = await Promise.all([
+  const [releasesResult, [authors, postsResult], promoted, focusProject] = await Promise.all([
     getReleases(),
     getAvatars().then(async (avatars) => {
       const authors = avatars.map(toAuthor);
@@ -115,6 +119,7 @@ export default async function Home() {
       ] as const;
     }),
     getPromotedSeries(),
+    getProjectWithVersion(FOCUS_PROJECT),
   ]);
 
   const initialPosts: PostListItem[] = postsResult.success
@@ -138,7 +143,7 @@ export default async function Home() {
       <HomeVideoHero script={kagurame} />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
         <HomePoster {...POSTER} />
-        <SeriesPromo {...promoted} />
+        <SeriesPromo {...promoted} project={focusProject} />
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
         {releasesResult.success ? (

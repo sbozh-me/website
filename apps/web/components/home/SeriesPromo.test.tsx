@@ -2,7 +2,20 @@ import { render, screen, within } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
 import type { PostListItem, Series } from "@sbozh/blog/types"
 
+import type { Project } from "@/lib/projects/types"
+
 import { SeriesPromo } from "./SeriesPromo"
+
+const project: Project = {
+  slug: "renesans-inter",
+  title: "Renesans Inter",
+  tagline: "A calmer front door",
+  status: "coming-soon",
+  version: "0.2.0",
+  heroImage: { src: "/hero.png", headerSrc: "/header.png", alt: "Renesans wordmark" },
+  meta: [],
+  tabs: [],
+}
 
 const makePost = (slug: string): PostListItem => ({
   id: slug,
@@ -77,8 +90,43 @@ describe("SeriesPromo", () => {
   it("shows the smaller cards alone when there is no big one", () => {
     render(<SeriesPromo right={makeSeries("right")} />)
 
-    expect(screen.queryByRole("heading", { level: 2 })).not.toBeInTheDocument()
+    // The only h2 left is the section title
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent("My current focus")
     expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent("Title right")
+  })
+
+  it("names the section after its title", () => {
+    render(<SeriesPromo big={makeSeries("big")} title="Coming Soon" />)
+
+    expect(screen.getByRole("region", { name: "Coming Soon" })).toBeInTheDocument()
+  })
+
+  it("shows the project in focus under the series, linking to its page", () => {
+    render(<SeriesPromo left={makeSeries("left")} right={makeSeries("right")} project={project} />)
+
+    const links = screen.getAllByRole("link")
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "/blog/series/left",
+      "/blog/series/right",
+      "/projects/renesans-inter",
+    ])
+
+    const card = within(links[2])
+    expect(card.getByRole("heading", { level: 3 })).toHaveTextContent("Renesans Inter")
+    expect(card.getByText("A calmer front door")).toBeInTheDocument()
+    expect(card.getByText("v0.2.0")).toBeInTheDocument()
+    expect(card.getByText("Coming Soon")).toBeInTheDocument()
+    // The wide header image, not the card one that carries its own text
+    expect(card.getByAltText("Renesans wordmark")).toHaveAttribute("src", expect.stringContaining("header.png"))
+  })
+
+  it("shows the project alone when no series is promoted", () => {
+    render(<SeriesPromo project={{ ...project, version: undefined, heroImage: { src: "/hero.png", alt: "Hero" } }} />)
+
+    expect(screen.getByRole("region", { name: "My current focus" })).toBeInTheDocument()
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/projects/renesans-inter")
+    expect(screen.getByAltText("Hero")).toHaveAttribute("src", expect.stringContaining("hero.png"))
+    expect(screen.queryByText(/^v/)).not.toBeInTheDocument()
   })
 
   it("falls back to the placeholder, not a post image, without a series Hero", () => {

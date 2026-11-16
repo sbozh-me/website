@@ -230,7 +230,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 
 ## 1.12.0 - Current Focus
 
-- Main page "My current focus": the promoted series under that heading, with the project in focus (Renesans Inter) as one wide card under them
+- ~~Main page "My current focus": the promoted series under that heading, with the project in focus (Renesans Inter) as one wide card under them~~
 - ~~Project version from Directus (`projects.version`) for sister projects; sbozh.me keeps its own~~
 
 ## 2.x.x - Later
