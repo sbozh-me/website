@@ -249,7 +249,7 @@ describe("HeroDialogue with the window ON", () => {
     render(<Harness />)
     fireEvent.keyDown(window, { key: "1" }) // Hello.
     openWindow()
-    fireEvent.keyDown(window, { key: "3" }) // I quit.
+    fireEvent.keyDown(window, { key: "4" }) // I quit.
     expect(screen.getByRole("dialog")).toHaveTextContent("I resigned sixteen times")
   })
 
