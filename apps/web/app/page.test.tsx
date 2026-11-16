@@ -64,6 +64,7 @@ vi.mock("@/components/home", () => ({
       <p>Software Developer</p>
     </div>
   ),
+  HomePoster: ({ alt }: any) => <img data-testid="home-poster" alt={alt} />,
   SeriesPromo: ({ big }: any) => (big ? <aside data-testid="series-promo">{big.series.title}</aside> : null),
 }));
 

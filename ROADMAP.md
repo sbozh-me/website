@@ -230,6 +230,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Series status badge (planned / ongoing / finished) on the series page~~
 - ~~Planned post status badge: a post with a future publish time is listed with a Planned badge and shows a teaser until then~~
 - ~~Promoted series on the main page, above the avatar hero: one big, two under it (Directus `promotion` slot: big / left / right)~~
+- ~~Main page announcement poster between the video hero and the promoted series~~
 
 ## 2.x.x - Later
 

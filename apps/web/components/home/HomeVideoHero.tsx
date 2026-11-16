@@ -226,6 +226,9 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
           <ChevronDown />
         </Button>
       </div>
+      {/* Amethyst-to-gold light travelling along the video's bottom edge: .hero-glow in globals.css */}
+      <div aria-hidden className="hero-glow pointer-events-none absolute inset-x-0 bottom-0 h-28 opacity-[0.18] blur-2xl" />
+      <div aria-hidden className="hero-glow-line pointer-events-none absolute inset-x-0 bottom-0 h-0.5 opacity-30" />
     </section>
   )
 }

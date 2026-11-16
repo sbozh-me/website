@@ -6,6 +6,7 @@ import { AuthorCarousel } from "./AuthorCarousel"
 import { BlogPostGrid } from "./BlogPostGrid"
 import type { Author } from "@/types/author"
 import { getPostsByAuthors } from "@/actions/blog-posts"
+import { Spark } from "@/components/Spark"
 
 const DEBOUNCE_DELAY = 300
 
@@ -64,6 +65,11 @@ export function HomeContent({ authors, initialPosts }: HomeContentProps) {
   return (
     <>
       <div className="group flex min-h-[80vh] flex-col items-center justify-center py-16 max-sm:w-full">
+        {/* Centred with the carousel, so it stays close to the avatar on any screen height */}
+        <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight md:mb-10">
+          Avatars of sbozh.me
+          <Spark />
+        </h2>
         <AuthorCarousel authors={authors} onAuthorChange={handleAuthorChange} />
       </div>
 

@@ -2,7 +2,12 @@ import type { ReactNode } from "react";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import type { PostListItem } from "@sbozh/blog/types";
-import { HomeContent, HomeVideoHero, SeriesPromo } from "@/components/home";
+import {
+  HomeContent,
+  HomePoster,
+  HomeVideoHero,
+  SeriesPromo,
+} from "@/components/home";
 import { getAvatars, toAuthor } from "@/lib/avatars";
 import { getPromotedSeries } from "@/lib/blog/promoted-series";
 import { getPostsByAuthors } from "@/actions/blog-posts";
@@ -32,6 +37,15 @@ type ReleasesResult =
   | { success: false; error: string; status?: number };
 
 const INITIAL_LIMIT = 3;
+
+// Announcement poster between the video hero and the promoted series, leading to its post
+const POSTER = {
+  href: "/blog/gta-is-near",
+  src: "/images/home/gta-is-near-poster.png",
+  alt: "DPSM, post I of III: GTA is near. 17 November 2026. I grant you a holiday. #SEMSDAY, by decree of the 17th Company. Admit all.",
+  width: 1280,
+  height: 1920,
+};
 
 async function getCurrentVersion(): Promise<string> {
   try {
@@ -123,6 +137,7 @@ export default async function Home() {
       {/* Full-bleed, outside main's padding; runs under the translucent home header */}
       <HomeVideoHero script={kagurame} />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
+        <HomePoster {...POSTER} />
         <SeriesPromo {...promoted} />
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
