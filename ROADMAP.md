@@ -208,13 +208,9 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Post publish time stored as a timestamp~~
 - ~~Feed topic filter~~
 
-## 1.11.0 - Links & Cookies
+## ~~1.11.0 - Links & Cookies~~ ✅
 
-- Internal link click handling
 - ~~Link hover previews from Directus~~
-- Cookies rework: remove the marketing option
-- Track blog post reading time
-- Read/unread state for blog posts, release notes and projects
 - ~~Locked (paid) blog posts: Directus `is_locked` toggle, static password unlock until accounts exist~~
 - ~~Post video fullscreen: button, double-click / double-tap~~
 - ~~Post video sound toggle (unmute button)~~
