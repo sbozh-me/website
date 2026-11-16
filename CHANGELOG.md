@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.0] - 2026-11-16
+
+### Changes
+
+- fix(deploy): reach the announcer by container name, not the shared web alias ([0665081](https://github.com/sbozh-me/website/commit/0665081417bec0c4b5ea30bc81b0d4a88f96e457))
+- chore(release): draft note and Kagurame scenes on every push ([9c77842](https://github.com/sbozh-me/website/commit/9c77842db0200fa661ec163c40ec7e5bf799fe5e))
+- feat(web): Kagurame explains the home video ([47c3125](https://github.com/sbozh-me/website/commit/47c3125eb2c28ffcb3519b15568cf7db9dfee044))
+- feat(web): add GTA is near poster to the home page ([69d5fac](https://github.com/sbozh-me/website/commit/69d5fac7c323da7e95993010081b2b7b52ce7578))
+- docs(roadmap): close 1.11.0 without its unfinished items ([8590e55](https://github.com/sbozh-me/website/commit/8590e553b08f85b24d8e66e3f6c5c63eb004ddc6))
+- feat(web): Kagurame recites the GTA is near poster and post ([4216ef7](https://github.com/sbozh-me/website/commit/4216ef7bbc2a24bfa692f278bcd69fa6949ecc7d))
+- test(web): press 4 for I quit now that hello asks about the video ([8bf01d1](https://github.com/sbozh-me/website/commit/8bf01d1dbf6494b76f6db91ea6d6ad329390af1f))
+- chore(release): keep the note's slug when a push is re-run ([ade0ded](https://github.com/sbozh-me/website/commit/ade0ded63407ac0b83e420e0457d5c957379f255))
+
+
 ## [1.10.13] - 2026-11-15
 
 ### Changes
