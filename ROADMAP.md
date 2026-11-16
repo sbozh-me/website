@@ -228,6 +228,11 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Promoted series on the main page, above the avatar hero: one big, two under it (Directus `promotion` slot: big / left / right)~~
 - ~~Main page announcement poster between the video hero and the promoted series~~
 
+## 1.12.0 - Current Focus
+
+- Main page "My current focus": the promoted series under that heading, with the project in focus (Renesans Inter) as one wide card under them
+- Project version from Directus (`projects.version`) for sister projects; sbozh.me keeps its own
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line
