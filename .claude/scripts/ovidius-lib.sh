@@ -55,6 +55,32 @@ ovidius_main_checkout() {
   fi
 }
 
+# /commit push only. A version is declared in the main checkout itself, by a
+# session that sits on main there: never from a worktree, borrowed or not.
+# Sets MAIN. Untracked files don't block (the release stages its own files by
+# name); a modified or staged tracked file does, since it may be another
+# session's half-done work and the coverage gate would test it.
+ovidius_release_checkout() {
+  local here branch dirty
+  here=$(git rev-parse --show-toplevel)
+  branch=$(git -C "$here" rev-parse --abbrev-ref HEAD)
+  if [[ "$branch" != "main" ]]; then
+    echo "/commit push runs only on main, and this session is on '$branch' — deliver the branch with /commit merge, then push from the main checkout" >&2
+    exit 1
+  fi
+  if [[ ! "$here" -ef "$PRIMARY" ]]; then
+    echo "/commit push runs only in the main checkout ($PRIMARY), never in a worktree ($here)" >&2
+    exit 1
+  fi
+  dirty=$(git -C "$here" status --porcelain --untracked-files=no)
+  if [[ -n "$dirty" ]]; then
+    echo "main has uncommitted changes to tracked files — commit them first (another session may be mid-work):" >&2
+    sed 's/^/  /' <<<"$dirty" >&2
+    exit 1
+  fi
+  MAIN=$here
+}
+
 # Talk to origin through gh's credential helper: plain HTTPS via osxkeychain
 # fails from a non-interactive shell. Usage: ovidius_git_remote <dir> fetch|push ...
 ovidius_git_remote() {

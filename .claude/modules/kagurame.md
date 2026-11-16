@@ -16,7 +16,7 @@ graph of scenes in a `.fabula` file, checked by a CLI and extended by the Plautu
 | `lib/kagurame/script.tsx` | Server loader: reads, validates, compiles glitch lines; broken script → dialogue hidden |
 | `lib/kagurame/onboarding.test.ts` | Validates the real script against the real routes (CI catches a broken graph) |
 | `components/home/HeroDialogue.tsx` | The box: typing, replies, keys 1–4, Escape → "Ave ✳" |
-| `.claude/scripts/plautus.ts` | CLI: `check`, `graph`, `pending`, `mark` |
+| `.claude/scripts/plautus.ts` | CLI: `check`, `graph`, `pending`, `mark`, `released` |
 | `.claude/agents/plautus-kagurame-playwright.md` | The agent that writes scenes about new posts and releases |
 
 ## Format
@@ -50,11 +50,13 @@ more than 4 replies. Lines are measured as they read: over 160 warns, over 200 f
 
 ## Flow
 
-1. **Every release** (`/commit push`): Livius drafts the note, Plautus reviews it from the draft
-   (the page isn't live yet; the guid comes from the draft's slug) plus whatever is pending in
-   the feed, Ovidius commits the script and the ledger, and only then is the version declared.
-   The release's own scene ships in its image, and its link works once the note is pasted
-   into Directus with that slug.
+1. **Every release** (`/commit push`, on main only): Livius drafts the note, Plautus writes the
+   release's scene from the draft (the page isn't live yet; the guid comes from the draft's
+   slug) and reviews whatever is pending in the feed, Ovidius commits the script and the
+   ledger, and only then is the version declared. Every release gets a scene: the push script
+   refuses to declare without one (`plautus.ts released <slug>`). Right after the tag is
+   pushed the same script posts the note (`livius-publish.ts post`), so the scene's link
+   answers before the image is even deployed, and it runs `check --live`.
 2. **Between releases**: `/plautus` → the agent runs `pending`, reads each live page, writes or
    skips, runs `check`, `mark`s every verdict, and reports the diff and `graph --open`. Ovidius
    commits; the next release ships the lines.

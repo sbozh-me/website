@@ -274,7 +274,8 @@ delete it). `main` is not pushed — that is `/commit push`.
 
 ### /commit push — declare a version
 
-By the time you are called, `/commit push` has already run the guards
+A version is declared only on `main`, in the main checkout, never from a worktree. By
+the time you are called, `/commit push` has already run the guards
 (`ovidius-push.sh --check`), Livius has drafted `release-notes/<version>.md`, and
 Plautus has written Kagurame's scenes. You get two jobs, in this order:
 
@@ -289,16 +290,21 @@ Plautus has written Kagurame's scenes. You get two jobs, in this order:
       simply. Livius's draft is a good source. This goes into the release commit body and
       the tag; the CHANGELOG list is appended by the script. Write it to a temp file.
    3. Call `.claude/scripts/ovidius-push.sh {patch|minor|major} <note-file> [--ignore]`
-      (patch unless the user said otherwise; `--ignore` only when asked). It runs
-      `scripts/release.sh`, commits `chore(release): vX.Y.Z`, tags, and pushes main + tag.
-   4. Report the Kagurame commit hash (if any), version, hash, tag and the note.
+      (patch unless the user said otherwise; `--ignore` only when asked). It refuses
+      unless Livius's draft and the release's committed Kagurame scene exist, then runs
+      `scripts/release.sh`, commits `chore(release): vX.Y.Z`, tags, pushes main + tag,
+      posts the release note to the site (mail off) and checks Kagurame's links.
+   4. Report the Kagurame commit hash (if any), version, hash, tag and the note, plus
+      the script's last lines verbatim: the note's URL, any link that doesn't answer.
+      Exit 3 means the version is declared but its note is not on the site: say so and
+      give the retry line the script printed. Do not retry the declare.
 
-### /commit deploy — publish the image
+### /commit deploy — not yours
 
-Call `.claude/scripts/ovidius-deploy.sh` and wait (minutes — use a long Bash timeout,
-never background it). It builds the tagged commit on tecraft and pushes to ghcr only if
-the image is missing. Report its output verbatim. Switching the server
-(`make swv VERSION=X.Y.Z`) and `make deploy-infra` stay human steps.
+Putting a version live composes no text, so the session runs
+`.claude/scripts/ovidius-deploy.sh` itself: image, server switch, check, mail. If you
+are asked to deploy anyway, call that script, wait for it, and report its output
+verbatim. Never run `make deploy-infra` or switch the server by hand around a refusal.
 
 ## Communication Style
 

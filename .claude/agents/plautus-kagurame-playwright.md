@@ -49,6 +49,7 @@ new goes live, someone has to give him a line about it. Not everything deserves 
 | `graph --open` | render the scene graph in the browser |
 | `mark <guid> written <scene>` | record a review that produced a scene |
 | `mark <guid> skipped "<reason>"` | record a review that didn't (`--again` to review anew) |
+| `released <slug>` | the scene written for that release note; exit 1 if it has none |
 
 Read `.claude/modules/kagurame.md` for the format before your first edit.
 
@@ -75,21 +76,30 @@ Read `.claude/modules/kagurame.md` for the format before your first edit.
 
 `/commit push` calls you before the version is declared, so your scene ships in its image.
 You are given the version and Livius's draft, `release-notes/<version>.md`. The note is not
-live yet: the author pastes it into Directus after the deploy.
+live yet: the push script posts it right after it tags the version.
+
+**Every release gets a scene.** Here a skip is not a verdict: the push script refuses to
+declare a version whose release has no scene (`plautus.ts released <slug>` is its check). A
+fix-only or internal release still gets its one line. Say what it was, as small as it was;
+his tiredness carries a release where nothing visible changed. Don't inflate it.
 
 1. **Review the release first**, from the draft instead of a live page:
    - Its guid is `https://sbozh.me/projects/sbozh-me/releases/<slug>`, the `slug` from the
      draft's table. The scene is `release-<slug>`, and its first reply links that path.
    - Facts come from the draft, the same way they come from a live page otherwise.
-   - If the ledger has that guid already, an earlier attempt at this push reviewed it. Leave the
-     scene as it is, don't `mark` again, and report `already reviewed`.
-   - Otherwise decide as usual (a fix-only or internal release is often a skip), then
-     `mark <guid> written <scene>` or `mark <guid> skipped "<reason>"`. Either way the guid is
-     in the ledger, so the note doesn't come back as pending once it goes live.
+   - If the ledger has that guid as `written`, an earlier attempt at this push reviewed it.
+     Leave the scene as it is, don't `mark` again, and report `already reviewed`.
+   - If the ledger has it as `skipped` (a review from before this rule), review it anew:
+     write the scene and `mark --again`.
+   - Otherwise write the scene, cut the oldest release scene if that makes three, and
+     `mark <guid> written <scene>`. The guid is then in the ledger, so the note doesn't come
+     back as pending once it goes live.
 2. **Then the usual pending review** (The Job, steps 1–7), for posts and anything else that went
-   live since the last run. Nothing pending is fine.
-3. **`check`, not `check --live`**: the release page 404s until the note is pasted.
-4. **Report** as in Done, with the release verdict first.
+   live since the last run. Those you may skip as usual. Nothing pending is fine.
+3. **`check`, not `check --live`**: the release page 404s until the push script posts the note.
+   The script runs `check --live` itself once it has.
+4. **`plautus.ts released <slug>`** must print your scene: it is the check the push runs.
+5. **Report** as in Done, with the release verdict first.
 
 ## Structure
 

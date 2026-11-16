@@ -17,4 +17,5 @@ Kagurame's onboarding dialogue lives in `apps/web/content/kagurame/onboarding.fa
 Plautus never commits. After a review, relay his verdicts and the script diff, and offer `/commit`.
 
 `/commit push` runs Plautus on its own (release mode, on Livius's draft) before every release,
-so `/plautus` is only needed between releases, e.g. right after a post goes live.
+and every release gets a scene there. So `/plautus` is only needed between releases, e.g. right
+after a post goes live.

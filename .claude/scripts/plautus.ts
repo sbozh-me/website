@@ -6,6 +6,7 @@
  *   node .claude/scripts/plautus.ts graph [--open]     Mermaid flowchart; --open renders it in the browser
  *   node .claude/scripts/plautus.ts pending [--guids]  feed items not reviewed yet
  *   node .claude/scripts/plautus.ts mark <guid> written <scene> | skipped "<reason>" [--again]
+ *   node .claude/scripts/plautus.ts released <slug>    the release's scene; exit 1 if it has none
  *
  * The script is apps/web/content/kagurame/onboarding.fabula, parsed by the app's own
  * apps/web/lib/kagurame/fabula.ts. The live feed (https://sbozh.me/rss.xml) is the source of
@@ -342,6 +343,25 @@ function mark(args: string[]) {
   console.log(`✓ ${verdict}: ${guid} → ${detail}`)
 }
 
+/**
+ * The release guard: /commit push declares a version only once Kagurame has a scene for it.
+ * Prints the scene id; exits 1 when the release wasn't reviewed, was skipped, or lost its scene.
+ */
+function released(slug: string | undefined) {
+  if (!slug || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) fail("usage: released <slug>   (the release note's slug)")
+  const guid = `${SITE}/projects/sbozh-me/releases/${slug}`
+  const row = readLedger().get(guid)
+  if (!row) fail(`Kagurame has no scene for ${guid}: Plautus reviews a release before it is declared (/commit push runs him)`)
+  if (row.verdict !== "written") {
+    fail(`Plautus skipped ${guid} (${row.detail}), but every release gets a scene: have him review it anew (mark --again)`)
+  }
+  const { fabula } = parseFabula(readFileSync(SCRIPT, "utf-8"))
+  if (!fabula.scenes.some((scene) => scene.id === row.detail)) {
+    fail(`the ledger says ${guid} is scene "${row.detail}", but ${rel(SCRIPT)} has no such scene`)
+  }
+  console.log(row.detail)
+}
+
 // ---------------------------------------------------------------------------
 
 function fail(message: string): never {
@@ -356,7 +376,8 @@ const HELP = `Plautus: Kagurame's script (${rel(SCRIPT)})
   graph [--open]     Mermaid flowchart of the scenes; --open renders it in the browser
   pending [--guids]  items in ${FEED} not in the ledger yet
   mark <guid> written <scene>          record a review in ${rel(LEDGER)}
-  mark <guid> skipped "<reason>"       (--again to review an item anew)`
+  mark <guid> skipped "<reason>"       (--again to review an item anew)
+  released <slug>    the scene written for that release note; exit 1 if there is none`
 
 const [command, ...args] = process.argv.slice(2)
 switch (command) {
@@ -371,6 +392,9 @@ switch (command) {
     break
   case "mark":
     mark(args)
+    break
+  case "released":
+    released(args[0])
     break
   case undefined:
   case "help":

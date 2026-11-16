@@ -1,23 +1,32 @@
 #!/bin/bash
 # Ovidius automation — /commit push: declare a version on main and publish it.
 #
-#   1. guards: no released tag may live outside main (releases have shipped
-#      from unmerged worktrees before), the new tag must not exist, and main
-#      must have commits since the last release;
-#   2. runs scripts/release.sh — CHANGELOG entry, version bump in root, apps/*
+#   1. guards: the session sits on main in the main checkout (a version is
+#      never declared from a worktree), no tracked file is modified, origin is
+#      not ahead, no released tag lives outside main (releases have shipped
+#      from unmerged worktrees before), the new tag does not exist, and main
+#      has commits since the last release;
+#   2. the release's two texts exist: Livius's draft release-notes/X.Y.Z.md
+#      and Kagurame's scene for it, committed. No version is declared without
+#      them;
+#   3. runs scripts/release.sh — CHANGELOG entry, version bump in root, apps/*
 #      and packages/*, and the 90% coverage gate for minor/major;
-#   3. commits `chore(release): vX.Y.Z` with ovidius' short note in the body;
-#   4. tags vX.Y.Z (annotated: note + CHANGELOG entry);
-#   5. pushes main and the new tag.
+#   4. commits `chore(release): vX.Y.Z` with ovidius' short note in the body;
+#   5. tags vX.Y.Z (annotated: note + CHANGELOG entry);
+#   6. pushes main and the new tag;
+#   7. posts the release note to the site (livius-publish.ts post), mail off.
 #
-# Building the image is /commit deploy; switching the server stays human.
+# Going live is /commit deploy: image, server switch, then the mail.
 #
 # Usage: ovidius-push.sh {patch|minor|major} <note-file> [--ignore]
 #        ovidius-push.sh --check {patch|minor|major}
 #   --ignore  skip the minor/major coverage gate (= make minor-ignore)
-#   --check   run the guards only and print the version that would be declared
-#             (last line: vX.Y.Z). /commit push calls it first, so Livius and
-#             Plautus write for the right version before anything is committed.
+#   --check   run the guards only (step 1) and print the version that would be
+#             declared (last line: vX.Y.Z). /commit push calls it first, so
+#             Livius and Plautus write for the right version before anything
+#             is committed.
+#
+# Exit 3: the version is declared and pushed, but its note is not on the site.
 set -euo pipefail
 
 USAGE="usage: ovidius-push.sh {patch|minor|major} <note-file> [--ignore] | --check {patch|minor|major}"
@@ -37,11 +46,20 @@ if [[ -z "$CHECK" ]]; then
   [[ -s "$NOTE_PATH" ]] || { echo "release note file '$NOTE_SRC' is missing or empty" >&2; exit 1; }
 fi
 
+SCRIPTS=$(cd "$(dirname "$0")" && pwd)
 # shellcheck source=ovidius-lib.sh
-source "$(dirname "$0")/ovidius-lib.sh"
-ovidius_main_checkout
+source "$SCRIPTS/ovidius-lib.sh"
+ovidius_release_checkout
 
-ovidius_git_remote "$MAIN" fetch -q origin main --tags || echo "warning: fetch failed — guards run on local refs only" >&2
+# main on its own: the guard below must see origin as it is now.
+if ! ovidius_git_remote "$MAIN" fetch -q origin main; then
+  echo "cannot fetch origin/main — a release needs origin (network? gh auth status?)" >&2
+  exit 1
+fi
+# Tags apart from it: a few old tags differ from origin's, which makes
+# `fetch --tags` exit non-zero while the new tags still arrive.
+CLOBBERED=$(ovidius_git_remote "$MAIN" fetch origin --tags 2>&1 | sed -n 's/^ ! \[rejected\] *\([^ ]*\) .*would clobber.*/\1/p' | paste -sd' ' - || true)
+[[ -z "$CLOBBERED" ]] || echo "note: old tags differ from origin's and were left alone: $CLOBBERED"
 if ! git -C "$MAIN" merge-base --is-ancestor origin/main main 2>/dev/null; then
   echo "origin/main has commits that local main lacks — pull main first" >&2
   exit 1
@@ -82,7 +100,19 @@ if [[ -n "$CHECK" ]]; then
   echo "v$NEW"
   exit 0
 fi
-echo "declaring v$NEW ($TYPE, was v$CURRENT)"
+
+# Both texts of the release must be there before it exists: Livius's draft
+# (posted below, once the tag is out) and Kagurame's scene (in this version's
+# image, because it is committed already).
+if ! SLUG=$(node "$SCRIPTS/livius-publish.ts" check "$NEW" | tail -1); then
+  echo "v$NEW has no usable release note draft — /commit push has Livius write it before declaring" >&2
+  exit 1
+fi
+if ! SCENE=$(node "$SCRIPTS/plautus.ts" released "$SLUG"); then
+  echo "v$NEW has no Kagurame scene — /commit push has Plautus write it (and Ovidius commit it) before declaring" >&2
+  exit 1
+fi
+echo "declaring v$NEW ($TYPE, was v$CURRENT) · note $SLUG · scene $SCENE"
 
 # The coverage gate needs dependencies; a borrowed worktree has none.
 if [[ "$TYPE" != "patch" && -z "$IGNORE" && ! -d "$MAIN/node_modules" ]]; then
@@ -122,9 +152,21 @@ git -C "$MAIN" tag -a --cleanup=verbatim "v$NEW" -F "$TAG_MSG"
 rm -f "$COMMIT_MSG" "$TAG_MSG"
 
 if ! ovidius_git_remote "$MAIN" push origin main "v$NEW"; then
-  echo "push failed — v$NEW is committed and tagged on local main; retry: git push origin main v$NEW" >&2
+  echo "push failed — v$NEW is committed and tagged on local main; retry: git push origin main v$NEW, then: node .claude/scripts/livius-publish.ts post $NEW" >&2
   exit 1
 fi
 
 echo "declared v$NEW ($TYPE, was v$CURRENT) @ $(git -C "$MAIN" rev-parse --short HEAD) · tagged v$NEW · pushed main + v$NEW"
-echo "next: /commit deploy (image) · make swv VERSION=$NEW · paste release-notes/$NEW.md into Directus"
+
+# The note goes on the site now: its page is dynamic, so it is live without a
+# deploy. The mail waits for /commit deploy.
+POSTED=1
+node "$SCRIPTS/livius-publish.ts" post "$NEW" || POSTED=
+# Kagurame's links, the new note's among them, against the live site.
+node "$SCRIPTS/plautus.ts" check --live || echo "note: one of Kagurame's links doesn't answer on sbozh.me (above)"
+
+if [[ -z "$POSTED" ]]; then
+  echo "v$NEW is declared and pushed, but its release note is NOT on the site — retry: node .claude/scripts/livius-publish.ts post $NEW" >&2
+  exit 3
+fi
+echo "next: /commit deploy — image, server switch, then the mail for this note"
