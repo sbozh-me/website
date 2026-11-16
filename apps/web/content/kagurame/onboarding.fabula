@@ -155,7 +155,14 @@ Quit? I resigned sixteen times. Every time the next company was already waiting.
 
 == archive
 Scrolls I kept a note on. The archive has the rest.
+* «GTA is near» -> post-gta-is-near
 * «PITCH D(;)CK» -> post-pitch-d-ck
+* Back. -> fresh
+
+== post-gta-is-near
+«GTA is near». A holiday, #SEMSDAY, by decree of the 17th Company. My ==company|>legion==. The sixteen before it never gave me one.
+* Read the decree. -> /blog/gta-is-near
+* Something else? -> archive
 * Back. -> fresh
 
 == post-pitch-d-ck
@@ -166,16 +173,17 @@ Scrolls I kept a note on. The archive has the rest.
 
 == shipped
 Two releases I can recite. The rest are in the notes.
+* The leaning poster. -> release-a-poster-for-gta-is-near
 * The one about me. -> release-video-hero-and-kagurame
-* Signed by The Anon. -> release-submissions-signed-by-the-anon
 * Back. -> built
+
+== release-a-poster-for-gta-is-near
+A poster moved in below my video: «GTA is near». It leans towards your mouse. I was here first, and I don't lean.
+* Read the note. -> /projects/sbozh-me/releases/a-poster-for-gta-is-near
+* The scroll it promotes. -> /blog/gta-is-near
+* Back. -> shipped
 
 == release-video-hero-and-kagurame
 This one is about me: I step in when the video's first run ends. Sixteen companies wrote about me before, always on my way ==out|>up==.
 * Read the note. -> /projects/sbozh-me/releases/video-hero-and-kagurame
-* Back. -> shipped
-
-== release-submissions-signed-by-the-anon
-Every submission is signed by The Anon now. One name for everyone. My last sixteen companies called that a reorg.
-* Read the note. -> /projects/sbozh-me/releases/submissions-signed-by-the-anon
 * Back. -> shipped
