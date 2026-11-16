@@ -23,10 +23,12 @@ describe("Header", () => {
     render(<Header />);
     const brand = screen.getByRole("banner").querySelector("[data-brand]")!;
     expect(brand).toContainElement(screen.getByRole("link", { name: "sbozh.me" }));
-    const tagline = screen.getByText("Personal startup");
+    // The tagline leads home too
+    const tagline = screen.getByRole("link", { name: "Personal startup" });
+    expect(tagline).toHaveAttribute("href", "/");
     expect(brand).toContainElement(tagline);
-    // The tagline takes the brand's width instead of setting it
-    expect(tagline).toHaveClass("w-0", "min-w-full");
+    // Its row takes the brand's width instead of setting it
+    expect(tagline.parentElement).toHaveClass("w-0", "min-w-full");
   });
 
   it("keeps the menu links", () => {

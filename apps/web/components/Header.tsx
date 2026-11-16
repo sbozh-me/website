@@ -130,7 +130,9 @@ export function Header() {
             sbozh.me
           </Link>
           <span className="mt-1 flex w-0 min-w-full justify-center whitespace-nowrap text-[0.625rem] leading-none text-muted-foreground md:text-xs">
-            Personal startup
+            <Link href="/" className="transition-colors hover:text-foreground">
+              Personal startup
+            </Link>
             <TooltipProvider delayDuration={1337}>
               <Tooltip>
                 <TooltipTrigger asChild>
