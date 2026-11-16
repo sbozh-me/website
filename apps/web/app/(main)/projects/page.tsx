@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ProjectGrid } from "@/components/projects/ProjectGrid";
-import { getProjects } from "@/lib/projects/data";
+import { getProjectsWithVersions } from "@/lib/projects/versions";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -17,8 +17,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProjectsPage() {
-  const projects = getProjects();
+export default async function ProjectsPage() {
+  // Sister projects take their version from Directus
+  const projects = await getProjectsWithVersions();
 
   return (
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">

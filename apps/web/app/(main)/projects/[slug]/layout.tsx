@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProjectLayout } from "@/components/projects/ProjectLayout";
 import { getProject, getProjects } from "@/lib/projects/data";
+import { getProjectWithVersion } from "@/lib/projects/versions";
 
 interface ProjectLayoutPageProps {
   params: Promise<{ slug: string }>;
@@ -48,7 +49,8 @@ export default async function Layout({
   children,
 }: ProjectLayoutPageProps) {
   const { slug } = await params;
-  const project = getProject(slug);
+  // The header shows the version, which Directus sets for sister projects
+  const project = await getProjectWithVersion(slug);
 
   if (!project) {
     notFound();

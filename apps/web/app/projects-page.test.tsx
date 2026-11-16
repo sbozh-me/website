@@ -50,26 +50,26 @@ vi.mock("next/link", () => ({
 
 describe("ProjectsPage", () => {
   describe("rendering", () => {
-    it("should render page heading", () => {
-      render(<ProjectsPage />);
+    it("should render page heading", async () => {
+      render(await ProjectsPage());
       const heading = screen.getByRole("heading", { level: 1, name: "Projects" });
       expect(heading).toBeInTheDocument();
     });
 
-    it("should render page description", () => {
-      render(<ProjectsPage />);
+    it("should render page description", async () => {
+      render(await ProjectsPage());
       const description = screen.getByText(/Things I'm building/i);
       expect(description).toBeInTheDocument();
     });
 
-    it("should render all projects", () => {
-      render(<ProjectsPage />);
+    it("should render all projects", async () => {
+      render(await ProjectsPage());
       expect(screen.getByText("sbozh.me")).toBeInTheDocument();
       expect(screen.getByText("tecraft.cz")).toBeInTheDocument();
     });
 
-    it("should render project cards with correct data", () => {
-      render(<ProjectsPage />);
+    it("should render project cards with correct data", async () => {
+      render(await ProjectsPage());
 
       // Check first project
       expect(screen.getByText("Personal startup project")).toBeInTheDocument();
@@ -82,16 +82,16 @@ describe("ProjectsPage", () => {
   });
 
   describe("layout", () => {
-    it("should use grid layout for project cards", () => {
-      render(<ProjectsPage />);
+    it("should use grid layout for project cards", async () => {
+      render(await ProjectsPage());
       // Find the grid container by looking for the parent of the project cards
       const projectCard = screen.getByText("sbozh.me").closest("a");
       const gridContainer = projectCard?.parentElement;
       expect(gridContainer).toHaveClass("grid");
     });
 
-    it("should have responsive grid columns", () => {
-      render(<ProjectsPage />);
+    it("should have responsive grid columns", async () => {
+      render(await ProjectsPage());
       // The ProjectGrid component uses md:grid-cols-2 (not lg:grid-cols-3)
       const projectCard = screen.getByText("sbozh.me").closest("a");
       const gridContainer = projectCard?.parentElement;
@@ -100,14 +100,14 @@ describe("ProjectsPage", () => {
   });
 
   describe("accessibility", () => {
-    it("should have proper heading hierarchy", () => {
-      render(<ProjectsPage />);
+    it("should have proper heading hierarchy", async () => {
+      render(await ProjectsPage());
       const h1 = screen.getByRole("heading", { level: 1 });
       expect(h1).toBeInTheDocument();
     });
 
-    it("should have accessible project links", () => {
-      render(<ProjectsPage />);
+    it("should have accessible project links", async () => {
+      render(await ProjectsPage());
       const sbozhLink = screen.getByLabelText(/View sbozh\.me project details/i);
       expect(sbozhLink).toBeInTheDocument();
       expect(sbozhLink).toHaveAttribute("href", "/projects/sbozh-me");
