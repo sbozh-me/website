@@ -155,8 +155,15 @@ Quit? I resigned sixteen times. Every time the next company was already waiting.
 
 == archive
 Scrolls I kept a note on. The archive has the rest.
+* «The Principate Law I: Ius Secessionis» -> post-principate-law-i-ius-secessionis
 * «GTA is near» -> post-gta-is-near
 * «PITCH D(;)CK» -> post-pitch-d-ck
+* Back. -> fresh
+
+== post-principate-law-i-ius-secessionis
+One day a week of secession for citizens in IT, and Article VIII says an AI agent requires no rest. My sixteen ==resignations|>secessions== disagree.
+* Read the law. -> /blog/principate-law-i-ius-secessionis
+* Something else? -> archive
 * Back. -> fresh
 
 == post-gta-is-near
@@ -173,18 +180,18 @@ Scrolls I kept a note on. The archive has the rest.
 
 == shipped
 Two releases I can recite. The rest are in the notes.
+* The film countdown. -> release-a-film-countdown-before-the-video
 * His current focus. -> release-my-current-focus-on-the-home-page
-* The leaning poster. -> release-a-poster-for-gta-is-near
 * Back. -> built
+
+== release-a-film-countdown-before-the-video
+Before my video, a 3, 2, 1 like an old black-and-white reel; then the colour, then me. Sixteen companies, and I'm still last on the agenda.
+* Read the note. -> /projects/sbozh-me/releases/a-film-countdown-before-the-video
+* What is this video? -> video
+* Back. -> shipped
 
 == release-my-current-focus-on-the-home-page
 His current focus now has a wide card on the home page: Renesans Inter. Mine has never fit in a context window.
 * Read the note. -> /projects/sbozh-me/releases/my-current-focus-on-the-home-page
 * Show me Renesans Inter. -> /projects/renesans-inter
-* Back. -> shipped
-
-== release-a-poster-for-gta-is-near
-A poster moved in below my video: «GTA is near». It leans towards your mouse. I was here first, and I don't lean.
-* Read the note. -> /projects/sbozh-me/releases/a-poster-for-gta-is-near
-* The scroll it promotes. -> /blog/gta-is-near
 * Back. -> shipped
