@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.0] - 2026-11-19
+
+### Changes
+
+- fix(release): build the image on tecraft from origin's tag, detached ([d2b7baf](https://github.com/sbozh-me/website/commit/d2b7bafafa0e85a50c53f3fb86192956e7131013))
+- chore(agents): add Atticus post publisher agent ([ba83cd9](https://github.com/sbozh-me/website/commit/ba83cd91252a33baa11502a21c7152d1888e3ae0))
+- feat(web): open home video hero on a 3-2-1 leader ([dcae51a](https://github.com/sbozh-me/website/commit/dcae51ae33a139f150b079850fda0756a7dd6885))
+- feat(web): style home leader as old b/w film reel ([d8ce50f](https://github.com/sbozh-me/website/commit/d8ce50f91a3bd87ae2eaf99804b901ee5067c8bc))
+- docs(roadmap): close 1.12.0 - Current Focus ([91e6934](https://github.com/sbozh-me/website/commit/91e6934794b458f4f3b766147869191de8921bab))
+- feat(web): Kagurame recites the A film countdown before the video release ([7924e7f](https://github.com/sbozh-me/website/commit/7924e7fb77194b1c6a6e1bf685eb764208691464))
+
+
 ## [1.11.1] - 2026-11-16
 
 ### Changes
