@@ -36,6 +36,7 @@ afterEach(() => vi.restoreAllMocks());
 
 const video = () => document.querySelector("video")!;
 const leader = () => document.querySelector("[data-leader]")!;
+const hero = () => document.querySelector("[data-home-hero]")!;
 const loadingMark = () => screen.queryByRole("status", { name: "Loading video" });
 
 /** One number of the 3-2-1 leader */
@@ -167,7 +168,10 @@ describe("HomeVideoHero", () => {
 });
 
 describe("HomeVideoHero leader", () => {
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+  });
 
   it("counts 3, 2, 1 while the video downloads, then plays it", () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
@@ -241,6 +245,47 @@ describe("HomeVideoHero leader", () => {
     renderStaged(<HomeVideoHero />);
     await waitFor(() => expect(loadingMark()).toBeNull());
     expect(screen.getByRole("button", { name: "Play video" })).toBeInTheDocument();
+    // …in colour: nothing is going to start on its own
+    expect(hero()).not.toHaveAttribute("data-bw");
+  });
+
+  it("keeps the site black and white until the video starts, then for good in colour", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    render(<HomeVideoHero />);
+    // globals.css greys the whole page while the hero says so
+    expect(hero()).toHaveAttribute("data-bw");
+    tick();
+    tick();
+    tick();
+    // The leader is over, the video still loads: not yet
+    expect(loadingMark()).toBeInTheDocument();
+    expect(hero()).toHaveAttribute("data-bw");
+    fireEvent.playing(video());
+    expect(hero()).not.toHaveAttribute("data-bw");
+    // A stall later on spins the mark, in colour
+    vi.spyOn(HTMLMediaElement.prototype, "paused", "get").mockReturnValue(false);
+    fireEvent.waiting(video());
+    expect(loadingMark()).toBeInTheDocument();
+    expect(hero()).not.toHaveAttribute("data-bw");
+  });
+
+  it("holds the video while the visitor is scrolled away from the top", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    render(<HomeVideoHero />);
+    tick();
+    Object.defineProperty(window, "scrollY", { value: 5, configurable: true });
+    fireEvent.scroll(window);
+    tick();
+    tick();
+    tick();
+    expect(leader()).toHaveAttribute("data-leader", "counting");
+    expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+    expect(hero()).toHaveAttribute("data-bw");
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+    fireEvent.scroll(window);
+    tick();
+    tick();
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
   });
 });
 

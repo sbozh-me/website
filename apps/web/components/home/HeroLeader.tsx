@@ -14,12 +14,14 @@ const DIAL_R = 90
 const MARK_PX = 64
 
 /**
- * Milliseconds until the hand is back at 12 o'clock. The first number's hand has been
- * turning since first paint, before this code loaded: the count moves on as it comes round.
+ * Milliseconds until the hand is back at 12 o'clock, where the count moves on. The hand's own
+ * animation is the clock: it has been turning since first paint, before this code loaded, and
+ * it stands still while the visitor is scrolled away. Nothing to read (reduced motion keeps
+ * the hand still): a full tick.
  */
 function untilNextTurn(hand: SVGElement | null): number {
   const turn = hand?.getAnimations?.()[0]
-  const at = turn?.playState === "running" ? Number(turn.currentTime) : 0
+  const at = turn && turn.playState !== "finished" ? Number(turn.currentTime) : 0
   return LEADER_TICK_MS - (at % LEADER_TICK_MS)
 }
 
@@ -31,9 +33,13 @@ interface HeroLeaderProps {
 }
 
 /**
- * The film leader over the home video: 3, 2, 1 in a dial, a clock hand going round once per
- * number and lighting the part it has swept. It is drawn, not a file, so it shows at first
- * paint and the video has the connection to itself while it counts.
+ * The film leader over the home video, as on old black-and-white reels: a grey, grainy,
+ * flickering frame with 3, 2, 1 in a dial, a clock hand going round once per number and
+ * darkening the part it has swept. It is drawn, not a file, so it shows at first paint and
+ * the video has the connection to itself while it counts.
+ *
+ * The count waits while the visitor is scrolled away from the top, even slightly, and goes on
+ * from where the hand stood when they come back.
  *
  * If the video still can't play when the leader runs out (or stalls later), the brand mark
  * spins fast in the dial's place until the picture moves.
@@ -43,33 +49,50 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
   const counting = count > 0
   // Fading out, it keeps its last number
   const shown = Math.max(count, 1)
-  const first = shown === LEADER_FROM
   const hand = useRef<SVGLineElement>(null)
+  // Scrolled away from the top: the film stands still until the visitor is back
+  const [away, setAway] = useState(false)
+
+  useEffect(() => {
+    if (!counting) return
+    const update = () => setAway(window.scrollY > 0)
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    return () => window.removeEventListener("scroll", update)
+  }, [counting])
 
   useEffect(() => {
     if (!counting) {
       onDone()
       return
     }
-    const wait = count === LEADER_FROM ? untilNextTurn(hand.current) : LEADER_TICK_MS
-    const timer = setTimeout(() => setCount((n) => n - 1), wait)
+    if (away) return
+    const timer = setTimeout(() => setCount((n) => n - 1), untilNextTurn(hand.current))
     return () => clearTimeout(timer)
-  }, [count, counting, onDone])
+  }, [count, counting, away, onDone])
 
   // The first number's hand keeps going round until the client takes over
-  const turn = { animationDuration: `${LEADER_TICK_MS}ms`, animationIterationCount: first ? "infinite" : 1 }
+  const turn = {
+    animationDuration: `${LEADER_TICK_MS}ms`,
+    animationIterationCount: shown === LEADER_FROM ? "infinite" : 1,
+  }
 
   return (
     <>
+      {/* Without scripts nothing would ever end the leader, or bring the colour back */}
+      <noscript>
+        <style>{"[data-leader]{display:none}html{filter:none!important}"}</style>
+      </noscript>
       <div
         aria-hidden="true"
         data-leader={counting ? "counting" : "done"}
+        data-paused={away && counting ? "" : undefined}
         // Counting, it takes the clicks: the video under it isn't to be started early
-        className={`absolute inset-0 grid place-items-center bg-background/85 transition-opacity duration-500 ${
+        className={`leader-film absolute inset-0 grid place-items-center overflow-hidden transition-opacity duration-500 ${
           counting ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <svg viewBox="0 0 200 200" className="w-[min(60vw,46svh)] max-w-80 overflow-visible text-foreground">
+        <svg viewBox="0 0 200 200" className="leader-weave w-[min(60vw,46svh)] max-w-80 overflow-visible">
           {/* A new number starts the turn again */}
           <g key={shown}>
             {/* A stroke as wide as the dial's radius, on a circle of half that radius, paints
@@ -81,8 +104,8 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
               cy={CENTRE}
               r={DIAL_R / 2}
               fill="none"
-              stroke="currentColor"
-              strokeOpacity={0.14}
+              stroke="#000"
+              strokeOpacity={0.3}
               strokeWidth={DIAL_R}
               pathLength={1}
               strokeDasharray={1}
@@ -91,33 +114,37 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
             />
             <line
               ref={hand}
-              className="leader-hand stroke-secondary"
+              className="leader-hand"
               style={turn}
               x1={CENTRE}
               y1={CENTRE}
               x2={CENTRE}
               y2={CENTRE - DIAL_R}
-              strokeWidth={2.5}
-              strokeLinecap="round"
+              stroke="currentColor"
+              strokeWidth={3}
             />
           </g>
-          {/* Crosshair and the two rings */}
-          <path d="M-40 100H240M100 -40V240" stroke="currentColor" strokeOpacity={0.3} strokeWidth={1} />
-          <circle cx={CENTRE} cy={CENTRE} r={DIAL_R} fill="none" stroke="currentColor" strokeOpacity={0.85} strokeWidth={2.5} />
-          <circle cx={CENTRE} cy={CENTRE} r={DIAL_R - 13} fill="none" stroke="currentColor" strokeOpacity={0.85} strokeWidth={1.5} />
+          {/* Crosshair across the frame, and the two white rings */}
+          <path d="M-400 100H600M100 -400V600" stroke="currentColor" strokeWidth={1.5} />
+          <circle cx={CENTRE} cy={CENTRE} r={DIAL_R} fill="none" stroke="#f4f4f4" strokeWidth={3} />
+          <circle cx={CENTRE} cy={CENTRE} r={DIAL_R - 13} fill="none" stroke="#f4f4f4" strokeWidth={2} />
           <text
             data-leader-count
             x={CENTRE}
             y={CENTRE}
             textAnchor="middle"
             dominantBaseline="central"
-            fontSize={104}
+            fontSize={112}
             fontWeight={700}
             fill="currentColor"
           >
             {shown}
           </text>
         </svg>
+        {/* Old stock: grain, a scratch now and then, an unsteady lamp (globals.css) */}
+        <div className="leader-grain" />
+        <div className="leader-scratch" />
+        <div className="leader-flicker" />
       </div>
 
       {loading && !counting && (

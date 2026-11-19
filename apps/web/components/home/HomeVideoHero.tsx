@@ -51,7 +51,8 @@ interface HomeVideoHeroProps {
  *
  * It opens on a 3-2-1 film leader (HeroLeader). The video's file is picked and starts
  * downloading as the leader starts, and plays when it runs out; if it isn't ready by then,
- * the brand mark spins until it is.
+ * the brand mark spins until it is. Until the video starts the whole site is black and
+ * white, like the leader (data-bw, see globals.css).
  *
  * The first run plays once: when it ends the video fades out to the poster (the
  * section's background) and Kagurame starts talking. After that, Play loops it.
@@ -76,6 +77,14 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const endLeader = useCallback(() => setCounting(false), [])
   // Asked to play, and the picture isn't moving yet (not enough of the file, or a stall)
   const [loading, setLoading] = useState(false)
+  // The video has started, or it turned out it won't on its own: the site gets its colour
+  // back, for good
+  const [colour, setColour] = useState(false)
+  // The wait is over, one way or the other
+  const settle = () => {
+    setLoading(false)
+    setColour(true)
+  }
   // What the visitor wants: a cut switch remounts the video, and must not restart one
   // they paused (or that stopped at the end of its first run)
   const wantPlay = useRef(true)
@@ -109,7 +118,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     video.play().catch(() => {
       // Refused (autoplay blocked) or paused first: back to the poster and the Play button.
       // A cut switch drops the old video's play the same way; that isn't the new one's news.
-      if (videoRef.current === video) setLoading(false)
+      if (videoRef.current === video) settle()
     })
   }
 
@@ -175,6 +184,8 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
       data-theme-island="obsidian-forge"
       // The site header turns from dark glass to the reader's theme once this is behind it
       data-home-hero
+      // Black and white, the whole site, until the video starts
+      data-bw={counting || !colour ? "" : undefined}
     >
       {cut && (
         <video
@@ -197,12 +208,12 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
           }}
           onPause={() => {
             setPlaying(false)
-            setLoading(false)
+            settle()
           }}
-          onPlaying={() => setLoading(false)}
+          onPlaying={settle}
           // Ran out of downloaded video mid-play
           onWaiting={(event) => !event.currentTarget.paused && setLoading(true)}
-          onError={() => setLoading(false)}
+          onError={settle}
           onEnded={onEnded}
           // Clicking the picture pauses and resumes it, like the Play/Pause button
           onClick={togglePlay}

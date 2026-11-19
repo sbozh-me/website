@@ -958,9 +958,33 @@ code[data-language] span {
   to { background-position: 100% 0; }
 }
 
-/* Home video hero leader (3-2-1, components/home/HeroLeader.tsx). Each number gets one turn:
-   the hand goes round the dial and the part it has swept lights up. The turn's length is set
-   inline (LEADER_TICK_MS). CSS, not JS: it keeps turning while the page is busy loading. */
+/* Black and white until the home video starts: its hero carries data-bw while the 3-2-1 film
+   leader counts and while the video still loads behind it, then the colour comes in.
+   (On the root element a filter leaves fixed elements, the header, fixed to the screen.) */
+html {
+  transition: filter 0.9s ease-out;
+}
+
+html:has([data-home-hero][data-bw]) {
+  filter: grayscale(1);
+}
+
+/* Home video hero leader (3-2-1, components/home/HeroLeader.tsx), as on old black-and-white
+   reels. The frame is grey whatever the theme, darker towards its edges. */
+.leader-film {
+  color: #0c0c0c;
+  background: radial-gradient(ellipse at center, #a6a6a6 0%, #8e8e8e 45%, #505050 82%, #262626 100%);
+}
+
+/* Scrolled away from the top, the film stands still: hand, grain, lamp and all */
+.leader-film[data-paused],
+.leader-film[data-paused] * {
+  animation-play-state: paused;
+}
+
+/* Each number gets one turn: the hand goes round the dial and the part it has swept darkens.
+   The turn's length is set inline (LEADER_TICK_MS). CSS, not JS: it keeps turning while the
+   page is busy loading. */
 .leader-hand {
   transform-box: view-box;
   transform-origin: center;
@@ -977,6 +1001,79 @@ code[data-language] span {
 
 @keyframes leader-wipe {
   to { stroke-dashoffset: 0; }
+}
+
+/* Gate weave: the frame never sits quite still in the projector */
+.leader-weave {
+  animation: leader-weave 0.45s steps(1) infinite;
+}
+
+@keyframes leader-weave {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(0.6px, -1.2px); }
+  50% { transform: translate(-0.8px, 0.4px); }
+  75% { transform: translate(0.3px, 1px); }
+}
+
+/* Grain: one small tile of noise, thrown about the frame a dozen times a second */
+.leader-grain {
+  position: absolute;
+  inset: -48px;
+  pointer-events: none;
+  /* Dark specks and, from a second seed, light ones */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0.9 0.9 0 -1.25'/%3E%3C/filter%3E%3Cfilter id='l'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.9 0.9 0.9 0 -1.4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23l)'/%3E%3C/svg%3E");
+  opacity: 0.7;
+  animation: leader-grain 0.5s steps(1) infinite;
+}
+
+@keyframes leader-grain {
+  0% { transform: translate(0, 0); }
+  17% { transform: translate(-23px, 17px); }
+  33% { transform: translate(31px, -12px); }
+  50% { transform: translate(-9px, -29px); }
+  67% { transform: translate(18px, 26px); }
+  83% { transform: translate(-34px, -6px); }
+}
+
+/* A scratch down the print, here and there */
+.leader-scratch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent calc(50% - 0.5px), #f4f4f4 50%, transparent calc(50% + 0.5px));
+  animation: leader-scratch 1.9s steps(1) infinite;
+}
+
+@keyframes leader-scratch {
+  0% { transform: translateX(-31%); opacity: 0.5; }
+  9% { opacity: 0; }
+  34% { transform: translateX(22%); opacity: 0.35; }
+  41% { transform: translateX(22.4%); opacity: 0.5; }
+  47% { opacity: 0; }
+  72% { transform: translateX(-8%); opacity: 0.45; }
+  79% { opacity: 0; }
+}
+
+/* The lamp: small dips only, well inside what is safe to flash */
+.leader-flicker {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #000;
+  opacity: 0;
+  animation: leader-flicker 0.8s steps(1) infinite;
+}
+
+@keyframes leader-flicker {
+  0% { opacity: 0.03; }
+  12% { opacity: 0.09; }
+  25% { opacity: 0; }
+  40% { opacity: 0.06; }
+  52% { opacity: 0.02; }
+  66% { opacity: 0.1; }
+  80% { opacity: 0.01; }
+  90% { opacity: 0.05; }
 }
 
 /* The brand mark while the video loads: a fast spin, shown after a beat */
