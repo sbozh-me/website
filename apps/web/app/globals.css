@@ -958,6 +958,40 @@ code[data-language] span {
   to { background-position: 100% 0; }
 }
 
+/* Home video hero leader (3-2-1, components/home/HeroLeader.tsx). Each number gets one turn:
+   the hand goes round the dial and the part it has swept lights up. The turn's length is set
+   inline (LEADER_TICK_MS). CSS, not JS: it keeps turning while the page is busy loading. */
+.leader-hand {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: leader-turn linear both;
+}
+
+.leader-wipe {
+  animation: leader-wipe linear both;
+}
+
+@keyframes leader-turn {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes leader-wipe {
+  to { stroke-dashoffset: 0; }
+}
+
+/* The brand mark while the video loads: a fast spin, shown after a beat */
+.leader-loading {
+  animation: leader-in 200ms 200ms both;
+}
+
+.leader-mark {
+  animation: leader-turn 0.6s linear infinite;
+}
+
+@keyframes leader-in {
+  from { opacity: 0; }
+}
+
 @keyframes poster-glow-breathe {
   50% { scale: 1.06; }
 }

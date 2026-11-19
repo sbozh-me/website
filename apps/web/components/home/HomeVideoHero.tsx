@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronDown, Pause, Play, Volume2, VolumeX } from "lucide-react"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import { HeroDialogue } from "./HeroDialogue"
+import { HeroLeader } from "./HeroLeader"
 import type { KagurameScript } from "@/lib/kagurame/script"
 import { browserQualityEnv, chooseQuality, quickQuality, type Quality, type Rendition } from "./video-quality"
 
@@ -48,6 +49,10 @@ interface HomeVideoHeroProps {
  * top of the viewport: the home header is absolute and translucent, so the video runs
  * under it. Kagurame's onboarding dialogue sits over it.
  *
+ * It opens on a 3-2-1 film leader (HeroLeader). The video's file is picked and starts
+ * downloading as the leader starts, and plays when it runs out; if it isn't ready by then,
+ * the brand mark spins until it is.
+ *
  * The first run plays once: when it ends the video fades out to the poster (the
  * section's background) and Kagurame starts talking. After that, Play loops it.
  */
@@ -66,6 +71,11 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   // Ended: the video is hidden so the poster underneath shows, until it plays again
   const [ended, setEnded] = useState(false)
   const [dialogueOpen, setDialogueOpen] = useState(false)
+  // The 3-2-1 leader is still counting: the video downloads, and plays when it runs out
+  const [counting, setCounting] = useState(true)
+  const endLeader = useCallback(() => setCounting(false), [])
+  // Asked to play, and the picture isn't moving yet (not enough of the file, or a stall)
+  const [loading, setLoading] = useState(false)
   // What the visitor wants: a cut switch remounts the video, and must not restart one
   // they paused (or that stopped at the end of its first run)
   const wantPlay = useRef(true)
@@ -93,22 +103,33 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     }
   }, [cut, qualities])
 
-  // Starts the video once its file is picked; a cut switch keeps the sound choice and
-  // plays on only if it was playing
+  const play = (video: HTMLVideoElement) => {
+    // Not enough of the file yet: the brand mark spins until the picture moves (onPlaying)
+    if (video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) setLoading(true)
+    video.play().catch(() => {
+      // Refused (autoplay blocked) or paused first: back to the poster and the Play button.
+      // A cut switch drops the old video's play the same way; that isn't the new one's news.
+      if (videoRef.current === video) setLoading(false)
+    })
+  }
+
+  // Starts the video once the leader has run out and its file is picked (it has been
+  // downloading meanwhile); a cut switch keeps the sound choice and plays on only if it
+  // was playing
   useEffect(() => {
     const video = videoRef.current
-    if (!video || !src) return
+    if (!video || !src || counting) return
     video.muted = muted
-    if (wantPlay.current) video.play().catch(() => {})
+    if (wantPlay.current) play(video)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src])
+  }, [src, counting])
 
   const togglePlay = () => {
     const video = videoRef.current
     if (!video) return
     wantPlay.current = !playing
     if (playing) video.pause()
-    else video.play().catch(() => {})
+    else play(video)
   }
 
   const onEnded = () => {
@@ -125,7 +146,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     const next = !muted
     video.muted = next
     setMuted(next)
-    if (!next) video.play().catch(() => {})
+    if (!next) play(video)
   }
 
   const sectionRef = useRef<HTMLElement>(null)
@@ -174,7 +195,14 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
             setPlaying(true)
             setEnded(false)
           }}
-          onPause={() => setPlaying(false)}
+          onPause={() => {
+            setPlaying(false)
+            setLoading(false)
+          }}
+          onPlaying={() => setLoading(false)}
+          // Ran out of downloaded video mid-play
+          onWaiting={(event) => !event.currentTarget.paused && setLoading(true)}
+          onError={() => setLoading(false)}
           onEnded={onEnded}
           // Clicking the picture pauses and resumes it, like the Play/Pause button
           onClick={togglePlay}
@@ -182,13 +210,17 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
         />
       )}
 
+      <HeroLeader loading={loading} onDone={endLeader} />
+
       <HeroDialogue
         script={script}
         onScroll={scrollTo}
         open={dialogueOpen}
         onOpenChange={setDialogueOpen}
         toolbar={
-          cut && (
+          // Nothing to control while the leader counts
+          cut &&
+          !counting && (
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
