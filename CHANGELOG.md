@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0] - 2026-11-20
+
+### Changes
+
+- docs(roadmap): open 1.13.0 - Glitches with the Window OFF ([c4fc33a](https://github.com/sbozh-me/website/commit/c4fc33aa60d4011c86695e43ec9ccc4d0e0b34bc))
+- feat(web): glitch words keep glitching with window off ([e51cda6](https://github.com/sbozh-me/website/commit/e51cda66f0c218fa6d7a28b305644e96fdab5b76))
+- feat(web): Kagurame recites the glitches-you-can-see-but-not-read release ([7d47304](https://github.com/sbozh-me/website/commit/7d473049b9138923aeaad35bcf4b7b660c4fe9bf))
+
+
 ## [1.12.0] - 2026-11-19
 
 ### Changes
