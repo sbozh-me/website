@@ -235,6 +235,12 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 - ~~Home video hero opens on a 3-2-1 film leader (a clock hand sweeping a circle) while the video downloads; the brand mark spins fast if it still isn't ready~~
 - ~~The leader as an old black-and-white reel (grain, scratches, flicker), the whole site black and white until the video starts; the count waits while the visitor is scrolled away~~
 
+## 1.13.0 - Glitches with the Window OFF
+
+One goal.
+
+- Glitch words keep glitching when the (context) Window is OFF, set in a font without actual letters (the author supplies the font)
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line
