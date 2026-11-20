@@ -239,7 +239,7 @@ The glitch syntax behind Kagurame Sbozh's stand-up posts, and the reading around
 
 One goal.
 
-- Glitch words keep glitching when the (context) Window is OFF, set in a font without actual letters (the author supplies the font)
+- ~~Glitch words keep glitching when the (context) Window is OFF, set in a font without actual letters (the author supplies the font)~~
 
 ## 2.x.x - Later
 

@@ -82,18 +82,6 @@ function bands(
   });
 }
 
-/**
- * Resting notch: one strip across the upper half of the letters, nudged 2px.
- * At body-text size the video's two 1-2px strips read as a strikethrough, so the
- * notch is thicker, single and kept off the x-height middle.
- */
-export function notches(rng: Rng): Slice[] {
-  return bands(rng, 1, [9, 11], [32, 54]).map(([top, bottom]) => ({
-    top,
-    bottom,
-    dx: pick(rng, [-2, 2]),
-  }));
-}
 
 /** One burst frame: scale jump, colour swap, echoes and hard slices. */
 export function burstLook(rng: Rng): Look {
@@ -156,9 +144,28 @@ export function planBurst({ kind, from, count, rng, hold = () => 0, skip }: Plan
   return { steps, rest: from };
 }
 
-/** Pause before the next random burst while the word is on screen. */
-export function nextDelay(rng: Rng, blink: boolean) {
-  return blink ? 1200 + rng() * 1400 : 4000 + rng() * 6000;
+/**
+ * Pause before the next random burst while the word is on screen. Window OFF (`veiled`) a
+ * blinking word waits as long as any other, and half of the pauses end in nothing (showsVeiled).
+ */
+export function nextDelay(rng: Rng, blink: boolean, veiled = false) {
+  return blink && !veiled ? 1200 + rng() * 1400 : 4000 + rng() * 6000;
+}
+
+/**
+ * Window OFF: does the word show its shapes when its pause is up? Half of the time, so a
+ * word left alone shows them every 14s or so, at no rhythm. Rolled afresh every pause.
+ */
+export function showsVeiled(rng: Rng) {
+  return rng() < 1 / 2;
+}
+
+/**
+ * Window OFF: does a hover or tap show the shapes? 73 times in 111. Rolled afresh on every
+ * hover, so the same word shows or stays plain each time you come to it, never decided once.
+ */
+export function showsVeiledHover(rng: Rng) {
+  return rng() < 73 / 111;
 }
 
 /** Random bursts mostly show the second meaning; some just twitch. Blink always flips. */

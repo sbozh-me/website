@@ -7,8 +7,10 @@ import "./glitch.css";
 
 /*
  * The "window" (форточка): one page-wide switch for the glitch effects. With the window
- * OFF, glitch words render as plain article text and nothing bursts. The site header
- * carries its button (and the W hotkey) on every page; posts may add their own.
+ * OFF, glitch words read as plain article text. They still glitch, but into shapes (the
+ * cipher face, see cipher.ts): the reader sees there is context and opens the window to
+ * read it. The site header carries its button (and the W hotkey) on every page; posts may
+ * add their own.
  *
  * Until the reader clicks, the page's default applies: ON, or OFF when something on the
  * page starts it closed (`==WINDOW OFF==` in a post, Kagurame on the home page). For a

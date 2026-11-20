@@ -20,7 +20,7 @@ const EXAMPLES: readonly Example[] = [
   { code: "==word|red:meaning==", note: "colours: gold, purple, teal, white, red, pink" },
   { code: "==a|b|c==", note: "several states, one after another" },
   { code: "==calm|BLINK!==", note: "! at the end: it blinks" },
-  { code: "===sure|red:100% sure===", note: "ignores the window, keeps glitching when it's off" },
+  { code: "===sure|red:100% sure===", note: "ignores the window: readable even when it's off" },
   { code: "==|only with the window open==", note: "exists only while the window is open" },
   { code: "х(;)й", note: "the ✳ censors one letter" },
   {

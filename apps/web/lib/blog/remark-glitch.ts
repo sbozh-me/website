@@ -15,12 +15,12 @@ import type { MdxJsxAttribute, MdxJsxFlowElement, MdxJsxTextElement } from "mdas
  *   ==себя|teal:US==    -> <GlitchState color="teal">  gold/purple/teal/white/red/pink picks a colour
  *   [==a|b==](url)      -> <GlitchState link>          linked states: teal, big overhanging underline
  *   ==a|[b](url)==      -> only the state holding the link is a link
- *   ===a|b===           -> <Glitch unclosable>         keeps glitching with the window OFF
+ *   ===a|b===           -> <Glitch unclosable>         stays readable with the window OFF
  *   ==|text==           -> <Glitch windowOnly>         only there while the window is ON
  *   ==shut|>open|x==    -> <Glitch openState="1">      closed: "shut"; open: rests on "open" instead
  *   ==a|WINDOW==        -> <GlitchState window>        a state that flashes the (clickable) window button
  *   ==WINDOW OFF|>b==   -> button base                 the button while closed; "b" in its place once open
- *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = no glitches
+ *   ==WINDOW==          -> <WindowToggle />            "Window ON/OFF" button; OFF = plain text, glitching into shapes
  *   ==WINDOW OFF==      -> <WindowToggle off />        same button, but the page starts with it OFF
  *   ==text==            -> <mark>                      plain Obsidian highlight
  *

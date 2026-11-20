@@ -5,12 +5,13 @@ import {
   burstLook,
   holdMs,
   nextDelay,
-  notches,
   onlySlice,
   planBurst,
   randInt,
   randomKind,
   seeded,
+  showsVeiled,
+  showsVeiledHover,
   withoutSlices,
 } from "../plan";
 
@@ -105,20 +106,6 @@ describe("glitch plan", () => {
     }
   });
 
-  it("resting notch is one strip across the upper letters, nudged 2px", () => {
-    const rng = seeded(5);
-    for (let i = 0; i < 100; i++) {
-      const cuts = notches(rng);
-      expect(cuts).toHaveLength(1);
-      const [cut] = cuts;
-      expect([-2, 2]).toContain(cut.dx);
-      expect(cut.bottom - cut.top).toBeGreaterThanOrEqual(9);
-      expect(cut.bottom - cut.top).toBeLessThanOrEqual(11);
-      expect(cut.top).toBeGreaterThanOrEqual(32);
-      expect(cut.bottom).toBeLessThanOrEqual(54);
-    }
-  });
-
   it("holdMs scales with length within bounds; blink holds briefly", () => {
     expect(holdMs(2)).toBe(700);
     expect(holdMs(14)).toBe(1220);
@@ -136,6 +123,37 @@ describe("glitch plan", () => {
       expect(blink).toBeGreaterThanOrEqual(1200);
       expect(blink).toBeLessThan(2600);
     }
+  });
+
+  it("nextDelay: 4-10s with the window OFF, blinking or not", () => {
+    const rng = seeded(2);
+    for (let i = 0; i < 100; i++) {
+      for (const blink of [false, true]) {
+        const veiled = nextDelay(rng, blink, true);
+        expect(veiled).toBeGreaterThanOrEqual(4000);
+        expect(veiled).toBeLessThan(10000);
+      }
+    }
+  });
+
+  it("showsVeiled: half of the pauses end in shapes", () => {
+    expect(showsVeiled(() => 0.49)).toBe(true);
+    expect(showsVeiled(() => 0.5)).toBe(false);
+    const rng = seeded(3);
+    const shown = Array.from({ length: 1000 }, () => showsVeiled(rng)).filter(Boolean).length;
+    expect(shown).toBeGreaterThan(430);
+    expect(shown).toBeLessThan(570);
+  });
+
+  it("showsVeiledHover: a hover shows the shapes 73 times in 111", () => {
+    // 73/111 is 0.6577
+    expect(showsVeiledHover(() => 0.65)).toBe(true);
+    expect(showsVeiledHover(() => 0.66)).toBe(false);
+    const rng = seeded(4);
+    const shown = Array.from({ length: 1110 }, () => showsVeiledHover(rng)).filter(Boolean).length;
+    // About 730; well within a wide band
+    expect(shown).toBeGreaterThan(680);
+    expect(shown).toBeLessThan(780);
   });
 
   it("randomKind always flips when blinking and mixes otherwise", () => {

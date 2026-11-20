@@ -124,11 +124,11 @@ describe("Glitch", () => {
     expect(visibleText(container)).toBe("себя");
   });
 
-  it("adds resting notches after mount", () => {
+  it("rests without a notch: the word sits still, only a burst slices it", () => {
     const { container } = render(word());
-    // main copy + 1 notch slice
-    expect(container.querySelectorAll(".glitch-copy[data-tone='rest']")).toHaveLength(2);
-    expect(container.querySelector<HTMLElement>(".glitch-copy")?.style.clipPath).toContain("polygon(");
+    // Just the main copy at rest, no shifted strip beside it
+    expect(container.querySelectorAll(".glitch-copy[data-tone='rest']")).toHaveLength(1);
+    expect(container.querySelector<HTMLElement>(".glitch-copy")?.style.clipPath).toBeFalsy();
   });
 
   it("backs the word first, under its echoes, at rest and through a burst", () => {
@@ -688,6 +688,10 @@ describe("Window button as the base of a > word (==WINDOW OFF|>you opened it==)"
     );
     const button = screen.getByRole("button", { name: /Window OFF/ });
     expect(button).not.toHaveAttribute("tabindex");
+    // Closed, it stands still: a button that flickered into shapes couldn't be pressed
+    setVisible(true);
+    advance(20_000);
+    expect(container.querySelector(".glitch-layers, .glitch-cipher")).toBeNull();
     fireEvent.click(button);
     expect(container.querySelector(".window-toggle")).toBeNull();
     expect(container.querySelector(".glitch-sizer")?.textContent).toBe("you opened the window");

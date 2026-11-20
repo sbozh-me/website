@@ -142,7 +142,7 @@ word is the one that glitches**.
 4. Rest state: **back to base** after each burst (the alt only shows during the burst).
 5. GLITCH BEGIN: **deferred**. Build the glitch mechanisms first. `==GLITCH==` is not
    built yet.
-6. Font: **Archivo Black** for glitched states (Latin only; Cyrillic falls back to Space Grotesk), **Rubik Glitch** for `red:` states (2026-09-28, `--glitch-font` / `--glitch-font-red` in glitch.css); `||` plain states keep the article font. No Retron2000 on the web.
+6. Font: **Sofija** for glitched states — a brushy all-caps display face, one family, upright for a glitched state and its **italic** for a `||` plain state (Latin only; Cyrillic falls back to Space Grotesk); **Rubik Glitch** for `red:` states (`--glitch-font` / `--glitch-font-red` in glitch.css, loaded in app/layout.tsx; 2026-11-20, replaced the Archivo Black trial). Window OFF, a plain copy is the base word flickering as the article's own text, not italic. No Retron2000 on the web.
 7. ✳ spin: **only inside the DICK PITCH flip**. Plain `(;)` censors stay still.
 8. Theme: **obsidian-forge**. A dedicated theme may come later, so keep glitch colours
    in CSS custom properties that a theme can override (no hard-coded hex in components).
@@ -173,8 +173,9 @@ word is the one that glitches**.
     colours and keeps them. Shares the `.brand-mark` styles with D✳CK PITCH (no ✳ spin).
     `===sbozhed===` keeps it flipping with the window OFF. Inside `==a|b==` it is plain text.
 - **Plain states and colours** (added after the first draft was converted):
-  - `==LOL|No||yes==`: a state after `||` is plain. It uses the article's own weight and
-    colour and has no resting notch, but the frames into and out of it still glitch.
+  - `==LOL|No||yes==`: a state after `||` is plain. It is set in the glitch font's italic
+    (the glitched states are upright), in the article's own colour, and has no resting notch,
+    but the frames into and out of it still glitch.
   - `==||нас|us==`: a leading `||` makes the base plain, so the word reads as normal text
     until it glitches.
   - Default colours: the base is amethyst and glitched states are gold. A burst flashes
@@ -191,9 +192,23 @@ word is the one that glitches**.
     so it glitches with them.
 - **Window switch** (`==WINDOW==`, exactly, in capitals): an inline "Window ON / Window OFF"
   button (`glitch/window.tsx`, shadcn Button). With it OFF, every glitch word on the page
-  renders as plain article text (links stay links), nothing bursts, and D✳CK PITCH stays
-  as a static brand mark. Censors are unaffected. The setting isn't saved: it resets
-  when the page is left, so a post without the button always glitches.
+  reads as plain article text (links stay links, and it wraps like any text), and D✳CK
+  PITCH stays as a static brand mark. Censors are unaffected. The setting isn't saved: it
+  resets when the page is left, so a post without the button always glitches.
+  **OFF, a glitch word keeps glitching, into shapes** (1.13.0): its bursts (scroll-in,
+  random, hover, tap) are drawn over the plain word, and every state but the base is set
+  in the cipher face (`--glitch-font-cipher`, 4-Sided: two rectangles per glyph, no
+  letters; `public/fonts/4-Sided.ttf`, loaded in `app/layout.tsx`), in the state's own
+  colour. The reader sees there is context and can't read it until the window opens.
+  `glitch/cipher.ts` turns the text into capitals and digits the face has (Cyrillic and
+  punctuation get one picked for them), so nothing falls back to a readable font. The
+  shapes are held 0.45s whatever the length, every burst flips (no twitches), and a `>`
+  state is shown too. Hover or tap always shows them. Left alone, a word does not flip
+  on scroll-in: it waits 4-10s (blinking words too) and then shows its shapes half of
+  the time (`showsVeiled` in `plan.ts`), so about every 14s, at no rhythm. The real text stays out of the visible DOM (it is in `data-alt`, as
+  always). Standing still while OFF: brand marks, window-only words, and a word whose base
+  is the Window button. A Window-button state (`==a|WINDOW==`) flashes as the real button.
+  A word wrapped over two lines gets its burst over the part on its first line.
   `==WINDOW OFF==` is the same button, but the page starts OFF. The plugin then marks
   every Glitch/DickPitch in the post `windowOff`, so the server already renders them
   plain (no flash of glitching before hydration).
@@ -226,8 +241,9 @@ word is the one that glitches**.
   open, so that button disappears with the window ON. Without a `>` state a WINDOW base is
   left alone. It doesn't own the `W` hotkey, so a post still wants a `==WINDOW==` somewhere
   for keyboard readers.
-- **Unclosable** (`===a|b===`): a glitch word the window can't close. It keeps bursting
-  with the window OFF, including on a `==WINDOW OFF==` page. Everything else works inside
+- **Unclosable** (`===a|b===`): a glitch word the window can't close. It keeps bursting,
+  readable and in its glitch face, with the window OFF (the others only show shapes
+  there), including on a `==WINDOW OFF==` page. Everything else works inside
   it (`||`, colours, `!`, links), and `===D(;)ck pitch===` keeps the brand flipping.
   `==` and `===` never pair with each other, and runs of four or more `=` are text.
 - Not built yet: `==GLITCH==` (GLITCH BEGIN, deferred), and TOC and heading ids for

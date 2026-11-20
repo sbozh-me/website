@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono, Inter, Caveat, Archivo_Black, Rubik_Glitch, Cinzel, Forum } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono, Inter, Caveat, Rubik_Glitch, Cinzel, Forum } from "next/font/google";
+import localFont from "next/font/local";
 
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 import { ThemeProvider, readerThemeScript } from "@sbozh/themes";
@@ -43,11 +44,15 @@ const caveat = Caveat({
   display: "swap",
 });
 
-// Blog glitch words (trial). Latin only: Cyrillic glitch words fall back to Space Grotesk.
-const archivoBlack = Archivo_Black({
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
-  variable: "--font-archivo-black",
+// Blog glitch words: Sofija, one family, upright for a glitched state and italic for a `||`
+// plain state. A brushy all-caps display face; Latin only, so Cyrillic glitch words fall back
+// to Space Grotesk (the red states, which carry Cyrillic, use Rubik Glitch).
+const sofija = localFont({
+  src: [
+    { path: "../public/fonts/Sofija.ttf", weight: "400", style: "normal" },
+    { path: "../public/fonts/Sofija-Italic.ttf", weight: "400", style: "italic" },
+  ],
+  variable: "--font-sofija",
   display: "swap",
 });
 
@@ -57,6 +62,16 @@ const rubikGlitch = Rubik_Glitch({
   weight: "400",
   variable: "--font-rubik-glitch",
   display: "swap",
+});
+
+// Glitch words with the window OFF: shapes instead of letters, so what a word glitches into
+// stays hidden (lib/blog/glitch/cipher.ts). `block` and no fallback face: it must never show
+// in a readable font while it loads.
+const fourSided = localFont({
+  src: "../public/fonts/4-Sided.ttf",
+  variable: "--font-four-sided",
+  display: "block",
+  adjustFontFallback: false,
 });
 
 // roman-white headings: Cinzel capitals (Latin only), and Forum for a heading with
@@ -126,7 +141,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="obsidian-forge"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable} ${archivoBlack.variable} ${rubikGlitch.variable} ${cinzel.variable} ${forum.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable} ${sofija.variable} ${rubikGlitch.variable} ${fourSided.variable} ${cinzel.variable} ${forum.variable}`}
       // The reader-theme script below changes data-theme before React hydrates
       suppressHydrationWarning
     >

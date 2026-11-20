@@ -12,17 +12,18 @@ import {
 } from "react";
 
 import { Censor } from "./censor";
+import { cipher } from "./cipher";
 import {
   type BurstKind,
   type Look,
   type Rng,
-  type Slice,
   holdMs,
   nextDelay,
-  notches,
   onlySlice,
   planBurst,
   randomKind,
+  showsVeiled,
+  showsVeiledHover,
   withoutSlices,
 } from "./plan";
 import { useGlitchesEnabled } from "./window";
@@ -75,8 +76,28 @@ interface EngineProps {
   openState?: number;
   /** Each state as plain text: the ones not at rest go to `data-alt` for machines reading the HTML. */
   texts?: string[];
+  /**
+   * Each state as the cipher face sets it (cipher.ts): with the window OFF the word keeps
+   * glitching, into these shapes. The base is left out, it stays readable; any other state
+   * left out shows as it is. Without the list the word stands still while the window is OFF.
+   */
+  ciphers?: Array<string | undefined>;
   className?: string;
   rng?: Rng;
+}
+
+/**
+ * A window-OFF word is inline text, and the CSS centres its layers on it. A word that wraps
+ * has no single box to centre on, so its layers go over the part on its first line.
+ */
+function coverFirstLine(root: HTMLElement, layers: HTMLElement) {
+  const [first, ...more] = Array.from(root.getClientRects());
+  if (more.length === 0) return;
+  layers.style.inset = "0 auto auto 0";
+  layers.style.width = `${first.width}px`;
+  const box = layers.getBoundingClientRect();
+  layers.style.left = `${first.left - box.left}px`;
+  layers.style.top = `${first.top + first.height / 2 - (box.top + box.height / 2)}px`;
 }
 
 function prefersReducedMotion() {
@@ -103,6 +124,7 @@ function GlitchEngine({
   windowOnly = false,
   openState,
   texts,
+  ciphers,
   className,
   rng = Math.random,
 }: EngineProps) {
@@ -115,21 +137,25 @@ function GlitchEngine({
   const layersRef = useRef<HTMLSpanElement>(null);
   const mainRef = useRef<HTMLSpanElement>(null);
 
-  // The page's "window" switch: when it's off the word is plain text and never bursts
+  // The page's "window" switch: when it's off the word is plain article text
   const windowOpen = useGlitchesEnabled(windowOff);
   const on = windowOpen || unclosable;
+  // Off, it still glitches, into shapes instead of its other meanings: there is context here,
+  // and the window shows it. Now and then on its own (showsVeiled), more often than not under
+  // the pointer (showsVeiledHover), each a fresh roll (plan.ts).
+  // A brand mark or a window-only word hides nothing and stands still.
+  const veiled = !on && ciphers !== undefined && count > 1 && !windowOnly;
   // Where the word rests: state 0, or the `>` state while the window is open. An unclosable
   // `>` word keeps glitching with the window closed, but still rests on its base there.
   const restState = windowOpen && openState !== undefined ? openState : 0;
 
   const [state, setState] = useState(restState);
   const [look, setLook] = useState<Look | undefined>();
-  const [restSlices, setRestSlices] = useState<Slice[]>([]);
   const [flips, setFlips] = useState(0);
 
   // Latest props for the timer callbacks, which outlive renders
-  const props = useRef({ count, lengths, mode, blink, rng, openState, windowOpen });
-  props.current = { count, lengths, mode, blink, rng, openState, windowOpen };
+  const props = useRef({ count, lengths, mode, blink, rng, openState, windowOpen, veiled, ciphers });
+  props.current = { count, lengths, mode, blink, rng, openState, windowOpen, veiled, ciphers };
 
   const engine = useRef({
     rest: restState,
@@ -140,6 +166,8 @@ function GlitchEngine({
     seen: false,
     reduced: false,
     off: false,
+    /** `on` as the engine last saw it: a burst is planned for the window as it is */
+    on,
     stepTimer: undefined as ReturnType<typeof setTimeout> | undefined,
     nextTimer: undefined as ReturnType<typeof setTimeout> | undefined,
   });
@@ -148,11 +176,14 @@ function GlitchEngine({
     const e = engine.current;
     clearTimeout(e.nextTimer);
     if (!e.visible || e.reduced || e.off) return;
-    const { rng: random, blink: blinking } = props.current;
+    const { rng: random, blink: blinking, veiled: hidden } = props.current;
     e.nextTimer = setTimeout(() => {
       if (document.hidden) schedule();
+      // Veiled, the shapes turn up half of the time, and always as a flip: a twitch of the
+      // plain word would show none
+      else if (hidden) showsVeiled(random) ? play("flip") : schedule();
       else play(randomKind(random, blinking));
-    }, nextDelay(random, blinking));
+    }, nextDelay(random, blinking, hidden));
   }
 
   function play(kind: Exclude<BurstKind, "toggle">) {
@@ -170,6 +201,8 @@ function GlitchEngine({
       rng: random,
       openState: open,
       windowOpen: opened,
+      veiled: hidden,
+      ciphers: shapes,
     } = props.current;
     const burstKind: BurstKind = m === "toggle" && kind === "flip" ? "toggle" : kind;
     const burst = planBurst({
@@ -177,10 +210,11 @@ function GlitchEngine({
       from: e.rest,
       count: states,
       rng: random,
-      hold: (s) => holdMs(chars[s] ?? 0, blinking),
+      // Shapes are glimpsed, not read: held as briefly as a blink
+      hold: (s) => holdMs(chars[s] ?? 0, blinking || (hidden && shapes?.[s] !== undefined)),
       // A `>` word keeps its closed-window text out of the open window, and (unclosable)
-      // its open-window state out of the closed one
-      skip: open === undefined ? undefined : opened ? 0 : open,
+      // its open-window state out of the closed one. Veiled, every state shows, as shapes.
+      skip: hidden || open === undefined ? undefined : opened ? 0 : open,
     });
     if (burstKind === "toggle") setFlips((f) => f + 1);
 
@@ -213,18 +247,26 @@ function GlitchEngine({
     schedule();
   }
 
+  /**
+   * Hover or tap. Veiled, the shapes come up 73 times in 111, rolled fresh each time: coming
+   * to the same word again is a new roll, never a settled yes or no. Otherwise it always plays.
+   */
+  function poke() {
+    if (props.current.veiled && !showsVeiledHover(props.current.rng)) return;
+    play("flip");
+  }
+
   function onClick() {
     const e = engine.current;
     // Toggle bursts (D✳CK PITCH) change the word, so they always run to the end
     if (e.playing && props.current.mode === "return" && Date.now() - e.startedAt > STOP_AFTER_MS) stop();
-    else play("flip");
+    else poke();
   }
 
   useEffect(() => {
     const e = engine.current;
     const el = rootRef.current;
     e.reduced = prefersReducedMotion();
-    setRestSlices(notches(props.current.rng));
     if (e.reduced || !el || typeof IntersectionObserver === "undefined") return;
 
     const observer = new IntersectionObserver(
@@ -232,7 +274,7 @@ function GlitchEngine({
         e.visible = entry.isIntersecting;
         if (!entry.isIntersecting) {
           clearTimeout(e.nextTimer);
-        } else if (!e.seen) {
+        } else if (!e.seen && !props.current.veiled) {
           e.seen = true;
           play("flip");
         } else if (!e.playing) {
@@ -255,27 +297,32 @@ function GlitchEngine({
 
   useEffect(() => {
     const e = engine.current;
-    e.off = !on;
+    // An unclosable word stays on through a window switch, and its burst plays on. Any other
+    // burst was planned for the window as it was (readable, or in shapes): it is cut.
+    const playsOn = on && e.on;
+    e.on = on;
+    e.off = !on && !veiled;
     // A `>` word swaps its resting state with the window
     if (openState !== undefined) e.rest = restState;
-    if (on) {
-      if (openState !== undefined && !e.playing) setState(restState);
-      if (!e.playing) schedule();
-      return;
+    if (!playsOn) {
+      clearTimeout(e.stepTimer);
+      clearTimeout(e.nextTimer);
+      e.playing = false;
+      setLook(undefined);
     }
-    clearTimeout(e.stepTimer);
-    clearTimeout(e.nextTimer);
-    e.playing = false;
+    if (e.playing) return;
     setState(e.rest);
-    setLook(undefined);
+    schedule();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [on, restState]);
+  }, [on, veiled, restState]);
 
   // Keep a wider alt state inside the viewport
   useLayoutEffect(() => {
+    const root = rootRef.current;
     const layers = layersRef.current;
     const main = mainRef.current;
-    if (!layers || !main) return;
+    if (!root || !layers || !main) return;
+    if (!on) coverFirstLine(root, layers);
     layers.style.setProperty("--glitch-shift", "0px");
     const { left, right } = main.getBoundingClientRect();
     const width = document.documentElement.clientWidth;
@@ -284,18 +331,18 @@ function GlitchEngine({
     if (left < VIEWPORT_MARGIN) shift = VIEWPORT_MARGIN - left;
     else if (right > width - VIEWPORT_MARGIN) shift = width - VIEWPORT_MARGIN - right;
     if (shift) layers.style.setProperty("--glitch-shift", `${Math.round(shift)}px`);
-  }, [state, look, mounted]);
+  }, [state, look, mounted, on]);
 
-  const shown = styles?.[state];
-  const current = look ?? {
-    tone: "rest",
-    scale: 1,
-    dx: 0,
-    dy: 0,
-    echo: null,
-    // A plain state reads as article text, so it rests without the notch
-    slices: shown?.plain ? [] : restSlices,
-  };
+  // Veiled, a copy keeps the article's face (the shapes bring their own) and its state's colour
+  const shown: StateStyle | undefined = veiled
+    ? { color: (state > 0 && styles?.[state]?.color) || "var(--glitch-plain)", plain: true, link: false }
+    : styles?.[state];
+  const shapes = veiled ? ciphers?.[state] : undefined;
+  // A glitch word sits still and legible at rest; only a burst slices it.
+  const resting: Look = { tone: "rest", scale: 1, dx: 0, dy: 0, echo: null, slices: [] };
+  // Window OFF the shapes just flicker in and out: no slices, echoes or jumps to smear them
+  // (the 4-Sided face is unreadable enough), so a veiled burst keeps the resting look.
+  const current = veiled ? resting : (look ?? resting);
   const move = (x: number, y: number): CSSProperties => ({
     transform: `translate(calc(-50% + var(--glitch-shift, 0px) + ${x}px), ${y}px) scale(${current.scale})`,
     ...(shown &&
@@ -308,7 +355,7 @@ function GlitchEngine({
   // red: states get their own face (--glitch-font-red)
   const red = (style?: StateStyle) => (style?.color === GLITCH_COLORS.red ? "" : undefined);
   const link = shown?.link ? "" : undefined;
-  const content = renderState(state);
+  const content = shapes === undefined ? renderState(state) : <span className="glitch-cipher">{shapes}</span>;
   // A held alt is often wider than the base word: back it so it covers the neighbours cleanly
   const cover = mode === "return" && state !== restState && !look ? "" : undefined;
   const alt = texts?.filter((text, index) => index !== restState && text).join(" | ");
@@ -325,19 +372,34 @@ function GlitchEngine({
       data-off={on ? undefined : ""}
       data-alt={alt || undefined}
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
-      onPointerEnter={() => play("flip")}
+      onPointerEnter={poke}
       onClick={onClick}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}
-      {on
-        ? mounted
-          ? renderLayers()
-          : renderCalm()
-        : windowOnly
-          ? null
-          : renderState(mode === "toggle" ? state : 0)}
+      {renderWord()}
     </span>
   );
+
+  function renderWord() {
+    if (on) return mounted ? renderLayers() : renderCalm();
+    if (windowOnly) return null;
+    if (veiled) return renderVeiled();
+    // Nothing to hide (a brand mark, a word that is the Window button): it stands still
+    return renderState(mode === "toggle" ? state : 0);
+  }
+
+  /** Window OFF: the word as article text, in the flow; a burst is drawn over it while it plays. */
+  function renderVeiled() {
+    const playing = look !== undefined || state !== restState;
+    return (
+      <>
+        <span className="glitch-rest" data-covered={playing ? "" : undefined}>
+          {renderState(restState)}
+        </span>
+        {playing && renderCopies()}
+      </>
+    );
+  }
 
   /** Before hydration: the resting word, once, in its colour; no copies in the HTML. */
   function renderCalm() {
@@ -362,72 +424,78 @@ function GlitchEngine({
         <span className="glitch-sizer" data-plain={plain(styles?.[restState])} data-red={red(styles?.[restState])}>
           {renderState(restState)}
         </span>
-        {/* Decoration only: hidden from screen readers and kept out of search snippets */}
-        <span ref={layersRef} className="glitch-layers" aria-hidden="true" data-nosnippet="">
-          {/* The theme's background under every copy; a `||` state at rest is just article text */}
-          {(!shown?.plain || look || cover !== undefined) && (
+        {renderCopies()}
+      </>
+    );
+  }
+
+  /** Decoration only: hidden from screen readers and kept out of search snippets. */
+  function renderCopies() {
+    return (
+      <span ref={layersRef} className="glitch-layers" aria-hidden="true" data-nosnippet="">
+        {/* The theme's background under every copy; a `||` state at rest is just article text */}
+        {(!shown?.plain || look || cover !== undefined) && (
+          <span
+            className="glitch-back"
+            data-plain={plain(shown)}
+            data-red={red(shown)}
+            data-bursting={look ? "" : undefined}
+            data-cover={cover}
+            style={move(current.dx, current.dy)}
+          >
+            {content}
+          </span>
+        )}
+        {current.echo !== null && (
+          <>
             <span
-              className="glitch-back"
+              className="glitch-copy glitch-echo"
               data-plain={plain(shown)}
               data-red={red(shown)}
-              data-bursting={look ? "" : undefined}
-              data-cover={cover}
-              style={move(current.dx, current.dy)}
+              data-link={link}
+              style={move(current.dx + current.echo, current.dy + 2)}
             >
               {content}
             </span>
-          )}
-          {current.echo !== null && (
-            <>
-              <span
-                className="glitch-copy glitch-echo"
-                data-plain={plain(shown)}
-                data-red={red(shown)}
-                data-link={link}
-                style={move(current.dx + current.echo, current.dy + 2)}
-              >
-                {content}
-              </span>
-              <span
-                className="glitch-copy glitch-echo glitch-echo-dark"
-                data-plain={plain(shown)}
-                data-red={red(shown)}
-                data-link={link}
-                style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
-              >
-                {content}
-              </span>
-            </>
-          )}
+            <span
+              className="glitch-copy glitch-echo glitch-echo-dark"
+              data-plain={plain(shown)}
+              data-red={red(shown)}
+              data-link={link}
+              style={move(current.dx - Math.trunc(current.echo / 2), current.dy + 3)}
+            >
+              {content}
+            </span>
+          </>
+        )}
+        <span
+          ref={mainRef}
+          key="main"
+          className="glitch-copy"
+          data-tone={current.tone}
+          data-plain={plain(shown)}
+          data-red={red(shown)}
+          data-link={link}
+          data-cover={cover}
+          style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
+        >
+          {content}
+        </span>
+        {current.slices.map((slice, index) => (
           <span
-            ref={mainRef}
-            key="main"
+            key={index}
             className="glitch-copy"
             data-tone={current.tone}
             data-plain={plain(shown)}
             data-red={red(shown)}
             data-link={link}
             data-cover={cover}
-            style={{ ...move(current.dx, current.dy), clipPath: withoutSlices(current.slices) }}
+            style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
           >
             {content}
           </span>
-          {current.slices.map((slice, index) => (
-            <span
-              key={index}
-              className="glitch-copy"
-              data-tone={current.tone}
-              data-plain={plain(shown)}
-              data-red={red(shown)}
-              data-link={link}
-              data-cover={cover}
-              style={{ ...move(current.dx + slice.dx, current.dy), clipPath: onlySlice(slice) }}
-            >
-              {content}
-            </span>
-          ))}
-        </span>
-      </>
+        ))}
+      </span>
     );
   }
 }
@@ -435,9 +503,12 @@ function GlitchEngine({
 /** A window-button state is held like a 30-character word (~2s), so it can be clicked. */
 const WINDOW_STATE_LENGTH = 30;
 
+function isWindowState(state: ReactNode): boolean {
+  return isValidElement<GlitchStateProps>(state) && Boolean(state.props.window);
+}
+
 function stateLength(state: ReactNode): number {
-  if (isValidElement<GlitchStateProps>(state) && state.props.window) return WINDOW_STATE_LENGTH;
-  return textLength(state);
+  return isWindowState(state) ? WINDOW_STATE_LENGTH : textLength(state);
 }
 
 /** A state as plain text: the ✳ for a censor, nothing for a Window button. */
@@ -510,6 +581,12 @@ export function Glitch({
   if (states.length === 0) return null;
   const open = openState === undefined ? undefined : Number(openState);
   const validOpen = open !== undefined && Number.isInteger(open) && open > 0 && open < states.length ? open : undefined;
+  const texts = states.map((state) => plainState(state).replace(/\s+/g, " ").trim());
+  // Window OFF: every meaning but the base is set in shapes. A Window button stays a button,
+  // and a word whose base is one (`==WINDOW OFF|>…==`) stands still, to be pressed.
+  const ciphers = isWindowState(states[0])
+    ? undefined
+    : states.map((state, index) => (index === 0 || isWindowState(state) ? undefined : cipher(texts[index])));
 
   return (
     <GlitchEngine
@@ -517,7 +594,8 @@ export function Glitch({
       renderState={(index) => states[index]}
       styles={states.map(stateStyle)}
       lengths={states.map(stateLength)}
-      texts={states.map((state) => plainState(state).replace(/\s+/g, " ").trim())}
+      texts={texts}
+      ciphers={ciphers}
       mode="return"
       blink={blink}
       windowOff={windowOff}
