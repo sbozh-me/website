@@ -10,6 +10,7 @@
 // The answer carries the address, the network warning and a QR code (SVG,
 // generated here — no third-party QR service sees the address).
 
+import { SeverityNumber } from "@opentelemetry/api-logs";
 import { NextResponse } from "next/server";
 import QRCode from "qrcode";
 
@@ -21,6 +22,11 @@ import {
   type RevealResponse,
 } from "@/lib/donations/reveal";
 import { getWallet, UUID } from "@/lib/donations/repository";
+import { getPostHogLogger } from "@/lib/posthog-logs";
+
+export const runtime = "nodejs";
+
+const posthogLogger = getPostHogLogger();
 
 const HEADERS = {
   "Cache-Control": "no-store",
@@ -36,9 +42,21 @@ export async function POST(request: Request) {
   try {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_rejected",
+      severityNumber: SeverityNumber.WARN,
+      attributes: { reason: "invalid_request" },
+    });
     return reply({ ok: false, reason: "invalid" }, 400);
   }
-  if (!body || typeof body !== "object") return reply({ ok: false, reason: "invalid" }, 400);
+  if (!body || typeof body !== "object") {
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_rejected",
+      severityNumber: SeverityNumber.WARN,
+      attributes: { reason: "invalid_request" },
+    });
+    return reply({ ok: false, reason: "invalid" }, 400);
+  }
 
   const id = typeof body.id === "string" ? body.id : "";
   const startedAt = typeof body.startedAt === "number" ? body.startedAt : 0;
@@ -48,10 +66,20 @@ export async function POST(request: Request) {
   // No start time, a start in the future, or a too-quick reveal: a bot.
   if (!UUID.test(id) || honeypot || startedAt <= 0 || waited < MIN_WAIT_MS) {
     console.warn("[donations] reveal refused");
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_rejected",
+      severityNumber: SeverityNumber.WARN,
+      attributes: { reason: "validation_failed" },
+    });
     return reply({ ok: false, reason: "invalid" }, 400);
   }
 
   if (revealLimiter.hit(clientIp(request))) {
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_rejected",
+      severityNumber: SeverityNumber.WARN,
+      attributes: { reason: "rate_limited" },
+    });
     return reply({ ok: false, reason: "rate_limited" }, 429);
   }
 
@@ -60,9 +88,21 @@ export async function POST(request: Request) {
     wallet = await getWallet(id);
   } catch (error) {
     console.error("[donations] Directus read failed", error);
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_unavailable",
+      severityNumber: SeverityNumber.ERROR,
+      attributes: { dependency: "directus" },
+    });
     return reply({ ok: false, reason: "unavailable" }, 502);
   }
-  if (!wallet) return reply({ ok: false, reason: "not_found" }, 404);
+  if (!wallet) {
+    posthogLogger?.emit({
+      body: "donation_wallet_reveal_rejected",
+      severityNumber: SeverityNumber.WARN,
+      attributes: { reason: "not_found" },
+    });
+    return reply({ ok: false, reason: "not_found" }, 404);
+  }
 
   const info = networkInfo(wallet.network);
   const qr = await QRCode.toString(info.qrPayload(wallet.address), {
@@ -70,6 +110,12 @@ export async function POST(request: Request) {
     errorCorrectionLevel: "M",
     margin: 2,
     type: "svg",
+  });
+
+  posthogLogger?.emit({
+    body: "donation_wallet_revealed",
+    severityNumber: SeverityNumber.INFO,
+    attributes: { asset: wallet.asset, network: wallet.network },
   });
 
   return reply({

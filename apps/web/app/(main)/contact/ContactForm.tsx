@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import posthog from "posthog-js";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { Input } from "@sbozh/react-ui/components/ui/input";
@@ -63,6 +64,7 @@ export function ContactForm() {
           setStatus("sent");
           // Only that a message was sent — never who or what.
           track("contact_sent", { where: "contact_page" });
+          posthog.capture("contact_sent", { where: "contact_page" });
         } catch {
           // Keep the typed message so a retry is one click, not a re-type.
           setStatus("error");

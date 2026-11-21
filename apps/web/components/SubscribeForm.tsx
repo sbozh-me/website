@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import posthog from "posthog-js";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { Input } from "@sbozh/react-ui/components/ui/input";
@@ -42,6 +43,10 @@ export function SubscribeForm({ size = "default" }: SubscribeFormProps = {}) {
         throw new Error(body?.error ?? "Could not subscribe, try again later");
       }
       setState("sent");
+      posthog.capture("newsletter_subscription_created", {
+        form_size: size,
+        topic_count: topics.length,
+      });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not subscribe, try again later");
       setState("error");

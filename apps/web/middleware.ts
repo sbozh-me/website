@@ -29,15 +29,30 @@ export function middleware(request: NextRequest) {
     // Keep empty if parsing fails
   }
 
-  // Configure CSP to allow Umami and Sentry/GlitchTip
-  const externalDomains = [analyticsDomain, sentryDomain].filter(Boolean).join(' ');
+  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+  let posthogDomain = '';
+  let posthogAssetsDomain = '';
+  try {
+    if (posthogHost) {
+      posthogDomain = new URL(posthogHost).host;
+      posthogAssetsDomain = posthogDomain.replace('.i.posthog.com', '-assets.i.posthog.com');
+    }
+  } catch {
+    // Keep PostHog disabled if its optional host is invalid
+  }
+
+  // Configure CSP to allow Umami, Sentry/GlitchTip, and PostHog
+  const externalDomains = [analyticsDomain, sentryDomain, posthogDomain, posthogAssetsDomain]
+    .filter(Boolean)
+    .join(' ');
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' ${analyticsDomain};
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' ${analyticsDomain} ${posthogAssetsDomain};
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob: ${analyticsDomain};
     font-src 'self';
     connect-src 'self' ${externalDomains};
+    worker-src 'self' blob:;
     frame-ancestors 'none';
     base-uri 'self';
     form-action 'self';
