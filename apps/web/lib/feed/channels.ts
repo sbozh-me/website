@@ -5,7 +5,7 @@ import { FEED_PATHS, feedPathsFor } from "./paths";
 
 export interface FeedChannel {
   title: string;
-  /** Path of the HTML page the feed mirrors, e.g. "/blog" */
+  /** Path of the HTML page the feed mirrors, e.g. "/library" */
   link: string;
   description: string;
   /** Paths the feed is served at, one per format */
@@ -23,8 +23,8 @@ export const FEEDS = {
     load: getAllEntries,
   },
   blog: {
-    title: "sbozh.me blog",
-    link: "/blog",
+    title: "sbozh.me library",
+    link: "/library",
     description: "A place where I build and ship things in public.",
     ...FEED_PATHS.blog,
     load: getBlogEntries,

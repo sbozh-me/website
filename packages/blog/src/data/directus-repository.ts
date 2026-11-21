@@ -9,7 +9,7 @@ import type { BlogRepository } from "./repository";
 import type { Avatar, AvatarStatusColor } from "../types/avatar";
 import type { PostFilters } from "../types/filters";
 import type { Persona } from "../types/persona";
-import type { Post, PostListItem } from "../types/post";
+import { POST_TYPES, type Post, type PostListItem, type PostType } from "../types/post";
 import { SERIES_PROMOTIONS, SERIES_STATUSES, type Series } from "../types/series";
 import type { Tag } from "../types/tag";
 import { isPlannedDate } from "../utils/planned";
@@ -79,6 +79,7 @@ interface DirectusPost {
   og_generate: boolean;
   is_toc_hidden: boolean;
   theme: string | null;
+  type: string | null;
   next_post: string | null;
   series: string | null;
   is_locked: boolean | null;
@@ -207,6 +208,7 @@ export class DirectusRepository implements BlogRepository {
             "next_post",
             "series",
             "is_locked",
+            "type",
             { persona: ["id", "name", "slug", "color", "description"] },
             { tags: [{ tags_id: ["id", "name", "slug"] }] },
             { image: ["id", "filename_download", "width", "height"] },
@@ -355,6 +357,12 @@ export class DirectusRepository implements BlogRepository {
     return directusFilter;
   }
 
+  private coerceType(value: string | null | undefined): PostType | undefined {
+    return value && (POST_TYPES as readonly string[]).includes(value)
+      ? (value as PostType)
+      : undefined;
+  }
+
   private mapToPost(post: DirectusPost): Post {
     return {
       id: post.id,
@@ -375,6 +383,7 @@ export class DirectusRepository implements BlogRepository {
       ogGenerate: post.og_generate,
       isTocHidden: post.is_toc_hidden,
       theme: post.theme ?? undefined,
+      type: this.coerceType(post.type),
       isLocked: post.is_locked ?? false,
       isDraft: post.status === "draft",
       isPlanned: isPlannedDate(post.date_published),
@@ -395,6 +404,7 @@ export class DirectusRepository implements BlogRepository {
       image: post.image ? this.mapToImage(post.image) : undefined,
       nextPostId: post.next_post ?? undefined,
       seriesId: post.series ?? undefined,
+      type: this.coerceType(post.type),
       isLocked: post.is_locked ?? false,
       isPlanned: isPlannedDate(post.date_published),
     };

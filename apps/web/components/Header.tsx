@@ -16,7 +16,7 @@ import { ReaderThemeToggle } from "./ReaderTheme";
 
 const navItems = [
   {name: "Home", href: "/"},
-  {name: "Blog", href: "/blog"},
+  {name: "Library", href: "/library"},
   {name: "Forum", href: "/forum"},
   {name: "Projects", href: "/projects"},
 ];

@@ -1,7 +1,7 @@
 import { WindowToggle } from "@/lib/blog/glitch/window";
 import { compileSummary } from "@/lib/releases/compile-summary";
 
-const SDS_POST = "/blog/words-that-dont-stay-still";
+const SDS_POST = "/library/articles/words-that-dont-stay-still";
 
 /**
  * The SDS cheat sheet with live examples: what you type, what readers see, and the

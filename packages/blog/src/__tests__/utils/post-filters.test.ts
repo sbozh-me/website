@@ -140,11 +140,16 @@ describe("parsePostFilters", () => {
 
 describe("blogHref", () => {
   it("keeps the default view clean", () => {
-    expect(blogHref("cards")).toBe("/blog");
+    expect(blogHref("cards")).toBe("/library");
   });
 
   it("names other views", () => {
-    expect(blogHref("timeline")).toBe("/blog?view=timeline");
+    expect(blogHref("timeline")).toBe("/library?view=timeline");
+  });
+
+  it("honours the basePath argument", () => {
+    expect(blogHref("timeline", { tag: "ai" }, "/library/articles"))
+      .toBe("/library/articles?view=timeline&tag=ai");
   });
 
   it("round-trips filters through the URL, including spaces in slugs", () => {
@@ -155,6 +160,6 @@ describe("blogHref", () => {
   });
 
   it("drops post filters on the way to the series view", () => {
-    expect(blogHref("series", { tag: "ai" })).toBe("/blog?view=series");
+    expect(blogHref("series", { tag: "ai" })).toBe("/library?view=series");
   });
 });

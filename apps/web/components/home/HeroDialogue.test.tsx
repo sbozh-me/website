@@ -126,8 +126,8 @@ describe("HeroDialogue", () => {
     fireEvent.click(screen.getByRole("button", { name: /Let him decide/ }))
     random.mockReturnValue(0.99)
     act(() => vi.advanceTimersByTime(5_000))
-    expect(screen.getByRole("dialog")).toHaveTextContent("Decided. The blog. Read something you didn't come for.")
-    expect(screen.getByRole("button", { name: /Go to the blog\./ })).toBeInTheDocument()
+    expect(screen.getByRole("dialog")).toHaveTextContent("Decided. The library. Read something you didn't come for.")
+    expect(screen.getByRole("button", { name: /Go to the library\./ })).toBeInTheDocument()
   })
 
   it("closes on !close", () => {

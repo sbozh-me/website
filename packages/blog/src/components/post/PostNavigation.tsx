@@ -1,6 +1,6 @@
 import type { PostListItem } from "../../types";
 import type { AdjacentPosts } from "../../utils";
-import { formatShortDate } from "../../utils";
+import { formatShortDate, postHref } from "../../utils";
 import { ArrowIcon } from "./ArrowIcon";
 import { Censored } from "./Censored";
 import { PostThumbnail } from "./PostThumbnail";
@@ -39,7 +39,7 @@ function NavCard({
 
   return (
     <a
-      href={`/blog/${post.slug}`}
+      href={postHref(post)}
       rel={isNext ? "next" : "prev"}
       className={`group flex overflow-hidden rounded-lg border border-border bg-muted transition-colors duration-200 hover:border-primary sm:flex-col ${
         isNext ? "flex-row-reverse sm:col-start-2" : "flex-row"

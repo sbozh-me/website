@@ -44,7 +44,7 @@ function PromoCard({ item: { series, posts }, big = false }: { item: SeriesWithP
   const Heading = big ? "h2" : "h3"
 
   return (
-    <a href={`/blog/series/${series.slug}`} className="group block">
+    <a href={`/library/series/${series.slug}`} className="group block">
       <div className="relative overflow-hidden rounded-lg">
         {series.image ? (
           <Image

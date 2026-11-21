@@ -110,7 +110,7 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': [
         { url: '/rss.xml', title: 'sbozh.me' },
-        { url: '/blog/rss.xml', title: 'sbozh.me blog' },
+        { url: '/library/rss.xml', title: 'sbozh.me library' },
         { url: '/releases/rss.xml', title: 'sbozh.me releases' },
       ],
       'application/atom+xml': [{ url: '/atom.xml', title: 'sbozh.me' }],

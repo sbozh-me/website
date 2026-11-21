@@ -54,7 +54,7 @@ describe("SeriesPromo", () => {
     render(<SeriesPromo big={makeSeries("pan-dude")} />)
 
     const link = screen.getByRole("link")
-    expect(link).toHaveAttribute("href", "/blog/series/pan-dude")
+    expect(link).toHaveAttribute("href", "/library/series/pan-dude")
     expect(within(link).getByRole("heading", { level: 2 })).toHaveTextContent("Title pan-dude")
     expect(within(link).getByText("About pan-dude")).toBeInTheDocument()
 
@@ -75,9 +75,9 @@ describe("SeriesPromo", () => {
     )
 
     expect(screen.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
-      "/blog/series/big",
-      "/blog/series/left",
-      "/blog/series/right",
+      "/library/series/big",
+      "/library/series/left",
+      "/library/series/right",
     ])
     expect(screen.getAllByRole("heading", { level: 3 }).map((h) => h.textContent)).toEqual([
       "Title left",
@@ -106,8 +106,8 @@ describe("SeriesPromo", () => {
 
     const links = screen.getAllByRole("link")
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
-      "/blog/series/left",
-      "/blog/series/right",
+      "/library/series/left",
+      "/library/series/right",
       "/projects/renesans-inter",
     ])
 

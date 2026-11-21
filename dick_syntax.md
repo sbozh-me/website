@@ -121,6 +121,29 @@ Two cuts switched by the window. Optional `onPoster`, `offPoster`, `mobileOnPost
 
 One silent looping video (landscape or Shorts), not tied to the window.
 
+### Laws: `:::lang xx` language blocks
+
+Only in posts of type **Laws**. Each `:::lang xx` ... `:::` fence holds one translation;
+a five-button switcher above the article picks which one is rendered.
+
+```mdx
+:::lang cs
+
+Český text zákona…
+
+:::
+
+:::lang en
+
+English translation of the law…
+
+:::
+```
+
+Accepted codes: `cs`, `en`, `ja`, `uk`, `ru`. Default is Czech; the reader's choice is
+kept in `localStorage` across posts. The TOC is hidden for Laws because the five versions
+would duplicate the same headings.
+
 ## Examples from the stand-up post
 
 ```mdx

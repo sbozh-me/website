@@ -79,7 +79,11 @@ export function parsePostFilters(params: SearchParams): PostFilters {
 }
 
 /** The shareable URL of a view. Cards are the default view, so they don't need a parameter. */
-export function blogHref(view: BlogView, filters: PostFilters = {}): string {
+export function blogHref(
+  view: BlogView,
+  filters: PostFilters = {},
+  basePath: string = "/library",
+): string {
   const params = new URLSearchParams();
   if (view !== "cards") params.set("view", view);
 
@@ -94,5 +98,5 @@ export function blogHref(view: BlogView, filters: PostFilters = {}): string {
   }
 
   const search = params.toString();
-  return search ? `/blog?${search}` : "/blog";
+  return search ? `${basePath}?${search}` : basePath;
 }

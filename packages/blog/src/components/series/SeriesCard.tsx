@@ -1,4 +1,5 @@
 import { PostThumbnail } from "../post/PostThumbnail";
+import { seriesHref } from "../../utils/post-href";
 
 import type { SeriesWithPosts } from "../../utils/series";
 
@@ -10,7 +11,7 @@ export function SeriesCard({ series, posts }: SeriesCardProps) {
 
   return (
     <a
-      href={`/blog/series/${series.slug}`}
+      href={seriesHref(series.slug)}
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-muted transition-colors duration-200 hover:border-primary"
     >
       <PostThumbnail post={thumbnail} width={640} className="aspect-video w-full" />

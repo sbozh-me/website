@@ -47,6 +47,13 @@ const nextConfig: NextConfig = {
         destination: "https://lnkd.in/p/dKG-q7EC",
         permanent: false,
       },
+      // /blog → /library (v1.13.1). /blog/:slug stays as a slug-only secret
+      // shortcut handled by apps/web/app/(main)/blog/[slug]/page.tsx.
+      { source: "/blog", destination: "/library", permanent: true },
+      { source: "/blog/submit", destination: "/library/submit", permanent: true },
+      { source: "/blog/series/:slug", destination: "/library/series/:slug", permanent: true },
+      { source: "/blog/rss.xml", destination: "/library/rss.xml", permanent: true },
+      { source: "/blog/atom.xml", destination: "/library/atom.xml", permanent: true },
     ];
   },
 };

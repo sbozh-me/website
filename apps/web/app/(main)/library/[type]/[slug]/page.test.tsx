@@ -38,7 +38,9 @@ let mockPostsShouldThrow = false;
 let mockPostOverride: unknown = undefined;
 let lastRepositoryOptions: unknown = undefined;
 
-// Mock the repository
+// Mock the repository.
+// Every mock post is pinned to type="articles" so the /library/[type]/[slug]
+// route matches what the tests build and the type check doesn't 404.
 vi.mock("@/lib/blog/repository", () => ({
   createBlogRepository: (options?: unknown) => (lastRepositoryOptions = options, {
     getPost: vi.fn(async (slug: string) => {
@@ -46,12 +48,14 @@ vi.mock("@/lib/blog/repository", () => ({
         throw new Error("Connection failed");
       }
       if (mockPostOverride !== undefined) {
-        return mockPostOverride;
+        if (mockPostOverride === null) return null;
+        const override = mockPostOverride as { type?: string };
+        return { ...override, type: override.type ?? "articles" };
       }
-      // Default: use real mock data
       const { MockBlogRepository } = await import("@sbozh/blog/data");
       const repo = new MockBlogRepository();
-      return repo.getPost(slug);
+      const post = await repo.getPost(slug);
+      return post ? { ...post, type: post.type ?? "articles" } : post;
     }),
     getPosts: vi.fn(async () => {
       if (mockShouldThrow || mockPostsShouldThrow) {
@@ -59,7 +63,8 @@ vi.mock("@/lib/blog/repository", () => ({
       }
       const { MockBlogRepository } = await import("@sbozh/blog/data");
       const repo = new MockBlogRepository();
-      return repo.getPosts();
+      const posts = await repo.getPosts();
+      return posts.map((p) => ({ ...p, type: p.type ?? "articles" }));
     }),
     getSeries: vi.fn(async () => []),
   }),
@@ -96,11 +101,11 @@ describe("BlogPostPage", () => {
     };
 
     it("only asks for drafts with ?draft=1", async () => {
-      await BlogPostPage({ params: Promise.resolve({ slug: "why-i-started-sbozh" }) });
+      await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" }) });
       expect(lastRepositoryOptions).toEqual({ includeDrafts: false });
 
       await BlogPostPage({
-        params: Promise.resolve({ slug: "why-i-started-sbozh" }),
+        params: Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" }),
         searchParams: Promise.resolve({ draft: "1" }),
       });
       expect(lastRepositoryOptions).toEqual({ includeDrafts: true });
@@ -110,7 +115,7 @@ describe("BlogPostPage", () => {
       mockPostOverride = draftPost;
       render(
         await BlogPostPage({
-          params: Promise.resolve({ slug: "pitch-deck" }),
+          params: Promise.resolve({ type: "articles", slug: "pitch-deck" }),
           searchParams: Promise.resolve({ draft: "1" }),
         }),
       );
@@ -122,7 +127,7 @@ describe("BlogPostPage", () => {
     it("keeps a draft out of search engines", async () => {
       mockPostOverride = draftPost;
       const metadata = await generateMetadata({
-        params: Promise.resolve({ slug: "pitch-deck" }),
+        params: Promise.resolve({ type: "articles", slug: "pitch-deck" }),
         searchParams: Promise.resolve({ draft: "1" }),
       });
       expect(metadata.robots).toEqual({ index: false, follow: false });
@@ -147,7 +152,7 @@ describe("BlogPostPage", () => {
 
     it("shows the title, excerpt and password form, but not the body", async () => {
       mockPostOverride = lockedPost;
-      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+      render(await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "locked-post" }) }));
 
       expect(screen.getByText("Locked Post")).toBeInTheDocument();
       expect(screen.getByText("A public teaser")).toBeInTheDocument();
@@ -161,7 +166,7 @@ describe("BlogPostPage", () => {
     it("ignores a forged unlock cookie", async () => {
       mockPostOverride = lockedPost;
       mockUnlockCookie = "forged";
-      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+      render(await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "locked-post" }) }));
 
       expect(screen.getByText("This post is locked")).toBeInTheDocument();
     });
@@ -170,7 +175,7 @@ describe("BlogPostPage", () => {
       const { unlockToken } = await import("@/lib/content-lock");
       mockPostOverride = lockedPost;
       mockUnlockCookie = unlockToken();
-      render(await BlogPostPage({ params: Promise.resolve({ slug: "locked-post" }) }));
+      render(await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "locked-post" }) }));
 
       expect(screen.getByText(/The paid part/)).toBeInTheDocument();
       expect(screen.queryByText("This post is locked")).not.toBeInTheDocument();
@@ -194,7 +199,7 @@ describe("BlogPostPage", () => {
 
     it("shows the title, excerpt, badge and publish date, but not the body", async () => {
       mockPostOverride = plannedPost;
-      render(await BlogPostPage({ params: Promise.resolve({ slug: "planned-post" }) }));
+      render(await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "planned-post" }) }));
 
       expect(screen.getByText("Planned Post")).toBeInTheDocument();
       expect(screen.getByText("Out soon")).toBeInTheDocument();
@@ -210,7 +215,7 @@ describe("BlogPostPage", () => {
       const { unlockToken } = await import("@/lib/content-lock");
       mockPostOverride = { ...plannedPost, isLocked: true };
       mockUnlockCookie = unlockToken();
-      render(await BlogPostPage({ params: Promise.resolve({ slug: "planned-post" }) }));
+      render(await BlogPostPage({ params: Promise.resolve({ type: "articles", slug: "planned-post" }) }));
 
       expect(screen.getByText(/Comes out/)).toBeInTheDocument();
       expect(screen.queryByText(/Not out yet/)).not.toBeInTheDocument();
@@ -220,7 +225,7 @@ describe("BlogPostPage", () => {
       mockPostOverride = plannedPost;
       render(
         await BlogPostPage({
-          params: Promise.resolve({ slug: "planned-post" }),
+          params: Promise.resolve({ type: "articles", slug: "planned-post" }),
           searchParams: Promise.resolve({ draft: "1" }),
         }),
       );
@@ -231,7 +236,7 @@ describe("BlogPostPage", () => {
   });
 
   it("renders post title and content", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("Why I started sbozh.me")).toBeInTheDocument();
@@ -241,7 +246,7 @@ describe("BlogPostPage", () => {
   it("shows the excerpt before the hero image", async () => {
     const { MockBlogRepository } = await import("@sbozh/blog/data");
     const post = await new MockBlogRepository().getPost("why-i-started-sbozh");
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     const { container } = render(await BlogPostPage({ params }));
 
     const excerpt = container.querySelector(".post-excerpt");
@@ -251,14 +256,14 @@ describe("BlogPostPage", () => {
   });
 
   it("renders post header with persona", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("The Founder")).toBeInTheDocument();
   });
 
   it("renders hero image when post has image", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     const img = screen.getByRole("img");
@@ -269,7 +274,7 @@ describe("BlogPostPage", () => {
   });
 
   it("renders table of contents on mobile", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     // TOC should have headings from the post content
@@ -277,7 +282,7 @@ describe("BlogPostPage", () => {
   });
 
   it("renders MDX content with code blocks", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     // Content should be rendered as MDX
@@ -285,14 +290,14 @@ describe("BlogPostPage", () => {
   });
 
   it("calls notFound for non-existent post", async () => {
-    const params = Promise.resolve({ slug: "non-existent-post" });
+    const params = Promise.resolve({ type: "articles", slug: "non-existent-post" });
 
     await expect(BlogPostPage({ params })).rejects.toThrow("NEXT_NOT_FOUND");
     expect(notFound).toHaveBeenCalled();
   });
 
   it("renders post without image", async () => {
-    const params = Promise.resolve({ slug: "on-patience-and-shipping" });
+    const params = Promise.resolve({ type: "articles", slug: "on-patience-and-shipping" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
@@ -303,21 +308,21 @@ describe("BlogPostPage", () => {
   });
 
   it("links to the neighbouring posts in the header and after the content", async () => {
-    const params = Promise.resolve({ slug: "on-patience-and-shipping" });
+    const params = Promise.resolve({ type: "articles", slug: "on-patience-and-shipping" });
     render(await BlogPostPage({ params }));
 
     expect(
       screen.getByRole("link", { name: "Previous post: Prague in winter" })
-    ).toHaveAttribute("href", "/blog/prague-in-winter");
+    ).toHaveAttribute("href", "/library/articles/prague-in-winter");
     expect(
       screen.getByRole("link", { name: "Next post: Why I started sbozh.me" })
-    ).toHaveAttribute("href", "/blog/why-i-started-sbozh");
+    ).toHaveAttribute("href", "/library/articles/why-i-started-sbozh");
     expect(screen.getByRole("navigation", { name: "More posts" })).toBeInTheDocument();
   });
 
   it("still renders the post when the post list fails to load", async () => {
     mockPostsShouldThrow = true;
-    const params = Promise.resolve({ slug: "on-patience-and-shipping" });
+    const params = Promise.resolve({ type: "articles", slug: "on-patience-and-shipping" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("On patience and shipping")).toBeInTheDocument();
@@ -325,7 +330,7 @@ describe("BlogPostPage", () => {
   });
 
   it("renders ScrollToTop component (hidden by default)", async () => {
-    const params = Promise.resolve({ slug: "why-i-started-sbozh" });
+    const params = Promise.resolve({ type: "articles", slug: "why-i-started-sbozh" });
     render(await BlogPostPage({ params }));
 
     // ScrollToTop is hidden by default (only shows after scrolling 300px)
@@ -338,7 +343,7 @@ describe("BlogPostPage", () => {
 
   it("renders error state when repository throws", async () => {
     mockShouldThrow = true;
-    const params = Promise.resolve({ slug: "any-slug" });
+    const params = Promise.resolve({ type: "articles", slug: "any-slug" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("Unable to load post")).toBeInTheDocument();
@@ -359,7 +364,7 @@ describe("BlogPostPage", () => {
       tags: [],
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("TL;DR:")).toBeInTheDocument();
@@ -380,7 +385,7 @@ describe("BlogPostPage", () => {
       tags: [],
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     const { container } = render(await BlogPostPage({ params }));
 
     const tldr = screen.getByText("TL;DR:").parentElement!;
@@ -403,7 +408,7 @@ describe("BlogPostPage", () => {
       attribution: "Photo by [John Doe](https://example.com)",
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     render(await BlogPostPage({ params }));
 
     expect(screen.getByText("Attribution")).toBeInTheDocument();
@@ -425,7 +430,7 @@ describe("BlogPostPage", () => {
       imageAttribution: "Photo by [Jane Roe](https://unsplash.com/@jane) on Unsplash",
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     render(await BlogPostPage({ params }));
 
     const link = screen.getByRole("link", { name: "Jane Roe" });
@@ -448,7 +453,7 @@ describe("BlogPostPage", () => {
       imageAttribution: "Photo by Jane Roe",
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     render(await BlogPostPage({ params }));
 
     expect(screen.queryByText("Photo by Jane Roe")).not.toBeInTheDocument();
@@ -472,7 +477,7 @@ describe("BlogPostPage", () => {
       },
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     render(await BlogPostPage({ params }));
 
     const img = screen.getByRole("img");
@@ -491,7 +496,7 @@ describe("generateStaticParams", () => {
 
     expect(Array.isArray(params)).toBe(true);
     expect(params.length).toBeGreaterThan(0);
-    expect(params).toContainEqual({ slug: "why-i-started-sbozh" });
+    expect(params).toContainEqual({ type: "articles", slug: "why-i-started-sbozh" });
   });
 
   it("returns empty array when repository throws", async () => {
@@ -528,7 +533,7 @@ describe("generateMetadata", () => {
       },
     };
 
-    const params = Promise.resolve({ slug: "test-post" });
+    const params = Promise.resolve({ type: "articles", slug: "test-post" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.title).toBe("Test Blog Post");
@@ -576,7 +581,7 @@ describe("generateMetadata", () => {
       },
     };
 
-    const params = Promise.resolve({ slug: "custom-og" });
+    const params = Promise.resolve({ type: "articles", slug: "custom-og" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.openGraph?.images).toEqual([
@@ -603,7 +608,7 @@ describe("generateMetadata", () => {
       tags: [],
     };
 
-    const params = Promise.resolve({ slug: "no-image" });
+    const params = Promise.resolve({ type: "articles", slug: "no-image" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.openGraph?.images).toEqual([
@@ -637,7 +642,7 @@ describe("generateMetadata", () => {
       ogGenerate: false,
     };
 
-    const params = Promise.resolve({ slug: "og-disabled" });
+    const params = Promise.resolve({ type: "articles", slug: "og-disabled" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.openGraph?.images).toEqual([
@@ -664,7 +669,7 @@ describe("generateMetadata", () => {
       ogGenerate: false,
     };
 
-    const params = Promise.resolve({ slug: "no-images" });
+    const params = Promise.resolve({ type: "articles", slug: "no-images" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.openGraph?.images).toEqual([
@@ -679,7 +684,7 @@ describe("generateMetadata", () => {
   });
 
   it("returns 'Post Not Found' title for non-existent post", async () => {
-    const params = Promise.resolve({ slug: "non-existent-post" });
+    const params = Promise.resolve({ type: "articles", slug: "non-existent-post" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.title).toBe("Post Not Found");
@@ -690,7 +695,7 @@ describe("generateMetadata", () => {
   it("returns fallback metadata when repository throws", async () => {
     mockShouldThrow = true;
 
-    const params = Promise.resolve({ slug: "any-slug" });
+    const params = Promise.resolve({ type: "articles", slug: "any-slug" });
     const metadata = await generateMetadata({ params });
 
     expect(metadata.title).toBe("Blog Post");

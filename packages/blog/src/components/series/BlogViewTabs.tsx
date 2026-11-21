@@ -12,6 +12,8 @@ export interface BlogViewTabsProps {
   showSeries?: boolean;
   /** Where the "Submit" button at the right of the row points; no button when unset */
   submitHref?: string;
+  /** The listing page the tabs link back to (default `/library`) */
+  basePath?: string;
 }
 
 const TABS: { view: BlogView; label: string }[] = [
@@ -26,6 +28,7 @@ export function BlogViewTabs({
   filters,
   showSeries = false,
   submitHref,
+  basePath,
 }: BlogViewTabsProps) {
   return (
     <div className="flex items-center gap-2">
@@ -39,7 +42,7 @@ export function BlogViewTabs({
               variant={tab.view === value ? "default" : "outline"}
             >
               <a
-                href={blogHref(tab.view, filters)}
+                href={blogHref(tab.view, filters, basePath)}
                 aria-current={tab.view === value ? "page" : undefined}
               >
                 {tab.label}

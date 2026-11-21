@@ -7,7 +7,7 @@ import {
 } from "@sbozh/react-ui/components/ui/hover-card";
 import type { PostListItem } from "../../types";
 import type { AdjacentPosts } from "../../utils";
-import { formatShortDate } from "../../utils";
+import { formatShortDate, postHref } from "../../utils";
 import { ArrowIcon } from "./ArrowIcon";
 import { Censored } from "./Censored";
 import { PostThumbnail } from "./PostThumbnail";
@@ -52,7 +52,7 @@ function NavArrow({
     <HoverCard openDelay={150} closeDelay={100}>
       <HoverCardTrigger asChild>
         <a
-          href={`/blog/${post.slug}`}
+          href={postHref(post)}
           rel={direction === "previous" ? "prev" : "next"}
           aria-label={`${label}: ${post.title}`}
           className="inline-flex size-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors duration-200 hover:border-primary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -61,7 +61,7 @@ function NavArrow({
         </a>
       </HoverCardTrigger>
       <HoverCardContent side="bottom" align="end" className="w-72 overflow-hidden border-border p-0">
-        <a href={`/blog/${post.slug}`} className="block" tabIndex={-1}>
+        <a href={postHref(post)} className="block" tabIndex={-1}>
           <PostThumbnail post={post} width={640} className="aspect-video w-full" />
           <div className="p-4">
             <div className="mb-1 text-xs text-muted-foreground">

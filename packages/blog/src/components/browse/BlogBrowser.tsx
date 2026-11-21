@@ -26,10 +26,12 @@ export interface BlogBrowserProps {
   initialFilters?: PostFilters;
   /** Passed to the view tabs: the anonymous submission page */
   submitHref?: string;
+  /** The listing page URL this browser is mounted on (e.g. `/library/articles`) */
+  basePath?: string;
 }
 
 /** The filter bar and its results. Filters live in the URL, so a filtered view can be shared. */
-export function BlogBrowser({ posts, series = [], view, initialFilters, submitHref }: BlogBrowserProps) {
+export function BlogBrowser({ posts, series = [], view, initialFilters, submitHref, basePath }: BlogBrowserProps) {
   const { filters, setFilters, clearFilters, hasActiveFilters } = usePostFilters(initialFilters);
 
   const options = useMemo(() => getFilterOptions(posts, series), [posts, series]);
@@ -45,10 +47,10 @@ export function BlogBrowser({ posts, series = [], view, initialFilters, submitHr
       return;
     }
     const timer = setTimeout(() => {
-      window.history.replaceState(window.history.state, "", blogHref(view, filters));
+      window.history.replaceState(window.history.state, "", blogHref(view, filters, basePath));
     }, URL_UPDATE_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [view, filters]);
+  }, [view, filters, basePath]);
 
   return (
     <>
@@ -58,6 +60,7 @@ export function BlogBrowser({ posts, series = [], view, initialFilters, submitHr
           filters={filters}
           showSeries={options.series.length > 0}
           submitHref={submitHref}
+          basePath={basePath}
         />
       </div>
       <FilterBar

@@ -15,6 +15,7 @@ import {
 
 import { Accordion } from "./accordion";
 import { glitchMdxComponents } from "./glitch/mdx-components";
+import { LawLanguageBlock } from "./law-languages";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
 
 // Link component that handles external links
@@ -60,6 +61,9 @@ export const blogMdxComponents: Record<string, ComponentType<any>> = {
 
   // <Accordion title="…">…</Accordion>: collapsed text, e.g. the old version of a rewritten post
   Accordion,
+
+  // Law-type posts: :::lang xx ... ::: block picked by LawLanguageSwitcher
+  LawLanguageBlock,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,

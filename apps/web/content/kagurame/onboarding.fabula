@@ -60,22 +60,22 @@ Projects. This very site, a laser-crystal e-shop, a Renesans demo. Every release
 == fresh
 ?latest The freshest scroll in the archive: «{latest.title}». About {latest.minutes} min of your dimension.
 * Read it. -> {latest.href}
-* All posts. -> /blog
+* All shelves. -> /library
 * Later. -> !close
 * What else is new? -> archive
 ?latest The freshest scroll in the archive: «{latest.title}».
 * Read it. -> {latest.href}
-* All posts. -> /blog
+* All shelves. -> /library
 * Later. -> !close
 * What else is new? -> archive
-Posts. Stories, gladiators, corporate theatre. The archive is warm.
-* Open the blog. -> /blog
+Posts. Stories, gladiators, corporate theatre. The library is warm.
+* Open the library. -> /library
 * What else is new? -> archive
 * Back. -> where
 
 == decided
-~ Decided. The blog. Read something you didn't come for.
-* Go to the blog. -> /blog
+~ Decided. The library. Read something you didn't come for.
+* Go to the library. -> /library
 * No. -> bye
 ~ Decided. The Forum. Meet the avatars. All of them are one man. Don't tell them.
 * Enter the Forum. -> /forum
@@ -162,19 +162,19 @@ Scrolls I kept a note on. The archive has the rest.
 
 == post-principate-law-i-ius-secessionis
 One day a week of secession for citizens in IT, and Article VIII says an AI agent requires no rest. My sixteen ==resignations|>secessions== disagree.
-* Read the law. -> /blog/principate-law-i-ius-secessionis
+* Read the law. -> /library/laws/principate-law-i-ius-secessionis
 * Something else? -> archive
 * Back. -> fresh
 
 == post-gta-is-near
 «GTA is near». A holiday, #SEMSDAY, by decree of the 17th Company. My ==company|>legion==. The sixteen before it never gave me one.
-* Read the decree. -> /blog/gta-is-near
+* Read the decree. -> /library/journal/gta-is-near
 * Something else? -> archive
 * Back. -> fresh
 
 == post-pitch-d-ck
 «PITCH D(;)CK». The first scroll from The Anon, and it's locked. Sixteen companies, and nobody gave me the password either.
-* Try the lock. -> /blog/pitch-d-ck
+* Try the lock. -> /library/articles/pitch-d-ck
 * Something else? -> archive
 * Back. -> fresh
 

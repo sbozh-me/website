@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const pathname = vi.hoisted(() => ({ current: "/blog" }));
+const pathname = vi.hoisted(() => ({ current: "/library" }));
 
 vi.mock("next/navigation", () => ({
   usePathname: () => pathname.current,
@@ -14,7 +14,7 @@ const press = () =>
   act(() => void document.body.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, code: "KeyW", key: "w" })));
 
 afterEach(() => {
-  pathname.current = "/blog";
+  pathname.current = "/library";
   act(() => setGlitchesEnabled(null));
 });
 
@@ -33,7 +33,7 @@ describe("Header", () => {
 
   it("keeps the menu links", () => {
     render(<Header />);
-    for (const name of ["Home", "Blog", "Forum", "Projects"]) {
+    for (const name of ["Home", "Library", "Forum", "Projects"]) {
       expect(screen.getAllByRole("link", { name }).length).toBeGreaterThan(0);
     }
   });

@@ -29,7 +29,8 @@ export type { UsePostFiltersReturn } from "./hooks";
 export type { PostFilters, PostSort } from "./types/filters";
 
 export type { Persona } from "./types/persona";
-export type { Post, PostListItem } from "./types/post";
+export type { Post, PostListItem, PostType } from "./types/post";
+export { POST_TYPES } from "./types/post";
 export type { Series, SeriesPromotion, SeriesStatus } from "./types/series";
 export type { Tag } from "./types/tag";
 export type { BlogView, FilterOptions, GroupedPosts, MonthGroup, SeriesPart, SeriesWithPosts } from "./utils";

@@ -25,7 +25,7 @@ Hi.
 
 == hello
 Hello.
-* Blog. -> /blog
+* Library. -> /library
 * Forum. -> /forum
 * Projects. -> /projects
 * Subscribe. -> /subscribe
@@ -48,7 +48,7 @@ Colours.
 * Back. -> start
 `
 
-const ROUTES = ["/", "/blog", "/blog/[slug]", "/forum", "/projects", "/subscribe"]
+const ROUTES = ["/", "/library", "/library/[type]", "/library/[type]/[slug]", "/forum", "/projects", "/subscribe"]
 
 function check(source: string, routes: string[] | undefined = ROUTES): Problem[] {
   const { fabula, problems } = parseFabula(source)
@@ -243,7 +243,7 @@ describe("validateFabula", () => {
 
   it("checks /paths against the app's routes", () => {
     const source = withScene(
-      "== extra\nLine.\n* A. -> /blog/some-post\n* B. -> /blog?topic=x\n* C. -> /nowhere\n* D. -> start"
+      "== extra\nLine.\n* A. -> /library/laws/some-post\n* B. -> /library?topic=x\n* C. -> /nowhere\n* D. -> start"
     )
     expect(errors(source)).toEqual([`${X + 4}: no page for /nowhere under app/`])
     // An empty route list matches nothing; no list at all (the running app) skips the check

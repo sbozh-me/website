@@ -14,3 +14,4 @@ export type { SeriesPart, SeriesWithPosts } from "./series";
 export { getSeriesParts, getSeriesWithPosts } from "./series";
 export type { BlogView, FilterOptions } from "./post-filters";
 export { blogHref, filterPosts, getFilterOptions, parsePostFilters } from "./post-filters";
+export { postHref, seriesHref } from "./post-href";

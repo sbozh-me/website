@@ -3,7 +3,7 @@ import { TOPICS, type Topic } from "@/lib/subscribers/topics";
 /** Feed URLs per channel. Kept free of server imports so client components (the footer's feed menu) can use it. */
 export const FEED_PATHS = {
   all: { rss: "/rss.xml", atom: "/atom.xml" },
-  blog: { rss: "/blog/rss.xml", atom: "/blog/atom.xml" },
+  blog: { rss: "/library/rss.xml", atom: "/library/atom.xml" },
   releases: { rss: "/releases/rss.xml", atom: "/releases/atom.xml" },
 } as const;
 

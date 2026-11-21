@@ -56,13 +56,13 @@ describe("Kagurame's onboarding script", () => {
     expect(line.choices[0].target).toEqual<Target>({ kind: "route", href: "/blog/gladiators" })
   })
 
-  it("falls back to the blog when there is no latest post", () => {
-    expect(resolveScene(fabula, "fresh", stranger).choices[0].target).toEqual<Target>({ kind: "route", href: "/blog" })
+  it("falls back to the library when there is no latest post", () => {
+    expect(resolveScene(fabula, "fresh", stranger).choices[0].target).toEqual<Target>({ kind: "route", href: "/library" })
   })
 
   it("decides a destination on his own", () => {
     const decide = (r: number) => resolveScene(fabula, "decided", { ...stranger, random: () => r })
-    expect(decide(0).choices[0].target).toEqual<Target>({ kind: "route", href: "/blog" })
+    expect(decide(0).choices[0].target).toEqual<Target>({ kind: "route", href: "/library" })
     expect(decide(0.3).choices[0].target).toEqual<Target>({ kind: "route", href: "/forum" })
     expect(decide(0.6).choices[0].target).toEqual<Target>({ kind: "route", href: "/projects" })
     expect(decide(0.99).choices[0].target).toEqual<Target>({ kind: "route", href: "/subscribe" })

@@ -4,9 +4,9 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/blog/repository", () => ({
   createBlogRepository: () => ({
     getPosts: vi.fn(async () => [
-      { slug: "test-post-1", date: "2024-01-15" },
-      { slug: "test-post-2", date: "2024-02-20", seriesId: "s1" },
-      { slug: "planned-post", date: "2099-01-01", isPlanned: true },
+      { slug: "test-post-1", type: "articles", date: "2024-01-15" },
+      { slug: "test-post-2", type: "stories", date: "2024-02-20", seriesId: "s1" },
+      { slug: "planned-post", type: "journal", date: "2099-01-01", isPlanned: true },
     ]),
     getSeries: vi.fn(async () => [
       { id: "s1", title: "Stand-up", slug: "stand-up" },
@@ -41,7 +41,7 @@ describe("sitemap.ts", () => {
     const urls = result.map((entry) => entry.url);
 
     expect(urls).toContain("https://sbozh.me");
-    expect(urls).toContain("https://sbozh.me/blog");
+    expect(urls).toContain("https://sbozh.me/library");
     expect(urls).toContain("https://sbozh.me/forum");
     expect(urls).toContain("https://sbozh.me/projects");
   });
@@ -58,9 +58,9 @@ describe("sitemap.ts", () => {
     const result = await sitemap();
     const urls = result.map((entry) => entry.url);
 
-    expect(urls).toContain("https://sbozh.me/blog/test-post-1");
-    expect(urls).toContain("https://sbozh.me/blog/test-post-2");
-    expect(urls).not.toContain("https://sbozh.me/blog/planned-post");
+    expect(urls).toContain("https://sbozh.me/library/articles/test-post-1");
+    expect(urls).toContain("https://sbozh.me/library/stories/test-post-2");
+    expect(urls).not.toContain("https://sbozh.me/library/journal/planned-post");
   });
 
   it("includes project tab routes", async () => {
@@ -83,7 +83,7 @@ describe("sitemap.ts", () => {
   it("sets correct lastModified for blog posts", async () => {
     const result = await sitemap();
     const post1 = result.find((entry) =>
-      entry.url.includes("blog/test-post-1")
+      entry.url.includes("/library/articles/test-post-1")
     );
 
     expect(post1?.lastModified).toEqual(new Date("2024-01-15"));
@@ -93,16 +93,16 @@ describe("sitemap.ts", () => {
     const result = await sitemap();
 
     const homepage = result.find((entry) => entry.url === "https://sbozh.me");
-    const blog = result.find((entry) => entry.url === "https://sbozh.me/blog");
+    const library = result.find((entry) => entry.url === "https://sbozh.me/library");
     const projects = result.find(
       (entry) => entry.url === "https://sbozh.me/projects"
     );
     const blogPost = result.find((entry) =>
-      entry.url.includes("blog/test-post")
+      entry.url.includes("/library/articles/test-post")
     );
 
     expect(homepage?.priority).toBe(1);
-    expect(blog?.priority).toBe(0.8);
+    expect(library?.priority).toBe(0.8);
     expect(projects?.priority).toBe(0.8);
     expect(blogPost?.priority).toBe(0.6);
   });
@@ -111,13 +111,13 @@ describe("sitemap.ts", () => {
     const result = await sitemap();
 
     const homepage = result.find((entry) => entry.url === "https://sbozh.me");
-    const blog = result.find((entry) => entry.url === "https://sbozh.me/blog");
+    const library = result.find((entry) => entry.url === "https://sbozh.me/library");
     const blogPost = result.find((entry) =>
-      entry.url.includes("blog/test-post")
+      entry.url.includes("/library/articles/test-post")
     );
 
     expect(homepage?.changeFrequency).toBe("monthly");
-    expect(blog?.changeFrequency).toBe("weekly");
+    expect(library?.changeFrequency).toBe("weekly");
     expect(blogPost?.changeFrequency).toBe("monthly");
   });
 
@@ -177,7 +177,7 @@ describe("sitemap.ts error handling", () => {
 
     // Static routes should still be present
     expect(urls).toContain("https://sbozh.me");
-    expect(urls).toContain("https://sbozh.me/blog");
+    expect(urls).toContain("https://sbozh.me/library");
     expect(urls).toContain("https://sbozh.me/projects");
   });
 });

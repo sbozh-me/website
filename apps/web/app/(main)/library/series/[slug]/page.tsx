@@ -87,10 +87,10 @@ export default async function SeriesPage({ params }: PageProps) {
     <div className="mx-auto px-6 md:px-12 lg:px-24 py-12 md:py-24">
       <div className="max-w-3xl mx-auto">
         <a
-          href="/blog?view=series"
+          href="/library"
           className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
         >
-          ← All series
+          ← Library
         </a>
 
         {series.image && (
@@ -139,12 +139,12 @@ export default async function SeriesPage({ params }: PageProps) {
         {(earlier || later) && (
           <nav aria-label="Linked series" className="mt-8 flex flex-wrap justify-between gap-4 text-sm">
             {earlier && (
-              <a href={`/blog/series/${earlier.slug}`} className="text-muted-foreground hover:text-foreground">
+              <a href={`/library/series/${earlier.slug}`} className="text-muted-foreground hover:text-foreground">
                 ← Previous series: {earlier.title}
               </a>
             )}
             {later && (
-              <a href={`/blog/series/${later.slug}`} className="ml-auto text-muted-foreground hover:text-foreground">
+              <a href={`/library/series/${later.slug}`} className="ml-auto text-muted-foreground hover:text-foreground">
                 Next series: {later.title} →
               </a>
             )}

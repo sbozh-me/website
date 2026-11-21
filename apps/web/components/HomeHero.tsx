@@ -11,7 +11,7 @@ import {
 } from "@sbozh/react-ui/components/ui/tooltip";
 
 const navItems = [
-  { name: "Blog", href: "/blog" },
+  { name: "Library", href: "/library" },
   { name: "Forum", href: "/forum" },
   { name: "Projects", href: "/projects" },
 ];

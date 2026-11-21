@@ -81,6 +81,7 @@ export interface Problem {
 export interface LatestPost {
   title: string
   slug: string
+  type?: string
   readingTime?: number
 }
 
@@ -126,7 +127,7 @@ export const OPENERS: readonly { label: string; scene: string; open?: string }[]
 ]
 
 /** Every visitor must be able to reach these from `start`: routes, scrolls and scenes. */
-export const MUST_REACH: readonly string[] = ["/blog", "/forum", "/projects", "/subscribe", "#releases", "ave"]
+export const MUST_REACH: readonly string[] = ["/library", "/forum", "/projects", "/subscribe", "#releases", "ave"]
 
 /** External links may only go here (host and path prefix, after `https://`). */
 export const EXTERNAL_ALLOWLIST: readonly string[] = ["github.com/sbozh/"]
@@ -495,7 +496,7 @@ function placeholderValues(post?: LatestPost): Record<string, string | undefined
   return {
     title: post?.title,
     minutes: post?.readingTime ? String(post.readingTime) : undefined,
-    href: post ? `/blog/${post.slug}` : undefined,
+    href: post ? (post.type ? `/library/${post.type}/${post.slug}` : `/blog/${post.slug}`) : undefined,
   }
 }
 

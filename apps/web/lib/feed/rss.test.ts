@@ -26,11 +26,28 @@ describe("renderRss", () => {
     const xml = renderRss(channel, [entry]);
 
     expect(xml).toContain("<title>Rock &amp; &lt;roll&gt;</title>");
-    expect(xml).toContain("<description>A &quot;loud&quot; post</description>");
+    expect(xml).toContain(
+      '<description><![CDATA[<p>A &quot;loud&quot; post</p><p><a href="https://sbozh.me/blog/rock-and-roll">Read on a website</a></p>]]></description>',
+    );
     expect(xml).toContain("<link>https://sbozh.me/blog/rock-and-roll</link>");
     expect(xml).toContain("<pubDate>Thu, 01 Oct 2026 10:00:00 GMT</pubDate>");
     expect(xml).toContain("<category>Blog posts</category>");
     expect(xml).toContain('<atom:link href="https://sbozh.me/rss.xml" rel="self"');
+  });
+
+  it("omits the teaser paragraph when the entry has none but keeps the Read link", () => {
+    const xml = renderRss(channel, [{ ...entry, description: "" }]);
+
+    expect(xml).toContain(
+      '<description><![CDATA[<p><a href="https://sbozh.me/blog/rock-and-roll">Read on a website</a></p>]]></description>',
+    );
+  });
+
+  it("escapes the teaser inside CDATA so angle brackets stay harmless", () => {
+    const xml = renderRss(channel, [{ ...entry, description: "watch out ]]> there" }]);
+
+    expect(xml).toContain("]]&gt; there");
+    expect(xml.match(/]]>/g) ?? []).toHaveLength(1);
   });
 
   it("strips control characters that are illegal in XML", () => {
@@ -55,7 +72,9 @@ describe("renderAtom", () => {
     expect(xml).toContain("<entry><title>Rock &amp; &lt;roll&gt;</title>");
     expect(xml).toContain("<id>https://sbozh.me/blog/rock-and-roll</id>");
     expect(xml).toContain('<category term="blog" label="Blog posts"/>');
-    expect(xml).toContain("<summary>A &quot;loud&quot; post</summary>");
+    expect(xml).toContain(
+      '<summary type="html"><![CDATA[<p>A &quot;loud&quot; post</p><p><a href="https://sbozh.me/blog/rock-and-roll">Read on a website</a></p>]]></summary>',
+    );
   });
 
   it("still has an updated date when empty, as Atom requires", () => {

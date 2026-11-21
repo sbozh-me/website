@@ -5,6 +5,7 @@ import { PlannedBadge } from "../post/PlannedBadge";
 import { PostThumbnail } from "../post/PostThumbnail";
 import { PersonaDot } from "../timeline/PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
+import { postHref, seriesHref } from "../../utils/post-href";
 import { formatReadingTime } from "../../utils/reading-time";
 
 import type { PostListItem } from "../../types/post";
@@ -25,7 +26,7 @@ export function PostTile({ post, seriesPart }: PostTileProps) {
   return (
     <article className="relative h-full">
       <a
-        href={`/blog/${post.slug}`}
+        href={postHref(post)}
         className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-muted transition-colors duration-200 hover:border-primary"
       >
         <PostThumbnail post={post} width={640} className="aspect-video w-full" />
@@ -62,7 +63,7 @@ export function PostTile({ post, seriesPart }: PostTileProps) {
       </a>
       {seriesPart && (
         <a
-          href={`/blog/series/${seriesPart.series.slug}`}
+          href={seriesHref(seriesPart.series.slug)}
           className="absolute left-3 top-3 max-w-[80%] truncate rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground transition-colors duration-200 hover:border-primary hover:text-foreground"
         >
           {seriesPart.series.title} · Post {seriesPart.part}

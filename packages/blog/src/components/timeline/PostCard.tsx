@@ -2,6 +2,7 @@ import { Censored } from "../post/Censored";
 import { PlannedBadge } from "../post/PlannedBadge";
 import { PersonaDot } from "./PersonaDot";
 import { formatShortDate } from "../../utils/date-format";
+import { postHref, seriesHref } from "../../utils/post-href";
 import { formatReadingTime } from "../../utils/reading-time";
 
 import type { PostListItem } from "../../types/post";
@@ -18,7 +19,7 @@ export function PostCard({ post, seriesPart }: PostCardProps) {
   return (
     <div className="relative">
       <a
-        href={`/blog/${post.slug}`}
+        href={postHref(post)}
         className="block bg-muted border border-border rounded-lg p-5 mb-4 transition-colors duration-200 hover:border-primary"
       >
         <div className="flex flex-col gap-1 mb-3 text-sm">
@@ -49,7 +50,7 @@ export function PostCard({ post, seriesPart }: PostCardProps) {
       </a>
       {seriesPart && (
         <a
-          href={`/blog/series/${seriesPart.series.slug}`}
+          href={seriesHref(seriesPart.series.slug)}
           className="absolute right-4 top-4 max-w-[50%] truncate rounded-md border border-border bg-background px-2 py-1 text-xs text-muted-foreground transition-colors duration-200 hover:border-primary hover:text-foreground"
         >
           {seriesPart.series.title} · Post {seriesPart.part}

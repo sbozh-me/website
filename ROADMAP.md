@@ -241,6 +241,12 @@ One goal.
 
 - ~~Glitch words keep glitching when the (context) Window is OFF, set in a font without actual letters (the author supplies the font)~~
 
+## 1.14.0 - Library
+
+- Posts carry a `type` field in Directus — Laws, Stories, Articles, Journal — and every existing post is assigned one
+- `/blog` becomes `/library`: hub page lists the four types with post counts, each type lives at `/library/<type>`, posts at `/library/<type>/<slug>`; old `/blog` URLs redirect to the new ones, `/blog/<slug>` stays as a slug-only shortcut that resolves to the canonical URL
+- Laws carry a body in five languages (Czech, English, Japanese, Ukrainian, Russian) as `:::lang xx` blocks; a five-button switcher above the article shows one language at a time, defaults to Czech, and remembers the reader's choice in localStorage
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line

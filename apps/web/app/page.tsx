@@ -41,7 +41,7 @@ const INITIAL_LIMIT = 3;
 
 // Announcement poster between the video hero and the promoted series, leading to its post
 const POSTER = {
-  href: "/blog/gta-is-near",
+  href: "/library/journal/gta-is-near",
   src: "/images/home/gta-is-near-poster.png",
   alt: "DPSM, post I of III: GTA is near. 17 November 2026. I grant you a holiday. #SEMSDAY, by decree of the 17th Company. Admit all.",
   width: 1280,
@@ -133,6 +133,7 @@ export default async function Home() {
     latest && {
       title: latest.title,
       slug: latest.slug,
+      type: latest.type,
       readingTime: latest.readingTime,
     },
   );

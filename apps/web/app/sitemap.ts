@@ -26,29 +26,45 @@ function getLastModified(path: string): Date {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://sbozh.me";
 
-  // Fetch blog data first to get latest post date for /blog route
+  // Fetch blog data first to get latest post date for /library route
   let blogRoutes: MetadataRoute.Sitemap = [];
   let latestBlogPostDate: Date | undefined;
+  const seenTypes = new Set<string>();
   try {
     const repository = createBlogRepository();
     // A planned post is only a teaser until its publish time: index it from then
     const posts = (await repository.getPosts()).filter((post) => !post.isPlanned);
 
-    // Track the latest post date for the /blog route
+    // Track the latest post date for the /library route
     if (posts.length > 0) {
       latestBlogPostDate = new Date(posts[0].date);
     }
 
-    blogRoutes = posts.map((post) => ({
-      url: `${baseUrl}/blog/${post.slug}`,
-      lastModified: new Date(post.lastModified || post.date),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    }));
+    blogRoutes = posts
+      .filter((post) => !!post.type)
+      .map((post) => {
+        seenTypes.add(post.type!);
+        return {
+          url: `${baseUrl}/library/${post.type}/${post.slug}`,
+          lastModified: new Date(post.lastModified || post.date),
+          changeFrequency: "monthly" as const,
+          priority: 0.6,
+        };
+      });
+
+    // One entry per non-empty type page
+    for (const type of seenTypes) {
+      blogRoutes.push({
+        url: `${baseUrl}/library/${type}`,
+        lastModified: latestBlogPostDate || new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      });
+    }
 
     const seriesRoutes = getSeriesWithPosts(posts, await repository.getSeries()).map(
       ({ series, posts: seriesPosts }) => ({
-        url: `${baseUrl}/blog/series/${series.slug}`,
+        url: `${baseUrl}/library/series/${series.slug}`,
         lastModified: new Date(seriesPosts.at(-1)!.date),
         changeFrequency: "monthly" as const,
         priority: 0.6,
@@ -96,7 +112,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/library`,
       lastModified: latestBlogPostDate || new Date(),
       changeFrequency: "weekly",
       priority: 0.8,

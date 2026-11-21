@@ -75,10 +75,10 @@ export function BlogPostGrid({
                   : "No posts available."}
               </p>
               <Link
-                href="/blog"
+                href="/library"
                 className="mt-2 inline-block text-primary hover:underline"
               >
-                View all posts
+                View the library
               </Link>
             </motion.div>
           ) : (
@@ -101,7 +101,7 @@ export function BlogPostGrid({
                 variants={itemVariants}
               >
                 <Button variant="outline" asChild>
-                  <Link href="/blog">More posts</Link>
+                  <Link href="/library">More posts</Link>
                 </Button>
               </motion.div>
             </motion.div>

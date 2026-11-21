@@ -16,10 +16,10 @@ export default function SubmitPage() {
         <div>
           <p className="text-sm">
             <a
-              href="/blog"
+              href="/library"
               className="text-muted-foreground hover:text-foreground"
             >
-              ← Blog
+              ← Library
             </a>
           </p>
           <h1 className="mt-4 text-3xl md:text-4xl tracking-tight">

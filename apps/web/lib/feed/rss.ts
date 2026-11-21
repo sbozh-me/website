@@ -16,6 +16,21 @@ export function escapeXml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
+// RSS 2.0 descriptions and Atom summaries can carry HTML; feed readers that support it
+// render the "Read on a website" link, the rest show the escaped markup as text — both are
+// readable. CDATA is split so a literal `]]>` in the body cannot close the section.
+function cdata(html: string): string {
+  return `<![CDATA[${html.replace(/]]>/g, "]]]]><![CDATA[>")}]]>`;
+}
+
+/** The teaser as a paragraph, followed by a "Read on a website" link to the post. */
+function entryBodyHtml(entry: FeedEntry): string {
+  const safeUrl = escapeXml(entry.url);
+  const teaserHtml = escapeXml(entry.description);
+  const teaserParagraph = teaserHtml ? `<p>${teaserHtml}</p>` : "";
+  return `${teaserParagraph}<p><a href="${safeUrl}">Read on a website</a></p>`;
+}
+
 export function renderRss(channel: FeedChannel, entries: FeedEntry[]): string {
   const items = entries.map((entry) =>
     [
@@ -25,7 +40,7 @@ export function renderRss(channel: FeedChannel, entries: FeedEntry[]): string {
       `<guid isPermaLink="true">${entry.url}</guid>`,
       `<pubDate>${new Date(entry.date).toUTCString()}</pubDate>`,
       `<category>${TOPIC_LABELS[entry.topic]}</category>`,
-      `<description>${escapeXml(entry.description)}</description>`,
+      `<description>${cdata(entryBodyHtml(entry))}</description>`,
       "</item>",
     ].join("")
   );
@@ -63,7 +78,7 @@ export function renderAtom(channel: FeedChannel, entries: FeedEntry[]): string {
       `<published>${date}</published>`,
       `<updated>${date}</updated>`,
       `<category term="${entry.topic}" label="${TOPIC_LABELS[entry.topic]}"/>`,
-      `<summary>${escapeXml(entry.description)}</summary>`,
+      `<summary type="html">${cdata(entryBodyHtml(entry))}</summary>`,
       "</entry>",
     ].join("");
   });

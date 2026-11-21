@@ -88,7 +88,7 @@ Hi.
 * ==||What is AVE?|>Why color has changed?== -> ==ave|>color==
 == hello
 Hello.
-* Blog. -> /blog
+* Library. -> /library
 * Forum. -> /forum
 * Projects. -> /projects
 * Subscribe. -> /subscribe

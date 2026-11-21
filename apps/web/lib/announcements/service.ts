@@ -64,6 +64,7 @@ interface DirectusPost {
   title: string;
   slug: string;
   excerpt: string | null;
+  type: string | null;
   date_published: string;
 }
 
@@ -82,7 +83,7 @@ function dueQuery(dateField: string, fields: string): string {
 export async function findDue(): Promise<Announcement[]> {
   const [posts, releases] = await Promise.all([
     directusRest<{ data: DirectusPost[] }>(
-      `/items/posts?${dueQuery("date_published", "id,title,slug,excerpt,date_published")}`
+      `/items/posts?${dueQuery("date_published", "id,title,slug,excerpt,type,date_published")}`
     ),
     directusRest<{ data: DirectusRelease[] }>(`/items/release_notes?${dueQuery("date_released", RELEASE_FIELDS)}`),
   ]);
@@ -96,7 +97,7 @@ export async function findDue(): Promise<Announcement[]> {
         topic: "blog",
         subject: `New post: ${title}`,
         title,
-        url: postUrl(post.slug),
+        url: postUrl({ slug: post.slug, type: post.type ?? undefined }),
         body: post.excerpt ?? "",
         date: post.date_published,
       };

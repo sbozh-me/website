@@ -28,8 +28,8 @@ export interface DirectusRelease {
 
 export const RELEASE_FIELDS = "id,slug,version,title,summary,date_released,project.name,project.slug";
 
-export function postUrl(slug: string): string {
-  return `${SITE_URL}/blog/${slug}`;
+export function postUrl(post: { slug: string; type?: string }): string {
+  return post.type ? `${SITE_URL}/library/${post.type}/${post.slug}` : `${SITE_URL}/blog/${post.slug}`;
 }
 
 export function releaseUrl(release: Pick<DirectusRelease, "slug" | "project">): string {
@@ -61,7 +61,7 @@ export async function getBlogEntries(): Promise<FeedEntry[]> {
   return posts.filter((post) => !post.isPlanned).map((post) => ({
     topic: "blog",
     title: post.title,
-    url: postUrl(post.slug),
+    url: postUrl(post),
     date: post.date,
     description: post.excerpt,
   }));

@@ -111,13 +111,13 @@ describe("SeriesPage", () => {
     render(await SeriesPage(params("part-1")));
     expect(screen.getByRole("link", { name: /Next series: Part 2/ })).toHaveAttribute(
       "href",
-      "/blog/series/part-2"
+      "/library/series/part-2"
     );
 
     render(await SeriesPage(params("part-2")));
     expect(screen.getByRole("link", { name: /Previous series: Part 1/ })).toHaveAttribute(
       "href",
-      "/blog/series/part-1"
+      "/library/series/part-1"
     );
   });
 
