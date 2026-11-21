@@ -2,6 +2,7 @@
 
 import { Check, Copy, Eye, TriangleAlert } from "lucide-react";
 import { useRef, useState } from "react";
+import posthog from "posthog-js";
 import { toast } from "sonner";
 
 import { Alert, AlertDescription } from "@sbozh/react-ui/components/ui/alert";
@@ -57,6 +58,7 @@ export function DonateWallets({ wallets }: { readonly wallets: readonly WalletSu
       }
       setState(wallet.id, { status: "shown", wallet: body.wallet });
       track("donate_reveal", { asset: wallet.asset, network: wallet.network });
+      posthog.capture("donate_reveal", { asset: wallet.asset, network: wallet.network });
     } catch {
       setState(wallet.id, { message: ERRORS.unavailable, status: "error" });
     }
