@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2026-11-21
+
+### Changes
+
+- Set up PostHog ([9456094](https://github.com/sbozh-me/website/commit/945609482a006acbfa363e0c6dcc0dd4fcc25b13))
+- Merge pull request #8 from sbozh-me/posthog/wizard-01a1fe7f3b35 ([3cabd3b](https://github.com/sbozh-me/website/commit/3cabd3b28ba05c7d82cc9094c8fbb57c0d676a57))
+- docs(roadmap): add release flow automation handoff ([1a0e353](https://github.com/sbozh-me/website/commit/1a0e3530c85a456081051b00003c4c310eeec57d))
+- feat(blog): deliver Library, law languages and feed links ([a02832e](https://github.com/sbozh-me/website/commit/a02832e0b72b287fa451f2507ee89ef443393d79))
+- feat(web): Kagurame recites the Library release ([857745b](https://github.com/sbozh-me/website/commit/857745bbcce0713d6835c4ac0a13f7132b393fec))
+- test(web): cover library type and submit pages, plus the blog redirect ([1ff7820](https://github.com/sbozh-me/website/commit/1ff7820f1c1018e9126fe2756df74f832944e678))
+
+
 ## [1.13.0] - 2026-11-20
 
 ### Changes
