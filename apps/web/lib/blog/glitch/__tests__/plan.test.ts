@@ -136,16 +136,16 @@ describe("glitch plan", () => {
     }
   });
 
-  it("showsVeiled: half of the pauses end in shapes", () => {
-    expect(showsVeiled(() => 0.49)).toBe(true);
-    expect(showsVeiled(() => 0.5)).toBe(false);
+  it("showsVeiled: 3 pauses in 10 end in shapes", () => {
+    expect(showsVeiled(() => 0.29)).toBe(true);
+    expect(showsVeiled(() => 0.3)).toBe(false);
     const rng = seeded(3);
     const shown = Array.from({ length: 1000 }, () => showsVeiled(rng)).filter(Boolean).length;
-    expect(shown).toBeGreaterThan(430);
-    expect(shown).toBeLessThan(570);
+    expect(shown).toBeGreaterThan(240);
+    expect(shown).toBeLessThan(360);
   });
 
-  it("showsVeiledHover: a hover shows the shapes 73 times in 111", () => {
+  it("showsVeiledHover: a tap shows the shapes 73 times in 111", () => {
     // 73/111 is 0.6577
     expect(showsVeiledHover(() => 0.65)).toBe(true);
     expect(showsVeiledHover(() => 0.66)).toBe(false);

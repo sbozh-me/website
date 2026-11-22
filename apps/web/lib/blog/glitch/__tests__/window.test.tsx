@@ -163,11 +163,12 @@ describe("WindowToggle", () => {
     expect(button()).toHaveAttribute("aria-pressed", "false");
     expect(glitch(container)).toHaveAttribute("data-off");
     expect(glitch(container).textContent).toBe("себя");
-    // Closed, it glitches into shapes: under the pointer, and now and then on its own
+    // Closed, it glitches into shapes: on tap, and now and then on its own
     setVisible(true);
     expect(glitch(container).querySelector(".glitch-layers")).toBeNull();
-    fireEvent.pointerEnter(glitch(container));
+    fireEvent.click(glitch(container));
     expect(glitch(container).querySelector(".glitch-cipher")).not.toBeNull();
+    advance(400);
     fireEvent.click(glitch(container)); // stop it
 
     fireEvent.click(button());
@@ -306,9 +307,9 @@ describe("WindowToggle", () => {
     expect(unclosable).toHaveAttribute("data-bursting");
     expect(unclosable.querySelector(".glitch-cipher")).toBeNull();
     expect(unclosable.querySelector(".glitch-copy:not(.glitch-echo)")?.textContent).toBe("US");
-    // The other word glitches too, but into shapes: here, under the pointer
+    // The other word glitches too, but into shapes: here, on tap
     expect(normal).not.toHaveAttribute("data-bursting");
-    fireEvent.pointerEnter(normal);
+    fireEvent.click(normal);
     expect(normal).toHaveAttribute("data-bursting");
     expect(normal.querySelector(".glitch-copy:not(.glitch-echo) .glitch-cipher")).not.toBeNull();
   });
@@ -362,7 +363,9 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     return container.querySelector(".glitch") as HTMLElement;
   }
 
+  const tap = (word: HTMLElement) => fireEvent.click(word);
   const hover = (word: HTMLElement) => fireEvent.pointerEnter(word);
+  const leave = (word: HTMLElement) => fireEvent.pointerLeave(word);
   const copies = (word: HTMLElement) => Array.from(word.querySelectorAll<HTMLElement>(".glitch-copy:not(.glitch-echo)"));
 
   /** What the reader sees of the word at each step of `ms`: "shapes", or readable text. */
@@ -392,11 +395,11 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     return starts;
   }
 
-  it("under the pointer, flips into shapes over the plain word, and back", () => {
+  it("a tap flips into shapes over the plain word, and back", () => {
     const word = closed();
     expect(word.querySelector(".glitch-layers")).toBeNull();
 
-    hover(word);
+    tap(word);
     expect(word).toHaveAttribute("data-off");
     expect(word).toHaveAttribute("data-bursting");
     // The real word keeps its place in the line, covered while the burst plays over it
@@ -415,44 +418,55 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     expect(word.textContent).toBe("себя");
   });
 
-  it("a hover shows the shapes 73 times in 111", () => {
+  it("a tap shows the shapes 73 times in 111", () => {
     // 73/111 is 0.6577: just under it shows, just over it stays plain
     const shows = closed({ rng: () => 0.65 });
-    hover(shows);
+    tap(shows);
     expect(shows.querySelector(".glitch-cipher")).not.toBeNull();
 
     const quiet = closed({ rng: () => 0.66 });
-    hover(quiet);
+    tap(quiet);
     expect(quiet.querySelector(".glitch-layers")).toBeNull();
     expect(quiet.textContent).toBe("себя");
   });
 
-  it("a tap gets the same chance", () => {
-    const shows = closed({ rng: () => 0.65 });
-    fireEvent.click(shows);
-    expect(shows.querySelector(".glitch-cipher")).not.toBeNull();
-
-    const quiet = closed({ rng: () => 0.66 });
-    fireEvent.click(quiet);
-    expect(quiet.querySelector(".glitch-layers")).toBeNull();
-  });
-
-  it("rolls afresh on each hover: never a settled yes or no", () => {
+  it("rolls afresh on each tap: never a settled yes or no", () => {
     // The same word: it stays plain once, shows the next time, stays plain again
     let roll = 0.9;
     const word = closed({ rng: () => roll });
 
-    hover(word);
+    tap(word);
     expect(word.querySelector(".glitch-layers")).toBeNull();
 
     roll = 0.1;
-    hover(word);
+    tap(word);
     expect(word.querySelector(".glitch-cipher")).not.toBeNull();
     advance(800);
 
     roll = 0.9;
+    tap(word);
+    expect(word.querySelector(".glitch-layers")).toBeNull();
+  });
+
+  it("a hover calms a running veiled burst and holds it calm", () => {
+    const word = closed();
+    tap(word);
+    expect(word.querySelector(".glitch-cipher")).not.toBeNull();
     hover(word);
     expect(word.querySelector(".glitch-layers")).toBeNull();
+    expect(word.textContent).toBe("себя");
+    // No auto-bursts fire while hovered, however long
+    setVisible(true);
+    expect(burstStarts(word, 60_000)).toEqual([]);
+  });
+
+  it("resumes auto-bursts on pointer leave", () => {
+    const word = closed();
+    setVisible(true);
+    hover(word);
+    expect(burstStarts(word, 60_000)).toEqual([]);
+    leave(word);
+    expect(burstStarts(word, 120_000).length).toBeGreaterThan(0);
   });
 
   it("doesn't flip on scroll-in: left alone, it waits a pause first", () => {
@@ -472,14 +486,14 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     expect(word.textContent).toBe("себя");
   });
 
-  it("left alone, shows its shapes about one pause in two", () => {
+  it("left alone, shows its shapes about three pauses in ten", () => {
     const word = closed();
     setVisible(true);
-    // 5 minutes of 4-10s pauses is some 40 of them
+    // 5 minutes of 4-10s pauses is some 40 of them; about a third end in shapes
     const starts = burstStarts(word, 5 * 60_000);
     expect(starts[0]).toBeGreaterThanOrEqual(4000);
-    expect(starts.length).toBeGreaterThanOrEqual(12);
-    expect(starts.length).toBeLessThanOrEqual(30);
+    expect(starts.length).toBeGreaterThanOrEqual(5);
+    expect(starts.length).toBeLessThanOrEqual(25);
 
     setVisible(false);
     expect(burstStarts(word, 5 * 60_000)).toEqual([]);
@@ -489,7 +503,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     const word = closed();
     setVisible(true);
     for (let t = 0; t < 30_000; t += 20) {
-      if (t % 3000 === 0) hover(word);
+      if (t % 3000 === 0) tap(word);
       expect(word.textContent).not.toContain("контекст");
       advance(20);
     }
@@ -498,7 +512,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
 
   it("gives the shapes their state's colour and the article's face", () => {
     const word = closed();
-    hover(word);
+    tap(word);
     const [main] = copies(word);
     expect(main).toHaveAttribute("data-plain");
     expect(main).not.toHaveAttribute("data-link");
@@ -507,7 +521,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
 
   it("draws the base's own frames as plain article text", () => {
     const word = closed();
-    hover(word);
+    tap(word);
     advance(45); // second frame of the flicker: back on the base
     const [main] = copies(word);
     expect(main.textContent).toBe("себя");
@@ -517,14 +531,14 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
 
   it("holds the shapes briefly, however long the hidden text", () => {
     const word = closed({ alt: <GlitchState>a meaning long enough to be held two seconds</GlitchState> });
-    hover(word);
+    tap(word);
     advance(800);
     expect(word.querySelector(".glitch-layers")).toBeNull();
   });
 
   it("a click stops a burst", () => {
     const word = closed();
-    hover(word);
+    tap(word);
     advance(400);
     fireEvent.click(word);
     expect(word.querySelector(".glitch-layers")).toBeNull();
@@ -532,14 +546,14 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
 
   it("shows a > state too: closed, that is the context", () => {
     const word = closed({ alt: <GlitchState>legion</GlitchState>, openState: "1" });
-    hover(word);
+    tap(word);
     expect(word.querySelector(".glitch-cipher")?.textContent).toBe("LEGION");
     expect(watch(word, 800)).toEqual(new Set(["shapes", "себя"]));
   });
 
   it("opening the window cuts a burst of shapes and shows the words", () => {
     const word = closed();
-    hover(word);
+    tap(word);
     expect(word.querySelector(".glitch-cipher")).not.toBeNull();
 
     fireEvent.click(button());
@@ -547,8 +561,8 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     expect(word).not.toHaveAttribute("data-bursting");
     expect(word.querySelector(".glitch-cipher, .glitch-rest")).toBeNull();
     expect(word.querySelector(".glitch-sizer")?.textContent).toBe("себя");
-    // Now a flip shows the words themselves
-    hover(word);
+    // Now a tap shows the words themselves
+    tap(word);
     expect(watch(word, 1500)).toEqual(new Set(["контекст", "себя"]));
   });
 
@@ -560,7 +574,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
         </GlitchState>
       ),
     });
-    hover(word);
+    tap(word);
     advance(300);
     expect(word.querySelector(".glitch-cipher")).toBeNull();
     advance(1500);
@@ -575,7 +589,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     window.matchMedia = vi.fn().mockImplementation((query: string) => ({ matches: query.includes("reduce"), media: query }));
     const word = closed();
     setVisible(true);
-    hover(word);
+    tap(word);
     advance(30_000);
     expect(word.querySelector(".glitch-layers")).toBeNull();
     expect(word.textContent).toBe("себя");
@@ -593,7 +607,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     );
     const word = container.querySelector(".glitch") as HTMLElement;
     setVisible(true);
-    hover(word);
+    tap(word);
     advance(30_000);
     expect(word.textContent).toBe("");
   });
@@ -611,7 +625,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
       // "се" at the end of one line, "бя" at the start of the next
       vi.spyOn(word, "getClientRects").mockReturnValue([rect(300, 100, 10, 20), rect(40, 130, 12, 20)] as unknown as DOMRectList);
       vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue(rect(100, 50, 10, 30));
-      hover(word);
+      tap(word);
 
       const layers = word.querySelector(".glitch-layers") as HTMLElement;
       expect(layers.style.width).toBe("10px");
@@ -623,7 +637,7 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     it("is left to the CSS on one line", () => {
       const word = closed();
       vi.spyOn(word, "getClientRects").mockReturnValue([rect(300, 100, 40, 20)] as unknown as DOMRectList);
-      hover(word);
+      tap(word);
       expect((word.querySelector(".glitch-layers") as HTMLElement).style.width).toBe("");
     });
   });

@@ -141,9 +141,9 @@ function GlitchEngine({
   const windowOpen = useGlitchesEnabled(windowOff);
   const on = windowOpen || unclosable;
   // Off, it still glitches, into shapes instead of its other meanings: there is context here,
-  // and the window shows it. Now and then on its own (showsVeiled), more often than not under
-  // the pointer (showsVeiledHover), each a fresh roll (plan.ts).
-  // A brand mark or a window-only word hides nothing and stands still.
+  // and the window shows it. Now and then on its own (showsVeiled, plan.ts), and a tap can
+  // still peek (showsVeiledHover). A hovered word calms, as a way to hold the shapes still
+  // and read the base. A brand mark or a window-only word hides nothing and stands still.
   const veiled = !on && ciphers !== undefined && count > 1 && !windowOnly;
   // Where the word rests: state 0, or the `>` state while the window is open. An unclosable
   // `>` word keeps glitching with the window closed, but still rests on its base there.
@@ -166,6 +166,8 @@ function GlitchEngine({
     seen: false,
     reduced: false,
     off: false,
+    /** Pointer is over the word while veiled: keep it calm until the pointer leaves. */
+    hovered: false,
     /** `on` as the engine last saw it: a burst is planned for the window as it is */
     on,
     stepTimer: undefined as ReturnType<typeof setTimeout> | undefined,
@@ -175,7 +177,7 @@ function GlitchEngine({
   function schedule() {
     const e = engine.current;
     clearTimeout(e.nextTimer);
-    if (!e.visible || e.reduced || e.off) return;
+    if (!e.visible || e.reduced || e.off || e.hovered) return;
     const { rng: random, blink: blinking, veiled: hidden } = props.current;
     e.nextTimer = setTimeout(() => {
       if (document.hidden) schedule();
@@ -248,10 +250,38 @@ function GlitchEngine({
   }
 
   /**
-   * Hover or tap. Veiled, the shapes come up 73 times in 111, rolled fresh each time: coming
-   * to the same word again is a new roll, never a settled yes or no. Otherwise it always plays.
+   * A hover. Veiled, it calms the word: a running burst snaps back to the base and no auto
+   * bursts start until the pointer leaves, so the base can be read without flicker. A tap
+   * is still free to peek (onClick → tap). Otherwise a hover always plays.
    */
-  function poke() {
+  function hover() {
+    const e = engine.current;
+    if (props.current.veiled) {
+      if (e.hovered) return;
+      e.hovered = true;
+      clearTimeout(e.stepTimer);
+      clearTimeout(e.nextTimer);
+      e.playing = false;
+      setState(e.rest);
+      setLook(undefined);
+      return;
+    }
+    play("flip");
+  }
+
+  /** The pointer leaves: a veiled word resumes its auto-bursts. */
+  function leave() {
+    const e = engine.current;
+    if (!e.hovered) return;
+    e.hovered = false;
+    if (!e.playing) schedule();
+  }
+
+  /**
+   * A tap. Veiled, the shapes come up 73 times in 111, rolled fresh each time: coming to
+   * the same word again is a new roll, never a settled yes or no. Otherwise it always plays.
+   */
+  function tap() {
     if (props.current.veiled && !showsVeiledHover(props.current.rng)) return;
     play("flip");
   }
@@ -260,7 +290,7 @@ function GlitchEngine({
     const e = engine.current;
     // Toggle bursts (D✳CK PITCH) change the word, so they always run to the end
     if (e.playing && props.current.mode === "return" && Date.now() - e.startedAt > STOP_AFTER_MS) stop();
-    else poke();
+    else tap();
   }
 
   useEffect(() => {
@@ -372,7 +402,8 @@ function GlitchEngine({
       data-off={on ? undefined : ""}
       data-alt={alt || undefined}
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
-      onPointerEnter={poke}
+      onPointerEnter={hover}
+      onPointerLeave={leave}
       onClick={onClick}
     >
       {/* The root stays mounted either way so its IntersectionObserver keeps working */}

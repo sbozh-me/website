@@ -146,23 +146,23 @@ export function planBurst({ kind, from, count, rng, hold = () => 0, skip }: Plan
 
 /**
  * Pause before the next random burst while the word is on screen. Window OFF (`veiled`) a
- * blinking word waits as long as any other, and half of the pauses end in nothing (showsVeiled).
+ * blinking word waits as long as any other, and most pauses end in nothing (showsVeiled).
  */
 export function nextDelay(rng: Rng, blink: boolean, veiled = false) {
   return blink && !veiled ? 1200 + rng() * 1400 : 4000 + rng() * 6000;
 }
 
 /**
- * Window OFF: does the word show its shapes when its pause is up? Half of the time, so a
- * word left alone shows them every 14s or so, at no rhythm. Rolled afresh every pause.
+ * Window OFF: does the word show its shapes when its pause is up? 3 times in 10, so a
+ * word left alone shows them every 23s or so, at no rhythm. Rolled afresh every pause.
  */
 export function showsVeiled(rng: Rng) {
-  return rng() < 1 / 2;
+  return rng() < 3 / 10;
 }
 
 /**
- * Window OFF: does a hover or tap show the shapes? 73 times in 111. Rolled afresh on every
- * hover, so the same word shows or stays plain each time you come to it, never decided once.
+ * Window OFF: does a tap show the shapes? 73 times in 111. Rolled afresh on every
+ * tap, so the same word shows or stays plain each time, never decided once.
  */
 export function showsVeiledHover(rng: Rng) {
   return rng() < 73 / 111;
