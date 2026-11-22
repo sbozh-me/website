@@ -1,7 +1,7 @@
 import type { Persona } from "./persona";
 import type { Tag } from "./tag";
 
-export const POST_TYPES = ["laws", "stories", "articles", "journal"] as const;
+export const POST_TYPES = ["laws", "stories", "articles", "journal", "music"] as const;
 export type PostType = (typeof POST_TYPES)[number];
 
 export interface PostImage {

@@ -24,6 +24,7 @@ const LABELS: Record<PostType, string> = {
   stories: "Stories",
   articles: "Articles",
   journal: "Journal",
+  music: "Music",
 };
 
 const TAGLINES: Record<PostType, string> = {
@@ -31,6 +32,7 @@ const TAGLINES: Record<PostType, string> = {
   stories: "Stand-up chapters, love stories, rehab narratives.",
   articles: "Essays with a thesis — tech, taste, and takes.",
   journal: "Short status notes, milestones, loose ends.",
+  music: "TBD.",
 };
 
 function isPostType(value: string): value is PostType {

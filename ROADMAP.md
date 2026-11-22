@@ -247,6 +247,11 @@ One goal.
 - `/blog` becomes `/library`: hub page lists the four types with post counts, each type lives at `/library/<type>`, posts at `/library/<type>/<slug>`; old `/blog` URLs redirect to the new ones, `/blog/<slug>` stays as a slug-only shortcut that resolves to the canonical URL
 - Laws carry a body in five languages (Czech, English, Japanese, Ukrainian, Russian) as `:::lang xx` blocks; a five-button switcher above the article shows one language at a time, defaults to Czech, and remembers the reader's choice in localStorage
 
+## 1.14.1 - Latest publications & My music
+
+- `/library` hub page gets a "Latest publications" section under the type grid: 5 most recent posts across all types, a Load more button that pages in older posts, and a "View all" link
+- New post type in Library: "My music" (fifth type alongside Laws, Stories, Articles, Journal) — body TBD
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line
