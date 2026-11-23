@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.2] - 2026-11-23
+
+### Changes
+
+- feat(web): flip home poster into sponsorship stamp ([c99c6b2](https://github.com/sbozh-me/website/commit/c99c6b29ebd0b7a0a15db89119adb6d0cf848883))
+- feat(web): Kagurame recites the sponsorship-stamp release ([8e9069f](https://github.com/sbozh-me/website/commit/8e9069fd044d15aec0d5090436c0f3792e20a9b6))
+
+
 ## [1.15.1] - 2026-11-23
 
 ### Changes
