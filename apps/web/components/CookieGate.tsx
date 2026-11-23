@@ -121,6 +121,9 @@ export function CookieGate() {
     setDecision("dismiss");
     setModalOpen(false);
   };
+  // Soft escape: close the modal without recording a choice, so the site keeps its
+  // colors and the gate asks again on the next visit.
+  const handleKeepColors = () => setModalOpen(false);
   // Close on the corner widget:
   //   before a decision -- hand off to the modal, so they still have to pick a side
   //   after a decision  -- hide the widget (they already settled it)
@@ -161,7 +164,12 @@ export function CookieGate() {
           Return colors
         </Button>
       )}
-      <EmperorCookieModal open={modalOpen} onAllow={handleAllow} onDismiss={handleDismiss} />
+      <EmperorCookieModal
+        open={modalOpen}
+        onAllow={handleAllow}
+        onDismiss={handleDismiss}
+        onKeepColors={handleKeepColors}
+      />
     </>
   );
 }
