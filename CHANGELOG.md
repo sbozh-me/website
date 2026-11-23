@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.1] - 2026-11-23
+
+### Changes
+
+- feat(web): add dismiss-and-keep-colors cookie option ([c83660f](https://github.com/sbozh-me/website/commit/c83660f404b673a16126dc54c20c9ab8f57bbfad))
+- feat(web): Kagurame recites the keep-colors-without-deciding release ([efe6b3e](https://github.com/sbozh-me/website/commit/efe6b3ee33bc39ebe853b8cfa9e9de7cb520039b))
+
+
 ## [1.15.0] - 2026-11-23
 
 ### Changes
