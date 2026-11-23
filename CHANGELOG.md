@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.1] - 2026-11-23
+
+### Changes
+
+- feat(web): calm veiled glitches on hover, show shapes less ([7f4af43](https://github.com/sbozh-me/website/commit/7f4af43314f864119ec69c5fd31d21b86858e737))
+- feat(web): add latest publications and music shelf ([f4af61e](https://github.com/sbozh-me/website/commit/f4af61eee38651b0d263cac5d46c1a48a3684623))
+- feat(web): Kagurame recites the Latest publications and a music shelf release ([fd1a8d0](https://github.com/sbozh-me/website/commit/fd1a8d01c9b41121a1f24fb73346e20ea3e96e7a))
+
+
 ## [1.14.0] - 2026-11-21
 
 ### Changes
