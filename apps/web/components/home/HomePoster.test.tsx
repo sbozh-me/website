@@ -3,35 +3,50 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { HomePoster } from "./HomePoster"
 
-const poster = { src: "/images/home/poster.png", alt: "GTA is near", width: 853, height: 1280 }
+const poster = {
+  src: "/images/home/poster.png",
+  alt: "GTA is near",
+  width: 853,
+  height: 1280,
+}
 
 const reducedMotion = (matches: boolean) =>
   vi.stubGlobal("matchMedia", vi.fn(() => ({ matches })))
 
-const card = () => screen.getByRole("img", { name: "GTA is near" }).parentElement!
+const flipCard = () => document.querySelector("[data-poster-card]") as HTMLElement
 
 describe("HomePoster", () => {
   afterEach(() => vi.unstubAllGlobals())
 
-  it("shows the poster as a plain picture without a link", () => {
+  it("opens as a placeholder ad slot, with the example poster hidden behind it", () => {
     render(<HomePoster {...poster} />)
 
     expect(screen.getByRole("region", { name: "Commercial Promotions" })).toBeInTheDocument()
     expect(screen.getByRole("heading", { level: 2, name: "Commercial Promotions" })).toBeInTheDocument()
-    expect(screen.getByRole("img", { name: "GTA is near" })).toBeInTheDocument()
-    expect(screen.queryByRole("link")).not.toBeInTheDocument()
+    // Placeholder face is the clickable invitation
+    expect(
+      screen.getByRole("button", { name: /your commercial here/i }),
+    ).toBeInTheDocument()
+    // The example image is still rendered (behind, aria-hidden), so a11y queries that opt
+    // out of hidden elements shouldn't see it as the primary content
+    expect(screen.queryByRole("img", { name: "GTA is near" })).not.toBeInTheDocument()
   })
 
-  it("links the poster when it has somewhere to lead", () => {
-    render(<HomePoster {...poster} href="/blog/gta-is-near" />)
+  it("flips to the example poster when the placeholder is clicked", () => {
+    render(<HomePoster {...poster} href="/library/journal/gta-is-near" />)
 
-    expect(screen.getByRole("link", { name: "GTA is near" })).toHaveAttribute("href", "/blog/gta-is-near")
+    fireEvent.click(screen.getByRole("button", { name: /your commercial here/i }))
+
+    // After the flip, the example face is revealed and its link becomes reachable
+    const link = screen.getByRole("link", { name: /gta is near/i })
+    expect(link).toHaveAttribute("href", "/library/journal/gta-is-near")
+    expect(screen.getByRole("button", { name: /flip back/i })).toBeInTheDocument()
   })
 
   it("leans towards the mouse and straightens when it leaves", () => {
     reducedMotion(false)
     render(<HomePoster {...poster} />)
-    const el = card()
+    const el = flipCard()
     el.getBoundingClientRect = () => ({ left: 0, top: 0, width: 400, height: 600 }) as DOMRect
 
     fireEvent.pointerMove(el, { pointerType: "mouse", clientX: 400, clientY: 0 })
@@ -47,7 +62,7 @@ describe("HomePoster", () => {
   it("stays still for touch and for reduced motion", () => {
     reducedMotion(true)
     render(<HomePoster {...poster} />)
-    const el = card()
+    const el = flipCard()
 
     fireEvent.pointerMove(el, { pointerType: "touch", clientX: 10, clientY: 10 })
     fireEvent.pointerMove(el, { pointerType: "mouse", clientX: 10, clientY: 10 })
