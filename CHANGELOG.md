@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.0] - 2026-11-23
+
+### Changes
+
+- feat(web): rework cookie consent as Pan Dude gate ([681ecfc](https://github.com/sbozh-me/website/commit/681ecfc63b43bfba15f99210292e53e8fd579025))
+- feat(web): Kagurame recites the Pan Dude cookie gate release ([31ebfb6](https://github.com/sbozh-me/website/commit/31ebfb67220cc4f8b698136045b2396aa9ba2992))
+- test(web): give library page fixtures the full PostListItem shape ([55e08d6](https://github.com/sbozh-me/website/commit/55e08d6d01712ff14bd9b47e017954647c322e27))
+- test(web): cover library/all, forum placeholder, LatestPublications, global-error ([9110200](https://github.com/sbozh-me/website/commit/91102007746750a93d5270a81d698abeb1d0343d))
+
+
 ## [1.14.2] - 2026-11-23
 
 ### Changes
