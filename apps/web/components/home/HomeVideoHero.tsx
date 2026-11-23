@@ -7,6 +7,16 @@ import { HeroDialogue } from "./HeroDialogue"
 import { HeroLeader } from "./HeroLeader"
 import type { KagurameScript } from "@/lib/kagurame/script"
 import { browserQualityEnv, chooseQuality, quickQuality, type Quality, type Rendition } from "./video-quality"
+import {
+  markLeaderShown,
+  readDecision,
+  requestCookieModal,
+  useCookieModalOpen,
+  wasLeaderShown,
+} from "@/lib/privacy/decision"
+
+/** Black-and-white scroll-away this long opens the cookie modal and locks the scroll */
+const COOKIE_PROMPT_DELAY_MS = 3000
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
@@ -74,7 +84,25 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const [dialogueOpen, setDialogueOpen] = useState(false)
   // The 3-2-1 leader is still counting: the video downloads, and plays when it runs out
   const [counting, setCounting] = useState(true)
-  const endLeader = useCallback(() => setCounting(false), [])
+  // Leader runs out: the video may play now, and unless the visitor has allowed cookies
+  // the gate opens its modal on top. A dismisser keeps being nudged on every visit
+  // until they switch.
+  const endLeader = useCallback(() => {
+    setCounting(false)
+    markLeaderShown()
+    if (readDecision() !== "allow") requestCookieModal()
+  }, [])
+
+  // The 3-2-1 is a tab-session one-shot: if the visitor already saw it in the corner
+  // widget this session, skip straight to the video on the home hero (don't mount
+  // the leader at all, so its internal count can't run).
+  const [skipLeader, setSkipLeader] = useState(false)
+  useEffect(() => {
+    if (wasLeaderShown()) {
+      setCounting(false)
+      setSkipLeader(true)
+    }
+  }, [])
   // Asked to play, and the picture isn't moving yet (not enough of the file, or a stall)
   const [loading, setLoading] = useState(false)
   // The video has started, or it turned out it won't on its own: the site gets its colour
@@ -132,6 +160,67 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     if (wantPlay.current) play(video)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, counting])
+
+  // Tab off: pause the video so it doesn't play into an empty room. Tab back: pick up
+  // where they were, if they wanted play.
+  useEffect(() => {
+    const onVisibility = () => {
+      const video = videoRef.current
+      if (!video) return
+      if (document.hidden) {
+        if (!video.paused) video.pause()
+      } else if (wantPlay.current && !counting && src) {
+        play(video)
+      }
+    }
+    document.addEventListener("visibilitychange", onVisibility)
+    return () => document.removeEventListener("visibilitychange", onVisibility)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counting, src])
+
+  // Cookie modal up: pause the hero so the visitor's attention lands on the choice,
+  // not the picture behind it. Resume only if the modal was actually open at some
+  // point, so the initial close -> close transition doesn't double-play on mount.
+  const cookieModalOpen = useCookieModalOpen()
+  const modalWasOpen = useRef(false)
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    if (cookieModalOpen) {
+      modalWasOpen.current = true
+      if (!video.paused) video.pause()
+    } else if (modalWasOpen.current) {
+      modalWasOpen.current = false
+      if (wantPlay.current && !counting && src) play(video)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cookieModalOpen, counting, src])
+
+  // Black-and-white with the visitor scrolled away for 3 s, with no cookie choice yet:
+  // ask the gate to open the modal (which locks the scroll). The grayscale state is
+  // counting || !colour; the timer resets whenever they scroll back to the top.
+  const bw = counting || !colour
+  useEffect(() => {
+    if (!bw) return
+    if (readDecision() === "allow") return
+    let timer: ReturnType<typeof setTimeout> | null = null
+    const check = () => {
+      if (window.scrollY > 0) {
+        if (timer === null) {
+          timer = setTimeout(requestCookieModal, COOKIE_PROMPT_DELAY_MS)
+        }
+      } else if (timer !== null) {
+        clearTimeout(timer)
+        timer = null
+      }
+    }
+    check()
+    window.addEventListener("scroll", check, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", check)
+      if (timer !== null) clearTimeout(timer)
+    }
+  }, [bw])
 
   const togglePlay = () => {
     const video = videoRef.current
@@ -221,7 +310,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
         />
       )}
 
-      <HeroLeader loading={loading} onDone={endLeader} />
+      {!skipLeader && <HeroLeader loading={loading} onDone={endLeader} />}
 
       <HeroDialogue
         script={script}

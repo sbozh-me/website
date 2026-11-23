@@ -74,4 +74,7 @@ window.IntersectionObserver = MockIntersectionObserver;
 
 afterEach(() => {
   cleanup();
+  // Tests that call markLeaderShown would otherwise bleed into the next test
+  window.sessionStorage.clear();
+  window.localStorage.clear();
 });

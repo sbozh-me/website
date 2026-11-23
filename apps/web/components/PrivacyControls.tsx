@@ -1,120 +1,74 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@sbozh/react-ui/components/ui/button';
-import { Switch } from '@sbozh/react-ui/components/ui/switch';
-import { consentManager, ConsentType } from '@/lib/privacy/consent';
+import { setDecision, useCookieDecision } from '@/lib/privacy/decision';
 
+/**
+ * The one honest control: it reflects, and writes, the same `cookie_decision`
+ * localStorage key that the Emperor modal and CookieGate read. Flipping it
+ * drives grayscale + PostHog/Umami routing live, in every open tab.
+ */
 export function PrivacyControls() {
-  const [consent, setConsent] = useState({
-    analytics: false,
-    marketing: false,
-    functional: true,
-  });
+  const decision = useCookieDecision();
 
-  useEffect(() => {
-    // Load current consent state
-    setConsent({
-      analytics: consentManager.hasConsent(ConsentType.Analytics),
-      marketing: consentManager.hasConsent(ConsentType.Marketing),
-      functional: consentManager.hasConsent(ConsentType.Functional),
-    });
-
-    // Listen for consent changes
-    const handleConsentChange = (event: CustomEvent) => {
-      const state = event.detail;
-      setConsent({
-        analytics: state[ConsentType.Analytics],
-        marketing: state[ConsentType.Marketing],
-        functional: state[ConsentType.Functional],
-      });
-    };
-
-    window.addEventListener('consentchange', handleConsentChange as EventListener);
-    return () => {
-      window.removeEventListener('consentchange', handleConsentChange as EventListener);
-    };
-  }, []);
-
-  const handleToggle = (type: keyof typeof consent) => {
-    const newValue = !consent[type];
-    setConsent(prev => ({ ...prev, [type]: newValue }));
-
-    consentManager.saveConsent({
-      [type]: newValue,
-    });
-    toast.success('Cookie preferences saved');
+  const onAllow = () => {
+    setDecision('allow');
+    toast.success(
+      <span>
+        You're aware of{' '}
+        <a href="/terms" className="underline underline-offset-2">Terms of Use</a>,{' '}
+        <a href="/privacy" className="underline underline-offset-2">Privacy Policy</a>{' '}
+        and the{' '}
+        <a
+          href="/library/laws/declaration-of-the-digital-principate"
+          className="underline underline-offset-2"
+        >
+          Digital Principate Declaration
+        </a>
+        .
+      </span>,
+      { duration: 7000 }
+    );
   };
-
-  const handleDenyAll = () => {
-    consentManager.denyAll();
-    toast.success('Only necessary cookies enabled');
-  };
-
-  const handleAcceptAll = () => {
-    consentManager.grantAll();
-    toast.success('All cookies accepted');
+  const onDismiss = () => {
+    setDecision('dismiss');
+    toast.success('Cookies dismissed — only cookieless Umami runs');
   };
 
   return (
-    <div className="space-y-6 border border-border bg-muted rounded-lg p-6">
+    <div className="space-y-5 border border-border bg-muted rounded-lg p-6">
       <div>
-        <h3 className="text-lg font-medium mb-2">Cookie Settings</h3>
+        <h3 className="text-lg font-medium mb-1">Cookie preference</h3>
         <p className="text-sm text-muted-foreground">
-          Choose which cookies you allow. Your preferences are saved locally.
+          One switch. It picks the same side as the &quot;Take The
+          Piece&quot; dialog and is remembered in this browser only.
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-medium">Necessary</p>
-            <p className="text-xs text-muted-foreground">Required for the site to work</p>
-          </div>
-          <Switch checked={true} disabled />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-medium">Analytics</p>
-            <p className="text-xs text-muted-foreground">Help us improve the site</p>
-          </div>
-          <Switch
-            checked={consent.analytics}
-            onCheckedChange={() => handleToggle('analytics')}
-          />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-medium">Functional</p>
-            <p className="text-xs text-muted-foreground">Enhanced features</p>
-          </div>
-          <Switch
-            checked={consent.functional}
-            onCheckedChange={() => handleToggle('functional')}
-          />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex-1">
-            <p className="text-sm font-medium">Marketing</p>
-            <p className="text-xs text-muted-foreground">Personalized ads</p>
-          </div>
-          <Switch
-            checked={consent.marketing}
-            onCheckedChange={() => handleToggle('marketing')}
-          />
-        </div>
+      <div className="text-sm">
+        <span className="text-muted-foreground">Current choice: </span>
+        <strong>
+          {decision === 'allow'
+            ? 'Allow — PostHog EU loads (cookies, colour on)'
+            : decision === 'dismiss'
+              ? 'Dismiss — only Umami loads (cookieless, grayscale on)'
+              : 'Not chosen yet'}
+        </strong>
       </div>
 
-      <div className="flex gap-2">
-        <Button variant="outline" onClick={handleDenyAll}>
-          Deny All
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={decision === 'dismiss' ? 'default' : 'outline'}
+          onClick={onDismiss}
+        >
+          Dismiss cookies
         </Button>
-        <Button onClick={handleAcceptAll}>
-          Accept All
+        <Button
+          variant={decision === 'allow' ? 'default' : 'outline'}
+          onClick={onAllow}
+        >
+          Allow cookies
         </Button>
       </div>
     </div>

@@ -12,7 +12,7 @@ export default function TermsPage() {
     <div className="container mx-auto px-4 py-12 md:py-16 max-w-3xl">
       <h1 className="text-3xl font-bold mb-4">Terms of Use</h1>
       <p className="text-muted-foreground mb-8">
-        Effective Date: December 15, 2025 | Last Updated: December 15, 2025
+        Effective Date: December 15, 2025 | Last Updated: November 21, 2026
       </p>
 
       <Prose>
@@ -26,6 +26,14 @@ export default function TermsPage() {
           <li><strong>Contact:</strong> sem.bozhyk@sbozh.me</li>
         </ul>
         <p>By using this website, you agree to these Terms.</p>
+        <p>
+          If you do not accept these Terms, you may still observe the website,
+          but only through the black-and-white filter: decline the choice in
+          the &quot;Take The Piece&quot; dialog (or hit <strong>DISMISS COOKIES</strong>) and
+          the site stays grayscale on every page, with only cookieless Umami
+          analytics running. See <a href="/privacy">/privacy</a> for the
+          analytics detail.
+        </p>
 
         <h2>2. What This Website Is</h2>
         <p>sbozh.me is a personal website featuring:</p>
@@ -63,7 +71,14 @@ export default function TermsPage() {
         <p>We collect minimal data:</p>
         <ul>
           <li><strong>Emails</strong> — only if voluntarily submitted</li>
-          <li><strong>Analytics</strong> — anonymized usage data via Umami</li>
+          <li>
+            <strong>Analytics</strong> — routed by your cookie choice.
+            If you allow cookies, PostHog on its EU cloud
+            (<code>eu.i.posthog.com</code>) collects page views, clicks, and
+            technical context, with session replay off. If you dismiss, only
+            Umami runs — self-hosted, cookieless, no personal data.
+            See <a href="/privacy">/privacy</a> for the full breakdown.
+          </li>
           {/*<li><strong>Error tracking</strong> — via GlitchTip</li>postponed*/}
         </ul>
         <p>

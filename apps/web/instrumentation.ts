@@ -5,8 +5,6 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
     await import("./sentry.server.config");
-    const { registerPostHogLogs } = await import("./lib/posthog-logs");
-    registerPostHogLogs();
   }
 
   if (process.env.NEXT_RUNTIME === "edge") {

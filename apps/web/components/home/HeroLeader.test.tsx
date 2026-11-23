@@ -139,17 +139,32 @@ describe("HeroLeader", () => {
     }
   });
 
-  it("shows the spinning brand mark only once the count is over", () => {
+  it("shows the spinning brand mark whenever loading, counting or not, and fades it out when loading ends", () => {
     const { rerender } = render(<HeroLeader loading onDone={() => {}} />);
-    expect(screen.queryByRole("status")).toBeNull();
-    advance(LEADER_TICK_MS);
-    advance(LEADER_TICK_MS);
-    advance(LEADER_TICK_MS);
-    const mark = screen.getByRole("status", { name: "Loading video" });
-    expect(mark.querySelector("img")).toHaveClass("leader-mark");
+    // Loading during the countdown: the mark covers the dial from the first paint
+    const duringCount = screen.getByRole("status", { name: "Loading video" });
+    expect(duringCount.querySelector("img")).toHaveClass("leader-mark");
     // Clicks go through it to the video
-    expect(mark).toHaveClass("pointer-events-none");
+    expect(duringCount).toHaveClass("pointer-events-none");
+    // The dial behind it is faded out
+    expect(document.querySelector("[data-leader-dial]")).toHaveClass("opacity-0");
+    // Still loading when the count is over: the mark stays
+    advance(LEADER_TICK_MS);
+    advance(LEADER_TICK_MS);
+    advance(LEADER_TICK_MS);
+    expect(screen.getByRole("status", { name: "Loading video" })).toBeTruthy();
+    // Loading ends: the role is dropped, the mark fades out and the dial back in
     rerender(<HeroLeader loading={false} onDone={() => {}} />);
     expect(screen.queryByRole("status")).toBeNull();
+  });
+
+  it("skips the rest of the count on click", () => {
+    const onDone = vi.fn();
+    render(<HeroLeader loading={false} onDone={onDone} />);
+    expect(leader()).toHaveAttribute("data-leader", "counting");
+    expect(leader()).toHaveClass("cursor-pointer");
+    act(() => void fireEvent.click(leader()));
+    expect(onDone).toHaveBeenCalledTimes(1);
+    expect(leader()).toHaveAttribute("data-leader", "done");
   });
 });

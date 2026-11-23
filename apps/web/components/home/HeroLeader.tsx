@@ -30,6 +30,8 @@ interface HeroLeaderProps {
   loading: boolean
   /** The countdown has run out: the video may play */
   onDone: () => void
+  /** Small picture-in-picture variant: the SVG fills its container, no viewport sizing */
+  compact?: boolean
 }
 
 /**
@@ -44,7 +46,7 @@ interface HeroLeaderProps {
  * If the video still can't play when the leader runs out (or stalls later), the brand mark
  * spins fast in the dial's place until the picture moves.
  */
-export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
+export function HeroLeader({ loading, onDone, compact = false }: HeroLeaderProps) {
   const [count, setCount] = useState(LEADER_FROM)
   const counting = count > 0
   // Fading out, it keeps its last number
@@ -52,6 +54,18 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
   const hand = useRef<SVGLineElement>(null)
   // Scrolled away from the top: the film stands still until the visitor is back
   const [away, setAway] = useState(false)
+  // Tab is hidden: the film stands still too, so the count doesn't run out off-screen
+  const [hidden, setHidden] = useState(false)
+  const paused = away || hidden
+  // Tracks the client takeover: before mount, the SSR'd number sits there with its hand
+  // sweeping; we don't want the visitor to see the same "3" lingering for several turns
+  // while hydration catches up or the video asset parses, so we fade the dial out and
+  // show the colourful brand mark instead, until the client's timer picks up the count.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  // The mark takes over the view whenever the dial can't move the count forward: the
+  // client hasn't taken over yet, or the video has stalled (loading).
+  const showMark = loading || !mounted
 
   useEffect(() => {
     if (!counting) return
@@ -62,14 +76,21 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
   }, [counting])
 
   useEffect(() => {
+    const update = () => setHidden(document.hidden)
+    update()
+    document.addEventListener("visibilitychange", update)
+    return () => document.removeEventListener("visibilitychange", update)
+  }, [])
+
+  useEffect(() => {
     if (!counting) {
       onDone()
       return
     }
-    if (away) return
+    if (paused) return
     const timer = setTimeout(() => setCount((n) => n - 1), untilNextTurn(hand.current))
     return () => clearTimeout(timer)
-  }, [count, counting, away, onDone])
+  }, [count, counting, paused, onDone])
 
   // The first number's hand keeps going round until the client takes over
   const turn = {
@@ -86,13 +107,22 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
       <div
         aria-hidden="true"
         data-leader={counting ? "counting" : "done"}
-        data-paused={away && counting ? "" : undefined}
-        // Counting, it takes the clicks: the video under it isn't to be started early
+        data-paused={paused && counting ? "" : undefined}
+        // Counting, it takes the clicks: the video under it isn't to be started early.
+        // A click on the countdown skips the rest of it -- setCount(0) flips the
+        // internal counting guard, which runs the same onDone path the natural end does.
+        onClick={counting ? () => setCount(0) : undefined}
         className={`leader-film absolute inset-0 grid place-items-center overflow-hidden transition-opacity duration-500 ${
-          counting ? "opacity-100" : "pointer-events-none opacity-0"
+          counting ? "cursor-pointer opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
-        <svg viewBox="0 0 200 200" className="leader-weave w-[min(60vw,46svh)] max-w-80 overflow-visible">
+        <svg
+          viewBox="0 0 200 200"
+          data-leader-dial
+          className={`leader-weave overflow-visible transition-opacity duration-500 ${
+            compact ? "h-24 w-24" : "w-[min(60vw,46svh)] max-w-80"
+          } ${showMark ? "opacity-0" : "opacity-100"}`}
+        >
           {/* A new number starts the turn again */}
           <g key={shown}>
             {/* A stroke as wide as the dial's radius, on a circle of half that radius, paints
@@ -147,25 +177,29 @@ export function HeroLeader({ loading, onDone }: HeroLeaderProps) {
         <div className="leader-flicker" />
       </div>
 
-      {loading && !counting && (
-        <div
-          role="status"
-          aria-label="Loading video"
-          // It lets clicks through to the video, and waits a beat before showing: a video
-          // that starts at once never flashes it
-          className="leader-loading pointer-events-none absolute inset-0 grid place-items-center"
-        >
-          <span className="rounded-full bg-background/40 p-4 backdrop-blur-md">
-            <Image
-              src="/android-chrome-192x192.png"
-              alt=""
-              width={MARK_PX}
-              height={MARK_PX}
-              className="leader-mark block"
-            />
-          </span>
-        </div>
-      )}
+      {/* The colour mark takes the dial's place while the video is loading or the
+          client hasn't taken over yet: spin mid-level, fade in, fade out. Lives
+          outside .leader-film so a post-count loading state still shows it, and
+          so the film's data-paused freeze doesn't stop the spin. */}
+      <div
+        {...(showMark
+          ? { role: "status" as const, "aria-label": "Loading video" }
+          : { "aria-hidden": "true" as const })}
+        data-leader-mark={showMark ? "" : undefined}
+        className={`pointer-events-none absolute inset-0 grid place-items-center transition-opacity duration-500 ${
+          showMark ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <span className="rounded-full bg-background/40 p-4 backdrop-blur-md">
+          <Image
+            src="/android-chrome-192x192.png"
+            alt=""
+            width={MARK_PX}
+            height={MARK_PX}
+            className="leader-mark block"
+          />
+        </span>
+      </div>
     </>
   )
 }

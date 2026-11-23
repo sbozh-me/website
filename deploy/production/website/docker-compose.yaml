@@ -184,6 +184,9 @@ services:
       UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID}
       UMAMI_SCRIPT_URL: ${UMAMI_SCRIPT_URL:-https://analytics.sbozh.me/script.js}
       ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
+      # PostHog EU (loaded when the visitor ALLOWS cookies)
+      POSTHOG_KEY: ${POSTHOG_KEY}
+      POSTHOG_HOST: ${POSTHOG_HOST:-https://eu.i.posthog.com}
       # Error tracking (GlitchTip)
       SENTRY_DSN: ${SENTRY_DSN}
       # SMTP (mailbox.org) for the /contact form (apps/web/lib/mail.ts). Port

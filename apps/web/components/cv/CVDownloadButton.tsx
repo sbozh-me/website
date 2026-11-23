@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import posthog from "posthog-js";
+import { capture } from "@/lib/analytics/tracker";
 import { toast } from "sonner";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
@@ -36,7 +36,7 @@ export function CVDownloadButton({
       document.body.removeChild(a);
 
       toast.success("PDF downloaded successfully");
-      posthog.capture("cv_pdf_downloaded");
+      void capture("cv_pdf_downloaded");
     } catch (err) {
       console.error("Download failed:", err);
       toast.error("Download failed", {

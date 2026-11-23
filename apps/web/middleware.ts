@@ -29,7 +29,10 @@ export function middleware(request: NextRequest) {
     // Keep empty if parsing fails
   }
 
-  const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
+  // PostHog is loaded by the client on cookie-allow (see AnalyticsProvider +
+  // lib/analytics/tracker.ts). We only need its host in CSP so the request
+  // isn't blocked once init runs.
+  const posthogHost = process.env.POSTHOG_HOST || 'https://eu.i.posthog.com';
   let posthogDomain = '';
   let posthogAssetsDomain = '';
   try {

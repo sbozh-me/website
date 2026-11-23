@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import { Toaster } from "@sbozh/react-ui/components/ui/sonner";
 import { ThemeProvider, readerThemeScript } from "@sbozh/themes";
 
-import { CookieConsentModal } from "@/components/CookieConsentModal";
+import { CookieGate } from "@/components/CookieGate";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LinkPreview } from "@/components/LinkPreview";
@@ -159,7 +159,7 @@ export default function RootLayout({
                 {children}
                 <Footer />
                 <Toaster />
-                <CookieConsentModal />
+                <CookieGate />
                 <LinkPreview />
               </PerformanceProvider>
             </AnalyticsProvider>

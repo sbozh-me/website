@@ -20,10 +20,34 @@ export default function PrivacyPage() {
       <PrivacyControls />
 
       <Prose className="mt-12">
-        <h2>About Our Analytics</h2>
+        <h2 id="analytics">Analytics</h2>
         <p>
-          We use <strong><a href="https://umami.is" target="_blank" rel="noopener noreferrer">Umami Analytics</a></strong>, a privacy-focused, self-hosted analytics solution.
-          Unlike traditional analytics:
+          Which analytics tool runs depends on the choice you made in the
+          &quot;Take The Piece&quot; dialog.
+        </p>
+        <h3>When you allow cookies: PostHog (EU)</h3>
+        <p>
+          We use <strong><a href="https://posthog.com" target="_blank" rel="noopener noreferrer">PostHog</a></strong> on the
+          EU cloud (<code>eu.i.posthog.com</code>, data stored in Frankfurt).
+          PostHog sets a first-party cookie to recognise your browser across
+          pages and records:
+        </p>
+        <ul>
+          <li>Page views and page leaves</li>
+          <li>Clicks and other interaction events</li>
+          <li>Technical context (referrer, device type, browser, country from IP)</li>
+        </ul>
+        <p>
+          Session replay is <strong>off</strong>. We do not record what you
+          type, screen recordings, or keystrokes. You can switch to the
+          cookieless path at any time with the &quot;Return colors&quot; button
+          at the bottom of the page and picking <strong>DISMISS</strong>.
+        </p>
+        <h3>When you dismiss cookies: Umami</h3>
+        <p>
+          We use <strong><a href="https://umami.is" target="_blank" rel="noopener noreferrer">Umami Analytics</a></strong>, a
+          privacy-focused, self-hosted analytics solution. Unlike traditional
+          analytics:
         </p>
         <ul>
           <li>No cookies are used for tracking</li>
@@ -33,8 +57,8 @@ export default function PrivacyPage() {
           <li>Fully GDPR compliant</li>
         </ul>
         <p>
-          We only collect anonymous, aggregated statistics like page views, referrers, and
-          device types to understand how our website is used.
+          Only anonymous, aggregated statistics are collected: page views,
+          referrers, and device types.
         </p>
 
         <h2>Performance Monitoring</h2>
@@ -95,10 +119,16 @@ export default function PrivacyPage() {
         <h2>What We Don't Collect</h2>
         <ul>
           <li>Names or other personal identifiers (your email address only if you subscribe)</li>
-          <li>IP addresses (they are not stored or logged)</li>
-          <li>Cross-site tracking or browsing history</li>
+          <li>Cross-site tracking or browsing history — our analytics run only on sbozh.me</li>
+          <li>Keystrokes, form inputs, or screen recordings</li>
           <li>Data sold to advertisers or data brokers</li>
         </ul>
+        <p>
+          <strong>About IP addresses:</strong> Umami does not store them.
+          PostHog (if you allowed cookies) uses your IP for coarse
+          geolocation (country, region) and then stores it on the event in
+          our EU account; it is never shared outside PostHog EU.
+        </p>
 
         <h2>Your Rights</h2>
         <p>

@@ -965,7 +965,9 @@ html {
   transition: filter 0.9s ease-out;
 }
 
-html:has([data-home-hero][data-bw]) {
+html:has([data-home-hero][data-bw]),
+html:has([data-cookie-corner-video][data-counting]),
+html[data-site-bw] {
   filter: grayscale(1);
 }
 

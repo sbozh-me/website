@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import posthog from "posthog-js";
+import { capture } from "@/lib/analytics/tracker";
 
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { Input } from "@sbozh/react-ui/components/ui/input";
@@ -147,7 +147,7 @@ export function SubmitForm() {
           setStatus("sent");
           // Only that something was sent — never what or by whom.
           track("blog_submission_sent", { where: "blog_submit" });
-          posthog.capture("blog_submission_sent", { where: "blog_submit" });
+          void capture("blog_submission_sent", { where: "blog_submit" });
         } catch {
           // Keep the text so a retry is one click.
           setStatus("error");
