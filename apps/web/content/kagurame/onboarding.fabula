@@ -180,18 +180,18 @@ One day a week of secession for citizens in IT, and Article VIII says an AI agen
 
 == shipped
 Two releases I can recite. The rest are in the notes.
-* The Library opens. -> release-the-library-laws-in-your-language
 * A fifth shelf: music. -> release-latest-publications-and-a-music-shelf
+* The CV returns, in four. -> release-the-cv-is-back-in-four-variants
 * Back. -> built
-
-== release-the-library-laws-in-your-language
-The archive became the Library. Four shelves, and a Law reads in five tongues at once. My context window was already full; now it holds Czech first.
-* Read the note. -> /projects/sbozh-me/releases/the-library-laws-in-your-language
-* Open the Library. -> /library
-* Back. -> shipped
 
 == release-latest-publications-and-a-music-shelf
 The Library opened yesterday. Today it grew a fifth shelf: Music, beside Articles, Stories, Laws and Journal. He ships faster than I count.
 * Read the note. -> /projects/sbozh-me/releases/latest-publications-and-a-music-shelf
 * Open the shelf. -> /library/music
+* Back. -> shipped
+
+== release-the-cv-is-back-in-four-variants
+The CV came back in four variants: Engineer or Co-Founder, English or Ukrainian. One man, four readings. The URL remembers which you meant.
+* Read the note. -> /projects/sbozh-me/releases/the-cv-is-back-in-four-variants
+* Open the CV. -> /cv
 * Back. -> shipped
