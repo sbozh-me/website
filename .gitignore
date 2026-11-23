@@ -40,9 +40,12 @@ coverage
 # Misc
 *.tsbuildinfo
 
-# Ignore CV drafts except the main one
+# Ignore CV drafts except the canonical role × language set
 apps/web/content/cv*
-!apps/web/content/sem-bozhyk-v0.0.1.pmdx
+!apps/web/content/cv-engineer-en.pmdx
+!apps/web/content/cv-engineer-ua.pmdx
+!apps/web/content/cv-founder-en.pmdx
+!apps/web/content/cv-founder-ua.pmdx
 
 # Ignore signature image
 apps/web/public/podpis.png

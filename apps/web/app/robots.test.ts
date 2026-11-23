@@ -10,7 +10,7 @@ describe("robots.ts", () => {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/cv", "/forum/*/cv"],
+        disallow: ["/cv"],
       },
     ]);
   });
@@ -21,11 +21,11 @@ describe("robots.ts", () => {
     expect(result.sitemap).toBe("https://sbozh.me/sitemap.xml");
   });
 
-  it("disallows CV routes", () => {
+  it("disallows the CV page from crawlers (personal contact details)", () => {
     const result = robots();
     const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
     const mainRule = rules[0];
 
-    expect(mainRule?.disallow).toEqual(["/cv", "/forum/*/cv"]);
+    expect(mainRule?.disallow).toEqual(["/cv"]);
   });
 });

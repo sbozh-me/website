@@ -252,6 +252,13 @@ One goal.
 - `/library` hub page gets a "Latest publications" section under the type grid: 5 most recent posts across all types, a Load more button that pages in older posts, and a "View all" link
 - New post type in Library: "My music" (fifth type alongside Laws, Stories, Articles, Journal) — body TBD
 
+## 1.15.0 - CV is back
+
+- Forum retired from the website for now: the nav link goes, `/forum` is a TBD placeholder page, the per-avatar CV routes disappear
+- CV link in the header right after Projects, pointing at `/cv`
+- `/cv` renders the CV with a Role picker (Engineer / Co-Founder) and a Language picker (EN / UK); the choice lives in the URL and is remembered in localStorage
+- CV sources renamed by role and language: `cv-engineer-en.pmdx`, `cv-engineer-ua.pmdx`, `cv-founder-en.pmdx`, `cv-founder-ua.pmdx`
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line

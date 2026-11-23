@@ -34,10 +34,15 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        // The CV moved under its avatar on the Forum. Older printed CVs carry
-        // a QR code to /cv; temporary, so it can follow the next move too
-        source: "/cv",
-        destination: "/forum/sem-bozhyk/cv",
+        // Printed CVs carried QR codes to /forum/<avatar>/cv while the Forum
+        // held them; the CV lives at /cv again in v1.15.0
+        source: "/forum/sem-bozhyk/cv",
+        destination: "/cv?role=engineer",
+        permanent: false,
+      },
+      {
+        source: "/forum/semen-bozhyk/cv",
+        destination: "/cv?role=founder",
         permanent: false,
       },
       {

@@ -22,7 +22,7 @@ describe("PDF Route", () => {
     vi.restoreAllMocks();
   });
 
-  it("generates PDF and returns it with correct headers", async () => {
+  it("defaults to the engineer EN CV and returns the PDF with the right headers", async () => {
     const request = new NextRequest("http://localhost:3000/api/cv/pdf", {
       headers: {
         host: "localhost:3000",
@@ -35,17 +35,20 @@ describe("PDF Route", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toBe("application/pdf");
     expect(response.headers.get("Content-Disposition")).toBe(
-      'attachment; filename="CV_Sem_Bozhyk_Software_Developer.pdf"'
+      'attachment; filename="CV_Sem_Bozhyk_Software_Engineer.pdf"'
     );
   });
 
-  it("calls PDF service with correct URL", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf", {
-      headers: {
-        host: "localhost:3000",
-        "x-forwarded-proto": "https",
-      },
-    });
+  it("asks the service to render /cv with the picked role and lang", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/cv/pdf?role=engineer&lang=en",
+      {
+        headers: {
+          host: "localhost:3000",
+          "x-forwarded-proto": "https",
+        },
+      }
+    );
 
     await GET(request);
 
@@ -54,46 +57,40 @@ describe("PDF Route", () => {
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: expect.stringContaining("https://localhost:3000/forum/sem-bozhyk/cv"),
+        body: expect.stringContaining(
+          "https://localhost:3000/cv?role=engineer&lang=en"
+        ),
       })
     );
   });
 
-  it("includes filename in request body", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf");
-
-    await GET(request);
-
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.any(String),
-      expect.objectContaining({
-        body: expect.stringContaining("CV_Sem_Bozhyk_Software_Developer.pdf"),
-      })
+  it("renders the founder CV in Ukrainian when asked", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/cv/pdf?role=founder&lang=uk",
+      {
+        headers: {
+          host: "localhost:3000",
+          "x-forwarded-proto": "https",
+        },
+      }
     );
-  });
-
-  it("renders the Semen CV for the semen variant", async () => {
-    const request = new NextRequest("http://localhost:3000/api/cv/pdf?v=semen", {
-      headers: {
-        host: "localhost:3000",
-        "x-forwarded-proto": "https",
-      },
-    });
 
     const response = await GET(request);
 
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining("https://localhost:3000/forum/semen-bozhyk/cv"),
+        body: expect.stringContaining(
+          "https://localhost:3000/cv?role=founder&lang=uk"
+        ),
       })
     );
     expect(response.headers.get("Content-Disposition")).toBe(
-      'attachment; filename="CV_Semen_Bozhyk_Builder_and_Creator.pdf"'
+      'attachment; filename="CV_Semen_Bozhyk_Co_Founder_UA.pdf"'
     );
   });
 
-  it("returns 500 error when PDF service fails", async () => {
+  it("returns 500 when PDF service fails", async () => {
     mockFetch.mockResolvedValue({
       ok: false,
       text: () => Promise.resolve("Service error"),
@@ -107,7 +104,7 @@ describe("PDF Route", () => {
     expect(json.error).toBe("Failed to generate PDF");
   });
 
-  it("returns 500 error when fetch throws", async () => {
+  it("returns 500 when fetch throws", async () => {
     mockFetch.mockRejectedValue(new Error("Network error"));
 
     const request = new NextRequest("http://localhost:3000/api/cv/pdf");
@@ -116,7 +113,7 @@ describe("PDF Route", () => {
     expect(response.status).toBe(500);
   });
 
-  it("uses default host when header is missing", async () => {
+  it("falls back to the default host when the header is missing", async () => {
     const request = new NextRequest("http://localhost:3000/api/cv/pdf");
 
     await GET(request);
@@ -124,7 +121,7 @@ describe("PDF Route", () => {
     expect(mockFetch).toHaveBeenCalledWith(
       expect.any(String),
       expect.objectContaining({
-        body: expect.stringContaining("localhost:3000/forum/sem-bozhyk/cv"),
+        body: expect.stringContaining("localhost:3000/cv?role=engineer&lang=en"),
       })
     );
   });

@@ -6,8 +6,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // CVs live under each avatar; /cv only redirects there
-        disallow: ["/cv", "/forum/*/cv"],
+        // The CV carries personal contact details; indexed CVs attract scrapers
+        disallow: ["/cv"],
       },
     ],
     sitemap: "https://sbozh.me/sitemap.xml",

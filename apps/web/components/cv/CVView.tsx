@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import { join } from "path";
+import type { ReactNode } from "react";
 
 import { compile } from "@sbozh/pmdxjs";
 
@@ -15,9 +16,10 @@ interface CVViewProps {
   title: string;
   pdfUrl?: string;
   pdfFilename?: string;
+  picker?: ReactNode;
 }
 
-export function CVView({ file, title, pdfUrl, pdfFilename }: CVViewProps) {
+export function CVView({ file, title, pdfUrl, pdfFilename, picker }: CVViewProps) {
   const source = readFileSync(join(process.cwd(), "content", file), "utf-8");
   const { element, error } = compile(source);
 
@@ -35,6 +37,7 @@ export function CVView({ file, title, pdfUrl, pdfFilename }: CVViewProps) {
   return (
     <div className="mx-auto px-4 md:px-12 lg:px-24 py-6 md:py-12 print:p-0">
       <h2 className="text-center print:hidden">{title}</h2>
+      {picker && <div className="mt-4 print:hidden">{picker}</div>}
       <div className="flex justify-center print:hidden z-10 flex gap-2 p-4 py-8 px-8">
         <CVThemeToggle />
         <CVPrintButton />

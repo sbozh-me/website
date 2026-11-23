@@ -4,7 +4,7 @@ margins: 12 12 12 12
 theme: normal
 logo: /android-chrome-512x512.png
 photo: /semen_bozhyk.png
-qr: https://sbozh.me/forum/semen-bozhyk/cv
+qr: https://sbozh.me/cv?role=founder
 qr-label: Web version
 version: v20.26.305
 :::
@@ -14,7 +14,7 @@ version: v20.26.305
 # Semen Bozhyk
 
 subtitle: Builder and Creator
-contact: +420 608 386 115 | sem.bozhyk@sbozh.me | github.com/sbozh | Prague, CZ
+contact: +380 50 333 3069 | sem.bozhyk@sbozh.me | github.com/sbozh | Prague, CZ
 
 ---
 
@@ -54,7 +54,7 @@ Self-taught software engineer: 11 years, 16 companies. Since December 2025 I als
 - Features for 20M daily sessions
 - Payments of EUR 5M+ monthly, as team lead
 
-:::link-qr https://sbozh.me/cv | Sem Bozhyk's full CV
+:::link-qr https://sbozh.me/cv?role=engineer | Sem Bozhyk's full CV
 
 ## Skills
 

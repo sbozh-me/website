@@ -33,9 +33,14 @@ describe("Header", () => {
 
   it("keeps the menu links", () => {
     render(<Header />);
-    for (const name of ["Home", "Library", "Forum", "Projects"]) {
+    for (const name of ["Home", "Library", "Projects", "CVs"]) {
       expect(screen.getAllByRole("link", { name }).length).toBeGreaterThan(0);
     }
+  });
+
+  it("drops the Forum link (the Forum is on pause)", () => {
+    render(<Header />);
+    expect(screen.queryByRole("link", { name: "Forum" })).toBeNull();
   });
 
   it("switches the theme with an icon, no wording", () => {

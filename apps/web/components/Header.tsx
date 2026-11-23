@@ -17,11 +17,11 @@ import { ReaderThemeToggle } from "./ReaderTheme";
 const navItems = [
   {name: "Home", href: "/"},
   {name: "Library", href: "/library"},
-  {name: "Forum", href: "/forum"},
   {name: "Projects", href: "/projects"},
+  {name: "CVs", href: "/cv"},
 ];
 
-// Sections own their sub-pages (the Forum holds each avatar's CV)
+// Sections own their sub-pages
 function isActive(pathname: string | null, href: string) {
   if (!pathname) return false;
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);

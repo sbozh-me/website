@@ -13,11 +13,15 @@ describe("redirects", () => {
     expect(link?.permanent).toBe(false);
   });
 
-  it("sends the old /cv link to Sem Bozhyk's CV on the Forum, temporarily", async () => {
+  it("sends printed CV QR codes from /forum/<avatar>/cv to the new /cv page, temporarily", async () => {
     const redirects = (await nextConfig.redirects?.()) ?? [];
-    const cv = redirects.find((r) => r.source === "/cv");
 
-    expect(cv?.destination).toBe("/forum/sem-bozhyk/cv");
-    expect(cv?.permanent).toBe(false);
+    const engineer = redirects.find((r) => r.source === "/forum/sem-bozhyk/cv");
+    expect(engineer?.destination).toBe("/cv?role=engineer");
+    expect(engineer?.permanent).toBe(false);
+
+    const founder = redirects.find((r) => r.source === "/forum/semen-bozhyk/cv");
+    expect(founder?.destination).toBe("/cv?role=founder");
+    expect(founder?.permanent).toBe(false);
   });
 });
