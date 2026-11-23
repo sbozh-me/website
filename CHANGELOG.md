@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.2] - 2026-11-23
+
+### Changes
+
+- feat(web): bring the CV back with role and language pickers ([65d2cbf](https://github.com/sbozh-me/website/commit/65d2cbf94882e56e68ef8ef183c7e87c5535f528))
+- chore(web): bump CV version to v20.26.2311 ([5a19f06](https://github.com/sbozh-me/website/commit/5a19f06a0dd0f6a3e859e796e161227ffce375ca))
+- feat(web): Kagurame recites the CV returns release ([976524a](https://github.com/sbozh-me/website/commit/976524a40359150fd2aeb3f11590df06814098a9))
+
+
 ## [1.14.1] - 2026-11-23
 
 ### Changes
