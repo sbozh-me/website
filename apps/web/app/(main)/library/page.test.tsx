@@ -1,8 +1,23 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
+import type { PostListItem, PostType } from "@sbozh/blog";
 
 let mockShouldThrow = false;
-let mockPosts: { id: string; slug: string; type?: string }[] = [];
+let mockPosts: PostListItem[] = [];
+
+function fixture(id: string, slug: string, type?: PostType): PostListItem {
+  return {
+    id,
+    slug,
+    title: slug,
+    excerpt: "",
+    date: "2026-01-01",
+    readingTime: 0,
+    persona: { id: "sem", slug: "sem", name: "Sem", color: "amethyst" },
+    tags: [],
+    type,
+  };
+}
 
 vi.mock("@/lib/blog/repository", () => ({
   createBlogRepository: () => ({
@@ -37,10 +52,10 @@ describe("Library hub", () => {
 
   it("counts posts by type", async () => {
     mockPosts = [
-      { id: "1", slug: "a", type: "laws" },
-      { id: "2", slug: "b", type: "laws" },
-      { id: "3", slug: "c", type: "stories" },
-      { id: "4", slug: "d" }, // no type → ignored
+      fixture("1", "a", "laws"),
+      fixture("2", "b", "laws"),
+      fixture("3", "c", "stories"),
+      fixture("4", "d"), // no type → ignored
     ];
     const page = await LibraryPage();
     render(page);
@@ -53,7 +68,7 @@ describe("Library hub", () => {
   });
 
   it("links each shelf to its /library/<type> page", async () => {
-    mockPosts = [{ id: "1", slug: "a", type: "articles" }];
+    mockPosts = [fixture("1", "a", "articles")];
     const page = await LibraryPage();
     render(page);
     expect(screen.getByRole("link", { name: /Articles/i })).toHaveAttribute(
