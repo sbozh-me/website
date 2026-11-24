@@ -14,6 +14,7 @@ import {
   useCookieModalOpen,
   wasLeaderShown,
 } from "@/lib/privacy/decision"
+import { usePersistentMuted } from "@/lib/video-muted"
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
@@ -73,7 +74,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const [qualities, setQualities] = useState<Partial<Record<Cut, Quality>>>({})
   const quality = cut ? qualities[cut] : undefined
   const src = cut && quality ? CUTS[cut][quality] : undefined
-  const [muted, setMuted] = useState(true)
+  const [muted, setMuted] = usePersistentMuted()
   const [playing, setPlaying] = useState(false)
   const [finishedOnce, setFinishedOnce] = useState(false)
   // Ended: the video is hidden so the poster underneath shows, until it plays again
@@ -81,6 +82,8 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const [dialogueOpen, setDialogueOpen] = useState(false)
   // The 3-2-1 leader is still counting: the video downloads, and plays when it runs out
   const [counting, setCounting] = useState(true)
+  // Pause the leader: freezes the dial, stops the beep and the projector ambience
+  const [leaderPaused, setLeaderPaused] = useState(false)
   // Leader runs out: the video may play now, and unless the visitor has allowed cookies
   // the gate opens its modal on top. A dismisser keeps being nudged on every visit
   // until they switch.
@@ -158,6 +161,13 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, counting])
 
+  // Hydration lands with the saved mute choice, or another tab toggles it: keep the
+  // media element's muted in step with the state, without touching playback
+  useEffect(() => {
+    const video = videoRef.current
+    if (video) video.muted = muted
+  }, [muted])
+
   // Tab off: pause the video so it doesn't play into an empty room. Tab back: pick up
   // where they were, if they wanted play.
   useEffect(() => {
@@ -194,6 +204,10 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   }, [cookieModalOpen, counting, src])
 
   const togglePlay = () => {
+    if (counting) {
+      setLeaderPaused((p) => !p)
+      return
+    }
     const video = videoRef.current
     if (!video) return
     wantPlay.current = !playing
@@ -210,12 +224,13 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   }
 
   const toggleSound = () => {
+    const next = !muted
+    setMuted(next)
     const video = videoRef.current
     if (!video) return
-    const next = !muted
     video.muted = next
-    setMuted(next)
-    if (!next) play(video)
+    // Starting the video on unmute only makes sense once the leader has let go
+    if (!next && !counting) play(video)
   }
 
   const sectionRef = useRef<HTMLElement>(null)
@@ -281,7 +296,9 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
         />
       )}
 
-      {!skipLeader && <HeroLeader loading={loading} onDone={endLeader} />}
+      {!skipLeader && (
+        <HeroLeader loading={loading} onDone={endLeader} paused={leaderPaused} muted={muted} />
+      )}
 
       <HeroDialogue
         script={script}
@@ -289,24 +306,38 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
         open={dialogueOpen}
         onOpenChange={setDialogueOpen}
         toolbar={
-          // Nothing to control while the leader counts
-          cut &&
-          !counting && (
+          cut && (
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 onClick={togglePlay}
-                aria-label={playing ? "Pause video" : "Play video"}
+                aria-label={
+                  counting
+                    ? leaderPaused
+                      ? "Resume countdown"
+                      : "Pause countdown"
+                    : playing
+                      ? "Pause video"
+                      : "Play video"
+                }
                 className="rounded-full bg-background/40 backdrop-blur-md"
               >
-                {playing ? <Pause /> : <Play />}
-                {playing ? "Pause" : "Play"}
+                {counting ? (leaderPaused ? <Play /> : <Pause />) : playing ? <Pause /> : <Play />}
+                {counting ? (leaderPaused ? "Resume" : "Pause") : playing ? "Pause" : "Play"}
               </Button>
               <Button
                 variant="outline"
                 size="icon"
                 onClick={toggleSound}
-                aria-label={muted ? "Unmute video" : "Mute video"}
+                aria-label={
+                  counting
+                    ? muted
+                      ? "Enable countdown sound"
+                      : "Mute countdown sound"
+                    : muted
+                      ? "Unmute video"
+                      : "Mute video"
+                }
                 aria-pressed={!muted}
                 className="rounded-full bg-background/40 backdrop-blur-md"
               >

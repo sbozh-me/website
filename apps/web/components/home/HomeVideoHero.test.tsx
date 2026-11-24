@@ -185,9 +185,10 @@ describe("HomeVideoHero leader", () => {
     expect(leader()).toHaveTextContent("2");
     tick();
     expect(leader()).toHaveTextContent("1");
-    // Not started early, and nothing to control yet
+    // Not started early: the toolbar shows countdown controls, not video ones
     expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
     expect(screen.queryByRole("button", { name: /(Play|Pause) video/ })).toBeNull();
+    expect(screen.getByRole("button", { name: /(Pause|Resume) countdown/ })).toBeInTheDocument();
     tick();
     expect(leader()).toHaveAttribute("data-leader", "done");
     expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
@@ -286,6 +287,51 @@ describe("HomeVideoHero leader", () => {
     tick();
     tick();
     expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
+  });
+
+  it("pauses the countdown with the toolbar Pause button, and resumes it", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    render(<HomeVideoHero />);
+    expect(leader()).toHaveTextContent("3");
+    tick();
+    expect(leader()).toHaveTextContent("2");
+    fireEvent.click(screen.getByRole("button", { name: "Pause countdown" }));
+    expect(leader()).toHaveAttribute("data-paused");
+    tick();
+    tick();
+    tick();
+    // Still at 2: the count sat on it while paused
+    expect(leader()).toHaveTextContent("2");
+    fireEvent.click(screen.getByRole("button", { name: "Resume countdown" }));
+    expect(leader()).not.toHaveAttribute("data-paused");
+    tick();
+    expect(leader()).toHaveTextContent("1");
+  });
+
+  it("saves the sound choice to localStorage and restores it on the next mount", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    window.localStorage.clear();
+    const { unmount } = render(<HomeVideoHero />);
+    fireEvent.click(screen.getByRole("button", { name: "Enable countdown sound" }));
+    expect(window.localStorage.getItem("sbozh:video:muted")).toBe("0");
+    unmount();
+    render(<HomeVideoHero />);
+    // Restored muted=false: the toolbar opens with the "Mute" variant and the element follows
+    expect(screen.getByRole("button", { name: "Mute countdown sound" })).toBeInTheDocument();
+    expect(video().muted).toBe(false);
+    window.localStorage.clear();
+  });
+
+  it("carries the sound choice from the countdown through to the video", () => {
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    render(<HomeVideoHero />);
+    fireEvent.click(screen.getByRole("button", { name: "Enable countdown sound" }));
+    expect(screen.getByRole("button", { name: "Mute countdown sound" })).toBeInTheDocument();
+    tick();
+    tick();
+    tick();
+    expect(screen.getByRole("button", { name: "Mute video" })).toBeInTheDocument();
+    expect(video().muted).toBe(false);
   });
 });
 

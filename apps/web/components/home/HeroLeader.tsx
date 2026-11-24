@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useLeaderAudio } from "./leader-audio"
 
 /** The leader counts down from here, one turn of the hand per number */
 export const LEADER_FROM = 3
@@ -32,6 +33,11 @@ interface HeroLeaderProps {
   onDone: () => void
   /** Small picture-in-picture variant: the SVG fills its container, no viewport sizing */
   compact?: boolean
+  /** External pause (visitor pressed the Pause button); stacks with scroll-away/hidden */
+  paused?: boolean
+  /** When false, the leader plays its countdown audio: a sync-pop beep on each digit
+   *  and a projector ambience (motor hum, filtered noise, sprocket ticks) underneath */
+  muted?: boolean
 }
 
 /**
@@ -46,7 +52,7 @@ interface HeroLeaderProps {
  * If the video still can't play when the leader runs out (or stalls later), the brand mark
  * spins fast in the dial's place until the picture moves.
  */
-export function HeroLeader({ loading, onDone, compact = false }: HeroLeaderProps) {
+export function HeroLeader({ loading, onDone, compact = false, paused: externallyPaused = false, muted = true }: HeroLeaderProps) {
   const [count, setCount] = useState(LEADER_FROM)
   const counting = count > 0
   // Fading out, it keeps its last number
@@ -56,7 +62,9 @@ export function HeroLeader({ loading, onDone, compact = false }: HeroLeaderProps
   const [away, setAway] = useState(false)
   // Tab is hidden: the film stands still too, so the count doesn't run out off-screen
   const [hidden, setHidden] = useState(false)
-  const paused = away || hidden
+  const paused = away || hidden || externallyPaused
+  // Beeps and projector ambience only while the count is actively running
+  useLeaderAudio({ enabled: !muted && counting && !paused, count })
   // Tracks the client takeover: before mount, the SSR'd number sits there with its hand
   // sweeping; we don't want the visitor to see the same "3" lingering for several turns
   // while hydration catches up or the video asset parses, so we fade the dial out and
@@ -97,6 +105,10 @@ export function HeroLeader({ loading, onDone, compact = false }: HeroLeaderProps
     animationDuration: `${LEADER_TICK_MS}ms`,
     animationIterationCount: shown === LEADER_FROM ? "infinite" : 1,
   }
+  // The digit fades over its own tick. Each number remounts the text (key below),
+  // so the animation starts fresh for 3, 2 and 1; before the client has taken over
+  // there is no class and the number stays visible.
+  const digitFade = mounted ? { animationDuration: `${LEADER_TICK_MS}ms` } : undefined
 
   return (
     <>
@@ -159,7 +171,10 @@ export function HeroLeader({ loading, onDone, compact = false }: HeroLeaderProps
           <circle cx={CENTRE} cy={CENTRE} r={DIAL_R} fill="none" stroke="#f4f4f4" strokeWidth={3} />
           <circle cx={CENTRE} cy={CENTRE} r={DIAL_R - 13} fill="none" stroke="#f4f4f4" strokeWidth={2} />
           <text
+            key={`digit-${shown}`}
             data-leader-count
+            className={mounted ? "leader-digit" : undefined}
+            style={digitFade}
             x={CENTRE}
             y={CENTRE}
             textAnchor="middle"

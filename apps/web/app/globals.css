@@ -1004,6 +1004,23 @@ html:has([data-cookie-corner-video][data-counting]) {
   to { stroke-dashoffset: 0; }
 }
 
+/* The number holds for most of its turn, then fades as the next one is about to take
+   over. Shares the turn's duration and iteration count via the same inline style the
+   hand uses, so the fade and the hand finish together. Off under reduced motion so
+   the digit doesn't snap to invisible. */
+@media (prefers-reduced-motion: no-preference) {
+  .leader-digit {
+    animation-name: leader-digit-fade;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+}
+
+@keyframes leader-digit-fade {
+  0%, 65% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 /* Gate weave: the frame never sits quite still in the projector */
 .leader-weave {
   animation: leader-weave 0.45s steps(1) infinite;

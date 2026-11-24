@@ -158,6 +158,25 @@ describe("HeroLeader", () => {
     expect(screen.queryByRole("status")).toBeNull();
   });
 
+  it("holds the count while paused from outside, and goes on when the pause lifts", () => {
+    const onDone = vi.fn();
+    const { rerender } = render(<HeroLeader loading={false} onDone={onDone} paused />);
+    expect(leader()).toHaveAttribute("data-paused");
+    advance(LEADER_TICK_MS * 5);
+    expect(leader()).toHaveTextContent("3");
+    rerender(<HeroLeader loading={false} onDone={onDone} paused={false} />);
+    expect(leader()).not.toHaveAttribute("data-paused");
+    advance(LEADER_TICK_MS);
+    expect(leader()).toHaveTextContent("2");
+  });
+
+  it("fades the number out before the next one takes over", () => {
+    render(<HeroLeader loading={false} onDone={() => {}} />);
+    const digit = document.querySelector<SVGTextElement>("[data-leader-count]")!;
+    expect(digit).toHaveClass("leader-digit");
+    expect(digit.style.animationDuration).toBe(`${LEADER_TICK_MS}ms`);
+  });
+
   it("skips the rest of the count on click", () => {
     const onDone = vi.fn();
     render(<HeroLeader loading={false} onDone={onDone} />);
