@@ -14,6 +14,7 @@ export function PrivacyControls() {
 
   const onAllow = () => {
     setDecision('allow');
+    window.umami?.track('cookie_choice', { choice: 'allow' });
     toast.success(
       <span>
         You're aware of{' '}
@@ -33,6 +34,7 @@ export function PrivacyControls() {
   };
   const onDismiss = () => {
     setDecision('dismiss');
+    window.umami?.track('cookie_choice', { choice: 'dismiss' });
     toast.success('Cookies dismissed — only cookieless Umami runs');
   };
 

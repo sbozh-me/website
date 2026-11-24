@@ -89,14 +89,21 @@ export function CookieGate() {
     emitCookieModalState(modalOpen);
   }, [modalOpen, hydrated]);
 
+  // Umami is the cookieless path -- it runs for everyone, so logging the choice
+  // itself does not depend on the choice.
+  const trackChoice = (choice: "allow" | "dismiss") => {
+    window.umami?.track("cookie_choice", { choice });
+  };
   const handleAllow = () => {
     setDecision("allow");
     setModalOpen(false);
+    trackChoice("allow");
     agreementBanner();
   };
   const handleDismiss = () => {
     setDecision("dismiss");
     setModalOpen(false);
+    trackChoice("dismiss");
   };
   // Close on the corner widget:
   //   before a decision -- hand off to the modal, so they still have to pick a side
