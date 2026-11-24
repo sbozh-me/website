@@ -8,9 +8,7 @@ import {
   onCookieModalRequest,
   readDecision,
   setDecision,
-  type CookieDecision,
 } from "@/lib/privacy/decision";
-import { Button } from "@sbozh/react-ui/components/ui/button";
 import { EmperorCookieModal } from "@/components/EmperorCookieModal";
 import { CookieCornerVideo } from "@/components/CookieCornerVideo";
 
@@ -37,44 +35,32 @@ function agreementBanner() {
  * Sits at the root and decides whether to present the cookie choice.
  *
  * Non-main page, no decision yet: a picture-in-picture Pan Dude clip plays in the
- * bottom-right corner (CookieCornerVideo) with a 3-2-1 leader, and the Emperor Cookie
- * modal opens the moment the countdown ends. The clip stays visible after the choice
- * too, until the visitor closes it with its own button.
+ * bottom-right corner on desktop (or full-screen on phones) via CookieCornerVideo
+ * with a 3-2-1 leader, and the Emperor Cookie modal opens the moment the countdown
+ * ends. The clip stays visible after the choice too, until the visitor closes it
+ * with its own button.
  *
  * Main page, no decision yet: HomeVideoHero fires a cookie:request the moment its
- * own 3-2-1 leader runs out (and again after 3 seconds of black-and-white scroll-away
- * as a backup); the gate opens the modal and locks the scroll.
- *
- * Dismissed: the site stays grayscale forever (data-site-bw on <html>) until the visitor
- * clears their choice.
+ * own 3-2-1 leader runs out; the gate opens the modal and locks the scroll.
  */
 export function CookieGate() {
   const pathname = usePathname();
   const isMain = pathname === "/";
-  // Keep the corner widget above the demo call bar on phones
-  const aboveDemoBar = !!pathname?.startsWith("/demo/");
-  const [decision, setLocalDecision] = useState<CookieDecision>(null);
   const [hydrated, setHydrated] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   // The corner video is mounted iff the page loaded with no decision, and stays mounted
   // until the visitor hits its close button (even after they pick a side)
   const [cornerVisible, setCornerVisible] = useState(false);
 
-  // Read the stored decision and mark hydrated in one commit, so a returning visitor
-  // never sees a flash of the widget before the "already decided" branch fires
+  // Mark hydrated after reading the stored decision, so a returning visitor never sees
+  // a flash of the widget before the "already decided" branch fires
   useEffect(() => {
-    const initial = readDecision();
-    setLocalDecision(initial);
     // Non-main pages get the picture-in-picture clip on a fresh visit and keep getting
     // it on every subsequent visit until the visitor switches to "allow" -- a dismiss
     // doesn't make Pan Dude go away. The main page has the full hero so the corner
     // clip stays hidden there.
-    setCornerVisible(!isMain && initial !== "allow");
+    setCornerVisible(!isMain && readDecision() !== "allow");
     setHydrated(true);
-    const onChange = (e: Event) =>
-      setLocalDecision((e as CustomEvent<CookieDecision>).detail);
-    window.addEventListener("cookie:decision", onChange);
-    return () => window.removeEventListener("cookie:decision", onChange);
   }, [isMain]);
 
   // Main page: wait for HomeVideoHero to call for the modal
@@ -84,15 +70,6 @@ export function CookieGate() {
       if (readDecision() !== "allow") setModalOpen(true);
     });
   }, [isMain]);
-
-  // Grayscale is the cost of dismissing
-  useEffect(() => {
-    if (!hydrated) return;
-    if (decision !== "dismiss") return;
-    const html = document.documentElement;
-    html.setAttribute("data-site-bw", "");
-    return () => html.removeAttribute("data-site-bw");
-  }, [decision, hydrated]);
 
   // Lock scroll only while the modal is up
   useEffect(() => {
@@ -121,9 +98,6 @@ export function CookieGate() {
     setDecision("dismiss");
     setModalOpen(false);
   };
-  // Soft escape: close the modal without recording a choice, so the site keeps its
-  // colors and the gate asks again on the next visit.
-  const handleKeepColors = () => setModalOpen(false);
   // Close on the corner widget:
   //   before a decision -- hand off to the modal, so they still have to pick a side
   //   after a decision  -- hide the widget (they already settled it)
@@ -150,25 +124,13 @@ export function CookieGate() {
           onClose={handleCornerClose}
           onLeaderDone={handleCornerLeaderDone}
           onLeaderSkip={handleCornerLeaderSkip}
-          aboveDemoBar={aboveDemoBar}
           shouldPlay={!modalOpen}
         />
-      )}
-      {decision === "dismiss" && !modalOpen && (
-        <Button
-          onClick={() => setModalOpen(true)}
-          className={`fixed ${aboveDemoBar ? "bottom-24 md:bottom-4" : "bottom-4"} left-1/2 z-50 -translate-x-1/2 rounded-full shadow-lg print:hidden`}
-          aria-label="Return colors"
-          title="Change your cookie choice"
-        >
-          Return colors
-        </Button>
       )}
       <EmperorCookieModal
         open={modalOpen}
         onAllow={handleAllow}
         onDismiss={handleDismiss}
-        onKeepColors={handleKeepColors}
       />
     </>
   );

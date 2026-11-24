@@ -40,8 +40,8 @@ export default function PrivacyPage() {
         <p>
           Session replay is <strong>off</strong>. We do not record what you
           type, screen recordings, or keystrokes. You can switch to the
-          cookieless path at any time with the &quot;Return colors&quot; button
-          at the bottom of the page and picking <strong>DISMISS</strong>.
+          cookieless path at any time with the <strong>Dismiss cookies</strong>
+          button in the Cookie preference panel above.
         </p>
         <h3>When you dismiss cookies: Umami</h3>
         <p>

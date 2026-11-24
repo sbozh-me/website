@@ -966,8 +966,7 @@ html {
 }
 
 html:has([data-home-hero][data-bw]),
-html:has([data-cookie-corner-video][data-counting]),
-html[data-site-bw] {
+html:has([data-cookie-corner-video][data-counting]) {
   filter: grayscale(1);
 }
 

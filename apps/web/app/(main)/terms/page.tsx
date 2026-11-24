@@ -27,12 +27,11 @@ export default function TermsPage() {
         </ul>
         <p>By using this website, you agree to these Terms.</p>
         <p>
-          If you do not accept these Terms, you may still observe the website,
-          but only through the black-and-white filter: decline the choice in
-          the &quot;Take The Piece&quot; dialog (or hit <strong>DISMISS COOKIES</strong>) and
-          the site stays grayscale on every page, with only cookieless Umami
-          analytics running. See <a href="/privacy">/privacy</a> for the
-          analytics detail.
+          If you do not accept these Terms, you may still use the website on
+          the cookieless path: decline the choice in the &quot;Take The
+          Piece&quot; dialog (or hit <strong>DISMISS COOKIES</strong>) and
+          only cookieless Umami analytics runs. See{" "}
+          <a href="/privacy">/privacy</a> for the analytics detail.
         </p>
 
         <h2>2. What This Website Is</h2>

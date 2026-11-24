@@ -13,15 +13,14 @@ interface EmperorCookieModalProps {
   open: boolean;
   onAllow: () => void;
   onDismiss: () => void;
-  onKeepColors: () => void;
 }
 
 /**
- * The one choice the visitor is given: ALLOW (loads PostHog EU) or DISMISS
- * (keeps the first-party Umami fallback, and the site stays black and white).
- * No X, no outside click, no Escape: the gate is only crossed by picking a side.
+ * The GDPR gate: two sides. ALLOW loads PostHog EU; DISMISS keeps only the
+ * first-party Umami fallback. No X, no outside click, no Escape -- the gate is
+ * only crossed by picking a side.
  */
-export function EmperorCookieModal({ open, onAllow, onDismiss, onKeepColors }: EmperorCookieModalProps) {
+export function EmperorCookieModal({ open, onAllow, onDismiss }: EmperorCookieModalProps) {
   return (
     <Dialog open={open}>
       <DialogContent
@@ -38,8 +37,8 @@ export function EmperorCookieModal({ open, onAllow, onDismiss, onKeepColors }: E
         <div className="space-y-1.5 text-center">
           <DialogTitle className="text-xl">Take The Piece</DialogTitle>
           <DialogDescription>
-            Allow cookies and the colour comes back. Dismiss and the site keeps running
-            in black and white.
+            Allow cookies for PostHog EU analytics, or dismiss and only
+            cookieless Umami runs.
           </DialogDescription>
         </div>
         <p className="text-center text-xs text-muted-foreground">
@@ -66,16 +65,6 @@ export function EmperorCookieModal({ open, onAllow, onDismiss, onKeepColors }: E
           </Button>
           <Button onClick={onAllow} className="w-full sm:w-auto">
             ALLOW cookies
-          </Button>
-        </div>
-        <div className="flex justify-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onKeepColors}
-            className="h-auto px-2 py-1 text-xs font-normal text-muted-foreground hover:bg-transparent hover:text-foreground hover:underline underline-offset-2"
-          >
-            Dismiss and keep colors
           </Button>
         </div>
       </DialogContent>

@@ -15,9 +15,6 @@ import {
   wasLeaderShown,
 } from "@/lib/privacy/decision"
 
-/** Black-and-white scroll-away this long opens the cookie modal and locks the scroll */
-const COOKIE_PROMPT_DELAY_MS = 3000
-
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
 
@@ -195,32 +192,6 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookieModalOpen, counting, src])
-
-  // Black-and-white with the visitor scrolled away for 3 s, with no cookie choice yet:
-  // ask the gate to open the modal (which locks the scroll). The grayscale state is
-  // counting || !colour; the timer resets whenever they scroll back to the top.
-  const bw = counting || !colour
-  useEffect(() => {
-    if (!bw) return
-    if (readDecision() === "allow") return
-    let timer: ReturnType<typeof setTimeout> | null = null
-    const check = () => {
-      if (window.scrollY > 0) {
-        if (timer === null) {
-          timer = setTimeout(requestCookieModal, COOKIE_PROMPT_DELAY_MS)
-        }
-      } else if (timer !== null) {
-        clearTimeout(timer)
-        timer = null
-      }
-    }
-    check()
-    window.addEventListener("scroll", check, { passive: true })
-    return () => {
-      window.removeEventListener("scroll", check)
-      if (timer !== null) clearTimeout(timer)
-    }
-  }, [bw])
 
   const togglePlay = () => {
     const video = videoRef.current

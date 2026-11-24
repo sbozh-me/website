@@ -7,7 +7,7 @@ import { setDecision, useCookieDecision } from '@/lib/privacy/decision';
 /**
  * The one honest control: it reflects, and writes, the same `cookie_decision`
  * localStorage key that the Emperor modal and CookieGate read. Flipping it
- * drives grayscale + PostHog/Umami routing live, in every open tab.
+ * drives PostHog/Umami routing live, in every open tab.
  */
 export function PrivacyControls() {
   const decision = useCookieDecision();
@@ -50,9 +50,9 @@ export function PrivacyControls() {
         <span className="text-muted-foreground">Current choice: </span>
         <strong>
           {decision === 'allow'
-            ? 'Allow — PostHog EU loads (cookies, colour on)'
+            ? 'Allow — PostHog EU loads (cookies)'
             : decision === 'dismiss'
-              ? 'Dismiss — only Umami loads (cookieless, grayscale on)'
+              ? 'Dismiss — only Umami loads (cookieless)'
               : 'Not chosen yet'}
         </strong>
       </div>
