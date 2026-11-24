@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.3] - 2026-11-24
+
+### Changes
+
+- refactor(web): simplify cookie gate to allow or dismiss ([4483657](https://github.com/sbozh-me/website/commit/44836578d9be90fc127f51e314f217181609d297))
+- feat(web): track cookie choice in umami ([a6a9e1e](https://github.com/sbozh-me/website/commit/a6a9e1ed96ed9885d414e51dc8b261b1d2dfb946))
+- feat(web): polish film leader, persist sound choice ([19a24a9](https://github.com/sbozh-me/website/commit/19a24a9dbcfb60698da85bd8b45d7c3e57bec7db))
+- feat(web): Kagurame recites the colors-stay-the-countdown-speaks release ([29a73e0](https://github.com/sbozh-me/website/commit/29a73e0fd45bec42947b8ecb8e4e07ddef6e9901))
+- chore(web): Plautus reviews colors-stay-the-countdown-speaks ([dcc6896](https://github.com/sbozh-me/website/commit/dcc689613d7aa0438ac036da2280510dc9ec662f))
+
+
 ## [1.15.2] - 2026-11-23
 
 ### Changes
