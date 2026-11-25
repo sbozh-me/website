@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import Image from "next/image"
 import { PostThumbnail, SeriesStatusBadge } from "@sbozh/blog/components"
 import type { SeriesWithPosts } from "@sbozh/blog/utils"
@@ -10,6 +11,8 @@ import type { Project } from "@/lib/projects/types"
 interface SeriesPromoProps extends PromotedSeries {
   /** Heading over the series, like the other home sections' */
   title?: string
+  /** Series titles with their inline syntax rendered (`(;)` as the ✳ logo), by series id */
+  headings?: Record<string, ReactNode>
   /** Project in focus: one wide card under the series, as wide as the two small ones */
   project?: Project
 }
@@ -19,7 +22,7 @@ interface SeriesPromoProps extends PromotedSeries {
  * header (Hero with the status badge on it, title, description), left and right under it,
  * then the project in focus across the full width.
  */
-export function SeriesPromo({ big, left, right, project, title = "My current focus" }: SeriesPromoProps) {
+export function SeriesPromo({ big, left, right, project, headings, title = "My current focus" }: SeriesPromoProps) {
   const hasSeries = Boolean(big || left || right)
   if (!hasSeries && !project) return null
 
@@ -28,11 +31,11 @@ export function SeriesPromo({ big, left, right, project, title = "My current foc
       <h2 id="series-promo-title" className="mb-8 text-center text-2xl font-semibold tracking-tight md:mb-10">
         {title}
       </h2>
-      {big && <PromoCard item={big} big />}
+      {big && <PromoCard item={big} heading={headings?.[big.series.id]} big />}
       {(left || right) && (
         <div className={cn("grid grid-cols-2 gap-4 sm:gap-6", big && "mt-10 md:mt-12")}>
-          {left && <PromoCard item={left} />}
-          {right && <PromoCard item={right} />}
+          {left && <PromoCard item={left} heading={headings?.[left.series.id]} />}
+          {right && <PromoCard item={right} heading={headings?.[right.series.id]} />}
         </div>
       )}
       {project && <ProjectPromoCard project={project} className={cn(hasSeries && "mt-10 md:mt-12")} />}
@@ -40,7 +43,16 @@ export function SeriesPromo({ big, left, right, project, title = "My current foc
   )
 }
 
-function PromoCard({ item: { series, posts }, big = false }: { item: SeriesWithPosts; big?: boolean }) {
+function PromoCard({
+  item: { series, posts },
+  heading,
+  big = false,
+}: {
+  item: SeriesWithPosts
+  /** The title with its inline syntax rendered; the plain title without it */
+  heading?: ReactNode
+  big?: boolean
+}) {
   const Heading = big ? "h2" : "h3"
 
   return (
@@ -82,7 +94,7 @@ function PromoCard({ item: { series, posts }, big = false }: { item: SeriesWithP
           big ? "mt-8 text-3xl! font-bold! md:text-4xl!" : "mt-3 text-base! font-semibold! sm:mt-4 sm:text-xl!"
         )}
       >
-        {series.title}
+        {heading ?? series.title}
       </Heading>
       {series.description && (
         <p

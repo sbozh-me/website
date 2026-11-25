@@ -37,13 +37,23 @@ export function createBlogRepository(
 /**
  * Titles may carry glitch syntax (see title.ts). Everything reading `post.title` gets the
  * plain text; a single post also keeps the markup as `titleMarkup` for its page heading.
+ * Series titles likewise, each keeping its markup for the headings that render it.
  */
 export function withPlainTitles(repository: BlogRepository): BlogRepository {
   return {
     getPersonas: () => repository.getPersonas(),
     getAvatars: () => repository.getAvatars(),
     getTags: () => repository.getTags(),
-    getSeries: () => repository.getSeries(),
+    async getSeries() {
+      const series = await repository.getSeries();
+      return Promise.all(
+        series.map(async (item) =>
+          hasTitleMarkup(item.title)
+            ? { ...item, title: await plainTitle(item.title), titleMarkup: item.title }
+            : item
+        )
+      );
+    },
     async getPosts(filters) {
       const posts = await repository.getPosts(filters);
       return Promise.all(

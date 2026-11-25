@@ -10,6 +10,7 @@ import {
 } from "@/components/home";
 import { getAvatars, toAuthor } from "@/lib/avatars";
 import { getPromotedSeries } from "@/lib/blog/promoted-series";
+import { renderSeriesTitles } from "@/lib/blog/title-heading";
 import { getProjectWithVersion } from "@/lib/projects/versions";
 import { getPostsByAuthors } from "@/actions/blog-posts";
 import { ErrorState } from "@sbozh/release-notes/components";
@@ -121,6 +122,10 @@ export default async function Home() {
     getPromotedSeries(),
     getProjectWithVersion(FOCUS_PROJECT),
   ]);
+  // A promoted series' title may use the glitch syntax: `(;)` is the ✳ logo in its heading
+  const promotedHeadings = await renderSeriesTitles(
+    Object.values(promoted).map((item) => item.series),
+  );
 
   const initialPosts: PostListItem[] = postsResult.success
     ? postsResult.posts
@@ -144,7 +149,7 @@ export default async function Home() {
       <HomeVideoHero script={kagurame} />
       <main className="flex flex-1 flex-col items-center px-6 md:px-12 lg:px-24 self-center">
         <HomePoster {...POSTER} />
-        <SeriesPromo {...promoted} project={focusProject} />
+        <SeriesPromo {...promoted} headings={promotedHeadings} project={focusProject} />
         <HomeContent authors={authors} initialPosts={initialPosts} />
 
         {releasesResult.success ? (

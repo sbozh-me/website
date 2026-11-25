@@ -65,6 +65,22 @@ describe("SeriesPromo", () => {
     expect(badge.closest(".relative")).toContainElement(screen.getByAltText("pan-dude.png"))
   })
 
+  it("shows a series' rendered heading in place of its plain title", () => {
+    render(
+      <SeriesPromo
+        big={makeSeries("big")}
+        left={makeSeries("left")}
+        headings={{ big: <>D<span className="censor">✳</span>CK PITCH</> }}
+      />
+    )
+
+    const heading = screen.getByRole("heading", { level: 2, name: "D✳CK PITCH" })
+    expect(heading.querySelector(".censor")).toHaveTextContent("✳")
+    expect(screen.queryByText("Title big")).not.toBeInTheDocument()
+    // A series without one keeps its title
+    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent("Title left")
+  })
+
   it("puts left and right under the big one, in that order", () => {
     render(
       <SeriesPromo

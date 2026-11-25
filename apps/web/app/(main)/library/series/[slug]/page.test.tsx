@@ -42,7 +42,8 @@ vi.mock("@/lib/blog/repository", () => ({
         status: "finished",
       },
       { id: "part-2", title: "Part 2", slug: "part-2", status: "planned" },
-      { id: "plain", title: "Plain", slug: "plain" },
+      // As the repository hands it over: plain title, markup kept for the heading
+      { id: "plain", title: "D✳CK PITCH", titleMarkup: "D(;)CK PITCH", slug: "plain" },
       { id: "draft", title: "Draft", slug: "draft" },
     ]),
   }),
@@ -98,6 +99,15 @@ describe("SeriesPage", () => {
     const { container } = render(await SeriesPage(params("plain")));
 
     expect(container.querySelector("[data-status]")).toBeNull();
+  });
+
+  it("renders the title's glitch syntax in the heading, and keeps the tab title plain", async () => {
+    render(await SeriesPage(params("plain")));
+
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect(heading).toHaveTextContent("D✳CK PITCH");
+    expect(heading.querySelector(".censor")).toHaveTextContent("✳");
+    expect((await generateMetadata(params("plain"))).title).toBe("D✳CK PITCH");
   });
 
   it("lists only its posts in reading order", async () => {

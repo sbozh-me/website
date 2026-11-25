@@ -10,6 +10,7 @@ import {
   type SeriesWithPosts,
 } from "@sbozh/blog";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
+import { renderTitle } from "@/lib/blog/title-heading";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +81,8 @@ export default async function SeriesPage({ params }: PageProps) {
   }
 
   const { series, posts } = current;
+  // The heading renders the title's glitch syntax: `(;)` as the ✳ logo
+  const heading = series.titleMarkup ? await renderTitle(series.titleMarkup) : series.title;
   const earlier = all.find((item) => item.series.nextSeriesId === series.id)?.series;
   const later = all.find((item) => item.series.id === series.nextSeriesId)?.series;
 
@@ -117,7 +120,7 @@ export default async function SeriesPage({ params }: PageProps) {
         <h1
           className={`${series.status && !series.image ? "mt-3" : "mt-8"} text-3xl md:text-4xl font-bold tracking-tight`}
         >
-          {series.title}
+          {heading}
         </h1>
         {series.description && (
           <p className="mt-2 text-muted-foreground whitespace-pre-line">{series.description}</p>

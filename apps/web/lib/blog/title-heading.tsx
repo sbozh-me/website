@@ -19,3 +19,15 @@ export async function renderTitle(title: string): Promise<ReactNode> {
     return title;
   }
 }
+
+/** Headings of the series whose titles have inline syntax, by series id. */
+export async function renderSeriesTitles(
+  series: { id: string; titleMarkup?: string }[]
+): Promise<Record<string, ReactNode>> {
+  const entries = await Promise.all(
+    series
+      .filter((item) => item.titleMarkup)
+      .map(async (item) => [item.id, await renderTitle(item.titleMarkup!)] as const)
+  );
+  return Object.fromEntries(entries);
+}

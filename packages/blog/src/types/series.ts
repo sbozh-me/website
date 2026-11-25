@@ -12,7 +12,10 @@ export type SeriesPromotion = (typeof SERIES_PROMOTIONS)[number];
 
 export interface Series {
   id: string;
+  /** Plain text: the tab title, cards, the label on a post */
   title: string;
+  /** The title as written, with inline syntax for headings (when it has any) */
+  titleMarkup?: string;
   slug: string;
   description?: string;
   /** Hero of the series page, and its card */

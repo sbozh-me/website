@@ -4,7 +4,7 @@ import type { BlogRepository, Post, PostListItem } from "@sbozh/blog";
 
 import { withPlainTitles } from "../repository";
 import { hasTitleMarkup, plainTitle, titleMarkdown } from "../title";
-import { renderTitle } from "../title-heading";
+import { renderSeriesTitles, renderTitle } from "../title-heading";
 
 describe("plainTitle", () => {
   it("reads glitch words as their base state and censors as ✳", async () => {
@@ -54,6 +54,20 @@ describe("renderTitle", () => {
   });
 });
 
+describe("renderSeriesTitles", () => {
+  it("renders the headings of the series that have title markup, by id", async () => {
+    const headings = await renderSeriesTitles([
+      { id: "pitch", titleMarkup: "Pan Dude #1 - D(;)CK PITCH" },
+      { id: "plain" },
+    ]);
+
+    expect(Object.keys(headings)).toEqual(["pitch"]);
+    expect(renderToStaticMarkup(<>{headings.pitch}</>)).toBe(
+      'Pan Dude #1 - D<span class="censor">✳</span>CK PITCH'
+    );
+  });
+});
+
 describe("withPlainTitles", () => {
   const post = { id: "1", slug: "yeter", title: "==Yeter|ENOUGH!==" } as Post;
   const plain = { id: "2", slug: "plain", title: "Plain" } as PostListItem;
@@ -63,7 +77,10 @@ describe("withPlainTitles", () => {
     getPersonas: async () => [],
     getAvatars: async () => [],
     getTags: async () => [],
-    getSeries: async () => [],
+    getSeries: async () => [
+      { id: "s1", slug: "pitch", title: "Pan Dude #1 - D(;)CK PITCH" },
+      { id: "s2", slug: "plain", title: "Plain" },
+    ],
   } as BlogRepository);
 
   it("gives lists the plain title", async () => {
@@ -75,5 +92,12 @@ describe("withPlainTitles", () => {
     expect(single?.title).toBe("Yeter");
     expect(single?.titleMarkup).toBe("==Yeter|ENOUGH!==");
     expect(await repository.getPost("missing")).toBeNull();
+  });
+
+  it("gives series the plain title, keeping the markup for their headings", async () => {
+    expect(await repository.getSeries()).toEqual([
+      { id: "s1", slug: "pitch", title: "Pan Dude #1 - D✳CK PITCH", titleMarkup: "Pan Dude #1 - D(;)CK PITCH" },
+      { id: "s2", slug: "plain", title: "Plain" },
+    ]);
   });
 });
