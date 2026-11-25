@@ -92,7 +92,7 @@ export function renderAtom(channel: FeedChannel, entries: FeedEntry[]): string {
     `<link href="${SITE_URL}${channel.link}"/>`,
     `<link href="${SITE_URL}${channel.atom}" rel="self" type="application/atom+xml"/>`,
     `<updated>${entries[0] ? new Date(entries[0].date).toISOString() : EPOCH}</updated>`,
-    "<author><name>Sem Bozhyk</name></author>",
+    "<author><name>Kagurame Sbozh</name></author>",
     ...items,
     "</feed>",
   ].join("");

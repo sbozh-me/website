@@ -108,11 +108,10 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
   alternates: {
     types: {
-      'application/rss+xml': [
-        { url: '/rss.xml', title: 'sbozh.me' },
-        { url: '/library/rss.xml', title: 'sbozh.me library' },
-        { url: '/releases/rss.xml', title: 'sbozh.me releases' },
-      ],
+      // One site-wide feed per format: readers that auto-discover multiple feeds would otherwise
+      // subscribe to both the all-feed and a topic-feed and show every blog post twice.
+      // The topic feeds at /library/rss.xml and /releases/rss.xml still work via the FeedMenu.
+      'application/rss+xml': [{ url: '/rss.xml', title: 'sbozh.me' }],
       'application/atom+xml': [{ url: '/atom.xml', title: 'sbozh.me' }],
     },
   },
