@@ -250,6 +250,22 @@ describe("HomeVideoHero leader", () => {
     expect(hero()).not.toHaveAttribute("data-bw");
   });
 
+  it("falls back to muted autoplay when the saved preference is unmuted but the browser refuses", async () => {
+    // A returning visitor whose last session unmuted the video: autoplay with sound is
+    // blocked without a user gesture, so the hero must mute itself and still start the picture.
+    window.localStorage.setItem("sbozh:video:muted", "0");
+    vi.mocked(HTMLMediaElement.prototype.play).mockImplementation(function (this: HTMLMediaElement) {
+      return this.muted
+        ? Promise.resolve()
+        : Promise.reject(new DOMException("refused", "NotAllowedError"));
+    });
+    renderStaged(<HomeVideoHero />);
+    await waitFor(() => expect(video().muted).toBe(true));
+    expect(screen.getByRole("button", { name: "Unmute video" })).toBeInTheDocument();
+    expect(window.localStorage.getItem("sbozh:video:muted")).toBe("1");
+    window.localStorage.clear();
+  });
+
   it("keeps the site black and white until the video starts, then for good in colour", () => {
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     render(<HomeVideoHero />);

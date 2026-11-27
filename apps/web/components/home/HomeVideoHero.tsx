@@ -144,9 +144,21 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     // Not enough of the file yet: the brand mark spins until the picture moves (onPlaying)
     if (video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) setLoading(true)
     video.play().catch(() => {
+      if (videoRef.current !== video) return
+      // Browsers block autoplay with sound until the visitor has interacted with the page,
+      // so a returning visitor whose saved preference is unmuted would see the leader run
+      // out and nothing move. Fall back to muted so the picture at least plays, and sync
+      // the preference so the toolbar shows the real state -- clicking Unmute counts as
+      // a user gesture and the Unmute path then puts sound back on.
+      if (!video.muted) {
+        video.muted = true
+        setMuted(true)
+        video.play().catch(() => settle())
+        return
+      }
       // Refused (autoplay blocked) or paused first: back to the poster and the Play button.
       // A cut switch drops the old video's play the same way; that isn't the new one's news.
-      if (videoRef.current === video) settle()
+      settle()
     })
   }
 
