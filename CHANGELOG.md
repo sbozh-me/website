@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.4] - 2026-11-27
+
+### Changes
+
+- fix(web): stop duplicate RSS posts, rename Atom author ([6c6b8b2](https://github.com/sbozh-me/website/commit/6c6b8b284d13b19c95d29fc01c0f48e0c43e8868))
+- fix(blog): run series titles through the title pipeline ([95adf38](https://github.com/sbozh-me/website/commit/95adf381fe0806377990563f098d90b4163b9f0c))
+- fix(web): fall back to muted when hero video autoplay is refused ([c751cda](https://github.com/sbozh-me/website/commit/c751cda3d20a706252c1365fb65bc2458790926d))
+- feat(web): Kagurame recites the one-feed-and-a-hero-that-plays release ([1ce88e1](https://github.com/sbozh-me/website/commit/1ce88e1df8a8cad4bd31c31d92962c8886df352c))
+- chore(web): Plautus reviews one-feed-and-a-hero-that-plays ([0617534](https://github.com/sbozh-me/website/commit/0617534c2ab9dce13b63cd8e3bfec816393f40c7))
+
+
 ## [1.15.3] - 2026-11-24
 
 ### Changes
