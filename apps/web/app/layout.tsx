@@ -44,15 +44,14 @@ const caveat = Caveat({
   display: "swap",
 });
 
-// Blog glitch words: Sofija, one family, upright for a glitched state and italic for a `||`
-// plain state. A brushy all-caps display face; Latin only, so Cyrillic glitch words fall back
-// to Space Grotesk (the red states, which carry Cyrillic, use Rubik Glitch).
-const sofija = localFont({
-  src: [
-    { path: "../public/fonts/Sofija.ttf", weight: "400", style: "normal" },
-    { path: "../public/fonts/Sofija-Italic.ttf", weight: "400", style: "italic" },
-  ],
-  variable: "--font-sofija",
+// Blog glitch words: Glitch Goblin for a glitched (`|`) state; a `||` plain state is the
+// article's own face. Latin only, so Cyrillic glitch words fall back to Space Grotesk (the red
+// states, which carry Cyrillic, use Rubik Glitch).
+const glitchGoblin = localFont({
+  src: "../public/fonts/GlitchGoblin.ttf",
+  weight: "400",
+  style: "normal",
+  variable: "--font-glitch-goblin",
   display: "swap",
 });
 
@@ -140,7 +139,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-theme="obsidian-forge"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable} ${sofija.variable} ${rubikGlitch.variable} ${fourSided.variable} ${cinzel.variable} ${forum.variable}`}
+      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${inter.variable} ${caveat.variable} ${glitchGoblin.variable} ${rubikGlitch.variable} ${fourSided.variable} ${cinzel.variable} ${forum.variable}`}
       // The reader-theme script below changes data-theme before React hydrates
       suppressHydrationWarning
     >

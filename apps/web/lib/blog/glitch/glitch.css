@@ -14,12 +14,10 @@
   --glitch-red: var(--color-destructive, #ef4444);
   --glitch-pink: #ec4899;
   --glitch-outline: 1px;
-  /* Glitch words: Sofija (one family, 400; Latin only, Cyrillic falls back to Space Grotesk).
-     A glitched state is upright; a `||` plain state is the same family's italic. */
-  --glitch-font: var(--font-sofija), var(--font-space-grotesk), sans-serif;
-  /* Sofija runs small against the body text, so glitch words are set a touch larger. Window
-     OFF the word reads as plain article text, at the body size (this doesn't reach it). */
-  --glitch-size: 1.3em;
+  /* Glitched (`|`) states: Glitch Goblin (Latin only, Cyrillic falls back to Space Grotesk).
+     A `||` plain state is the article's own face. Both at the body size: Glitch Goblin's
+     capitals stand as tall as Space Grotesk's, and a glitch word never changes the line height. */
+  --glitch-font: var(--font-glitch-goblin), var(--font-space-grotesk), sans-serif;
   /* red: states in Rubik Glitch (Cyrillic too) */
   --glitch-font-red: var(--font-rubik-glitch), var(--glitch-font);
   /* Window OFF: what a word glitches into is set in shapes, not letters (4-Sided, the author's
@@ -52,13 +50,8 @@
   display: inline-block;
   white-space: nowrap;
   cursor: default;
-  /* Larger than the body text (--glitch-size), so centre it on the line instead of sitting on
-     the baseline, where its caps would ride above the surrounding words. */
-  vertical-align: middle;
-}
-
-/* Window OFF it reads as plain article text, back on the baseline like any word */
-.glitch[data-off] {
+  /* On the baseline like any word; with the sizer's zero line height (below) its box is the
+     line's own, so the line is exactly as tall as one without a glitch word */
   vertical-align: baseline;
 }
 
@@ -69,9 +62,12 @@
   z-index: 10;
 }
 
-/* Real text in the flow; the visible word is drawn by the layers on top */
+/* Real text in the flow; the visible word is drawn by the layers on top. No line height of its
+   own: the glitch face's ascent and descent differ from the article's, and would otherwise push
+   the line a pixel taller. The word still sits on the baseline. */
 .glitch-sizer {
   opacity: 0;
+  line-height: 0;
 }
 
 /* Before hydration the sizer is the word itself: one copy in the server HTML */
@@ -79,24 +75,13 @@
   opacity: 1;
 }
 
-/* Glitched states use the glitch face upright; `||` plain states, its italic. */
+/* Glitched (`|`) states use the glitch face. A `||` plain state keeps the article's face and
+   size; only the burst (slices, echoes, colour flashes) glitches it. */
 .glitch-sizer:not([data-plain]),
 .glitch-back:not([data-plain]),
 .glitch-copy:not([data-plain]) {
   font-family: var(--glitch-font);
   font-weight: 400;
-  font-size: var(--glitch-size);
-}
-
-/* A `||` plain state: the glitch font's italic, set apart from the body text. Not with the
-   window off, where a plain copy is the base word flickering as the article's own text. */
-.glitch:not([data-off]) .glitch-sizer[data-plain],
-.glitch:not([data-off]) .glitch-back[data-plain],
-.glitch:not([data-off]) .glitch-copy[data-plain] {
-  font-family: var(--glitch-font);
-  font-weight: 400;
-  font-size: var(--glitch-size);
-  font-style: italic;
 }
 
 .glitch-sizer[data-red]:not([data-plain]),
@@ -409,7 +394,6 @@
 .brand-mark .glitch-copy {
   font-family: var(--glitch-font);
   font-weight: 400;
-  font-size: var(--glitch-size);
 }
 
 .brand-mark .glitch-copy [data-part="base"],

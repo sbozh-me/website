@@ -142,7 +142,7 @@ word is the one that glitches**.
 4. Rest state: **back to base** after each burst (the alt only shows during the burst).
 5. GLITCH BEGIN: **deferred**. Build the glitch mechanisms first. `==GLITCH==` is not
    built yet.
-6. Font: **Sofija** for glitched states — a brushy all-caps display face, one family, upright for a glitched state and its **italic** for a `||` plain state (Latin only; Cyrillic falls back to Space Grotesk); **Rubik Glitch** for `red:` states (`--glitch-font` / `--glitch-font-red` in glitch.css, loaded in app/layout.tsx; 2026-11-20, replaced the Archivo Black trial). Window OFF, a plain copy is the base word flickering as the article's own text, not italic. No Retron2000 on the web.
+6. Font: **Glitch Goblin** (`public/fonts/GlitchGoblin.ttf`) for glitched (`|`) states only; a `||` plain state is the article's own face and size, glitched only by the bursts (Latin only; Cyrillic falls back to Space Grotesk); **Rubik Glitch** for `red:` states (`--glitch-font` / `--glitch-font-red` in glitch.css, loaded in app/layout.tsx; 2026-11-27, replaced Sofija, which had replaced the Archivo Black trial on 2026-11-20). Every glitch word is at the body size and sits on the baseline; the sizer has `line-height: 0`, so a glitch word never changes the line height. No Retron2000 on the web.
 7. ✳ spin: **only inside the DICK PITCH flip**. Plain `(;)` censors stay still.
 8. Theme: **obsidian-forge**. A dedicated theme may come later, so keep glitch colours
    in CSS custom properties that a theme can override (no hard-coded hex in components).
