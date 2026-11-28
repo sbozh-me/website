@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { getLinkPreviewQuery, LINK_PREVIEW_ATTRIBUTE, type LinkPreviewMeta } from "@/lib/link-preview";
+import {
+  getLinkPreviewQuery,
+  LINK_PREVIEW_ATTRIBUTE,
+  NO_LINK_PREVIEW_ATTRIBUTE,
+  type LinkPreviewMeta,
+} from "@/lib/link-preview";
 
 // OG images are 1200×630
 const OG_ASPECT = 630 / 1200;
@@ -163,8 +168,8 @@ export function clearLinkPreviewMetaCache() {
  * Shows the OG image of the linked page while a mouse hovers a link in a blog post — pages
  * of this site and external ones alike; pages without an OG image get the SparkMark
  * placeholder with the page title. Works through event delegation: `<a href>`s inside an
- * element marked with `data-link-preview` (the post body) get the preview. Touch devices
- * are skipped.
+ * element marked with `data-link-preview` (the post body) get the preview, except links in
+ * glitch syntax (`data-no-link-preview` on the glitch word). Touch devices are skipped.
  */
 export function LinkPreview() {
   const [preview, setPreview] = useState<PreviewState | null>(null);
@@ -191,6 +196,9 @@ export function LinkPreview() {
 
       const link = (event.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
       if (!link || link === activeLink.current || !link.closest(`[${LINK_PREVIEW_ATTRIBUTE}]`)) return;
+      // A link in glitch syntax: inside a glitch word's state, or around the whole word
+      const noPreview = `[${NO_LINK_PREVIEW_ATTRIBUTE}]`;
+      if (link.closest(noPreview) || link.querySelector(noPreview)) return;
 
       const query = getLinkPreviewQuery(link.getAttribute("href") ?? "", window.location.href);
       if (!query) return;

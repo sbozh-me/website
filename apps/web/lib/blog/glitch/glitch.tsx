@@ -401,6 +401,9 @@ function GlitchEngine({
       data-bursting={look ? "" : undefined}
       data-off={on ? undefined : ""}
       data-alt={alt || undefined}
+      // Its links (in a state, or around the whole word) get no hover preview: LinkPreview,
+      // NO_LINK_PREVIEW_ATTRIBUTE
+      data-no-link-preview=""
       style={{ "--censor-turns": flips * SPIN_TURNS } as CSSProperties}
       onPointerEnter={hover}
       onPointerLeave={leave}

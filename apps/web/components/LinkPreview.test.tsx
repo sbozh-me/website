@@ -1,6 +1,8 @@
 import { act, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { clearLinkPreviewMetaCache, LinkPreview } from "./LinkPreview";
+import { Glitch, GlitchState } from "@/lib/blog/glitch/glitch";
+import { seeded } from "@/lib/blog/glitch/plan";
 
 function pointerEvent(type: "pointerover" | "pointerout", target: Element, pointerType = "mouse") {
   const event = new Event(type, { bubbles: true });
@@ -81,6 +83,69 @@ describe("LinkPreview", () => {
       await vi.advanceTimersByTimeAsync(300);
     });
     expect(container.querySelector("img")?.getAttribute("src")).toBe("/api/og/blog/hello-world");
+  });
+
+  describe("links in glitch syntax", () => {
+    it("gives no preview to a link inside a glitch word's state (==склад|[Tecraft](url)==)", async () => {
+      const fetchMock = stubFetch({ image: "/tecraft.png", title: "Tecraft" });
+      const { container } = render(
+        <>
+          <div data-link-preview="">
+            <Glitch rng={seeded(1)}>
+              <GlitchState link>
+                <a href="/projects/tecraft">Tecraft</a>
+              </GlitchState>
+              <GlitchState>склад</GlitchState>
+            </Glitch>
+          </div>
+          <LinkPreview />
+        </>,
+      );
+      const links = container.querySelectorAll('a[href="/projects/tecraft"]');
+      expect(links.length).toBeGreaterThan(0);
+      for (const link of links) await hoverAndWait(link);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(container.querySelector('[data-testid="link-preview"]')).toBeNull();
+    });
+
+    it("gives no preview to a link around a whole glitch word ([==билета|ticket==](url))", async () => {
+      const fetchMock = stubFetch({ image: "/x.png", title: "X" });
+      const { container } = render(
+        <>
+          <div data-link-preview="">
+            <a href="/blog/x">
+              <Glitch rng={seeded(1)}>
+                <GlitchState link>билета</GlitchState>
+                <GlitchState link>ticket</GlitchState>
+              </Glitch>
+            </a>
+          </div>
+          <LinkPreview />
+        </>,
+      );
+      await hoverAndWait(container.querySelector(".glitch")!);
+      await hoverAndWait(container.querySelector('a[href="/blog/x"]')!);
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(container.querySelector('[data-testid="link-preview"]')).toBeNull();
+    });
+
+    it("still previews a plain link next to a glitch word", async () => {
+      stubFetch({ image: "/plain.png", title: "Plain" });
+      const { container } = render(
+        <>
+          <div data-link-preview="">
+            <Glitch rng={seeded(1)}>
+              <GlitchState>себя</GlitchState>
+              <GlitchState>US</GlitchState>
+            </Glitch>{" "}
+            <a href="/blog/plain">plain</a>
+          </div>
+          <LinkPreview />
+        </>,
+      );
+      await hoverAndWait(container.querySelector('a[href="/blog/plain"]')!);
+      expect(container.querySelector("img")?.getAttribute("src")).toBe("/plain.png");
+    });
   });
 
   it("previews any internal page, such as a series", async () => {

@@ -7,6 +7,10 @@ export const SITE_ORIGINS = new Set(["https://sbozh.me", "https://www.sbozh.me"]
 // Marks the blog post body; only links inside it get a preview (not lists, cards or nav)
 export const LINK_PREVIEW_ATTRIBUTE = "data-link-preview";
 
+// Marks a part of the post body whose links get no preview: a glitch word, whose link (around
+// it or inside one of its states) is part of the glitch, not a page to peek at
+export const NO_LINK_PREVIEW_ATTRIBUTE = "data-no-link-preview";
+
 // The site-wide fallback from the root layout — a page that only has this has no image of its own
 const DEFAULT_OG_IMAGE = "/ogdefault.png";
 
