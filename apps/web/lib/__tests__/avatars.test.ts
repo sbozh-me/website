@@ -26,8 +26,8 @@ const sem: Avatar = {
 
 describe("toAuthor", () => {
   it("maps an avatar to its home card", () => {
-    expect(toAuthor(sem)).toEqual({
-      id: "sem-bozhyk",
+    expect(toAuthor({ ...sem, slug: "sem" })).toEqual({
+      id: "sem",
       name: "Sem Bozhyk",
       title: "Software Developer",
       description: "Building software",
@@ -36,6 +36,25 @@ describe("toAuthor", () => {
       ctaButtons: [{ label: "View CV", href: "/forum/sem-bozhyk/cv", variant: "primary" }],
       blogAuthorSlugs: ["founder", "architect"],
     });
+  });
+
+  it("glitches each avatar its own way, and an unknown one not at all", () => {
+    // Sem: his photo shoot, mirrored left to right at random, never upside down
+    const sem18 = toAuthor(sem).glitch;
+    expect(sem18?.photos).toHaveLength(18);
+    expect(sem18?.photos[0]).toBe("/images/avatars/sem-bozhyk/6163.webp");
+    expect(sem18?.moves).toEqual({ reflect: "sideways" });
+    // Semen: the marble thinker, turned, mirrored any way and scaled
+    expect(toAuthor({ ...sem, slug: "semen-bozhyk" }).glitch).toEqual({
+      photos: ["/images/avatars/semen-bozhyk/statue.webp"],
+      moves: { rotate: true, reflect: "any", scale: true },
+    });
+    // Oktavian: the whole mask and four illustrations, zoomed in at random
+    expect(toAuthor({ ...sem, slug: "oktvian-claude" }).glitch).toEqual({
+      photos: ["mask", "statue", "rage", "doge", "stage"].map((shot) => `/images/avatars/oktvian-claude/${shot}.webp`),
+      moves: { scale: true },
+    });
+    expect(toAuthor({ ...sem, slug: "someone-else" })).not.toHaveProperty("glitch");
   });
 
   it("leaves out the CV button and status when the avatar has none", () => {

@@ -461,3 +461,47 @@ a:has(> .glitch[data-off] > .glitch-rest[data-link]) {
     transition: none;
   }
 }
+
+/* Glitching avatar (avatar.tsx) ---------------------------------------- */
+
+.glitch-avatar {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* The echo's screen blend mixes with the photos under it, not with the page */
+  isolation: isolate;
+}
+
+.glitch-avatar-layers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --avatar-photo: url() of the photo; --avatar-tint: its glitch colour (set inline) */
+.glitch-avatar-photo {
+  position: absolute;
+  inset: 0;
+  background-image: var(--avatar-photo);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Painted in a glitch colour: the photo's luminosity over a neutral grey makes it black and
+   white (a colour photo too), then the colour multiplies it: the light takes the colour, the
+   shadows stay obsidian */
+.glitch-avatar-photo[data-tint] {
+  background-image: linear-gradient(var(--avatar-tint), var(--avatar-tint)), var(--avatar-photo);
+  background-color: #808080;
+  background-blend-mode: multiply, luminosity;
+  filter: contrast(1.25) brightness(1.2);
+}
+
+/* The echo adds its colour where the photo is light, shifted: a chromatic split */
+.glitch-avatar-echo {
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}

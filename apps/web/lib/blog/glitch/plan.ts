@@ -173,6 +173,150 @@ export function randomKind(rng: Rng, blink: boolean): "twitch" | "flip" {
   return blink || rng() < 0.6 ? "flip" : "twitch";
 }
 
+/* Avatar (GlitchAvatar) ------------------------------------------------- */
+
+/** The glitch colours an avatar burst paints its photos in (GLITCH_COLORS names). */
+export const AVATAR_TINTS = ["purple", "gold", "teal", "red", "pink"] as const;
+export type AvatarTint = (typeof AVATAR_TINTS)[number];
+
+/** The resting photo itself. */
+export const REST_PHOTO = -1;
+
+/** How one frame of an avatar burst is painted. */
+export interface AvatarLook {
+  /** Index into the avatar's photos, or REST_PHOTO. */
+  photo: number;
+  /** The glitch colour the photo is painted in; null keeps its own colours. */
+  tint: AvatarTint | null;
+  scale: number;
+  dx: number;
+  dy: number;
+  /** Degrees the photo is turned (0 unless the avatar rotates). */
+  rotate: number;
+  /** Mirrored left to right / upside down (only if the avatar reflects). */
+  mirrorX: boolean;
+  mirrorY: boolean;
+  /** A second copy in another tint, shifted sideways by dx px. null on a clean hold. */
+  echo: { tint: AvatarTint; dx: number } | null;
+  /** Strips of the photo (top/bottom in % of the circle) shifted sideways. */
+  slices: Slice[];
+}
+
+export interface AvatarStep {
+  ms: number;
+  look: AvatarLook;
+}
+
+/** What else every frame of an avatar's burst does to its photo, at random. */
+export interface AvatarMoves {
+  /** Turns it 15 to 180 degrees either way. */
+  rotate?: boolean;
+  /** Mirrors it: "sideways" left to right only (or not); "any" upside down too, or both, or neither. */
+  reflect?: "sideways" | "any";
+  /** Blows it up to 110-200%, instead of the small scale jump. Never smaller: it fills the circle. */
+  scale?: boolean;
+}
+
+/** The moves' share of a look: turn, mirror and size (`size` when the avatar doesn't scale). */
+function moved(rng: Rng, { rotate, reflect, scale }: AvatarMoves, size: number) {
+  return {
+    rotate: rotate ? sign(rng) * randInt(rng, 15, 180) : 0,
+    mirrorX: reflect ? rng() < 0.5 : false,
+    mirrorY: reflect === "any" ? rng() < 0.5 : false,
+    scale: scale ? randInt(rng, 110, 200) / 100 : size,
+  };
+}
+
+/**
+ * One avatar burst frame: a photo (`tinted`: in a glitch colour), scale jump, coloured echo,
+ * hard slices, and whatever `moves` the avatar makes.
+ */
+export function avatarLook(rng: Rng, photo: number, tinted = true, moves: AvatarMoves = {}): AvatarLook {
+  const tint = tinted ? pick(rng, AVATAR_TINTS) : null;
+  return {
+    photo,
+    tint,
+    dx: randInt(rng, -6, 6),
+    dy: randInt(rng, -4, 4),
+    ...moved(rng, moves, randInt(rng, 104, 118) / 100),
+    echo: { tint: pick(rng, AVATAR_TINTS.filter((t) => t !== tint)), dx: sign(rng) * randInt(rng, 5, 10) },
+    slices: bands(rng, randInt(rng, 2, 4), [4, 12], [4, 96]).map(([top, bottom]) => ({
+      top,
+      bottom,
+      dx: sign(rng) * randInt(rng, 6, 18),
+    })),
+  };
+}
+
+/** A photo held still long enough to be seen, in one colour. */
+function avatarHold(rng: Rng, photo: number, moves: AvatarMoves): AvatarStep {
+  return {
+    ms: randInt(rng, 550, 950),
+    look: {
+      photo,
+      tint: pick(rng, AVATAR_TINTS),
+      dx: 0,
+      dy: 0,
+      ...moved(rng, moves, 1),
+      echo: null,
+      slices: [],
+    },
+  };
+}
+
+/** `count` photos out of `photos`, in random order: all different while they last, then repeats. */
+function pickPhotos(rng: Rng, photos: number, count: number): number[] {
+  let pool: number[] = [];
+  const picked: number[] = [];
+  while (picked.length < count) {
+    if (pool.length === 0) pool = Array.from({ length: photos }, (_, i) => i);
+    picked.push(pool.splice(Math.floor(rng() * pool.length), 1)[0]);
+  }
+  return picked;
+}
+
+/**
+ * An avatar burst over `photos` photos. It always ends back on the resting photo.
+ * twitch - 2 to 5 frames, each another photo in another colour
+ * flip   - flicker into a photo (new, rest, new, new), hold it, maybe a second one, flicker back
+ *
+ * With no photos of its own, the avatar's resting photo stands in for them: painted in the
+ * glitch colours, it is the "new" one, and in its own colours the rest. `moves` (turn, mirror,
+ * scale) apply to every frame, the holds too.
+ */
+export function planAvatarBurst({
+  kind,
+  photos,
+  rng,
+  moves = {},
+}: {
+  kind: "twitch" | "flip";
+  photos: number;
+  rng: Rng;
+  moves?: AvatarMoves;
+}): AvatarStep[] {
+  const shots = (count: number) =>
+    photos > 0 ? pickPhotos(rng, photos, count) : Array<number>(count).fill(REST_PHOTO);
+  const shot = (photo: number): AvatarStep => ({ ms: FRAME_MS, look: avatarLook(rng, photo, true, moves) });
+  const rest = (): AvatarStep => ({ ms: FRAME_MS, look: avatarLook(rng, REST_PHOTO, false, moves) });
+
+  if (kind === "twitch") return shots(randInt(rng, 2, 5)).map(shot);
+
+  const steps: AvatarStep[] = [];
+  let previous = rest;
+  for (const photo of shots(randInt(rng, 1, 2))) {
+    steps.push(shot(photo), previous(), shot(photo), shot(photo), avatarHold(rng, photo, moves));
+    previous = () => shot(photo);
+  }
+  steps.push(rest(), previous(), rest());
+  return steps;
+}
+
+/** Pause before an avatar's next burst while it's on screen. */
+export function nextAvatarDelay(rng: Rng) {
+  return 2500 + rng() * 4500;
+}
+
 /** Deterministic rng (mulberry32) for tests. */
 export function seeded(seed: number): Rng {
   let a = seed >>> 0;

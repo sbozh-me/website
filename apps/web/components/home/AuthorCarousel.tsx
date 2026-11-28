@@ -258,7 +258,7 @@ export function AuthorCarousel({ authors, onAuthorChange }: AuthorCarouselProps)
         <div className="w-full px-12 md:px-0 flex flex-col">
           {authors.map((author) => (
             <div key={author.id} data-measure-card>
-              <AuthorCard author={author} />
+              <AuthorCard author={author} still />
             </div>
           ))}
         </div>

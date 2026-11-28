@@ -6,6 +6,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import { Button } from "@sbozh/react-ui/components/ui/button"
 import type { Author, CTAButton, AuthorStatus } from "@/types/author"
+import { GlitchAvatar } from "@/lib/blog/glitch/avatar"
 
 const easterEggMessages: { title: string; description: string; duration?: number }[] = [
   { title: "Currently it's a secret", description: "This button is under construction. Stay tuned!" },
@@ -19,6 +20,8 @@ const easterEggMessages: { title: string; description: string; duration?: number
 
 interface AuthorCardProps {
   author: Author
+  /** A hidden copy that is only measured: its avatar doesn't glitch */
+  still?: boolean
 }
 
 function getButtonVariant(variant: CTAButton['variant']): 'default' | 'secondary' | 'outline' {
@@ -49,8 +52,19 @@ function getStatusColor(variant: AuthorStatus['variant']): string {
   }
 }
 
-export function AuthorCard({ author }: AuthorCardProps) {
+export function AuthorCard({ author, still = false }: AuthorCardProps) {
   const clickCountRef = useRef(0)
+
+  const photo = author.avatar && (
+    <Image
+      src={author.avatar}
+      alt={author.name}
+      width={160}
+      height={160}
+      className="h-full w-full object-cover"
+      priority
+    />
+  )
 
   const handleEasterEggClick = () => {
     const message = easterEggMessages[clickCountRef.current]
@@ -63,15 +77,17 @@ export function AuthorCard({ author }: AuthorCardProps) {
       {/* Avatar */}
       <div className="relative mb-8">
         <div className="h-40 w-40 overflow-hidden rounded-full border-2 border-border/50 bg-muted">
-          {author.avatar ? (
-            <Image
-              src={author.avatar}
-              alt={author.name}
-              width={160}
-              height={160}
-              className="h-full w-full object-cover"
-              priority
-            />
+          {author.avatar && author.glitch ? (
+            <GlitchAvatar
+              rest={author.avatar}
+              photos={author.glitch.photos}
+              moves={author.glitch.moves}
+              still={still}
+            >
+              {photo}
+            </GlitchAvatar>
+          ) : author.avatar ? (
+            photo
           ) : (
             <div className="flex h-full w-full items-center justify-center text-4xl text-muted-foreground">
               {author.name.charAt(0)}

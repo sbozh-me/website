@@ -265,6 +265,10 @@ One goal.
 - ~~`:::ai` / `:::nai` blocks in any post: an AI | No AI switcher above the article (in the row the law languages use) shows one version at a time, defaults to AI, and remembers the reader's choice in localStorage~~
 - ~~The AI / No AI choice lives in the URL (`?version=ai` / `?version=no-ai`): a link opens exactly that version, and picking one writes it there~~
 
+## ~~1.16.1 - Glitching Avatars~~ ✅
+
+- ~~The home avatars glitch while the window is ON, through their own shots painted in all the glitch colours (still portraits with the window OFF): Sem through his photo shoot, mirrored left to right; Semen through the marble thinker, turned, mirrored and zoomed in; Oktavian through the whole mask and four illustrations, zoomed in~~
+
 ## 2.x.x - Later
 
 - Kagurame's dialogue becomes normal content: managed outside the code, no deploy per line
