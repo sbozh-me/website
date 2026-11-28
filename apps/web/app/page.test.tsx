@@ -224,7 +224,7 @@ describe("Home", () => {
       expect(screen.getByText("Release Notes")).toBeInTheDocument();
     });
 
-    it("handles releases with summaries", async () => {
+    it("lists every release it fetched", async () => {
       mockCreateRepository.mockReturnValue({
         getReleases: vi.fn(async () => [
           { id: "1", slug: "r1", title: "Release 1", summary: "# Summary content", dateReleased: "2024-01-01" },
@@ -236,7 +236,7 @@ describe("Home", () => {
       expect(screen.getByTestId("timeline")).toHaveTextContent("2 releases");
     });
 
-    it("handles releases without summaries", async () => {
+    it("lists a release that has no summary", async () => {
       mockCreateRepository.mockReturnValue({
         getReleases: vi.fn(async () => [
           { id: "1", slug: "r1", title: "Release 1", summary: undefined, dateReleased: "2024-01-01" },

@@ -41,7 +41,6 @@ describe("ReleasesContent", () => {
     releaseNotesData: {
       success: true as const,
       releases: [],
-      summaries: {},
       hasMore: false,
       currentVersion: "1.0.0",
     },

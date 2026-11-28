@@ -3,7 +3,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 
 // Mock release timeline component
 vi.mock("@sbozh/release-notes/components", () => ({
-  ReleaseTimeline: ({ releases, summaries, currentVersion }: any) => (
+  ReleaseTimeline: ({ releases, currentVersion }: any) => (
     <div data-testid="release-timeline">
       {releases.map((r: any) => (
         <div key={r.id} data-testid={`release-${r.id}`}>
@@ -36,7 +36,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
 
   const defaultProps = {
     initialReleases: [mockRelease],
-    initialSummaries: { "1": <div>Summary 1</div> },
     initialHasMore: true,
     currentVersion: "1.0.0",
     projectSlug: "test-project",
@@ -79,7 +78,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [],
-        rawSummaries: {},
         hasMore: false,
       });
 
@@ -102,7 +100,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [newRelease],
-        rawSummaries: { "2": "Summary 2" },
         hasMore: false,
       });
 
@@ -120,7 +117,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [{ ...mockRelease, id: "2" }],
-        rawSummaries: {},
         hasMore: false,
       });
 
@@ -154,7 +150,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
       resolvePromise!({
         success: true,
         releases: [],
-        rawSummaries: {},
         hasMore: false,
       });
     });
@@ -208,7 +203,6 @@ describe("ReleaseTimelineWithLoadMore", () => {
       mockLoadMoreReleases.mockResolvedValue({
         success: true,
         releases: [],
-        rawSummaries: {},
         hasMore: false,
       });
 

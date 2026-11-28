@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@sbozh/react-ui/components/ui/tabs";
 import { ReleaseNotesTab } from "./ReleaseNotesTab";
@@ -10,7 +9,7 @@ import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import type { TimelineData } from "@sbozh/react-ui/components/ui/vertical-timeline";
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
+  | { success: true; releases: ReleaseListItem[]; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
 
 type RoadmapData = {

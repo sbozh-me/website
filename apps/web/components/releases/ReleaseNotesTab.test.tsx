@@ -14,7 +14,6 @@ vi.mock("@sbozh/release-notes/components", () => ({
 vi.mock("./ReleaseTimelineWithLoadMore", () => ({
   ReleaseTimelineWithLoadMore: ({
     initialReleases,
-    initialSummaries,
     initialHasMore,
     currentVersion,
     projectSlug,
@@ -72,7 +71,6 @@ describe("ReleaseNotesTab", () => {
       const data = {
         success: true as const,
         releases: [],
-        summaries: {},
         hasMore: false,
         currentVersion: "1.0.0",
       };
@@ -86,7 +84,6 @@ describe("ReleaseNotesTab", () => {
       const data = {
         success: true as const,
         releases: [],
-        summaries: {},
         hasMore: false,
         currentVersion: "1.0.0",
       };
@@ -102,7 +99,6 @@ describe("ReleaseNotesTab", () => {
       const data = {
         success: true as const,
         releases: [mockRelease],
-        summaries: { "1": <div>Summary</div> },
         hasMore: false,
         currentVersion: "1.0.0",
       };
@@ -116,7 +112,6 @@ describe("ReleaseNotesTab", () => {
       const data = {
         success: true as const,
         releases: [mockRelease, { ...mockRelease, id: "2" }],
-        summaries: { "1": <div>Summary 1</div>, "2": <div>Summary 2</div> },
         hasMore: true,
         currentVersion: "2.0.0",
       };
@@ -134,7 +129,6 @@ describe("ReleaseNotesTab", () => {
       const data = {
         success: true as const,
         releases: [mockRelease],
-        summaries: {},
         hasMore: false,
         currentVersion: "1.0.0",
       };

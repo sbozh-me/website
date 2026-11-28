@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { readFile } from "fs/promises";
 import { join } from "path";
 import type { PostListItem } from "@sbozh/blog/types";
@@ -20,7 +19,6 @@ import {
   createReleaseRepository,
   DirectusError,
 } from "@/lib/releases/repository";
-import { compileSummary } from "@/lib/releases/compile-summary";
 import { loadKagurameScript } from "@/lib/kagurame/script";
 
 // Release notes and posts come from Directus at request time. Without this, a build that
@@ -32,7 +30,6 @@ type ReleasesResult =
   | {
       success: true;
       releases: ReleaseListItem[];
-      summaries: Record<string, ReactNode>;
       hasMore: boolean;
       currentVersion: string;
     }
@@ -72,7 +69,6 @@ async function getReleases(): Promise<ReleasesResult> {
       return {
         success: true,
         releases: [],
-        summaries: {},
         hasMore: false,
         currentVersion,
       };
@@ -87,18 +83,8 @@ async function getReleases(): Promise<ReleasesResult> {
       ? allReleases.slice(0, INITIAL_LIMIT)
       : allReleases;
 
-    // Compile MDX summaries in parallel
-    const summaryEntries = await Promise.all(
-      releases.map(async (release) => {
-        if (!release.summary) return [release.id, null] as const;
-        const content = await compileSummary(release.summary);
-        return [release.id, content] as const;
-      }),
-    );
-    const summaries = Object.fromEntries(summaryEntries);
-
     const currentVersion = await getCurrentVersion();
-    return { success: true, releases, summaries, hasMore, currentVersion };
+    return { success: true, releases, hasMore, currentVersion };
   } catch (error) {
     console.error("Failed to fetch releases:", error);
     if (error instanceof DirectusError) {
@@ -160,7 +146,6 @@ export default async function Home() {
               </h2>
               <ReleaseTimelineWithLoadMore
                 initialReleases={releasesResult.releases}
-                initialSummaries={releasesResult.summaries}
                 initialHasMore={releasesResult.hasMore}
                 currentVersion={releasesResult.currentVersion}
               />

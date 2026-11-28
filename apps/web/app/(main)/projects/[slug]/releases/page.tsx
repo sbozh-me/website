@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -10,7 +9,6 @@ import { parseRoadmapFromContent } from "@/lib/roadmap/parser";
 import { createReleaseRepository, DirectusError } from "@/lib/releases/repository";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import type { TimelineData } from "@sbozh/react-ui/components/ui/vertical-timeline";
-import { compileSummary } from "@/lib/releases/compile-summary";
 
 interface ReleasesPageProps {
   params: Promise<{ slug: string }>;
@@ -18,7 +16,7 @@ interface ReleasesPageProps {
 }
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
+  | { success: true; releases: ReleaseListItem[]; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
 
 const INITIAL_LIMIT = 3;
@@ -41,7 +39,7 @@ async function getReleases(projectSlug: string): Promise<ReleasesResult> {
     const repository = createReleaseRepository();
     if (!repository) {
       const currentVersion = await getCurrentVersion();
-      return { success: true, releases: [], summaries: {}, hasMore: false, currentVersion };
+      return { success: true, releases: [], hasMore: false, currentVersion };
     }
 
     // Filter releases by project
@@ -52,17 +50,8 @@ async function getReleases(projectSlug: string): Promise<ReleasesResult> {
     const hasMore = allReleases.length > INITIAL_LIMIT;
     const releases = hasMore ? allReleases.slice(0, INITIAL_LIMIT) : allReleases;
 
-    const summaryEntries = await Promise.all(
-      releases.map(async (release) => {
-        if (!release.summary) return [release.id, null] as const;
-        const content = await compileSummary(release.summary);
-        return [release.id, content] as const;
-      })
-    );
-    const summaries = Object.fromEntries(summaryEntries);
-
     const currentVersion = await getCurrentVersion();
-    return { success: true, releases, summaries, hasMore, currentVersion };
+    return { success: true, releases, hasMore, currentVersion };
   } catch (error) {
     console.error("Failed to fetch releases:", error);
     if (error instanceof DirectusError) {

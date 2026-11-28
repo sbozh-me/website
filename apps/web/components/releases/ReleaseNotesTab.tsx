@@ -1,10 +1,9 @@
-import type { ReactNode } from "react";
 import { ErrorState } from "@sbozh/release-notes/components";
 import { ReleaseTimelineWithLoadMore } from "./ReleaseTimelineWithLoadMore";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 
 type ReleasesResult =
-  | { success: true; releases: ReleaseListItem[]; summaries: Record<string, ReactNode>; hasMore: boolean; currentVersion: string }
+  | { success: true; releases: ReleaseListItem[]; hasMore: boolean; currentVersion: string }
   | { success: false; error: string; status?: number };
 
 interface ReleaseNotesTabProps {
@@ -28,7 +27,6 @@ export function ReleaseNotesTab({ data, projectSlug }: ReleaseNotesTabProps) {
   return (
     <ReleaseTimelineWithLoadMore
       initialReleases={data.releases}
-      initialSummaries={data.summaries}
       initialHasMore={data.hasMore}
       currentVersion={data.currentVersion}
       projectSlug={projectSlug}

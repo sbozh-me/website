@@ -160,7 +160,7 @@ vi.mock("@sbozh/release-notes/components", () => ({
   ReleaseTimelineEntry: ({ release }: any) => (
     <div data-testid="timeline-entry">{release.title}</div>
   ),
-  ReleaseTimeline: ({ releases, summaries, projectSlug }: any) => (
+  ReleaseTimeline: ({ releases, projectSlug }: any) => (
     <div data-testid="release-timeline">
       {releases.map((r: any) => (
         <div key={r.id} data-testid="timeline-entry">{r.title}</div>

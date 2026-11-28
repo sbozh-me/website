@@ -63,27 +63,12 @@ describe("loadMoreReleases", () => {
       });
     });
 
-    it("compiles MDX summaries", async () => {
+    it("returns the releases only: the list cards show no summary", async () => {
       mockGetReleases.mockResolvedValue([mockRelease]);
 
       const result = await loadMoreReleases(0);
 
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.rawSummaries).toHaveProperty("1");
-        expect(result.rawSummaries["1"]).toBeDefined();
-      }
-    });
-
-    it("handles release without summary", async () => {
-      mockGetReleases.mockResolvedValue([{ ...mockRelease, summary: undefined }]);
-
-      const result = await loadMoreReleases(0);
-
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.rawSummaries["1"]).toBeNull();
-      }
+      expect(result).toEqual({ success: true, releases: [mockRelease], hasMore: false });
     });
   });
 
@@ -187,7 +172,6 @@ describe("loadMoreReleases", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.releases).toHaveLength(0);
-        expect(result.rawSummaries).toEqual({});
         expect(result.hasMore).toBe(false);
       }
     });
@@ -203,7 +187,6 @@ describe("loadMoreReleases", () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.releases).toHaveLength(0);
-        expect(result.rawSummaries).toEqual({});
         expect(result.hasMore).toBe(false);
       }
     });

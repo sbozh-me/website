@@ -1,16 +1,13 @@
-import type { ReactNode } from "react";
 import type { ReleaseListItem } from "../types/release";
 import { ReleaseTimelineEntry } from "./ReleaseTimelineEntry";
 
 interface ReleaseTimelineProps {
   releases: ReleaseListItem[];
-  /** Map of release ID to pre-rendered MDX summary content */
-  summaries: Record<string, ReactNode>;
   /** Current app version from package.json */
   currentVersion?: string;
 }
 
-export function ReleaseTimeline({ releases, summaries, currentVersion }: ReleaseTimelineProps) {
+export function ReleaseTimeline({ releases, currentVersion }: ReleaseTimelineProps) {
   if (releases.length === 0) {
     return null;
   }
@@ -20,29 +17,13 @@ export function ReleaseTimeline({ releases, summaries, currentVersion }: Release
 
   return (
     <div className="w-full">
-      {/* Timeline container with vertical line - hidden on mobile */}
-      <div className="relative hidden md:block">
-        {releases.map((release, index) => (
-          <ReleaseTimelineEntry
-            key={release.id}
-            release={release}
-            summaryContent={summaries[release.id]}
-            isLatest={index === 0 && firstReleaseIsLatest}
-          />
-        ))}
-      </div>
-
-      {/* Mobile layout without timeline */}
-      <div className="md:hidden space-y-6">
-        {releases.map((release, index) => (
-          <ReleaseTimelineEntry
-            key={release.id}
-            release={release}
-            summaryContent={summaries[release.id]}
-            isLatest={index === 0 && firstReleaseIsLatest}
-          />
-        ))}
-      </div>
+      {releases.map((release, index) => (
+        <ReleaseTimelineEntry
+          key={release.id}
+          release={release}
+          isLatest={index === 0 && firstReleaseIsLatest}
+        />
+      ))}
     </div>
   );
 }

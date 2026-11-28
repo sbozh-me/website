@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, useTransition, useCallback, type ReactNode } from "react";
+import { useState, useTransition, useCallback } from "react";
 import { ReleaseTimeline } from "@sbozh/release-notes/components";
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { loadMoreReleases } from "@/lib/releases/actions";
-import { compileSummary } from "@/lib/releases/compile-summary";
 
 interface ReleaseTimelineWithLoadMoreProps {
   initialReleases: ReleaseListItem[];
-  initialSummaries: Record<string, ReactNode>;
   initialHasMore: boolean;
   currentVersion: string;
   projectSlug?: string;
@@ -17,13 +15,11 @@ interface ReleaseTimelineWithLoadMoreProps {
 
 export function ReleaseTimelineWithLoadMore({
   initialReleases,
-  initialSummaries,
   initialHasMore,
   currentVersion,
   projectSlug,
 }: ReleaseTimelineWithLoadMoreProps) {
   const [releases, setReleases] = useState(initialReleases);
-  const [summaries, setSummaries] = useState(initialSummaries);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isPending, startTransition] = useTransition();
 
@@ -32,20 +28,7 @@ export function ReleaseTimelineWithLoadMore({
       const result = await loadMoreReleases(releases.length, projectSlug);
 
       if (result.success) {
-        // Compile raw markdown summaries to React elements on client
-        const compiledSummaries: Record<string, ReactNode> = {};
-        await Promise.all(
-          Object.entries(result.rawSummaries).map(async ([id, markdown]) => {
-            if (markdown) {
-              compiledSummaries[id] = await compileSummary(markdown);
-            } else {
-              compiledSummaries[id] = null;
-            }
-          })
-        );
-
         setReleases((prev) => [...prev, ...result.releases]);
-        setSummaries((prev) => ({ ...prev, ...compiledSummaries }));
         setHasMore(result.hasMore);
       }
     });
@@ -53,11 +36,7 @@ export function ReleaseTimelineWithLoadMore({
 
   return (
     <>
-      <ReleaseTimeline
-        releases={releases}
-        summaries={summaries}
-        currentVersion={currentVersion}
-      />
+      <ReleaseTimeline releases={releases} currentVersion={currentVersion} />
       {hasMore && (
         <div className="flex justify-center pt-8">
           <Button

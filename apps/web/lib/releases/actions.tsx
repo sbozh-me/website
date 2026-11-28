@@ -3,11 +3,9 @@
 import type { ReleaseListItem } from "@sbozh/release-notes/types";
 import { createReleaseRepository, DirectusError } from "./repository";
 
-// Server action returns raw markdown, not ReactNode (ReactNode can't be serialized)
 export interface LoadMoreReleasesResult {
   success: true;
   releases: ReleaseListItem[];
-  rawSummaries: Record<string, string | null>;
   hasMore: boolean;
 }
 
@@ -24,7 +22,7 @@ export async function loadMoreReleases(offset: number, projectSlug?: string): Pr
   try {
     const repository = createReleaseRepository();
     if (!repository) {
-      return { success: true, releases: [], rawSummaries: {}, hasMore: false };
+      return { success: true, releases: [], hasMore: false };
     }
 
     // Fetch one extra to check if there are more
@@ -37,13 +35,7 @@ export async function loadMoreReleases(offset: number, projectSlug?: string): Pr
     const hasMore = releases.length > BATCH_SIZE;
     const releasesToReturn = hasMore ? releases.slice(0, BATCH_SIZE) : releases;
 
-    // Return raw markdown summaries (will be compiled on client)
-    const rawSummaries: Record<string, string | null> = {};
-    for (const release of releasesToReturn) {
-      rawSummaries[release.id] = release.summary || null;
-    }
-
-    return { success: true, releases: releasesToReturn, rawSummaries, hasMore };
+    return { success: true, releases: releasesToReturn, hasMore };
   } catch (error) {
     console.error("Failed to load more releases:", error);
     if (error instanceof DirectusError) {
