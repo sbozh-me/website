@@ -5,7 +5,6 @@ import { Maximize2, Minimize2, Volume2, VolumeX, X } from "lucide-react";
 import { Button } from "@sbozh/react-ui/components/ui/button";
 import { HeroLeader } from "@/components/home/HeroLeader";
 import { markLeaderShown, wasLeaderShown } from "@/lib/privacy/decision";
-import { usePersistentMuted } from "@/lib/video-muted";
 
 // SD landscape cut: small enough for a corner clip, reused when the widget
 // fills the viewport on mobile or on Full screen
@@ -54,8 +53,8 @@ export function CookieCornerVideo({
   // --- Playback state ------------------------------------------------------
   // One 3-2-1 per tab session: if the hero already ran it, skip to the video
   const [counting, setCounting] = useState(() => !wasLeaderShown());
-  // Mute choice is remembered across visits (localStorage) and across tabs
-  const [muted, setMuted] = usePersistentMuted();
+  // Starts muted on every visit, like the home hero
+  const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(false);
 
   // --- Layout state --------------------------------------------------------
@@ -96,13 +95,6 @@ export function CookieCornerVideo({
     // re-firing play() on every unmute
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counting, shouldPlay]);
-
-  // Saved mute choice lands after mount, or another tab toggles it: keep the
-  // element in step without triggering a replay
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) video.muted = muted;
-  }, [muted]);
 
   // --- Escape handling ----------------------------------------------------
   useEffect(() => {

@@ -14,7 +14,6 @@ import {
   useCookieModalOpen,
   wasLeaderShown,
 } from "@/lib/privacy/decision"
-import { usePersistentMuted } from "@/lib/video-muted"
 
 // One landscape poster for both cuts: object-cover crops it to the screen
 const POSTER = "/videos/home/pan-dude-poster.jpg"
@@ -74,7 +73,9 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const [qualities, setQualities] = useState<Partial<Record<Cut, Quality>>>({})
   const quality = cut ? qualities[cut] : undefined
   const src = cut && quality ? CUTS[cut][quality] : undefined
-  const [muted, setMuted] = usePersistentMuted()
+  // Every visit starts muted: browsers refuse sound before the visitor's first click, so a
+  // saved "sound on" could never take effect on load. The sound button holds for the visit.
+  const [muted, setMuted] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [finishedOnce, setFinishedOnce] = useState(false)
   // Ended: the video is hidden so the poster underneath shows, until it plays again
@@ -144,21 +145,11 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     // Not enough of the file yet: the brand mark spins until the picture moves (onPlaying)
     if (video.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) setLoading(true)
     video.play().catch(() => {
-      if (videoRef.current !== video) return
-      // Browsers block autoplay with sound until the visitor has interacted with the page,
-      // so a returning visitor whose saved preference is unmuted would see the leader run
-      // out and nothing move. Fall back to muted so the picture at least plays, and sync
-      // the preference so the toolbar shows the real state -- clicking Unmute counts as
-      // a user gesture and the Unmute path then puts sound back on.
-      if (!video.muted) {
-        video.muted = true
-        setMuted(true)
-        video.play().catch(() => settle())
-        return
-      }
       // Refused (autoplay blocked) or paused first: back to the poster and the Play button.
       // A cut switch drops the old video's play the same way; that isn't the new one's news.
-      settle()
+      // The sound is left as the visitor set it: the cookie modal pausing a play that hasn't
+      // started yet must not mute what they turned on during the countdown.
+      if (videoRef.current === video) settle()
     })
   }
 
@@ -172,13 +163,6 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     if (wantPlay.current) play(video)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, counting])
-
-  // Hydration lands with the saved mute choice, or another tab toggles it: keep the
-  // media element's muted in step with the state, without touching playback
-  useEffect(() => {
-    const video = videoRef.current
-    if (video) video.muted = muted
-  }, [muted])
 
   // Tab off: pause the video so it doesn't play into an empty room. Tab back: pick up
   // where they were, if they wanted play.

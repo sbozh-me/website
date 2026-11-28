@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadKagurameScript, type KagurameScript } from "@/lib/kagurame/script";
+import { emitCookieModalState } from "@/lib/privacy/decision";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
@@ -250,20 +251,32 @@ describe("HomeVideoHero leader", () => {
     expect(hero()).not.toHaveAttribute("data-bw");
   });
 
-  it("falls back to muted autoplay when the saved preference is unmuted but the browser refuses", async () => {
-    // A returning visitor whose last session unmuted the video: autoplay with sound is
-    // blocked without a user gesture, so the hero must mute itself and still start the picture.
-    window.localStorage.setItem("sbozh:video:muted", "0");
-    vi.mocked(HTMLMediaElement.prototype.play).mockImplementation(function (this: HTMLMediaElement) {
-      return this.muted
-        ? Promise.resolve()
-        : Promise.reject(new DOMException("refused", "NotAllowedError"));
-    });
-    renderStaged(<HomeVideoHero />);
-    await waitFor(() => expect(video().muted).toBe(true));
-    expect(screen.getByRole("button", { name: "Unmute video" })).toBeInTheDocument();
-    expect(window.localStorage.getItem("sbozh:video:muted")).toBe("1");
-    window.localStorage.clear();
+  it("keeps the sound turned on in the countdown when the cookie modal pauses the video", async () => {
+    // The visitor turns the sound on during the 3-2-1; it runs out, the video is told to play,
+    // and the cookie modal opens on top and pauses it before it starts. The browser aborts
+    // that play: the sound stays on.
+    vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+    let abort: (() => void) | null = null;
+    vi.mocked(HTMLMediaElement.prototype.play).mockImplementation(
+      () =>
+        new Promise<void>((_, reject) => {
+          abort = () => reject(new DOMException("interrupted by a call to pause()", "AbortError"));
+        }),
+    );
+    vi.mocked(HTMLMediaElement.prototype.pause).mockImplementation(() => abort?.());
+    vi.spyOn(HTMLMediaElement.prototype, "paused", "get").mockReturnValue(false);
+    render(<HomeVideoHero />);
+    fireEvent.click(screen.getByRole("button", { name: "Enable countdown sound" }));
+    tick();
+    tick();
+    tick();
+    vi.useRealTimers();
+    expect(video().muted).toBe(false);
+    act(() => emitCookieModalState(true));
+    expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
+    await waitFor(() => expect(loadingMark()).toBeNull());
+    expect(video().muted).toBe(false);
+    expect(screen.getByRole("button", { name: "Mute video" })).toBeInTheDocument();
   });
 
   it("keeps the site black and white until the video starts, then for good in colour", () => {
@@ -324,18 +337,16 @@ describe("HomeVideoHero leader", () => {
     expect(leader()).toHaveTextContent("1");
   });
 
-  it("saves the sound choice to localStorage and restores it on the next mount", () => {
+  it("starts muted on every visit, whatever the last one chose", () => {
+    // Browsers refuse sound before the visitor's first click, so nothing carries over
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
-    window.localStorage.clear();
     const { unmount } = render(<HomeVideoHero />);
     fireEvent.click(screen.getByRole("button", { name: "Enable countdown sound" }));
-    expect(window.localStorage.getItem("sbozh:video:muted")).toBe("0");
+    expect(screen.getByRole("button", { name: "Mute countdown sound" })).toBeInTheDocument();
     unmount();
     render(<HomeVideoHero />);
-    // Restored muted=false: the toolbar opens with the "Mute" variant and the element follows
-    expect(screen.getByRole("button", { name: "Mute countdown sound" })).toBeInTheDocument();
-    expect(video().muted).toBe(false);
-    window.localStorage.clear();
+    expect(screen.getByRole("button", { name: "Enable countdown sound" })).toBeInTheDocument();
+    expect(video().muted).toBe(true);
   });
 
   it("carries the sound choice from the countdown through to the video", () => {
