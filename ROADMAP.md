@@ -259,7 +259,7 @@ One goal.
 - `/cv` renders the CV with a Role picker (Engineer / Co-Founder) and a Language picker (EN / UK); the choice lives in the URL and is remembered in localStorage
 - CV sources renamed by role and language: `cv-engineer-en.pmdx`, `cv-engineer-ua.pmdx`, `cv-founder-en.pmdx`, `cv-founder-ua.pmdx`
 
-## 1.16.0 - Big Text & No AI
+## ~~1.16.0 - Big Text & No AI~~ ✅
 
 - ~~`:::big` blocks in posts: display text as large as an h1 without being a heading (no h1, no TOC entry), glitch syntax inside works~~
 - ~~`:::ai` / `:::nai` blocks in any post: an AI | No AI switcher above the article (in the row the law languages use) shows one version at a time, defaults to AI, and remembers the reader's choice in localStorage~~
