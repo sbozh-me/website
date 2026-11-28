@@ -263,6 +263,7 @@ One goal.
 
 - ~~`:::big` blocks in posts: display text as large as an h1 without being a heading (no h1, no TOC entry), glitch syntax inside works~~
 - ~~`:::ai` / `:::nai` blocks in any post: an AI | No AI switcher above the article (in the row the law languages use) shows one version at a time, defaults to AI, and remembers the reader's choice in localStorage~~
+- ~~The AI / No AI choice lives in the URL (`?version=ai` / `?version=no-ai`): a link opens exactly that version, and picking one writes it there~~
 
 ## 2.x.x - Later
 

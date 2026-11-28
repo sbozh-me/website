@@ -9,11 +9,11 @@ import {
 } from "./variants";
 
 /** Which version (AI / No AI) a post shows, shared by its blocks and the switcher. */
-const store = createChoiceStore<AiVariantCode>({
+export const aiVariantStore = createChoiceStore<AiVariantCode>({
   storageKey: AI_VARIANT_STORAGE_KEY,
   fallback: DEFAULT_AI_VARIANT,
   isValid: isAiVariant,
 });
 
-export const setAiVariant = store.set;
-export const useAiVariant = store.use;
+export const setAiVariant = aiVariantStore.set;
+export const useAiVariant = aiVariantStore.use;

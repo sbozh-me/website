@@ -18,7 +18,7 @@ import { PlannedContent } from "@/components/PlannedContent";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { UNLOCK_COOKIE, isUnlockTokenValid } from "@/lib/content-lock";
 import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
-import { AiVariantProvider, AiVariantSwitcher } from "@/lib/blog/ai-variants";
+import { AiVariantProvider, AiVariantSwitcher, variantFromParam } from "@/lib/blog/ai-variants";
 import { LawAvailableProvider, LawLanguageSwitcher } from "@/lib/blog/law-languages";
 import { SwitcherBar } from "@/lib/blog/switcher-tabs";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
@@ -35,7 +35,7 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ type: string; slug: string }>;
-  searchParams?: Promise<{ draft?: string | string[] }>;
+  searchParams?: Promise<{ draft?: string | string[]; version?: string | string[] }>;
 }
 
 function isPostType(value: string): value is PostType {
@@ -121,6 +121,8 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
   noStore();
   const { type, slug } = await params;
   const preview = await wantsDraft(searchParams);
+  // `?version=ai` / `?version=no-ai` opens a post written twice on exactly that version
+  const urlVariant = variantFromParam((await searchParams)?.version);
   const repository = createBlogRepository({ includeDrafts: preview });
 
   if (!isPostType(type)) {
@@ -303,7 +305,7 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
             toc={toc}
             tldr={TldrContent && <TldrContent />}
             content={
-              <AiVariantProvider variants={aiVariants}>
+              <AiVariantProvider variants={aiVariants} initial={urlVariant}>
                 <LawAvailableProvider languages={lawLanguages}>
                   {(aiVariants.length > 0 || lawLanguages.length > 0) && (
                     <SwitcherBar>

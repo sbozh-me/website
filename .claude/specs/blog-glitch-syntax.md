@@ -249,6 +249,30 @@ word is the one that glitches**.
   there), including on a `==WINDOW OFF==` page. Everything else works inside
   it (`||`, colours, `!`, links), and `===D(;)ck pitch===` keeps the brand flipping.
   `==` and `===` never pair with each other, and runs of four or more `=` are text.
+- **Block fences** (`:::name` … `:::`, 1.16.0): block-level syntax next to the inline
+  `==…==`. Each fence line stands alone, with or without blank lines around it
+  (`:::big\nWords\n:::` works). Fences nest: every `:::<word>` line opens a level and
+  every bare `:::` closes one, so a block can hold other blocks. An empty block is
+  dropped and takes no UI space; an opener without a closer, or a name no plugin claims,
+  stays text. Shared machinery in `lib/blog/remark-fences.ts`; avoid PMDX's reserved
+  names (`:::config`, `:::page`, …) for new fences.
+  - **`:::lang cs|en|ja|uk|ru`** (Laws only, 1.14.0): one language of the law; a switcher
+    above the article shows one at a time (`remark-law-languages.ts`, `law-languages/`).
+  - **`:::big`** (any post): display text as large as an h1, styled like the theme's h1,
+    but not a heading: the page keeps one h1 (the title) and it stays out of the TOC.
+    Glitch syntax inside works: `:::big` / `==D(;)ck pitch==: I'm Spartacus` / `:::`
+    (`remark-big-text.ts`, `BigText` in `mdx-components.tsx`, `.big-text` in the CSS).
+  - **`:::ai` / `:::nai`** (any post): the post written with AI and without. An
+    **AI | No AI** switcher sits above the article, in the same row as the law languages,
+    and shows one version at a time; text outside the blocks shows in both. AI is the
+    default and the reader's choice is remembered (localStorage `ai-variant`). A post with
+    only one version shows only its button. Headings inside the versions get ids but stay
+    out of the TOC. Blocks may hold `:::lang` and `:::big` blocks (and the other way round).
+    **URL**: `?version=ai` or `?version=no-ai` (`noai`, `nai` also work) opens exactly that
+    version, server-rendered, over the remembered choice (and becomes the remembered one).
+    Once the reader has a choice, the URL carries it (`history.replaceState`, other params
+    and the hash kept), so a copied link opens the same version; a first-time reader keeps
+    the clean URL (`remark-ai-variants.ts`, `ai-variants/`).
 - Not built yet: `==GLITCH==` (GLITCH BEGIN, deferred), and TOC and heading ids for
   headings containing syntax (`extractHeadings` reads the raw markdown, so the TOC shows
   `==a|b==` literally).
