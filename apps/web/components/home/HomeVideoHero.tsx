@@ -46,6 +46,9 @@ function pickCut(): Cut {
   return window.matchMedia(PORTRAIT_QUERY).matches ? "mobile" : "desktop"
 }
 
+// Less than this share of the hero on screen: the visitor is reading below, the video holds
+const HERO_IN_VIEW = 0.5
+
 interface HomeVideoHeroProps {
   /** Kagurame's dialogue, prepared on the server; null when his script is broken */
   script?: KagurameScript | null
@@ -63,9 +66,13 @@ interface HomeVideoHeroProps {
  *
  * The first run plays once: when it ends the video fades out to the poster (the
  * section's background) and Kagurame starts talking. After that, Play loops it.
+ *
+ * Scrolled more than half past, a hidden tab, the cookie modal: each holds the video, and it
+ * plays on once none of them does, if the visitor wanted play.
  */
 export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   // Chosen after mount: the server can't know the screen, and a wrong guess would
   // download the other cut first
   const [cut, setCut] = useState<Cut | null>(null)
@@ -117,6 +124,14 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   // What the visitor wants: a cut switch remounts the video, and must not restart one
   // they paused (or that stopped at the end of its first run)
   const wantPlay = useRef(true)
+  // At least half the hero is on screen (until the observer says otherwise)
+  const inView = useRef(true)
+  // The cookie modal is over the hero
+  const modalOpen = useRef(false)
+  // Nothing holds the video back: the visitor wants play, the leader has let go, and the hero
+  // is on screen, in a visible tab, with no cookie modal over it
+  const mayResume = () =>
+    wantPlay.current && !counting && !!src && inView.current && !document.hidden && !modalOpen.current
 
   useEffect(() => {
     const query = window.matchMedia(PORTRAIT_QUERY)
@@ -160,7 +175,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     const video = videoRef.current
     if (!video || !src || counting) return
     video.muted = muted
-    if (wantPlay.current) play(video)
+    if (wantPlay.current && inView.current) play(video)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, counting])
 
@@ -172,12 +187,37 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
       if (!video) return
       if (document.hidden) {
         if (!video.paused) video.pause()
-      } else if (wantPlay.current && !counting && src) {
+      } else if (mayResume()) {
         play(video)
       }
     }
     document.addEventListener("visibilitychange", onVisibility)
     return () => document.removeEventListener("visibilitychange", onVisibility)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [counting, src])
+
+  // Scrolled down past half the hero: the visitor is reading below, so the video holds still
+  // (and quiet). Not their pause: back up, it plays on if they wanted play.
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || typeof IntersectionObserver === "undefined") return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting && entry.intersectionRatio >= HERO_IN_VIEW
+        if (visible === inView.current) return
+        inView.current = visible
+        const video = videoRef.current
+        if (!video) return
+        if (!visible) {
+          if (!video.paused) video.pause()
+        } else if (mayResume()) {
+          play(video)
+        }
+      },
+      { threshold: HERO_IN_VIEW },
+    )
+    observer.observe(section)
+    return () => observer.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counting, src])
 
@@ -187,6 +227,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
   const cookieModalOpen = useCookieModalOpen()
   const modalWasOpen = useRef(false)
   useEffect(() => {
+    modalOpen.current = cookieModalOpen
     const video = videoRef.current
     if (!video) return
     if (cookieModalOpen) {
@@ -194,7 +235,7 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
       if (!video.paused) video.pause()
     } else if (modalWasOpen.current) {
       modalWasOpen.current = false
-      if (wantPlay.current && !counting && src) play(video)
+      if (mayResume()) play(video)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cookieModalOpen, counting, src])
@@ -228,8 +269,6 @@ export function HomeVideoHero({ script }: HomeVideoHeroProps = {}) {
     // Starting the video on unmute only makes sense once the leader has let go
     if (!next && !counting) play(video)
   }
-
-  const sectionRef = useRef<HTMLElement>(null)
 
   const scrollDown = () => {
     // The fixed header stays on top: land the content just under it

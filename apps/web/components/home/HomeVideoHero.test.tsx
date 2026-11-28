@@ -362,6 +362,75 @@ describe("HomeVideoHero leader", () => {
   });
 });
 
+describe("HomeVideoHero scrolled past", () => {
+  // An IntersectionObserver the test drives: report how much of the hero is on screen
+  let heroObserver: IntersectionObserverCallback | null = null;
+  class ControlledObserver {
+    constructor(private callback: IntersectionObserverCallback) {}
+    observe(target: Element) {
+      if (target.hasAttribute("data-home-hero")) heroObserver = this.callback;
+    }
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+  }
+  const onScreen = (ratio: number) =>
+    act(() =>
+      heroObserver?.(
+        [{ isIntersecting: ratio > 0, intersectionRatio: ratio, target: hero() } as IntersectionObserverEntry],
+        {} as IntersectionObserver,
+      ),
+    );
+  const originalObserver = window.IntersectionObserver;
+
+  beforeEach(() => {
+    heroObserver = null;
+    window.IntersectionObserver = ControlledObserver as unknown as typeof IntersectionObserver;
+    vi.spyOn(HTMLMediaElement.prototype, "paused", "get").mockReturnValue(false);
+  });
+
+  afterEach(() => {
+    window.IntersectionObserver = originalObserver;
+  });
+
+  it("pauses once half the hero is scrolled off, and plays on back up", () => {
+    renderStaged(<HomeVideoHero />);
+    fireEvent.play(video());
+    onScreen(0.8);
+    expect(HTMLMediaElement.prototype.pause).not.toHaveBeenCalled();
+    onScreen(0.3);
+    expect(HTMLMediaElement.prototype.pause).toHaveBeenCalledTimes(1);
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    onScreen(0.6);
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
+  });
+
+  it("leaves a video the visitor paused paused when they scroll back up", () => {
+    renderStaged(<HomeVideoHero />);
+    fireEvent.play(video());
+    fireEvent.click(screen.getByRole("button", { name: "Pause video" }));
+    fireEvent.pause(video());
+    onScreen(0);
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    onScreen(1);
+    expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+  });
+
+  it("doesn't start the video in a tab that comes back while the hero is scrolled off", () => {
+    renderStaged(<HomeVideoHero />);
+    onScreen(0);
+    vi.mocked(HTMLMediaElement.prototype.play).mockClear();
+    Object.defineProperty(document, "hidden", { value: false, configurable: true });
+    fireEvent(document, new Event("visibilitychange"));
+    expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+    onScreen(1);
+    expect(HTMLMediaElement.prototype.play).toHaveBeenCalledTimes(1);
+    delete (document as { hidden?: boolean }).hidden;
+  });
+});
+
 describe("HomeVideoHero quality", () => {
   // A retina laptop: twice the desktop SD file's pixels and more
   function retina() {
