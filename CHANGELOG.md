@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.1] - 2026-11-28
+
+### Changes
+
+- feat(web): glitch the home avatars while the window is on ([191c0e6](https://github.com/sbozh-me/website/commit/191c0e6f520ebb398374f887274d1d4678d9469e))
+- feat(web): Kagurame recites the avatars-with-more-than-one-face release ([17cb022](https://github.com/sbozh-me/website/commit/17cb022ee0258852f3df7bc3b859eff087bd5f5d))
+
+
 ## [1.16.0] - 2026-11-28
 
 ### Changes
