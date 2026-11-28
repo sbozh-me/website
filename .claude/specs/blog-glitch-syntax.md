@@ -189,7 +189,10 @@ word is the one that glitches**.
   - `==склад|[Tecraft](url)==`: only that state is a link, clickable while it's shown.
   - Linked states default to teal (a colour prefix still wins) and get a thick 0.14em
     underline that overhangs the word by 0.3em on each side. It is drawn on the copies,
-    so it glitches with them.
+    so it glitches with them. A linked state is underlined wherever it shows: before
+    hydration (the calm word), in every burst tone (a hollow frame gets an outlined
+    underline), and with the window OFF (on the shapes of a linked state, and on a linked
+    resting word, which as article text gets a 0.14em text underline in the link's colour).
 - **Window switch** (`==WINDOW==`, exactly, in capitals): an inline "Window ON / Window OFF"
   button (`glitch/window.tsx`, shadcn Button). With it OFF, every glitch word on the page
   reads as plain article text (links stay links, and it wraps like any text), and D✳CK

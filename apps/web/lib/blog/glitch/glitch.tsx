@@ -363,9 +363,14 @@ function GlitchEngine({
     if (shift) layers.style.setProperty("--glitch-shift", `${Math.round(shift)}px`);
   }, [state, look, mounted, on]);
 
-  // Veiled, a copy keeps the article's face (the shapes bring their own) and its state's colour
+  // Veiled, a copy keeps the article's face (the shapes bring their own), its state's colour, and
+  // a linked state its underline
   const shown: StateStyle | undefined = veiled
-    ? { color: (state > 0 && styles?.[state]?.color) || "var(--glitch-plain)", plain: true, link: false }
+    ? {
+        color: (state > 0 && styles?.[state]?.color) || "var(--glitch-plain)",
+        plain: true,
+        link: styles?.[state]?.link ?? false,
+      }
     : styles?.[state];
   const shapes = veiled ? ciphers?.[state] : undefined;
   // A glitch word sits still and legible at rest; only a burst slices it.
@@ -427,7 +432,11 @@ function GlitchEngine({
     const playing = look !== undefined || state !== restState;
     return (
       <>
-        <span className="glitch-rest" data-covered={playing ? "" : undefined}>
+        <span
+          className="glitch-rest"
+          data-covered={playing ? "" : undefined}
+          data-link={styles?.[restState]?.link ? "" : undefined}
+        >
           {renderState(restState)}
         </span>
         {playing && renderCopies()}
@@ -444,6 +453,7 @@ function GlitchEngine({
         data-calm=""
         data-plain={plain(rest)}
         data-red={red(rest)}
+        data-link={rest?.link ? "" : undefined}
         style={rest && { color: rest.color }}
       >
         {renderState(restState)}

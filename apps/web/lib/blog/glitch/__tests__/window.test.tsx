@@ -395,6 +395,43 @@ describe("Window OFF: glitch words keep glitching, in shapes", () => {
     return starts;
   }
 
+  it("underlines the shapes of a linked state, not the plain base between them", () => {
+    // ==склад|[Tecraft](url)==: only the other meaning is a link
+    const word = closed({
+      alt: (
+        <GlitchState link>
+          <a href="/projects/tecraft">Tecraft</a>
+        </GlitchState>
+      ),
+    });
+    expect(word.querySelector(".glitch-rest")).not.toHaveAttribute("data-link");
+    tap(word);
+    const frames = new Set<string>();
+    for (let t = 0; t < 800; t += 20) {
+      for (const copy of copies(word)) {
+        frames.add(`${copy.querySelector(".glitch-cipher") ? "shapes" : copy.textContent} ${copy.hasAttribute("data-link") ? "underlined" : "plain"}`);
+      }
+      advance(20);
+    }
+    expect(frames).toEqual(new Set(["shapes underlined", "себя plain"]));
+  });
+
+  it("underlines a resting word that is a link, as article text", () => {
+    // [==себя|контекст==](url): every state is a link
+    const { container } = render(
+      <p>
+        <WindowToggle off />{" "}
+        <a href="/blog/x">
+          <Glitch windowOff rng={cleared()}>
+            <GlitchState link>себя</GlitchState>
+            <GlitchState link>контекст</GlitchState>
+          </Glitch>
+        </a>
+      </p>,
+    );
+    expect(container.querySelector(".glitch[data-off] .glitch-rest")).toHaveAttribute("data-link");
+  });
+
   it("a tap flips into shapes over the plain word, and back", () => {
     const word = closed();
     expect(word.querySelector(".glitch-layers")).toBeNull();

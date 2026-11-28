@@ -87,6 +87,19 @@ describe("Glitch", () => {
     expect(div.querySelector(".glitch")?.getAttribute("data-alt")).toBe("US");
   });
 
+  it("server-renders a linked word with its underline (data-link on the calm word)", () => {
+    const div = document.createElement("div");
+    div.innerHTML = renderToStaticMarkup(
+      <Glitch rng={seeded(1)}>
+        <GlitchState link>билета</GlitchState>
+        <GlitchState link>ticket</GlitchState>
+      </Glitch>,
+    );
+    expect(div.querySelector(".glitch-sizer[data-calm]")).toHaveAttribute("data-link");
+    div.innerHTML = renderToStaticMarkup(word());
+    expect(div.querySelector(".glitch-sizer[data-calm]")).not.toHaveAttribute("data-link");
+  });
+
   it("lists every other meaning in data-alt, censors as ✳ and Window buttons left out", () => {
     const div = document.createElement("div");
     div.innerHTML = renderToStaticMarkup(
