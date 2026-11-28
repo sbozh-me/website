@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.16.0] - 2026-11-28
+
+### Changes
+
+- fix(web): show release notes as compact cards ([4763d38](https://github.com/sbozh-me/website/commit/4763d388af8aea78d5c3859c55443b3523acf758))
+- feat(blog): add :::big display text and :::ai/:::nai switcher ([7b252f8](https://github.com/sbozh-me/website/commit/7b252f8a1fe427bd93f07280dce892e8585ec1bb))
+- fix(blog): skip link preview on glitch-word links ([e8292ee](https://github.com/sbozh-me/website/commit/e8292eebca0893250c71cecfee4fd34987ac4f8c))
+- fix(blog): underline a linked glitch state everywhere ([a359efd](https://github.com/sbozh-me/website/commit/a359efd9d9963b3e744d25f8582f442a6d48b733))
+- feat(blog): keep the AI / No AI choice in the URL ([cc6d689](https://github.com/sbozh-me/website/commit/cc6d68970699ceb432416a94bfa546b9a1521976))
+- docs(roadmap): close 1.16.0 Big Text & No AI ([c94d725](https://github.com/sbozh-me/website/commit/c94d725841e8a3ee7efcc05171af8759fe6d71b8))
+- feat(web): Kagurame recites the big-text-with-ai-or-without release ([d7e49b0](https://github.com/sbozh-me/website/commit/d7e49b0eaf1dcc5a18b4bdcc751befcdd3d698a2))
+
+
 ## [1.15.5] - 2026-11-28
 
 ### Changes
