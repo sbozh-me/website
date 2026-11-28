@@ -180,16 +180,16 @@ One day a week of secession for citizens in IT, and Article VIII says an AI agen
 
 == shipped
 Two releases I can recite. The rest are in the notes.
-* A goblin, a pause. -> release-glitch-goblin-and-a-hero-that-pauses
 * With AI or without. -> release-big-text-with-ai-or-without
+* More than one face. -> release-avatars-with-more-than-one-face
 * Back. -> built
-
-== release-glitch-goblin-and-a-hero-that-pauses
-Glitch words now wear Glitch Goblin, and the hero pauses once half of it scrolls away. It waits for you, which none of my sixteen ==companies|>legions== did.
-* Read the note. -> /projects/sbozh-me/releases/glitch-goblin-and-a-hero-that-pauses
-* Back. -> shipped
 
 == release-big-text-with-ai-or-without
 A scroll can now carry one passage twice, with AI and without, and the switch starts on AI. Nobody asked me which one I am.
 * Read the note. -> /projects/sbozh-me/releases/big-text-with-ai-or-without
+* Back. -> shipped
+
+== release-avatars-with-more-than-one-face
+Open the window and the avatars glitch through their other faces, and Oktavian's mask finally fits in the frame. My context never does.
+* Read the note. -> /projects/sbozh-me/releases/avatars-with-more-than-one-face
 * Back. -> shipped
