@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.15.5] - 2026-11-28
+
+### Changes
+
+- feat(web): set blog glitch words in Glitch Goblin ([b821d70](https://github.com/sbozh-me/website/commit/b821d70cc1702f17005972c6e2babf386fe50eab))
+- fix(web): start home and corner videos muted again ([0a13a33](https://github.com/sbozh-me/website/commit/0a13a332667ff94466416c47744a7f05bde69bc0))
+- fix(web): pause home hero video when scrolled away ([067d9b6](https://github.com/sbozh-me/website/commit/067d9b6b7d0b1e4064e5c8b8a80886a8378f6aab))
+- feat(web): Kagurame recites the glitch-goblin-and-a-hero-that-pauses release ([3414f43](https://github.com/sbozh-me/website/commit/3414f436d334425e49bf4ed185cc7539d38b2b70))
+
+
 ## [1.15.4] - 2026-11-27
 
 ### Changes
