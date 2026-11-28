@@ -18,9 +18,13 @@ import { PlannedContent } from "@/components/PlannedContent";
 import { createBlogRepository, DirectusError } from "@/lib/blog/repository";
 import { UNLOCK_COOKIE, isUnlockTokenValid } from "@/lib/content-lock";
 import { glitchMdxComponents } from "@/lib/blog/glitch/mdx-components";
+import { AiVariantProvider, AiVariantSwitcher } from "@/lib/blog/ai-variants";
 import { LawAvailableProvider, LawLanguageSwitcher } from "@/lib/blog/law-languages";
+import { SwitcherBar } from "@/lib/blog/switcher-tabs";
 import { blogMdxComponents } from "@/lib/blog/mdx-components";
 import { PostArticle } from "@/lib/blog/post-article";
+import remarkAiVariants from "@/lib/blog/remark-ai-variants";
+import remarkBigText from "@/lib/blog/remark-big-text";
 import remarkGlitch from "@/lib/blog/remark-glitch";
 import remarkHeadingIds from "@/lib/blog/remark-heading-ids";
 import remarkLawLanguages from "@/lib/blog/remark-law-languages";
@@ -212,13 +216,17 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
   // syntax in a heading shows as its base text and the anchors match the heading ids.
   // Laws also parse `:::lang xx` blocks so the switcher can show one language at a time;
   // their TOC would mix five translations of the same headings, so we skip it.
+  // Every post may be written twice (`:::ai` / `:::nai`) and use `:::big` display text.
   const isLaw = post.type === "laws";
   let headings: TOCItem[] = [];
   let lawLanguages: string[] = [];
+  let aiVariants: string[] = [];
   const { default: MDXContent } = await evaluate(post.content, {
     ...runtime,
     remarkPlugins: [
       remarkGfm,
+      remarkBigText,
+      [remarkAiVariants, { onVariants: (variants: string[]) => (aiVariants = variants) }],
       ...(isLaw
         ? [[remarkLawLanguages, { onLanguages: (codes: string[]) => (lawLanguages = codes) }] as const]
         : []),
@@ -295,14 +303,17 @@ export default async function BlogPostPage({ params, searchParams }: PageProps) 
             toc={toc}
             tldr={TldrContent && <TldrContent />}
             content={
-              isLaw ? (
+              <AiVariantProvider variants={aiVariants}>
                 <LawAvailableProvider languages={lawLanguages}>
-                  <LawLanguageSwitcher />
+                  {(aiVariants.length > 0 || lawLanguages.length > 0) && (
+                    <SwitcherBar>
+                      <AiVariantSwitcher />
+                      <LawLanguageSwitcher />
+                    </SwitcherBar>
+                  )}
                   <MDXContent components={blogMdxComponents} />
                 </LawAvailableProvider>
-              ) : (
-                <MDXContent components={blogMdxComponents} />
-              )
+              </AiVariantProvider>
             }
             attribution={AttributionContent && <AttributionContent />}
             imageAttribution={ImageAttributionContent && <ImageAttributionContent />}

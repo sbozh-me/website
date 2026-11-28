@@ -46,7 +46,7 @@ export function CyrillicHeadings() {
 
   useEffect(() => {
     if (!white) return;
-    const markAll = () => document.querySelectorAll("h1, h2").forEach(markHeading);
+    const markAll = () => document.querySelectorAll("h1, h2, .big-text").forEach(markHeading);
     markAll();
     let frame = 0;
     const observer = new MutationObserver(() => {

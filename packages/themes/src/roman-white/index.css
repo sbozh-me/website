@@ -169,7 +169,8 @@ html[data-theme="roman-white"] {
 /* ── Headings: Cinzel capitals for h1–h2, sentence case below ─────────── */
 
 [data-theme="roman-white"] h1,
-[data-theme="roman-white"] h2 {
+[data-theme="roman-white"] h2,
+[data-theme="roman-white"] .big-text {
   font-family: var(--roman-caps);
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -178,7 +179,8 @@ html[data-theme="roman-white"] {
 }
 
 [data-theme="roman-white"] h1[data-script="cyrillic"],
-[data-theme="roman-white"] h2[data-script="cyrillic"] {
+[data-theme="roman-white"] h2[data-script="cyrillic"],
+[data-theme="roman-white"] .big-text[data-script="cyrillic"] {
   font-family: var(--roman-caps-cyrillic);
   font-weight: 400;
 }

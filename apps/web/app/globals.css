@@ -42,7 +42,9 @@ body {
   line-height: 1.7;
 }
 
-h1 {
+/* .big-text: a post's `:::big` block, an h1 to look at but not a heading */
+h1,
+.big-text {
   font-size: 2rem;
   font-weight: 700;
   line-height: 1.1;
@@ -61,7 +63,8 @@ h3 {
 }
 
 @media (min-width: 768px) {
-  h1 {
+  h1,
+  .big-text {
     font-size: 3rem;
   }
 

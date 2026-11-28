@@ -66,6 +66,12 @@ describe("remark-law-languages", () => {
     expect(html).not.toContain("<c-lang");
   });
 
+  it("reads blocks written without blank lines around the fences", async () => {
+    const html = await render(":::lang cs\nAhoj\n:::\n:::lang en\nHello\n:::\n");
+    expect(html).toContain('<c-lang data-lang="cs"><p>Ahoj</p></c-lang>');
+    expect(html).toContain('<c-lang data-lang="en"><p>Hello</p></c-lang>');
+  });
+
   it("drops an empty :::lang block instead of rendering it", async () => {
     const html = await render(":::lang cs\n\n:::\n\n:::lang en\n\nHello\n\n:::\n");
     expect(html).not.toContain('data-lang="cs"');

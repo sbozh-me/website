@@ -13,8 +13,12 @@ import type { TOCItem } from "@sbozh/blog/utils";
  * already have one).
  *
  * Headings inside an <Accordion> (e.g. the older version of a rewritten post) get ids but
- * stay out of the TOC: they're hidden until the reader opens it.
+ * stay out of the TOC: they're hidden until the reader opens it. The same goes for the
+ * `:::ai` / `:::nai` versions of a post: only one of them is on the page at a time.
  */
+
+/** Blocks whose headings may not be on the page, so the TOC can't link to them */
+const HIDDEN_BLOCKS = new Set(["Accordion", "AiVariantBlock"]);
 
 export const TOC_DEPTHS = [2, 3, 4];
 
@@ -47,7 +51,8 @@ function visitHeadings(
 ) {
   if (node.type === "heading") fn(node, collapsed);
   else if ("children" in node) {
-    const inside = collapsed || (node.type === "mdxJsxFlowElement" && node.name === "Accordion");
+    const inside =
+      collapsed || (node.type === "mdxJsxFlowElement" && HIDDEN_BLOCKS.has(node.name ?? ""));
     node.children.forEach((child) => visitHeadings(child as Nodes, inside, fn));
   }
 }

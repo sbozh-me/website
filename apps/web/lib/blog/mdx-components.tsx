@@ -1,4 +1,4 @@
-import type { AnchorHTMLAttributes, ComponentType } from "react";
+import type { AnchorHTMLAttributes, ComponentType, ReactNode } from "react";
 import { compile } from "@sbozh/pmdxjs";
 import { Columns, Column } from "@sbozh/pmdxjs/components";
 import {
@@ -14,9 +14,15 @@ import {
 } from "@sbozh/pmdxjs/components/cv";
 
 import { Accordion } from "./accordion";
+import { AiVariantBlock } from "./ai-variants";
 import { glitchMdxComponents } from "./glitch/mdx-components";
 import { LawLanguageBlock } from "./law-languages";
 import { PMDXScaleWrapper } from "./pmdx-scale-wrapper";
+
+// :::big ... ::: — display text as large as an h1 without being a heading
+function BigText({ children }: { children?: ReactNode }) {
+  return <div className="big-text">{children}</div>;
+}
 
 // Link component that handles external links
 function Link(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
@@ -64,6 +70,12 @@ export const blogMdxComponents: Record<string, ComponentType<any>> = {
 
   // Law-type posts: :::lang xx ... ::: block picked by LawLanguageSwitcher
   LawLanguageBlock,
+
+  // :::ai / :::nai ... ::: — the post with and without AI, picked by AiVariantSwitcher
+  AiVariantBlock,
+
+  // :::big ... ::: — big display text
+  BigText,
 
   // PMDX - compile raw PMDXJS syntax
   PMDX,

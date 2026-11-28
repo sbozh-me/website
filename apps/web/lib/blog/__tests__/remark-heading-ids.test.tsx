@@ -17,6 +17,7 @@ const components = {
   Glitch: ({ children }: { children: ReactNode }) => createElement("span", null, children),
   GlitchState: ({ children }: { children: ReactNode }) => createElement("span", null, children),
   Accordion: ({ children }: { children: ReactNode }) => createElement("div", null, children),
+  AiVariantBlock: ({ children }: { children: ReactNode }) => createElement("div", null, children),
 };
 
 async function compile(source: string, withIds = true) {
@@ -88,5 +89,20 @@ describe("remarkHeadingIds", () => {
     const { toc, ids } = await compile(source);
     expect(toc.map((item) => item.text)).toEqual(["Now", "After"]);
     expect(ids).toEqual(["now", "then", "then-deeper", "after"]);
+  });
+
+  it("keeps headings inside an :::ai / :::nai version out of the TOC", async () => {
+    const source = [
+      "## Shared",
+      '<AiVariantBlock variant="ai">',
+      "## Intro",
+      "</AiVariantBlock>",
+      '<AiVariantBlock variant="nai">',
+      "## Intro",
+      "</AiVariantBlock>",
+    ].join("\n\n");
+    const { toc, ids } = await compile(source);
+    expect(toc.map((item) => item.text)).toEqual(["Shared"]);
+    expect(ids).toEqual(["shared", "intro", "intro-1"]);
   });
 });
